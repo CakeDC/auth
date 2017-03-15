@@ -137,7 +137,7 @@ class SimpleRbacAuthorize extends BaseAuthorize
     {
         try {
             Configure::load($key, 'default');
-            $permissions = $this->getConfig() ?: Configure::read('Users.SimpleRbac.permissions');
+            $permissions = $this->getConfig('permissions') ?: Configure::read('Users.SimpleRbac.permissions');
         } catch (Exception $ex) {
             $msg = __d('CakeDC/auth', 'Missing configuration file: "config/{0}.php". Using default permissions', $key);
             $this->log($msg, LogLevel::WARNING);
