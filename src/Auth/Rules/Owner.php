@@ -64,9 +64,8 @@ class Owner extends AbstractRule
 
         try {
             if (!$table->hasField($this->getConfig('ownerForeignKey'))) {
-                $msg = __d(
-                    'CakeDC/auth',
-                    'Missing column {0} in table {1} while checking ownership permissions for user {2}',
+                $msg = sprintf(
+                    'Missing column %s in table %s while checking ownership permissions for user %s',
                     $this->getConfig('ownerForeignKey'),
                     $table->getAlias(),
                     $userId
@@ -74,9 +73,8 @@ class Owner extends AbstractRule
                 throw new OutOfBoundsException($msg);
             }
         } catch (Exception $ex) {
-            $msg = __d(
-                'CakeDC/auth',
-                'Missing column {0} in table {1} while checking ownership permissions for user {2}',
+            $msg = sprintf(
+                'Missing column %s in table %s while checking ownership permissions for user %s',
                 $this->getConfig('ownerForeignKey'),
                 $table->getAlias(),
                 $userId
