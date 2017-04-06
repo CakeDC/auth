@@ -11,6 +11,7 @@
 
 namespace CakeDC\Auth\Auth;
 
+use CakeDC\Auth\Auth\Rbac\PermissionMatchResult;
 use CakeDC\Auth\Auth\Rules\Rule;
 use Cake\Auth\BaseAuthorize;
 use Cake\Controller\ComponentRegistry;
@@ -32,11 +33,11 @@ class SimpleRbacAuthorize extends BaseAuthorize
     use LogTrait;
 
     protected $_defaultConfig = [
-        //autoload permissions.php
+        // autoload permissions.php
         'autoload_config' => 'permissions',
-        //role field in the Users table
+        // role field in the Users table
         'role_field' => 'role',
-        //default role, used in new users registered and also as role matcher when no role is available
+        // default role, used in new users registered and also as role matcher when no role is available
         'default_role' => 'user',
         /*
          * This is a quick roles-permissions implementation
@@ -79,6 +80,8 @@ class SimpleRbacAuthorize extends BaseAuthorize
          *
          */
         'permissions' => [],
+        // 'log' will match the value of 'debug' if not set on configuration
+        'log' => false,
     ];
 
     /**
@@ -117,6 +120,9 @@ class SimpleRbacAuthorize extends BaseAuthorize
      */
     public function __construct(ComponentRegistry $registry, array $config = [])
     {
+        if (!isset($config['log'])) {
+            $config['log'] = Configure::read('debug');
+        }
         parent::__construct($registry, $config);
         $autoload = $this->getConfig('autoload_config');
         if ($autoload) {
@@ -184,9 +190,12 @@ class SimpleRbacAuthorize extends BaseAuthorize
     {
         $permissions = $this->getConfig('permissions');
         foreach ($permissions as $permission) {
-            $allowed = $this->_matchPermission($permission, $user, $role, $request);
-            if ($allowed !== null) {
-                return $allowed;
+            $matchResult = $this->_matchPermission($permission, $user, $role, $request);
+            if ($matchResult !== null) {
+                if ($this->getConfig('log')) {
+                    $this->log($matchResult->getReason(), LogLevel::DEBUG);
+                }
+                return $matchResult->isAllowed();
             }
         }
 
@@ -201,7 +210,8 @@ class SimpleRbacAuthorize extends BaseAuthorize
      * @param string $role Effective user's role
      * @param \Cake\Http\ServerRequest $request Current request
      *
-     * @return null|bool Null if permission is discarded, boolean if a final result is produced
+     * @return null|PermissionMatchResult Null if permission is discarded, PermissionMatchResult if a final
+     * result is produced
      */
     protected function _matchPermission(array $permission, array $user, $role, ServerRequest $request)
     {
@@ -210,20 +220,14 @@ class SimpleRbacAuthorize extends BaseAuthorize
         $issetUser = isset($permission['user']) || isset($permission['*user']);
 
         if (!$issetController || !$issetAction) {
-            $this->log(
-                "Cannot evaluate permission when 'controller' and/or 'action' keys are absent",
-                LogLevel::DEBUG
-            );
+            $reason = "Cannot evaluate permission when 'controller' and/or 'action' keys are absent";
 
-            return false;
+            return new PermissionMatchResult(false, $reason);
         }
         if ($issetUser) {
-            $this->log(
-                "Permission key 'user' is illegal, cannot evaluate the permission",
-                LogLevel::DEBUG
-            );
+            $reason = "Permission key 'user' is illegal, cannot evaluate the permission";
 
-            return false;
+            return new PermissionMatchResult(false, $reason);
         }
 
         $permission += ['allowed' => true];
@@ -263,7 +267,14 @@ class SimpleRbacAuthorize extends BaseAuthorize
                 $return = !$return;
             }
             if ($key === 'allowed') {
-                return $return;
+                $reason = __d(
+                    'CakeDC/auth',
+                    'For {0} --> Rule matched {1} with result = {2}',
+                    json_encode($reserved),
+                    json_encode($permission),
+                    $return
+                );
+                return new PermissionMatchResult($return, $reason);
             }
             if (!$return) {
                 break;
@@ -285,10 +296,6 @@ class SimpleRbacAuthorize extends BaseAuthorize
     protected function _matchOrAsterisk($possibleValues, $value, $allowEmpty = false)
     {
         $possibleArray = (array)$possibleValues;
-
-        if ($allowEmpty && empty($possibleArray) && $value === null) {
-            return true;
-        }
 
         if ($possibleValues === '*' ||
             in_array($value, $possibleArray) ||
