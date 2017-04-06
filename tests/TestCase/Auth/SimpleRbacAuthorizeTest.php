@@ -1080,7 +1080,7 @@ class SimpleRbacAuthorizeTest extends TestCase
                     'action' => 'test'
                 ],
                 //expected
-                __d('CakeDC/Users', "Cannot evaluate permission when 'controller' and/or 'action' keys are absent"),
+                "Cannot evaluate permission when 'controller' and/or 'action' keys are absent",
             ],
             'no-action' => [
                 //permissions
@@ -1104,7 +1104,7 @@ class SimpleRbacAuthorizeTest extends TestCase
                     'action' => 'test'
                 ],
                 //expected
-                __d('CakeDC/Users', "Cannot evaluate permission when 'controller' and/or 'action' keys are absent"),
+                "Cannot evaluate permission when 'controller' and/or 'action' keys are absent",
             ],
             'no-controller-and-action' => [
                 //permissions
@@ -1128,7 +1128,7 @@ class SimpleRbacAuthorizeTest extends TestCase
                     'action' => 'test'
                 ],
                 //expected
-                __d('CakeDC/Users', "Cannot evaluate permission when 'controller' and/or 'action' keys are absent"),
+                "Cannot evaluate permission when 'controller' and/or 'action' keys are absent",
             ],
             'no-controller and user-key' => [
                 //permissions
@@ -1153,7 +1153,7 @@ class SimpleRbacAuthorizeTest extends TestCase
                     'action' => 'test'
                 ],
                 //expected
-                __d('CakeDC/Users', "Cannot evaluate permission when 'controller' and/or 'action' keys are absent"),
+                "Cannot evaluate permission when 'controller' and/or 'action' keys are absent",
             ],
             'user-key' => [
                 //permissions
@@ -1178,7 +1178,7 @@ class SimpleRbacAuthorizeTest extends TestCase
                     'action' => 'test'
                 ],
                 //expected
-                __d('CakeDC/Users', "Permission key 'user' is illegal, cannot evaluate the permission"),
+                "Permission key 'user' is illegal, cannot evaluate the permission",
             ],
         ];
     }
