@@ -42,12 +42,13 @@ class PermissionMatchResult
     }
 
     /**
-     * @param bool $allowed
+     * @param bool $allowed allowed value
      * @return PermissionMatchResult
      */
     public function setAllowed($allowed)
     {
         $this->_allowed = (bool)$allowed;
+
         return $this;
     }
 
@@ -60,12 +61,13 @@ class PermissionMatchResult
     }
 
     /**
-     * @param string $reason
+     * @param string $reason reason
      * @return PermissionMatchResult
      */
     public function setReason($reason)
     {
         $this->_reason = (string)$reason;
+
         return $this;
     }
 

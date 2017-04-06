@@ -195,6 +195,7 @@ class SimpleRbacAuthorize extends BaseAuthorize
                 if ($this->getConfig('log')) {
                     $this->log($matchResult->getReason(), LogLevel::DEBUG);
                 }
+
                 return $matchResult->isAllowed();
             }
         }
@@ -267,13 +268,13 @@ class SimpleRbacAuthorize extends BaseAuthorize
                 $return = !$return;
             }
             if ($key === 'allowed') {
-                $reason = __d(
-                    'CakeDC/auth',
-                    'For {0} --> Rule matched {1} with result = {2}',
+                $reason = sprintf(
+                    'For %s --> Rule matched %s with result = %s',
                     json_encode($reserved),
                     json_encode($permission),
                     $return
                 );
+
                 return new PermissionMatchResult($return, $reason);
             }
             if (!$return) {
