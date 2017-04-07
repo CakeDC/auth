@@ -21,7 +21,6 @@ use Cake\TestSuite\TestCase;
  */
 class OwnerTest extends TestCase
 {
-
     public $fixtures = [
         'plugin.CakeDC/Auth.posts',
         'plugin.CakeDC/Auth.users',

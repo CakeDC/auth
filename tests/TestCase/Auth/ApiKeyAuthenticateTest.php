@@ -20,7 +20,6 @@ use Cake\TestSuite\TestCase;
 
 class ApiKeyAuthenticateTest extends TestCase
 {
-
     public $fixtures = [
         'plugin.CakeDC/Auth.users',
     ];

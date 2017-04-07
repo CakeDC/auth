@@ -19,7 +19,6 @@ use Cake\TestSuite\TestCase;
 
 class RememberMeAuthenticateTest extends TestCase
 {
-
     public $fixtures = [
         'plugin.CakeDC/Auth.users',
     ];
