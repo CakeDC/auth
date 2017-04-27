@@ -85,7 +85,7 @@ Permission rules syntax
 
 * For Superadmin access (permission to access ALL THE THINGS in your app) there is a specific Authorize Object provided
 * Permissions that do not have `controller` and/or `action` keys (or the inverted versions) are automatically discarded in order to prevent errors.
-If you need to match all controllers/actions you can explicitly do `'contoller' => '*'`
+If you need to match all controllers/actions you can explicitly do `'controller' => '*'`
 * Key `user` (or the inverted version) is illegal (as it's impossible to match an array) and any permission containing it will be discarded
 * If the permission is discarded for the reasons stated above, a debug message will be logged
 
