@@ -77,8 +77,7 @@ abstract class AbstractRule implements Rule
 
         $this->modelFactory('Table', [$this->tableLocator(), 'get']);
         if (empty($modelClass)) {
-            $msg = __d('CakeDC/auth', 'Missing Table alias, we could not extract a default table from the request');
-            throw new OutOfBoundsException($msg);
+            throw new OutOfBoundsException('Missing Table alias, we could not extract a default table from the request');
         }
 
         return $this->loadModel($modelClass);

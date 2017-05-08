@@ -139,7 +139,7 @@ class SimpleRbacAuthorize extends BaseAuthorize
             Configure::load($key, 'default');
             $permissions = $this->getConfig('permissions') ?: Configure::read('Users.SimpleRbac.permissions');
         } catch (Exception $ex) {
-            $msg = __d('CakeDC/auth', 'Missing configuration file: "config/{0}.php". Using default permissions', $key);
+            $msg = sprintf('Missing configuration file: "config/%s.php". Using default permissions', $key);
             $this->log($msg, LogLevel::WARNING);
         }
 
@@ -211,7 +211,7 @@ class SimpleRbacAuthorize extends BaseAuthorize
 
         if (!$issetController || !$issetAction) {
             $this->log(
-                __d('CakeDC/auth', "Cannot evaluate permission when 'controller' and/or 'action' keys are absent"),
+                "Cannot evaluate permission when 'controller' and/or 'action' keys are absent",
                 LogLevel::DEBUG
             );
 
@@ -219,7 +219,7 @@ class SimpleRbacAuthorize extends BaseAuthorize
         }
         if ($issetUser) {
             $this->log(
-                __d('CakeDC/auth', "Permission key 'user' is illegal, cannot evaluate the permission"),
+                "Permission key 'user' is illegal, cannot evaluate the permission",
                 LogLevel::DEBUG
             );
 
