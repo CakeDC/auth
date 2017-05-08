@@ -10,6 +10,7 @@
  */
 
 namespace CakeDC\Auth\Rbac;
+
 use Cake\Core\Configure;
 use Cake\Log\LogTrait;
 use Psr\Log\LogLevel;
@@ -92,5 +93,4 @@ class PermissionsProvider
 
         return $permissions;
     }
-
 }
