@@ -11,16 +11,12 @@
 
 namespace CakeDC\Auth\Auth;
 
-use CakeDC\Auth\Auth\Rules\Rule;
 use Cake\Auth\BaseAuthorize;
 use Cake\Controller\ComponentRegistry;
-use Cake\Core\Configure;
-use Cake\Core\Exception\Exception;
 use Cake\Http\ServerRequest;
 use Cake\Log\LogTrait;
 use Cake\Utility\Hash;
-use Cake\Utility\Inflector;
-use Psr\Log\LogLevel;
+use CakeDC\Auth\Rbac\Rbac;
 
 /**
  * Simple Rbac Authorize
@@ -82,33 +78,9 @@ class SimpleRbacAuthorize extends BaseAuthorize
     ];
 
     /**
-     * Default permissions to be loaded if no provided permissions
-     *
-     * @var array
+     * @var Rbac
      */
-    protected $_defaultPermissions = [
-        //admin role allowed to all actions
-        [
-            'role' => 'admin',
-            'plugin' => '*',
-            'controller' => '*',
-            'action' => '*',
-        ],
-        //specific actions allowed for the user role in Users plugin
-        [
-            'role' => 'user',
-            'plugin' => 'CakeDC/Users',
-            'controller' => 'Users',
-            'action' => ['profile', 'logout'],
-        ],
-        //all roles allowed to Pages/display
-        [
-            'role' => '*',
-            'plugin' => null,
-            'controller' => ['Pages'],
-            'action' => ['display'],
-        ],
-    ];
+    protected $rbac;
 
     /**
      * Autoload permission configuration
@@ -118,36 +90,27 @@ class SimpleRbacAuthorize extends BaseAuthorize
     public function __construct(ComponentRegistry $registry, array $config = [])
     {
         parent::__construct($registry, $config);
-        $autoload = $this->getConfig('autoload_config');
-        if ($autoload) {
-            $loadedPermissions = $this->_loadPermissions($autoload);
-            $this->setConfig('permissions', $loadedPermissions);
-        }
+        $configInstance = Hash::get($config, 'rbac_instance');
+        $autoload = Hash::get($config, 'autoload_config');
+        $permissions = Hash::get($config, 'permissions');
+        $this->rbac = $this->rbacInstance($configInstance, $autoload, $permissions);
     }
 
     /**
-     * Load config and retrieve permissions
-     * If the configuration file does not exist, or the permissions key not present, return defaultPermissions
-     * To be mocked
+     * DI for Rbac
      *
-     * @param string $key name of the configuration file to read permissions from
-     * @return array permissions
+     * @param mixed $instance
+     * @param string $autoload
+     * @param array $permissions
+     * @return Rbac
      */
-    protected function _loadPermissions($key)
+    protected function rbacInstance($instance = null, $autoload = null, $permissions = null)
     {
-        try {
-            Configure::load($key, 'default');
-            $permissions = $this->getConfig('permissions') ?: Configure::read('Users.SimpleRbac.permissions');
-        } catch (Exception $ex) {
-            $msg = sprintf('Missing configuration file: "config/%s.php". Using default permissions', $key);
-            $this->log($msg, LogLevel::WARNING);
+        if ($instance instanceof Rbac) {
+            return $instance;
         }
 
-        if (empty($permissions)) {
-            return $this->_defaultPermissions;
-        }
-
-        return $permissions;
+        return new Rbac($autoload, $permissions);
     }
 
     /**
@@ -166,152 +129,8 @@ class SimpleRbacAuthorize extends BaseAuthorize
             $role = Hash::get($user, $roleField);
         }
 
-        $allowed = $this->_checkPermissions($user, $role, $request);
+        $allowed = $this->rbac->checkPermissions($user, $role, $request);
 
         return $allowed;
-    }
-
-    /**
-     * Match against permissions, return if matched
-     * Permissions are processed based on the 'permissions' config values
-     *
-     * @param array $user current user array
-     * @param string $role effective role for the current user
-     * @param \Cake\Http\ServerRequest $request request
-     * @return bool true if there is a match in permissions
-     */
-    protected function _checkPermissions(array $user, $role, ServerRequest $request)
-    {
-        $permissions = $this->getConfig('permissions');
-        foreach ($permissions as $permission) {
-            $allowed = $this->_matchPermission($permission, $user, $role, $request);
-            if ($allowed !== null) {
-                return $allowed;
-            }
-        }
-
-        return false;
-    }
-
-    /**
-     * Match the rule for current permission
-     *
-     * @param array $permission The permission configuration
-     * @param array $user Current user data
-     * @param string $role Effective user's role
-     * @param \Cake\Http\ServerRequest $request Current request
-     *
-     * @return null|bool Null if permission is discarded, boolean if a final result is produced
-     */
-    protected function _matchPermission(array $permission, array $user, $role, ServerRequest $request)
-    {
-        $issetController = isset($permission['controller']) || isset($permission['*controller']);
-        $issetAction = isset($permission['action']) || isset($permission['*action']);
-        $issetUser = isset($permission['user']) || isset($permission['*user']);
-
-        if (!$issetController || !$issetAction) {
-            $this->log(
-                "Cannot evaluate permission when 'controller' and/or 'action' keys are absent",
-                LogLevel::DEBUG
-            );
-
-            return false;
-        }
-        if ($issetUser) {
-            $this->log(
-                "Permission key 'user' is illegal, cannot evaluate the permission",
-                LogLevel::DEBUG
-            );
-
-            return false;
-        }
-
-        $permission += ['allowed' => true];
-        $userArr = ['user' => $user];
-        $reserved = [
-            'prefix' => $request->getParam('prefix'),
-            'plugin' => $request->getParam('plugin'),
-            'extension' => $request->getParam('_ext'),
-            'controller' => $request->getParam('controller'),
-            'action' => $request->getParam('action'),
-            'role' => $role
-        ];
-
-        foreach ($permission as $key => $value) {
-            $inverse = $this->_startsWith($key, '*');
-            if ($inverse) {
-                $key = ltrim($key, '*');
-            }
-
-            if (is_callable($value)) {
-                $return = (bool)call_user_func($value, $user, $role, $request);
-            } elseif ($value instanceof Rule) {
-                $return = (bool)$value->allowed($user, $role, $request);
-            } elseif ($key === 'allowed') {
-                $return = (bool)$value;
-            } elseif (array_key_exists($key, $reserved)) {
-                $return = $this->_matchOrAsterisk($value, $reserved[$key], true);
-            } else {
-                if (!$this->_startsWith($key, 'user.')) {
-                    $key = 'user.' . $key;
-                }
-
-                $return = $this->_matchOrAsterisk($value, Hash::get($userArr, $key));
-            }
-
-            if ($inverse) {
-                $return = !$return;
-            }
-            if ($key === 'allowed') {
-                return $return;
-            }
-            if (!$return) {
-                break;
-            }
-        }
-
-        return null;
-    }
-
-    /**
-     * Check if rule matched or '*' present in rule matching anything
-     *
-     * @param string|array $possibleValues Values that are accepted (from permission config)
-     * @param string|mixed|null $value Value to check with. We'll check the 'dasherized' value too
-     * @param bool $allowEmpty If true and $value is null, the rule will pass
-     *
-     * @return bool
-     */
-    protected function _matchOrAsterisk($possibleValues, $value, $allowEmpty = false)
-    {
-        $possibleArray = (array)$possibleValues;
-
-        if ($allowEmpty && empty($possibleArray) && $value === null) {
-            return true;
-        }
-
-        if ($possibleValues === '*' ||
-            in_array($value, $possibleArray) ||
-            in_array(Inflector::camelize($value, '-'), $possibleArray)
-        ) {
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * Checks if $haystack begins with $needle
-     *
-     * @see http://stackoverflow.com/a/7168986/2588539
-     *
-     * @param string $haystack The whole string
-     * @param string $needle The beginning to check
-     *
-     * @return bool
-     */
-    protected function _startsWith($haystack, $needle)
-    {
-        return substr($haystack, 0, strlen($needle)) === $needle;
     }
 }
