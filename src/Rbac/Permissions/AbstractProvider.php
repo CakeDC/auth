@@ -67,5 +67,5 @@ abstract class AbstractProvider
      *
      * @return array Array of permissions
      */
-    public abstract function getPermissions();
+    abstract public function getPermissions();
 }

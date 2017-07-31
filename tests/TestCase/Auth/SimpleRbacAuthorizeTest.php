@@ -71,7 +71,5 @@ class SimpleRbacAuthorizeTest extends TestCase
             'id' => 1,
             'role' => 'test',
         ];
-
-
     }
 }
