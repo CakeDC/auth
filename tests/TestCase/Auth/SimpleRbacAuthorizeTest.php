@@ -61,4 +61,17 @@ class SimpleRbacAuthorizeTest extends TestCase
         $this->simpleRbacAuthorize = new SimpleRbacAuthorize($this->registry, ['autoload_config' => false]);
         $this->assertEmpty($this->simpleRbacAuthorize->getConfig('permissions'));
     }
+
+    /**
+     * @test
+     */
+    public function testAuthorize()
+    {
+        $user = [
+            'id' => 1,
+            'role' => 'test',
+        ];
+
+
+    }
 }

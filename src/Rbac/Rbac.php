@@ -11,6 +11,7 @@
 
 namespace CakeDC\Auth\Rbac;
 
+use Cake\Core\InstanceConfigTrait;
 use Cake\Http\ServerRequest;
 use Cake\Log\LogTrait;
 use Cake\Utility\Hash;
@@ -25,7 +26,17 @@ use Psr\Log\LogLevel;
  */
 class Rbac
 {
+    use InstanceConfigTrait;
     use LogTrait;
+
+    /**
+     * @var array default configuration
+     */
+    protected $_defaultConfig = [
+        'autoload' => 'permissions',
+        'permissionsProviderClass' => '\CakeDC\Auth\Rbac\Permissions\ConfigProvider',
+        'permissions' => [],
+    ];
 
     /**
      * @var array rules array
@@ -34,16 +45,19 @@ class Rbac
 
     /**
      * Rbac constructor.
-     * @param string $autoload Config key to load permissions from file
-     * @param array $permissions Permissions array, will not load permissions if provided
+     *
+     * @param array $config Class configuration
      */
-    public function __construct($autoload = 'permissions', $permissions = null)
+    public function __construct($config = [])
     {
-        if ($permissions) {
+        $this->setConfig($config);
+        $permissions = $this->getConfig('permissions');
+        if ($permissions !== null) {
             $this->permissions = $permissions;
         } else {
-            $permissionsProvider = new PermissionsProvider();
-            $this->permissions = $permissionsProvider->loadPermissions($autoload);
+            $permissionsProviderClass = $this->getConfig('permissionsProviderClass');
+            $permissionsProvider = new $permissionsProviderClass($config);
+            $this->permissions = $permissionsProvider->getPermissions();
         }
     }
 

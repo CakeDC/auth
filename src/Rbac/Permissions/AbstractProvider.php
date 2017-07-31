@@ -9,36 +9,21 @@
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
-namespace CakeDC\Auth\Rbac;
+namespace CakeDC\Auth\Rbac\Permissions;
 
 use Cake\Core\Configure;
+use Cake\Core\InstanceConfigTrait;
 use Cake\Log\LogTrait;
 use Psr\Log\LogLevel;
 
 /**
- * Class PermissionsProvider, handles permission loading from configuration file
- *
- * @package Rbac
- * @todo create strategy for permission loading
+ * Class AbstractProvider, handles getting permission from different sources,
+ * for example a config file
  */
-class PermissionsProvider
+abstract class AbstractProvider
 {
+    use InstanceConfigTrait;
     use LogTrait;
-
-    /**
-     * Load permissions array
-     *
-     * @param $autoload
-     * @return array
-     */
-    public function loadPermissions($autoload)
-    {
-        if ($autoload) {
-            return $this->_loadPermissions($autoload);
-        }
-
-        return [];
-    }
 
     /**
      * Default permissions to be loaded if no provided permissions
@@ -70,27 +55,17 @@ class PermissionsProvider
     ];
 
     /**
-     * Load config and retrieve permissions
-     * If the configuration file does not exist, or the permissions key not present, return defaultPermissions
-     * To be mocked
+     * Provide permissions array, for example
+     * [
+     *     [
+                'role' => '*',
+                'plugin' => null,
+                'controller' => ['Pages'],
+                'action' => ['display'],
+            ],
+     * ]
      *
-     * @param string $key name of the configuration file to read permissions from
-     * @return array permissions
+     * @return array Array of permissions
      */
-    protected function _loadPermissions($key)
-    {
-        try {
-            Configure::load($key, 'default');
-            $permissions = Configure::read('CakeDC/Auth.permissions');
-        } catch (\Exception $ex) {
-            $msg = sprintf('Missing configuration file: "config/%s.php". Using default permissions', $key);
-            $this->log($msg, LogLevel::WARNING);
-        }
-
-        if (empty($permissions)) {
-            return $this->defaultPermissions;
-        }
-
-        return $permissions;
-    }
+    public abstract function getPermissions();
 }

@@ -84,33 +84,28 @@ class SimpleRbacAuthorize extends BaseAuthorize
 
     /**
      * Autoload permission configuration
+     *
      * @param ComponentRegistry $registry component registry
      * @param array $config config
      */
     public function __construct(ComponentRegistry $registry, array $config = [])
     {
         parent::__construct($registry, $config);
-        $configInstance = Hash::get($config, 'rbac_instance');
         $autoload = Hash::get($config, 'autoload_config');
         $permissions = Hash::get($config, 'permissions');
-        $this->rbac = $this->rbacInstance($configInstance, $autoload, $permissions);
+        $this->rbac = $this->rbacInstance($autoload, $permissions);
     }
 
     /**
-     * DI for Rbac
+     * Rbac instance for mocking
      *
-     * @param mixed $instance
      * @param string $autoload
      * @param array $permissions
      * @return Rbac
      */
-    protected function rbacInstance($instance = null, $autoload = null, $permissions = null)
+    protected function rbacInstance($autoload = null, $permissions = null)
     {
-        if ($instance instanceof Rbac) {
-            return $instance;
-        }
-
-        return new Rbac($autoload, $permissions);
+        return new Rbac(compact('autoload', 'permissions'));
     }
 
     /**

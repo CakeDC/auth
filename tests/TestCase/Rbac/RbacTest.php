@@ -75,10 +75,20 @@ class RbacTest extends TestCase
     /**
      * @covers \CakeDC\Auth\Rbac\Rbac::__construct
      */
-    public function testConstruct()
+    public function testConstructGetDefaultPermissions()
     {
-        //don't autoload config
-        $this->rbac = new Rbac(null, []);
+        $this->rbac = new Rbac();
+        $this->assertEmpty($this->rbac->getPermissions());
+    }
+
+    /**
+     * @covers \CakeDC\Auth\Rbac\Rbac::__construct
+     */
+    public function testConstructSetPermissions()
+    {
+        $this->rbac = new Rbac([
+            'permissions' => [],
+        ]);
         $this->assertEmpty($this->rbac->getPermissions());
     }
 
@@ -152,7 +162,7 @@ class RbacTest extends TestCase
      */
     public function testAuthorize($permissions, $user, $requestParams, $expected, $msg = null)
     {
-        $this->rbac = new Rbac(null, $permissions);
+        $this->rbac = new Rbac(compact('permissions'));
         $request = $this->_requestFromArray($requestParams);
 
         $result = $this->rbac->checkPermissions($user, $user['role'], $request);
