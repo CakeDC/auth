@@ -16,6 +16,7 @@ use Cake\Http\ServerRequest;
 use Cake\Log\LogTrait;
 use Cake\Utility\Hash;
 use Cake\Utility\Inflector;
+use CakeDC\Auth\Rbac\Permissions\AbstractProvider;
 use CakeDC\Auth\Rbac\Rules\Rule;
 use Psr\Log\LogLevel;
 
@@ -34,8 +35,14 @@ class Rbac
      */
     protected $_defaultConfig = [
         'autoload' => 'permissions',
+        /**
+         * Class used to provide the RBAC rules, by default from a config file, must extend AbstractProvider
+         */
         'permissionsProviderClass' => '\CakeDC\Auth\Rbac\Permissions\ConfigProvider',
-        'permissions' => [],
+        /**
+         * Used to set permissions array from configuration, ignoring the permissionsProvider
+         */
+        'permissions' => null,
     ];
 
     /**
@@ -56,6 +63,9 @@ class Rbac
             $this->permissions = $permissions;
         } else {
             $permissionsProviderClass = $this->getConfig('permissionsProviderClass');
+            if (!is_subclass_of($permissionsProviderClass, AbstractProvider::class)) {
+                throw new \RuntimeException(sprintf('Class "%s" must extend AbstractProvider', $permissionsProviderClass));
+            }
             $permissionsProvider = new $permissionsProviderClass($config);
             $this->permissions = $permissionsProvider->getPermissions();
         }

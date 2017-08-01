@@ -77,8 +77,43 @@ class RbacTest extends TestCase
      */
     public function testConstructGetDefaultPermissions()
     {
+        $defaultPermissions = [
+            //admin role allowed to all actions
+            [
+                'role' => 'admin',
+                'plugin' => '*',
+                'controller' => '*',
+                'action' => '*',
+            ],
+            //specific actions allowed for the user role in Users plugin
+            [
+                'role' => 'user',
+                'plugin' => 'CakeDC/Users',
+                'controller' => 'Users',
+                'action' => ['profile', 'logout'],
+            ],
+            //all roles allowed to Pages/display
+            [
+                'role' => '*',
+                'plugin' => null,
+                'controller' => ['Pages'],
+                'action' => ['display'],
+            ],
+        ];
         $this->rbac = new Rbac();
-        $this->assertEmpty($this->rbac->getPermissions());
+        $this->assertSame($defaultPermissions, $this->rbac->getPermissions());
+    }
+
+    /**
+     * @covers \CakeDC\Auth\Rbac\Rbac::__construct
+     * @expectedException \RuntimeException
+     * @expectedExceptionMessage Class "\Exception" must extend AbstractProvider
+     */
+    public function testConstructBadProvider()
+    {
+        $this->rbac = new Rbac([
+            'permissionsProviderClass' => '\Exception',
+        ]);
     }
 
     /**
