@@ -41,7 +41,7 @@ class ConfigProvider extends AbstractProvider
             return $this->_loadPermissions($autoload);
         }
 
-        return [];
+        return $this->defaultPermissions;
     }
 
     /**

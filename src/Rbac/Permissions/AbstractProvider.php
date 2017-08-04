@@ -68,4 +68,20 @@ abstract class AbstractProvider
      * @return array Array of permissions
      */
     abstract public function getPermissions();
+
+    /**
+     * @return array
+     */
+    public function getDefaultPermissions()
+    {
+        return $this->defaultPermissions;
+    }
+
+    /**
+     * @param array $defaultPermissions
+     */
+    public function setDefaultPermissions($defaultPermissions)
+    {
+        $this->defaultPermissions = $defaultPermissions;
+    }
 }
