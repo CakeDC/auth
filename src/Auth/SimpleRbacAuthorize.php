@@ -27,12 +27,16 @@ class SimpleRbacAuthorize extends BaseAuthorize
 {
     use LogTrait;
 
+    /**
+     * @var array configuration is passed to the Rbac object instance for convenience setup from Auth
+     */
     protected $_defaultConfig = [
-        //autoload permissions.php
+        // autoload permissions.php passed to Rbac object config
         'autoload_config' => 'permissions',
-        //role field in the Users table
+        // role field in the Users table  passed to Rbac object config
         'role_field' => 'role',
-        //default role, used in new users registered and also as role matcher when no role is available
+        // default role, used in new users registered and also as role matcher when no role is available
+        // passed to Rbac object config
         'default_role' => 'user',
         /*
          * This is a quick roles-permissions implementation
@@ -91,21 +95,19 @@ class SimpleRbacAuthorize extends BaseAuthorize
     public function __construct(ComponentRegistry $registry, array $config = [])
     {
         parent::__construct($registry, $config);
-        $autoload = Hash::get($config, 'autoload_config');
-        $permissions = Hash::get($config, 'permissions');
-        $this->rbac = $this->rbacInstance($autoload, $permissions);
+        $this->rbac = $this->rbacInstance($config);
     }
 
     /**
      * Rbac instance for mocking
      *
-     * @param string $autoload
+     * @param string $config
      * @param array $permissions
      * @return Rbac
      */
-    protected function rbacInstance($autoload = null, $permissions = null)
+    protected function rbacInstance($config = [])
     {
-        return new Rbac(compact('autoload', 'permissions'));
+        return new Rbac($config);
     }
 
     /**
@@ -118,13 +120,7 @@ class SimpleRbacAuthorize extends BaseAuthorize
      */
     public function authorize($user, ServerRequest $request)
     {
-        $roleField = $this->getConfig('role_field');
-        $role = $this->getConfig('default_role');
-        if (Hash::check($user, $roleField)) {
-            $role = Hash::get($user, $roleField);
-        }
-
-        $allowed = $this->rbac->checkPermissions($user, $role, $request);
+        $allowed = $this->rbac->checkPermissions($user, $request);
 
         return $allowed;
     }

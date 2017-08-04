@@ -47,7 +47,7 @@ class ConfigProviderTest extends TestCase
      */
     public function testGetPermissionsNoAutoload()
     {
-        $this->configProvider->setConfig('autoload', null);
+        $this->configProvider->setConfig('autoload_config', null);
         $this->configProvider->setDefaultPermissions([
             [
                 'controller' => 'Posts',
@@ -65,7 +65,7 @@ class ConfigProviderTest extends TestCase
      */
     public function testGetPermissionsAutoloadMissingFileShouldReturnDefaultPermissions()
     {
-        $this->configProvider->setConfig('autoload', 'missingFile');
+        $this->configProvider->setConfig('autoload_config', 'missingFile');
         $permissions = $this->configProvider->getPermissions();
         $this->assertSame($this->configProvider->getDefaultPermissions(), $permissions);
     }
@@ -77,7 +77,7 @@ class ConfigProviderTest extends TestCase
      */
     public function testGetPermissionsAutoload()
     {
-        $this->configProvider->setConfig('autoload', 'existing');
+        $this->configProvider->setConfig('autoload_config', 'existing');
         $permissions = $this->configProvider->getPermissions();
         $this->assertSame([
             'controller' => 'Posts',

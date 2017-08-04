@@ -146,7 +146,7 @@ class RbacTest extends TestCase
         $this->rbac = new Rbac(compact('permissions'));
         $request = $this->_requestFromArray($requestParams);
 
-        $result = $this->rbac->checkPermissions($user, $user['role'], $request);
+        $result = $this->rbac->checkPermissions($user, $request);
         $this->assertSame($expected, $result, $msg);
     }
 
@@ -1025,7 +1025,7 @@ class RbacTest extends TestCase
         $rbac->setPermissions($permissions);
         $request = $this->_requestFromArray($requestParams);
 
-        $rbac->checkPermissions($user, $user['role'], $request);
+        $rbac->checkPermissions($user, $request);
     }
 
     public function badPermissionProvider()

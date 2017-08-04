@@ -34,7 +34,15 @@ class Rbac
      * @var array default configuration
      */
     protected $_defaultConfig = [
-        'autoload' => 'permissions',
+        // autoload permissions based on a configuration
+        'autoload_config' => 'permissions',
+        // role field in the Users table  passed to Rbac object config
+        'role_field' => 'role',
+        /**
+         * default role, used in new users registered and also as role matcher when no role is available
+         * passed to Rbac object config
+         */
+        'default_role' => 'user',
         /**
          * Used to change the controller key in the request, for example to "service" if we are using a
          * middleware
@@ -102,12 +110,15 @@ class Rbac
      * Permissions are processed based on the 'permissions' config values
      *
      * @param array $user current user array
-     * @param string $role effective role for the current user
      * @param \Psr\Http\Message\ServerRequestInterface $request request
      * @return bool true if there is a match in permissions
      */
-    public function checkPermissions(array $user, $role, ServerRequestInterface $request)
+    public function checkPermissions(array $user, ServerRequestInterface $request)
     {
+        $roleField = $this->getConfig('role_field');
+        $defaultRole = $this->getConfig('default_role');
+        $role = Hash::get($user, $roleField, $defaultRole);
+
         foreach ($this->permissions as $permission) {
             $allowed = $this->_matchPermission($permission, $user, $role, $request);
             if ($allowed !== null) {

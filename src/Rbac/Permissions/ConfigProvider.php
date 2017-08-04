@@ -26,7 +26,7 @@ class ConfigProvider extends AbstractProvider
      * @var array default configuration
      */
     protected $_defaultConfig = [
-        'autoload' => 'permissions',
+        'autoload_config' => 'permissions',
     ];
 
     /**
@@ -36,7 +36,7 @@ class ConfigProvider extends AbstractProvider
      */
     public function getPermissions()
     {
-        $autoload = $this->getConfig('autoload');
+        $autoload = $this->getConfig('autoload_config');
         if ($autoload) {
             return $this->_loadPermissions($autoload);
         }
