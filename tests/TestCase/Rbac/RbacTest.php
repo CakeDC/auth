@@ -127,36 +127,6 @@ class RbacTest extends TestCase
         $this->assertEmpty($this->rbac->getPermissions());
     }
 
-//    /**
-//     * test
-//     *
-//     * @return void
-//     */
-//    public function testLoadPermissions()
-//    {
-//        $this->simpleRbacAuthorize = $this->getMockBuilder('CakeDC\Auth\Auth\SimpleRbacAuthorize')
-//            ->disableOriginalConstructor()
-//            ->getMock();
-//        $reflectedClass = new ReflectionClass($this->simpleRbacAuthorize);
-//        $loadPermissions = $reflectedClass->getMethod('_loadPermissions');
-//        $loadPermissions->setAccessible(true);
-//        $permissions = $loadPermissions->invoke($this->simpleRbacAuthorize, 'missing');
-//        $this->assertEquals($this->defaultPermissions, $permissions);
-//    }
-
-//    /**
-//     * @covers CakeDC\Auth\Auth\SimpleRbacAuthorize::__construct
-//     */
-//    public function testConstructMissingPermissionsFile()
-//    {
-//        $this->simpleRbacAuthorize = $this->getMockBuilder('CakeDC\Auth\Auth\SimpleRbacAuthorize')
-//            ->setMethods(null)
-//            ->setConstructorArgs([$this->registry, ['autoload_config' => 'does-not-exist']])
-//            ->getMock();
-//        //we should have the default permissions
-//        $this->assertEquals($this->defaultPermissions, $this->simpleRbacAuthorize->getConfig('permissions'));
-//    }
-
     protected function assertConstructorPermissions($instance, $config, $permissions)
     {
         $reflectedClass = new ReflectionClass($instance);
@@ -167,30 +137,6 @@ class RbacTest extends TestCase
         $resultPermissions = $this->simpleRbacAuthorize->getConfig('permissions');
         $this->assertEquals($permissions, $resultPermissions);
     }
-
-//    /**
-//     * @covers CakeDC\Auth\Auth\SimpleRbacAuthorize::__construct
-//     */
-//    public function testConstructPermissionsFileHappy()
-//    {
-//        $permissions = [
-//            [
-//                'controller' => 'Test',
-//                'action' => 'test'
-//            ]
-//        ];
-//        $className = 'CakeDC\Auth\Auth\SimpleRbacAuthorize';
-//        $this->simpleRbacAuthorize = $this->getMockBuilder($className)
-//            ->setMethods(['_loadPermissions'])
-//            ->disableOriginalConstructor()
-//            ->getMock();
-//        $this->simpleRbacAuthorize
-//            ->expects($this->once())
-//            ->method('_loadPermissions')
-//            ->with('permissions-happy')
-//            ->will($this->returnValue($permissions));
-//        $this->assertConstructorPermissions($className, ['autoload_config' => 'permissions-happy'], $permissions);
-//    }
 
     /**
      * @dataProvider providerAuthorize

@@ -8,6 +8,7 @@
  * @copyright Copyright 2010 - 2017, Cake Development Corporation (https://www.cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
+
 namespace CakeDC\Auth\Rbac\Rules;
 
 use Cake\Http\ServerRequest;
@@ -52,7 +53,7 @@ class OwnerTest extends TestCase
      *
      * @return void
      */
-    public function testAllowed()
+    public function testAllowedUsingRequestParamsAsDefaults()
     {
         $this->request = $this->request
             ->withParam('plugin', 'CakeDC/Users')
@@ -62,6 +63,83 @@ class OwnerTest extends TestCase
             'id' => '00000000-0000-0000-0000-000000000001',
         ];
         $this->assertTrue($this->Owner->allowed($user, 'user', $this->request));
+    }
+
+    /**
+     * test
+     *
+     * @return void
+     */
+    public function testAllowedUsingRequestQuery()
+    {
+        $this->Owner->setConfig([
+                'tableKeyType' => Owner::TYPE_TABLE_KEY_QUERY,
+                'tableIdParamsKey' => 'key'
+            ]
+        );
+        $user = [
+            'id' => '00000000-0000-0000-0000-000000000001',
+        ];
+        $this->request = $this->request
+            ->withParam('plugin', 'CakeDC/Users')
+            ->withParam('controller', 'Posts')
+            ->withQueryParams([
+                'key' => $user['id'],
+            ]);
+
+        $this->assertTrue($this->Owner->allowed($user, 'user', $this->request));
+    }
+
+    /**
+     * test
+     *
+     * @return void
+     */
+    public function testAllowedUsingRequestData()
+    {
+        $this->Owner->setConfig([
+                'tableKeyType' => Owner::TYPE_TABLE_KEY_DATA,
+                'tableIdParamsKey' => 'key'
+            ]
+        );
+        $user = [
+            'id' => '00000000-0000-0000-0000-000000000001',
+        ];
+        $this->request = $this->request
+            ->withParam('plugin', 'CakeDC/Users')
+            ->withParam('controller', 'Posts')
+            ->withParsedBody([
+                'key' => $user['id'],
+            ]);
+
+        $this->assertTrue($this->Owner->allowed($user, 'user', $this->request));
+    }
+
+    /**
+     * test
+     *
+     * @return void
+     * @expectedException \RuntimeException
+     * @expectedExceptionMessage TypeTableKey "computer-says-no" is invalid, please use "params", "data" or "query"
+     */
+    public function testExceptionThrownWhenInvalidTypeTableKey()
+    {
+        $this->Owner->setConfig([
+                'tableKeyType' => 'computer-says-no',
+                'tableIdParamsKey' => 'key'
+            ]
+        );
+        $user = [
+            'id' => '00000000-0000-0000-0000-000000000001',
+        ];
+        $this->request = $this->request
+            ->withParam('plugin', 'CakeDC/Users')
+            ->withParam('controller', 'Posts')
+            ->withParsedBody([
+                'key' => $user['id'],
+            ]);
+
+        $this->Owner->allowed($user, 'user', $this->request);
     }
 
     /**

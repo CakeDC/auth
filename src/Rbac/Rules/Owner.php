@@ -11,7 +11,7 @@
 namespace CakeDC\Auth\Rbac\Rules;
 
 use Cake\Core\Exception\Exception;
-use Cake\Http\ServerRequest;
+use \Psr\Http\Message\ServerRequestInterface;
 use Cake\Utility\Hash;
 use OutOfBoundsException;
 
@@ -20,6 +20,10 @@ use OutOfBoundsException;
  */
 class Owner extends AbstractRule
 {
+    const TYPE_TABLE_KEY_PARAMS = 'params';
+    const TYPE_TABLE_KEY_QUERY = 'query';
+    const TYPE_TABLE_KEY_DATA = 'data';
+
     protected $_defaultConfig = [
         //field in the owned table matching the user_id
         'ownerForeignKey' => 'user_id',
@@ -33,8 +37,8 @@ class Owner extends AbstractRule
          *   example.com/controller/action [posted form with a field named post_id] would be
          *     tableKeyType => 'data', 'tableIdParamsKey' => 'post_id'
          */
-        'tableKeyType' => 'params',
-        // request->params key path to retrieve the owned table id
+        'tableKeyType' => self::TYPE_TABLE_KEY_PARAMS,
+        // key path to retrieve the owned table id from the specified params, query or data depending on the 'tableKeyType'
         'tableIdParamsKey' => 'pass.0',
         /*
          * define table to use or pick it from controller name defaults if null
@@ -55,11 +59,11 @@ class Owner extends AbstractRule
     /**
      * {@inheritdoc}
      */
-    public function allowed(array $user, $role, ServerRequest $request)
+    public function allowed(array $user, $role, ServerRequestInterface $request)
     {
         $table = $this->_getTable($request, $this->getConfig('table'));
-        //retrieve table id from request
-        $id = Hash::get($request->{$this->getConfig('tableKeyType')}, $this->getConfig('tableIdParamsKey'));
+        //retrieve entity id from request
+        $id = $this->getTableId($request);
         $userId = Hash::get($user, 'id');
 
         try {
@@ -91,5 +95,26 @@ class Owner extends AbstractRule
         ], $this->getConfig('conditions'));
 
         return $table->exists($conditions);
+    }
+
+    protected function getTableId(ServerRequestInterface $request)
+    {
+        $requestKeyTypeData = [];
+        $tableKeyType = $this->getConfig('tableKeyType');
+        switch ($tableKeyType) {
+            case self::TYPE_TABLE_KEY_PARAMS:
+                $requestKeyTypeData = $request->getAttribute('params') ?: [];
+                break;
+            case self::TYPE_TABLE_KEY_QUERY:
+                $requestKeyTypeData = $request->getQueryParams() ?: [];
+                break;
+            case self::TYPE_TABLE_KEY_DATA:
+                $requestKeyTypeData = $request->getParsedBody() ?: [];
+                break;
+            default:
+                throw new \RuntimeException(sprintf('TypeTableKey "%s" is invalid, please use "params", "data" or "query"', $tableKeyType));
+        }
+
+        return Hash::get($requestKeyTypeData, $this->getConfig('tableIdParamsKey'));
     }
 }

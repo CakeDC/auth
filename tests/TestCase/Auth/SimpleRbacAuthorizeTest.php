@@ -11,6 +11,7 @@
 
 namespace CakeDC\Auth\Auth\Test\TestCase\Auth;
 
+use Cake\Http\Server;
 use CakeDC\Auth\Auth\SimpleRbacAuthorize;
 use Cake\Controller\ComponentRegistry;
 use Cake\Http\Response;
@@ -53,7 +54,7 @@ class SimpleRbacAuthorizeTest extends TestCase
     }
 
     /**
-     * @covers \CakeDC\Auth\Auth\SimpleRbacAuthorize::__construct
+     * test
      */
     public function testConstruct()
     {
@@ -71,5 +72,26 @@ class SimpleRbacAuthorizeTest extends TestCase
             'id' => 1,
             'role' => 'test',
         ];
+
+        $this->simpleRbacAuthorize = new SimpleRbacAuthorize($this->registry, [
+            'autoload_config' => false,
+            'permissions' => [
+                [
+                    'plugin' => '*',
+                    'controller' => '*',
+                    'action' => '*',
+                    'role' => 'test',
+                ]
+            ]
+        ]);
+
+        $request = new ServerRequest();
+        $request = $request->withAttribute('params', [
+            'plugin' => 'Tests',
+            'controller' => 'Tests',
+            'action' => 'one'
+        ]);
+
+        $this->assertTrue($this->simpleRbacAuthorize->authorize($user, $request));
     }
 }

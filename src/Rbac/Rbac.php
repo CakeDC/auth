@@ -12,12 +12,12 @@
 namespace CakeDC\Auth\Rbac;
 
 use Cake\Core\InstanceConfigTrait;
-use Cake\Http\ServerRequest;
 use Cake\Log\LogTrait;
 use Cake\Utility\Hash;
 use Cake\Utility\Inflector;
 use CakeDC\Auth\Rbac\Permissions\AbstractProvider;
 use CakeDC\Auth\Rbac\Rules\Rule;
+use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LogLevel;
 
 /**
@@ -35,6 +35,16 @@ class Rbac
      */
     protected $_defaultConfig = [
         'autoload' => 'permissions',
+        /**
+         * Used to change the controller key in the request, for example to "service" if we are using a
+         * middleware
+         */
+        'controllerKey' => 'controller',
+        /**
+         * Used to change the controller key in the request, if we are using a
+         * middleware
+         */
+        'actionKey' => 'action',
         /**
          * Class used to provide the RBAC rules, by default from a config file, must extend AbstractProvider
          */
@@ -93,10 +103,10 @@ class Rbac
      *
      * @param array $user current user array
      * @param string $role effective role for the current user
-     * @param \Cake\Http\ServerRequest $request request
+     * @param \Psr\Http\Message\ServerRequestInterface $request request
      * @return bool true if there is a match in permissions
      */
-    public function checkPermissions(array $user, $role, ServerRequest $request)
+    public function checkPermissions(array $user, $role, ServerRequestInterface $request)
     {
         foreach ($this->permissions as $permission) {
             $allowed = $this->_matchPermission($permission, $user, $role, $request);
@@ -114,11 +124,11 @@ class Rbac
      * @param array $permission The permission configuration
      * @param array $user Current user data
      * @param string $role Effective user's role
-     * @param \Cake\Http\ServerRequest $request Current request
+     * @param ServerRequestInterface $request Current request
      *
-     * @return null|bool Null if permission is discarded, boolean if a final result is produced
+     * @return bool|null Null if permission is discarded, boolean if a final result is produced
      */
-    protected function _matchPermission(array $permission, array $user, $role, ServerRequest $request)
+    protected function _matchPermission(array $permission, array $user, $role, ServerRequestInterface $request)
     {
         $issetController = isset($permission['controller']) || isset($permission['*controller']);
         $issetAction = isset($permission['action']) || isset($permission['*action']);
@@ -143,12 +153,13 @@ class Rbac
 
         $permission += ['allowed' => true];
         $userArr = ['user' => $user];
+        $params = $request->getAttribute('params');
         $reserved = [
-            'prefix' => $request->getParam('prefix'),
-            'plugin' => $request->getParam('plugin'),
-            'extension' => $request->getParam('_ext'),
-            'controller' => $request->getParam('controller'),
-            'action' => $request->getParam('action'),
+            'prefix' => Hash::get($params, 'prefix'),
+            'plugin' => Hash::get($params, 'plugin'),
+            'extension' => Hash::get($params, '_ext'),
+            'controller' => Hash::get($params, 'controller'),
+            'action' => Hash::get($params, 'action'),
             'role' => $role
         ];
 
