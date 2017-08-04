@@ -22,7 +22,6 @@ use Cake\TestSuite\TestCase;
  */
 class OwnerTest extends TestCase
 {
-
     public $fixtures = [
         'plugin.CakeDC/Auth.posts',
         'plugin.CakeDC/Auth.users',
@@ -75,8 +74,7 @@ class OwnerTest extends TestCase
         $this->Owner->setConfig([
                 'tableKeyType' => Owner::TYPE_TABLE_KEY_QUERY,
                 'tableIdParamsKey' => 'key'
-            ]
-        );
+            ]);
         $user = [
             'id' => '00000000-0000-0000-0000-000000000001',
         ];
@@ -100,8 +98,7 @@ class OwnerTest extends TestCase
         $this->Owner->setConfig([
                 'tableKeyType' => Owner::TYPE_TABLE_KEY_DATA,
                 'tableIdParamsKey' => 'key'
-            ]
-        );
+            ]);
         $user = [
             'id' => '00000000-0000-0000-0000-000000000001',
         ];
@@ -127,8 +124,7 @@ class OwnerTest extends TestCase
         $this->Owner->setConfig([
                 'tableKeyType' => 'computer-says-no',
                 'tableIdParamsKey' => 'key'
-            ]
-        );
+            ]);
         $user = [
             'id' => '00000000-0000-0000-0000-000000000001',
         ];
