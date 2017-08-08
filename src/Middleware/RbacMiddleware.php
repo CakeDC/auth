@@ -8,7 +8,7 @@
  * @copyright Copyright 2010 - 2017, Cake Development Corporation (https://www.cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
-namespace Middleware;
+namespace CakeDC\Auth\Middleware;
 
 use Cake\Network\Exception\ForbiddenException;
 use CakeDC\Auth\Rbac\Rbac;
@@ -40,8 +40,11 @@ class RbacMiddleware
      *
      * @param Rbac $rbac
      */
-    public function __construct(Rbac $rbac)
+    public function __construct(Rbac $rbac = null)
     {
+        if (!$rbac) {
+            $rbac = new Rbac();
+        }
         $this->rbac = $rbac;
     }
 
@@ -56,11 +59,12 @@ class RbacMiddleware
     public function __invoke(ServerRequestInterface $request, ResponseInterface $response, $next)
     {
         $userEntity = $request->getAttribute('identity');
-        if (!$userEntity) {
-            throw new ForbiddenException();
+        $userData = [];
+        if ($userEntity) {
+            $userData = $userEntity->toArray();
         }
 
-        if (!$this->rbac->checkPermissions($userEntity->toArray(), $request)) {
+        if (!$this->rbac->checkPermissions($userData, $request)) {
             throw new ForbiddenException();
         }
 
