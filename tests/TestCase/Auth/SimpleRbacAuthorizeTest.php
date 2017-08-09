@@ -1044,6 +1044,7 @@ class SimpleRbacAuthorizeTest extends TestCase
             ->setMethods(['_loadPermissions', 'log'])
             ->disableOriginalConstructor()
             ->getMock();
+        $simpleRbacAuthorize->setConfig('log', true);
         $simpleRbacAuthorize
             ->expects($this->once())
             ->method('log')

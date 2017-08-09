@@ -10,11 +10,11 @@ Example, in your AppController, you can configure the way the SimpleRbac works b
 
 ```php
 $config['Auth']['authorize']['CakeDC/Users.SimpleRbac'] = [
-        //autoload permissions.php
+        // autoload permissions.php
         'autoload_config' => 'permissions',
-        //role field in the Users table
+        // role field in the Users table
         'role_field' => 'role',
-        //default role, used in new users registered and also as role matcher when no role is available
+        // default role, used in new users registered and also as role matcher when no role is available
         'default_role' => 'user',
         /*
          * This is a quick roles-permissions implementation
@@ -33,6 +33,8 @@ $config['Auth']['authorize']['CakeDC/Users.SimpleRbac'] = [
          * Suggestion: put your rules into a specific config file
          */
         'permissions' => [], // you could set an array of permissions or load them using a file 'autoload_config'
+        // log will default to the 'debug' value, matched rbac rules will be logged in debug.log by default when debug enabled
+        'log' => false
     ];
 ```
 
@@ -83,7 +85,7 @@ Permission rules syntax
 
 * For Superadmin access (permission to access ALL THE THINGS in your app) there is a specific Authorize Object provided
 * Permissions that do not have `controller` and/or `action` keys (or the inverted versions) are automatically discarded in order to prevent errors.
-If you need to match all controllers/actions you can explicitly do `'contoller' => '*'`
+If you need to match all controllers/actions you can explicitly do `'controller' => '*'`
 * Key `user` (or the inverted version) is illegal (as it's impossible to match an array) and any permission containing it will be discarded
 * If the permission is discarded for the reasons stated above, a debug message will be logged
 
