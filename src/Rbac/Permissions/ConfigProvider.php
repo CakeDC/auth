@@ -57,6 +57,9 @@ class ConfigProvider extends AbstractProvider
         try {
             Configure::load($key, 'default');
             $permissions = Configure::read('CakeDC/Auth.permissions');
+            if (!$permissions && $legacyPermissions = Configure::read('Users.SimpleRbac.permissions')) {
+                $permissions = $legacyPermissions;
+            }
         } catch (\Exception $ex) {
             $msg = sprintf('Missing configuration file: "config/%s.php". Using default permissions', $key);
             $this->log($msg, LogLevel::WARNING);

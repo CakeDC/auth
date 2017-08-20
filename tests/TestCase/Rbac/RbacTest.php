@@ -112,7 +112,7 @@ class RbacTest extends TestCase
     public function testConstructBadProvider()
     {
         $this->rbac = new Rbac([
-            'permissionsProviderClass' => '\Exception',
+            'permissions_provider_class' => '\Exception',
         ]);
     }
 

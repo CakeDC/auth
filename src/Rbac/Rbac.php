@@ -12,6 +12,7 @@
 namespace CakeDC\Auth\Rbac;
 
 use Cake\Core\InstanceConfigTrait;
+use Cake\Error\Debugger;
 use Cake\Log\LogTrait;
 use Cake\Utility\Hash;
 use Cake\Utility\Inflector;
@@ -47,16 +48,16 @@ class Rbac
          * Used to change the controller key in the request, for example to "service" if we are using a
          * middleware
          */
-        'controllerKey' => 'controller',
+        'controller_key' => 'controller',
         /**
          * Used to change the controller key in the request, if we are using a
          * middleware
          */
-        'actionKey' => 'action',
+        'action_key' => 'action',
         /**
          * Class used to provide the RBAC rules, by default from a config file, must extend AbstractProvider
          */
-        'permissionsProviderClass' => '\CakeDC\Auth\Rbac\Permissions\ConfigProvider',
+        'permissions_provider_class' => '\CakeDC\Auth\Rbac\Permissions\ConfigProvider',
         /**
          * Used to set permissions array from configuration, ignoring the permissionsProvider
          */
@@ -80,11 +81,13 @@ class Rbac
         if ($permissions !== null) {
             $this->permissions = $permissions;
         } else {
-            $permissionsProviderClass = $this->getConfig('permissionsProviderClass');
+            $permissionsProviderClass = $this->getConfig('permissions_provider_class');
             if (!is_subclass_of($permissionsProviderClass, AbstractProvider::class)) {
                 throw new \RuntimeException(sprintf('Class "%s" must extend AbstractProvider', $permissionsProviderClass));
             }
-            $permissionsProvider = new $permissionsProviderClass($config);
+            $permissionsProvider = new $permissionsProviderClass([
+                'autoload_config' => $this->getConfig('autoload_config'),
+            ]);
             $this->permissions = $permissionsProvider->getPermissions();
         }
     }
@@ -171,7 +174,7 @@ class Rbac
             'extension' => Hash::get($params, '_ext'),
             'controller' => Hash::get($params, 'controller'),
             'action' => Hash::get($params, 'action'),
-            'role' => $role
+            'role' => $role,
         ];
 
         foreach ($permission as $key => $value) {
@@ -184,8 +187,10 @@ class Rbac
                 $return = (bool)call_user_func($value, $user, $role, $request);
             } elseif ($value instanceof Rule) {
                 $return = (bool)$value->allowed($user, $role, $request);
+            } elseif ($key === 'bypassAuth' && $value === true) {
+                return true;
             } elseif ($key === 'allowed') {
-                $return = (bool)$value;
+                $return = !empty($user) && (bool)$value;
             } elseif (array_key_exists($key, $reserved)) {
                 $return = $this->_matchOrAsterisk($value, $reserved[$key], true);
             } else {
