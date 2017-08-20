@@ -174,6 +174,7 @@ class RbacMiddleware
         $redirectResponse = $response
             ->withAddedHeader('Location', Router::url($url, true))
             ->withStatus(302);
+
         return $redirectResponse;
     }
 }
