@@ -11,13 +11,12 @@
 
 namespace CakeDC\Auth\Rbac;
 
+use CakeDC\Auth\Rbac\Permissions\AbstractProvider;
+use CakeDC\Auth\Rbac\Rules\Rule;
 use Cake\Core\InstanceConfigTrait;
-use Cake\Error\Debugger;
 use Cake\Log\LogTrait;
 use Cake\Utility\Hash;
 use Cake\Utility\Inflector;
-use CakeDC\Auth\Rbac\Permissions\AbstractProvider;
-use CakeDC\Auth\Rbac\Rules\Rule;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LogLevel;
 
@@ -101,7 +100,8 @@ class Rbac
     }
 
     /**
-     * @param array $permissions
+     * @param array $permissions permissions
+     * @return void
      */
     public function setPermissions($permissions)
     {

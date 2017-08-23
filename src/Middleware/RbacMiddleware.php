@@ -11,11 +11,11 @@
 
 namespace CakeDC\Auth\Middleware;
 
+use CakeDC\Auth\Rbac\Rbac;
 use Cake\Core\InstanceConfigTrait;
 use Cake\Network\Exception\ForbiddenException;
 use Cake\Routing\Router;
 use Cake\Utility\Hash;
-use CakeDC\Auth\Rbac\Rbac;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -112,8 +112,8 @@ class RbacMiddleware
     /**
      * RbacMiddleware constructor
      *
-     * @param Rbac $rbac
-     * @param array $options
+     * @param Rbac $rbac rbac instance
+     * @param array $options options
      */
     public function __construct(Rbac $rbac = null, array $options = [])
     {
@@ -148,6 +148,14 @@ class RbacMiddleware
         return $next($request, $response);
     }
 
+    /**
+     * Handles a not authorized request
+     *
+     * @param array $userData user data
+     * @param ServerRequestInterface $request request
+     * @param ResponseInterface $response response
+     * @return ResponseInterface
+     */
     protected function notAuthorized(array $userData, ServerRequestInterface $request, ResponseInterface $response)
     {
         $behavior = $this->getConfig('unauthorizedBehavior');
@@ -165,7 +173,9 @@ class RbacMiddleware
     }
 
     /**
-     * @param ResponseInterface $response
+     * Redirects to unauthorizedRedirect the response
+     *
+     * @param ResponseInterface $response response
      * @return ResponseInterface
      */
     protected function unauthorizedRedirect(ResponseInterface $response)

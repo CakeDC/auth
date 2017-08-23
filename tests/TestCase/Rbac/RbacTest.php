@@ -11,13 +11,10 @@
 
 namespace CakeDC\Auth\Test\TestCase\Rbac;
 
-use CakeDC\Auth\Auth\SimpleRbacAuthorize;
-use Cake\Controller\ComponentRegistry;
-use Cake\Http\Response;
+use CakeDC\Auth\Rbac\Rbac;
 use Cake\Http\ServerRequest;
 use Cake\TestSuite\TestCase;
 use Cake\Utility\Hash;
-use CakeDC\Auth\Rbac\Rbac;
 use Psr\Log\LogLevel;
 use ReflectionClass;
 

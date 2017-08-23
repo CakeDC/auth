@@ -11,14 +11,11 @@
 
 namespace CakeDC\Auth\Test\TestCase\Auth;
 
-use Cake\Http\Server;
 use CakeDC\Auth\Auth\SimpleRbacAuthorize;
 use Cake\Controller\ComponentRegistry;
 use Cake\Http\Response;
 use Cake\Http\ServerRequest;
 use Cake\TestSuite\TestCase;
-use Cake\Utility\Hash;
-use ReflectionClass;
 
 class SimpleRbacAuthorizeTest extends TestCase
 {

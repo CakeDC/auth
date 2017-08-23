@@ -25,6 +25,10 @@ abstract class AbstractProvider
     use InstanceConfigTrait;
     use LogTrait;
 
+    /**
+     * AbstractProvider constructor.
+     * @param array $config config
+     */
     public function __construct($config = [])
     {
         $this->setConfig($config);
@@ -83,7 +87,8 @@ abstract class AbstractProvider
     }
 
     /**
-     * @param array $defaultPermissions
+     * @param array $defaultPermissions default permissions
+     * @return void
      */
     public function setDefaultPermissions($defaultPermissions)
     {

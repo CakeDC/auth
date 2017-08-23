@@ -11,9 +11,9 @@
 namespace CakeDC\Auth\Rbac\Rules;
 
 use Cake\Core\Exception\Exception;
-use \Psr\Http\Message\ServerRequestInterface;
 use Cake\Utility\Hash;
 use OutOfBoundsException;
+use Psr\Http\Message\ServerRequestInterface;
 
 /**
  * Owner rule class, used to match ownership permissions
@@ -97,6 +97,13 @@ class Owner extends AbstractRule
         return $table->exists($conditions);
     }
 
+    /**
+     * Get the table id, inspecting the request
+     *
+     * @param ServerRequestInterface $request request
+     * @return string
+     * @throws \RuntimeException when invalid table key is used
+     */
     protected function getTableId(ServerRequestInterface $request)
     {
         $requestKeyTypeData = [];

@@ -11,11 +11,8 @@
 
 namespace CakeDC\Auth\Test\TestCase\Rbac\Permissions;
 
-use Cake\Http\ServerRequest;
-use Cake\Network\Request;
-use Cake\ORM\TableRegistry;
-use Cake\TestSuite\TestCase;
 use CakeDC\Auth\Rbac\Permissions\ConfigProvider;
+use Cake\TestSuite\TestCase;
 
 /**
  * ConfigProviderTest

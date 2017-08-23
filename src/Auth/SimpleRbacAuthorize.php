@@ -11,12 +11,11 @@
 
 namespace CakeDC\Auth\Auth;
 
+use CakeDC\Auth\Rbac\Rbac;
 use Cake\Auth\BaseAuthorize;
 use Cake\Controller\ComponentRegistry;
 use Cake\Http\ServerRequest;
 use Cake\Log\LogTrait;
-use Cake\Utility\Hash;
-use CakeDC\Auth\Rbac\Rbac;
 
 /**
  * Simple Rbac Authorize
@@ -101,8 +100,7 @@ class SimpleRbacAuthorize extends BaseAuthorize
     /**
      * Rbac instance for mocking
      *
-     * @param string $config
-     * @param array $permissions
+     * @param array $config configuration
      * @return Rbac
      */
     protected function rbacInstance($config = [])
