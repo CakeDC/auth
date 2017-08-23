@@ -56,7 +56,7 @@ class RbacMiddlewareTest extends TestCase
     {
         $request = new ServerRequest();
         $response = new Response();
-        $next = function() {
+        $next = function () {
             return 'unreachable';
         };
         $rbacMiddleware = $this->rbacMiddleware;
@@ -79,7 +79,7 @@ class RbacMiddlewareTest extends TestCase
             'controller' => 'Users',
             'action' => 'login',
         ]);
-        $next = function($request, Response $response) {
+        $next = function ($request, Response $response) {
             $this->assertSame(302, $response->getStatusCode());
             $this->assertSame('/login', $response->getHeaderLine('Location'));
         };
@@ -100,7 +100,7 @@ class RbacMiddlewareTest extends TestCase
         ];
         $request = $request->withAttribute('identity', $userData);
         $response = new Response();
-        $next = function() {
+        $next = function () {
             return 'pass';
         };
         $rbac = $this->getMockBuilder(Rbac::class)
