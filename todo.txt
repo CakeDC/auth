@@ -1,0 +1,6 @@
+* add unit tests for bypassAuth
+* add rbac alone in documentation
+* add bypassAuth to the docs
+* extract matcher into another class
+[next release]
+* refactor rbac to use service instead of controller, to be used from API
