@@ -9,7 +9,7 @@
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
-namespace CakeDC\Auth\Auth\Test\TestCase\Auth;
+namespace CakeDC\Auth\Test\TestCase\Auth;
 
 use Cake\Http\Server;
 use CakeDC\Auth\Auth\SimpleRbacAuthorize;

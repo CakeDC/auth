@@ -9,12 +9,13 @@
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
-namespace CakeDC\Auth\Rbac\Rules;
+namespace CakeDC\Auth\Test\TestCase\Rbac\Rules;
 
 use Cake\Http\ServerRequest;
 use Cake\Network\Request;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
+use CakeDC\Auth\Rbac\Rules\Owner;
 
 /**
  * @property Owner Owner

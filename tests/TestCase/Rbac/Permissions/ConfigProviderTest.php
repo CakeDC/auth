@@ -9,12 +9,13 @@
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
-namespace CakeDC\Auth\Rbac\Permissions;
+namespace CakeDC\Auth\Test\TestCase\Rbac\Permissions;
 
 use Cake\Http\ServerRequest;
 use Cake\Network\Request;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
+use CakeDC\Auth\Rbac\Permissions\ConfigProvider;
 
 /**
  * ConfigProviderTest
