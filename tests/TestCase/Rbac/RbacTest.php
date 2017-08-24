@@ -1132,6 +1132,7 @@ class RbacTest extends TestCase
             ->method('log')
             ->with($expectedMsg, LogLevel::DEBUG);
 
+        $rbac->setConfig('log', true);
         $rbac->setPermissions($permissions);
         $request = $this->_requestFromArray($requestParams);
 

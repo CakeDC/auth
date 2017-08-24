@@ -25,6 +25,30 @@ class SimpleRbacAuthorizeTest extends TestCase
      */
     protected $simpleRbacAuthorize;
 
+    protected $defaultPermissions = [
+        //admin role allowed to use CakeDC\Auth\Auth plugin actions
+        [
+            'role' => 'admin',
+            'plugin' => '*',
+            'controller' => '*',
+            'action' => '*',
+        ],
+        //specific actions allowed for the user role in Users plugin
+        [
+            'role' => 'user',
+            'plugin' => 'CakeDC/Users',
+            'controller' => 'Users',
+            'action' => ['profile', 'logout'],
+        ],
+        //all roles allowed to Pages/display
+        [
+            'role' => '*',
+            'plugin' => null,
+            'controller' => ['Pages'],
+            'action' => ['display'],
+        ],
+    ];
+
     /**
      * Sets up the fixture, for example, opens a network connection.
      * This method is called before a test is executed.

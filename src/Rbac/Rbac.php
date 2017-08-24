@@ -11,8 +11,10 @@
 
 namespace CakeDC\Auth\Rbac;
 
+use CakeDC\Auth\Auth\Rbac\PermissionMatchResult;
 use CakeDC\Auth\Rbac\Permissions\AbstractProvider;
 use CakeDC\Auth\Rbac\Rules\Rule;
+use Cake\Core\Configure;
 use Cake\Core\InstanceConfigTrait;
 use Cake\Log\LogTrait;
 use Cake\Utility\Hash;
@@ -36,31 +38,16 @@ class Rbac
     protected $_defaultConfig = [
         // autoload permissions based on a configuration
         'autoload_config' => 'permissions',
-        // role field in the Users table  passed to Rbac object config
+        // role field in the Users table
         'role_field' => 'role',
-        /**
-         * default role, used in new users registered and also as role matcher when no role is available
-         * passed to Rbac object config
-         */
+        // default role, used in new users registered and also as role matcher when no role is available
         'default_role' => 'user',
-        /**
-         * Used to change the controller key in the request, for example to "service" if we are using a
-         * middleware
-         */
-        'controller_key' => 'controller',
-        /**
-         * Used to change the controller key in the request, if we are using a
-         * middleware
-         */
-        'action_key' => 'action',
-        /**
-         * Class used to provide the RBAC rules, by default from a config file, must extend AbstractProvider
-         */
+        // Class used to provide the RBAC rules, by default from a config file, must extend AbstractProvider
         'permissions_provider_class' => '\CakeDC\Auth\Rbac\Permissions\ConfigProvider',
-        /**
-         * Used to set permissions array from configuration, ignoring the permissionsProvider
-         */
+        // Used to set permissions array from configuration, ignoring the permissionsProvider
         'permissions' => null,
+        // 'log' will match the value of 'debug' if not set on configuration
+        'log' => false,
     ];
 
     /**
@@ -75,6 +62,9 @@ class Rbac
      */
     public function __construct($config = [])
     {
+        if (!isset($config['log'])) {
+            $config['log'] = Configure::read('debug');
+        }
         $this->setConfig($config);
         $permissions = $this->getConfig('permissions');
         if ($permissions !== null) {
@@ -123,9 +113,12 @@ class Rbac
         $role = Hash::get($user, $roleField, $defaultRole);
 
         foreach ($this->permissions as $permission) {
-            $allowed = $this->_matchPermission($permission, $user, $role, $request);
-            if ($allowed !== null) {
-                return $allowed;
+            $matchResult = $this->_matchPermission($permission, $user, $role, $request);
+            if ($matchResult !== null) {
+                if ($this->getConfig('log')) {
+                    $this->log($matchResult->getReason(), LogLevel::DEBUG);
+                }
+                return $matchResult->isAllowed();
             }
         }
 
@@ -140,7 +133,8 @@ class Rbac
      * @param string $role Effective user's role
      * @param ServerRequestInterface $request Current request
      *
-     * @return bool|null Null if permission is discarded, boolean if a final result is produced
+     * @return null|PermissionMatchResult Null if permission is discarded, PermissionMatchResult if a final
+     * result is produced
      */
     protected function _matchPermission(array $permission, array $user, $role, ServerRequestInterface $request)
     {
@@ -149,20 +143,14 @@ class Rbac
         $issetUser = isset($permission['user']) || isset($permission['*user']);
 
         if (!$issetController || !$issetAction) {
-            $this->log(
-                "Cannot evaluate permission when 'controller' and/or 'action' keys are absent",
-                LogLevel::DEBUG
-            );
+            $reason = "Cannot evaluate permission when 'controller' and/or 'action' keys are absent";
 
-            return false;
+            return new PermissionMatchResult(false, $reason);
         }
         if ($issetUser) {
-            $this->log(
-                "Permission key 'user' is illegal, cannot evaluate the permission",
-                LogLevel::DEBUG
-            );
+            $reason = "Permission key 'user' is illegal, cannot evaluate the permission";
 
-            return false;
+            return new PermissionMatchResult(false, $reason);
         }
 
         $permission += ['allowed' => true];
@@ -188,7 +176,7 @@ class Rbac
             } elseif ($value instanceof Rule) {
                 $return = (bool)$value->allowed($user, $role, $request);
             } elseif ($key === 'bypassAuth' && $value === true) {
-                return true;
+                $return = true;
             } elseif ($key === 'allowed') {
                 $return = !empty($user) && (bool)$value;
             } elseif (array_key_exists($key, $reserved)) {
@@ -204,9 +192,14 @@ class Rbac
             if ($inverse) {
                 $return = !$return;
             }
-            if ($key === 'allowed') {
-                return $return;
-            }
+            if ($key === 'allowed' || $key === 'bypassAuth') {
+                $reason = sprintf(
+                    'For %s --> Rule matched %s with result = %s',
+                    json_encode($reserved),
+                    json_encode($permission),
+                    $return
+                );
+                return new PermissionMatchResult($return, $reason);            }
             if (!$return) {
                 break;
             }
@@ -227,10 +220,6 @@ class Rbac
     protected function _matchOrAsterisk($possibleValues, $value, $allowEmpty = false)
     {
         $possibleArray = (array)$possibleValues;
-
-        if ($allowEmpty && empty($possibleArray) && $value === null) {
-            return true;
-        }
 
         if ($possibleValues === '*' ||
             in_array($value, $possibleArray) ||
