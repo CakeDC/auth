@@ -11,7 +11,6 @@
 
 namespace CakeDC\Auth\Rbac;
 
-use CakeDC\Auth\Auth\Rbac\PermissionMatchResult;
 use CakeDC\Auth\Rbac\Permissions\AbstractProvider;
 use CakeDC\Auth\Rbac\Rules\Rule;
 use Cake\Core\Configure;

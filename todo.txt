@@ -1,4 +1,0 @@
-[next release]
-* extract matcher into another class
-* refactor rbac to use service instead of controller, to be used from API
-* move logging to Rbac instead of SimpleRbacAuthorize
