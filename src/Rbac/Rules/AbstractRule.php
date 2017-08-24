@@ -8,15 +8,16 @@
  * @copyright Copyright 2010 - 2017, Cake Development Corporation (https://www.cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
-namespace CakeDC\Auth\Auth\Rules;
+namespace CakeDC\Auth\Rbac\Rules;
 
 use Cake\Core\InstanceConfigTrait;
 use Cake\Datasource\ModelAwareTrait;
-use Cake\Http\ServerRequest;
 use Cake\ORM\Locator\LocatorAwareTrait;
 use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;
+use Cake\Utility\Hash;
 use OutOfBoundsException;
+use Psr\Http\Message\ServerRequestInterface;
 
 /**
  * Class AbstractRule
@@ -45,12 +46,11 @@ abstract class AbstractRule implements Rule
     /**
      * Get a table from the alias, table object or inspecting the request for a default table
      *
-     * @param \Cake\Http\ServerRequest $request request
+     * @param \Psr\Http\Message\ServerRequestInterface $request request
      * @param mixed $table table
      * @return \Cake\Datasource\RepositoryInterface
-     * @throws \OutOfBoundsException if table alias is empty
      */
-    protected function _getTable(ServerRequest $request, $table = null)
+    protected function _getTable(ServerRequestInterface $request, $table = null)
     {
         if (empty($table)) {
             return $this->_getTableFromRequest($request);
@@ -65,14 +65,16 @@ abstract class AbstractRule implements Rule
     /**
      * Inspect the request and try to retrieve a table based on the current controller
      *
-     * @param \Cake\Http\ServerRequest $request request
+     * @param \Psr\Http\Message\ServerRequestInterface $request request
      * @return \Cake\Datasource\RepositoryInterface
      * @throws \OutOfBoundsException if table alias can't be extracted from request
      */
-    protected function _getTableFromRequest(ServerRequest $request)
+    protected function _getTableFromRequest(ServerRequestInterface $request)
     {
-        $plugin = $request->getParam('plugin');
-        $controller = $request->getParam('controller');
+        $params = $request->getAttribute('params');
+
+        $plugin = Hash::get($params, 'plugin');
+        $controller = Hash::get($params, 'controller');
         $modelClass = ($plugin ? $plugin . '.' : '') . $controller;
 
         $this->modelFactory('Table', [$this->tableLocator(), 'get']);
@@ -88,9 +90,9 @@ abstract class AbstractRule implements Rule
      *
      * @param array $user Auth array with the logged in data
      * @param string $role role of the user
-     * @param \Cake\Http\ServerRequest $request current request, used to get a default table if not provided
+     * @param \Psr\Http\Message\ServerRequestInterface $request current request, used to get a default table if not provided
      * @return bool
      * @throws \OutOfBoundsException if table is not found or it doesn't have the expected fields
      */
-    abstract public function allowed(array $user, $role, ServerRequest $request);
+    abstract public function allowed(array $user, $role, ServerRequestInterface $request);
 }

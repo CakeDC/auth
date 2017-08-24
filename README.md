@@ -10,7 +10,7 @@ CakeDC Auth Objects is a refactor of the existing Auth objects present in the Ca
 to let anyone else use them in their projects.
 
 It covers the following features:
-* Simple RBAC
+* RBAC
 * Remember me (Cookie)
 * ApiAuthenticate for simple token based login
 

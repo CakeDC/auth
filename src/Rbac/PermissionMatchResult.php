@@ -9,7 +9,7 @@
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
-namespace CakeDC\Auth\Auth\Rbac;
+namespace CakeDC\Auth\Rbac;
 
 /**
  * Provides additional context on the result of a permission match operation,

@@ -9,7 +9,7 @@
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
-namespace CakeDC\Auth\Auth\Test\TestCase\Auth;
+namespace CakeDC\Auth\Test\TestCase\Auth;
 
 use CakeDC\Auth\Auth\SuperuserAuthorize;
 use Cake\Controller\ComponentRegistry;
