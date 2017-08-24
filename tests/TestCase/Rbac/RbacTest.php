@@ -15,6 +15,7 @@ use CakeDC\Auth\Rbac\Rbac;
 use Cake\Http\ServerRequest;
 use Cake\TestSuite\TestCase;
 use Cake\Utility\Hash;
+use CakeDC\Auth\Rbac\Rules\Owner;
 use Psr\Log\LogLevel;
 use ReflectionClass;
 
@@ -149,7 +150,7 @@ class RbacTest extends TestCase
 
     public function providerAuthorize()
     {
-        $trueRuleMock = $this->getMockBuilder(Rule::class)
+        $trueRuleMock = $this->getMockBuilder(Owner::class)
             ->setMethods(['allowed'])
             ->getMock();
         $trueRuleMock->expects($this->any())
@@ -997,6 +998,118 @@ class RbacTest extends TestCase
                 //expected
                 true
             ],
+            'bypass-auth' => [
+                //permissions
+                [[
+                    'plugin' => 'Tests',
+                    'controller' => 'Tests',
+                    'action' => 'test',
+                    'bypassAuth' => true,
+                ]],
+                //user
+                [],
+                //request
+                [
+                    'plugin' => 'Tests',
+                    'controller' => 'Tests',
+                    'action' => 'test'
+                ],
+                //expected
+                true,
+            ],
+            'bypass-auth-callable' => [
+                //permissions
+                [[
+                    'plugin' => 'Tests',
+                    'controller' => 'Tests',
+                    'action' => 'test',
+                    'bypassAuth' => false,
+                ]],
+                //user
+                [],
+                //request
+                [
+                    'plugin' => 'Tests',
+                    'controller' => 'Tests',
+                    'action' => 'test'
+                ],
+                //expected
+                false,
+            ],
+            'bypass-auth-rule-not-allowed-order-matters' => [
+                //permissions
+                [[
+                    'plugin' => 'Tests',
+                    'controller' => 'Tests',
+                    'action' => 'test',
+                    'role' => '*',
+                    'bypassAuth' => true,
+                    'allowed' => false,
+                ]],
+                //user
+                [
+                    'id' => 1,
+                    'username' => 'luke',
+                    'role' => 'test',
+                ],
+                //request
+                [
+                    'plugin' => 'Tests',
+                    'controller' => 'Tests',
+                    'action' => 'test'
+                ],
+                //expected
+                true,
+            ],
+            'rule-not-allowed-bypass-auth-order-matters' => [
+                //permissions
+                [[
+                    'plugin' => 'Tests',
+                    'controller' => 'Tests',
+                    'action' => 'test',
+                    'role' => '*',
+                    'allowed' => false,
+                    'bypassAuth' => true,
+                ]],
+                //user
+                [
+                    'id' => 1,
+                    'username' => 'luke',
+                    'role' => 'test',
+                ],
+                //request
+                [
+                    'plugin' => 'Tests',
+                    'controller' => 'Tests',
+                    'action' => 'test'
+                ],
+                //expected
+                false,
+            ],
+            'bypass-auth-user-not-authorized-another-role' => [
+                //permissions
+                [[
+                    'plugin' => 'Tests',
+                    'controller' => 'Tests',
+                    'action' => 'test',
+                    'role' => 'admin',
+                    'bypassAuth' => true,
+                ]],
+                //user
+                [
+                    'id' => 1,
+                    'username' => 'luke',
+                    'role' => 'test',
+                ],
+                //request
+                [
+                    'plugin' => 'Tests',
+                    'controller' => 'Tests',
+                    'action' => 'test'
+                ],
+                //expected
+                false,
+            ],
         ];
     }
 
@@ -1167,5 +1280,12 @@ class RbacTest extends TestCase
             ->withParam('action', Hash::get($params, 'action'))
             ->withParam('prefix', Hash::get($params, 'prefix'))
             ->withParam('_ext', Hash::get($params, '_ext'));
+    }
+
+    public function testGetPermissions()
+    {
+        $permissions = ['test'];
+        $this->rbac->setPermissions($permissions);
+        $this->assertSame($permissions, $this->rbac->getPermissions());
     }
 }
