@@ -11,16 +11,8 @@
 
 namespace CakeDC\Auth\Auth\Test\TestCase\Auth\Auth;
 
-use CakeDC\Auth\Auth\Rbac\PermissionMatchResult;
-use CakeDC\Auth\Auth\Rules\Rule;
-use CakeDC\Auth\Auth\SimpleRbacAuthorize;
-use Cake\Controller\ComponentRegistry;
-use Cake\Http\Response;
-use Cake\Http\ServerRequest;
+use CakeDC\Auth\Rbac\PermissionMatchResult;
 use Cake\TestSuite\TestCase;
-use Cake\Utility\Hash;
-use Psr\Log\LogLevel;
-use ReflectionClass;
 
 class PermissionMatchResultTest extends TestCase
 {

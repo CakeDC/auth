@@ -8,9 +8,9 @@
  * @copyright Copyright 2010 - 2017, Cake Development Corporation (https://www.cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
-namespace CakeDC\Auth\Auth\Rules;
+namespace CakeDC\Auth\Rbac\Rules;
 
-use Cake\Http\ServerRequest;
+use \Psr\Http\Message\ServerRequestInterface;
 
 interface Rule
 {
@@ -19,8 +19,8 @@ interface Rule
      *
      * @param array $user Auth array with the logged in data
      * @param string $role role of the user
-     * @param \Cake\Http\ServerRequest $request current request, used to get a default table if not provided
+     * @param \Psr\Http\Message\ServerRequestInterface $request current request, used to get a default table if not provided
      * @return bool
      */
-    public function allowed(array $user, $role, ServerRequest $request);
+    public function allowed(array $user, $role, ServerRequestInterface $request);
 }
