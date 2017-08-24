@@ -67,11 +67,11 @@ abstract class AbstractProvider
      * Provide permissions array, for example
      * [
      *     [
-                'role' => '*',
-                'plugin' => null,
-                'controller' => ['Pages'],
-                'action' => ['display'],
-            ],
+     *          'role' => '*',
+     *          'plugin' => null,
+     *          'controller' => ['Pages'],
+     *          'action' => ['display'],
+     *      ],
      * ]
      *
      * @return array Array of permissions
