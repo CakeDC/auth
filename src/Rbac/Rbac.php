@@ -118,6 +118,7 @@ class Rbac
                 if ($this->getConfig('log')) {
                     $this->log($matchResult->getReason(), LogLevel::DEBUG);
                 }
+
                 return $matchResult->isAllowed();
             }
         }
@@ -199,7 +200,9 @@ class Rbac
                     json_encode($permission),
                     $return
                 );
-                return new PermissionMatchResult($return, $reason);            }
+
+                return new PermissionMatchResult($return, $reason);
+            }
             if (!$return) {
                 break;
             }

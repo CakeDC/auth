@@ -12,10 +12,10 @@
 namespace CakeDC\Auth\Test\TestCase\Rbac;
 
 use CakeDC\Auth\Rbac\Rbac;
+use CakeDC\Auth\Rbac\Rules\Owner;
 use Cake\Http\ServerRequest;
 use Cake\TestSuite\TestCase;
 use Cake\Utility\Hash;
-use CakeDC\Auth\Rbac\Rules\Owner;
 use Psr\Log\LogLevel;
 use ReflectionClass;
 
