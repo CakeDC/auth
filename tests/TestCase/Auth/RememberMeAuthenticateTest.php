@@ -13,6 +13,7 @@ namespace CakeDC\Auth\Test\TestCase\Auth;
 
 use CakeDC\Auth\Auth\RememberMeAuthenticate;
 use Cake\Controller\ComponentRegistry;
+use Cake\Core\Configure;
 use Cake\Http\Response;
 use Cake\Http\ServerRequest;
 use Cake\TestSuite\TestCase;
@@ -80,6 +81,32 @@ class RememberMeAuthenticateTest extends TestCase
         $this->rememberMe = new RememberMeAuthenticate($registry);
         $result = $this->rememberMe->authenticate($request, new Response());
         $this->assertEquals('user-1', $result['username']);
+    }
+
+    /**
+     * test
+     *
+     * @return void
+     */
+    public function testAuthenticateDisabledRememberMe()
+    {
+        Configure::write('Users.RememberMe.active', false);
+        $request = new ServerRequest('/');
+        $request = $request->env('HTTP_USER_AGENT', 'user-agent');
+        $mockCookie = $this->getMockBuilder('Cake\Controller\Component\CookieComponent')
+                ->disableOriginalConstructor()
+                ->setMethods(['check', 'read'])
+                ->getMock();
+        $mockCookie
+                ->expects($this->never())
+                ->method('read');
+
+        $registry = new ComponentRegistry($this->controller);
+        $this->controller->Cookie = $mockCookie;
+        $this->rememberMe = new RememberMeAuthenticate($registry);
+        $result = $this->rememberMe->authenticate($request, new Response());
+        $this->assertFalse($result);
+        Configure::delete('Users.RememberMe.active');
     }
 
     /**
