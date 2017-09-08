@@ -4,7 +4,7 @@ Changelog
 Releases
 --------
 
-* 2.0.0
+* 2.0.1
   * Fix a bug loading default permissions when no config/permission.php file provided in application
 
 * 2.0.0
