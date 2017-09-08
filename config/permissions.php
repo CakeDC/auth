@@ -50,7 +50,7 @@
  */
 
 return [
-    'Users.SimpleRbac.permissions' => [
+    'CakeDC/Auth.permissions' => [
         //admin role allowed to all the things
         [
             'role' => 'admin',

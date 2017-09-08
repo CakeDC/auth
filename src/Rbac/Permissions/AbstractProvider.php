@@ -26,42 +26,58 @@ abstract class AbstractProvider
     use LogTrait;
 
     /**
+     * Default permissions to be loaded if no provided permissions
+     *
+     * @var array
+     */
+    protected $defaultPermissions;
+
+    /**
      * AbstractProvider constructor.
      * @param array $config config
      */
     public function __construct($config = [])
     {
         $this->setConfig($config);
-    }
+        $this->defaultPermissions = [
+            //admin role allowed to all the things
+            [
+                'role' => 'admin',
+                'prefix' => '*',
+                'extension' => '*',
+                'plugin' => '*',
+                'controller' => '*',
+                'action' => '*',
+            ],
+            //specific actions allowed for the all roles in Users plugin
+            [
+                'role' => '*',
+                'plugin' => 'CakeDC/Users',
+                'controller' => 'Users',
+                'action' => ['profile', 'logout'],
+            ],
+            [
+                'role' => '*',
+                'plugin' => 'CakeDC/Users',
+                'controller' => 'Users',
+                'action' => 'resetGoogleAuthenticator',
+                'allowed' => function (array $user, $role, \Cake\Http\ServerRequest $request) {
+                    $userId = \Cake\Utility\Hash::get($request->getAttribute('params'), 'pass.0');
+                    if (!empty($userId) && !empty($user)) {
+                        return $userId === $user['id'];
+                    }
 
-    /**
-     * Default permissions to be loaded if no provided permissions
-     *
-     * @var array
-     */
-    protected $defaultPermissions = [
-        //admin role allowed to all actions
-        [
-            'role' => 'admin',
-            'plugin' => '*',
-            'controller' => '*',
-            'action' => '*',
-        ],
-        //specific actions allowed for the user role in Users plugin
-        [
-            'role' => 'user',
-            'plugin' => 'CakeDC/Users',
-            'controller' => 'Users',
-            'action' => ['profile', 'logout'],
-        ],
-        //all roles allowed to Pages/display
-        [
-            'role' => '*',
-            'plugin' => null,
-            'controller' => ['Pages'],
-            'action' => ['display'],
-        ],
-    ];
+                    return false;
+                }
+            ],
+            //all roles allowed to Pages/display
+            [
+                'role' => '*',
+                'controller' => 'Pages',
+                'action' => 'display',
+            ],
+        ];
+    }
 
     /**
      * Provide permissions array, for example
