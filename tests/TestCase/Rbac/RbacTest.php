@@ -27,29 +27,7 @@ class RbacTest extends TestCase
      */
     protected $rbac;
 
-    protected $defaultPermissions = [
-        //admin role allowed to use CakeDC\Auth\Auth plugin actions
-        [
-            'role' => 'admin',
-            'plugin' => '*',
-            'controller' => '*',
-            'action' => '*',
-        ],
-        //specific actions allowed for the user role in Users plugin
-        [
-            'role' => 'user',
-            'plugin' => 'CakeDC/Users',
-            'controller' => 'Users',
-            'action' => ['profile', 'logout'],
-        ],
-        //all roles allowed to Pages/display
-        [
-            'role' => '*',
-            'plugin' => null,
-            'controller' => ['Pages'],
-            'action' => ['display'],
-        ],
-    ];
+    protected $defaultPermissions;
 
     /**
      * Sets up the fixture, for example, opens a network connection.
@@ -58,6 +36,37 @@ class RbacTest extends TestCase
     public function setUp()
     {
         $request = new ServerRequest();
+        $this->defaultPermissions = [
+            //admin role allowed to all the things
+            [
+                'role' => 'admin',
+                'prefix' => '*',
+                'extension' => '*',
+                'plugin' => '*',
+                'controller' => '*',
+                'action' => '*',
+            ],
+            //specific actions allowed for the all roles in Users plugin
+            [
+                'role' => '*',
+                'plugin' => 'CakeDC/Users',
+                'controller' => 'Users',
+                'action' => ['profile', 'logout'],
+            ],
+            [
+                'role' => '*',
+                'plugin' => 'CakeDC/Users',
+                'controller' => 'Users',
+                'action' => 'resetGoogleAuthenticator',
+                'allowed' => true
+            ],
+            //all roles allowed to Pages/display
+            [
+                'role' => '*',
+                'controller' => 'Pages',
+                'action' => 'display',
+            ],
+        ];
         $this->rbac = new Rbac(null, $this->defaultPermissions);
     }
 
@@ -75,31 +84,11 @@ class RbacTest extends TestCase
      */
     public function testConstructGetDefaultPermissions()
     {
-        $defaultPermissions = [
-            //admin role allowed to all actions
-            [
-                'role' => 'admin',
-                'plugin' => '*',
-                'controller' => '*',
-                'action' => '*',
-            ],
-            //specific actions allowed for the user role in Users plugin
-            [
-                'role' => 'user',
-                'plugin' => 'CakeDC/Users',
-                'controller' => 'Users',
-                'action' => ['profile', 'logout'],
-            ],
-            //all roles allowed to Pages/display
-            [
-                'role' => '*',
-                'plugin' => null,
-                'controller' => ['Pages'],
-                'action' => ['display'],
-            ],
-        ];
         $this->rbac = new Rbac();
-        $this->assertSame($defaultPermissions, $this->rbac->getPermissions());
+        $result = $this->rbac->getPermissions();
+        $this->assertTrue(is_callable($result[2]['allowed']));
+        $result[2]['allowed'] = true;
+        $this->assertSame($this->defaultPermissions, $result);
     }
 
     /**
