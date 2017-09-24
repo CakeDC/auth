@@ -4,6 +4,9 @@ Changelog
 Releases
 --------
 
+* 2.0.2
+  * Fix a bug with the BC compatible key in permissions.php
+
 * 2.0.1
   * Fix a bug loading default permissions when no config/permission.php file provided in application
   * Ignore RememberMe when disabled by config
