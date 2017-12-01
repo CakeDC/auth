@@ -53,7 +53,7 @@ Permission rules syntax
     * The `*` is checked and if found the result is inverted
     * The final boolean value is **the result of permission** checker. This means if it is `false` then no other permissions are checked and the user is denied access.
     For this reason the `allowed` key must be placed at the end of permission since no other rules are executed after it
-* Another special key is `bypassAuth`, if set to true will allow the request, even if there is no user data. This would work as the `AuthComponent::allow` method. 
+* ONLY when using Rbac within the RbacMiddleware: Another special key is `bypassAuth`, if set to true will allow the request, even if there is no user data. Note this won't work with the regular AuthComponent setup, and you'll require using `AuthComponent::allow` method to specify public actions. 
 
 **Notes**:
 
