@@ -89,7 +89,7 @@ Example *ownership* callback, to allow users to edit their own Posts:
 If you see that you are duplicating logic in your callbacks, you can create rule class to re-use the logic.
 For example, the above ownership callback is included in CakeDC\Users as `Owner` rule
 ```php
-'allowed' => new \CakeDC\Auth\Auth\Rules\Owner() //will pick by default the post id from the first pass param
+'allowed' => new \CakeDC\Auth\Rbac\Rules\Owner() //will pick by default the post id from the first pass param
 ```
 Check the [Owner Rule](OwnerRule.md) documentation for more details
 
