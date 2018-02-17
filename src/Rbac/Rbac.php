@@ -213,7 +213,7 @@ class Rbac
     /**
      * Check if rule matched or '*' present in rule matching anything
      *
-     * @param string|array $possibleValues Values that are accepted (from permission config)
+     * @param string|array|null $possibleValues Values that are accepted (from permission config)
      * @param string|mixed|null $value Value to check with. We'll check the 'dasherized' value too
      * @param bool $allowEmpty If true and $value is null, the rule will pass
      *
@@ -224,6 +224,7 @@ class Rbac
         $possibleArray = (array)$possibleValues;
 
         if ($possibleValues === '*' ||
+            $value === $possibleValues ||
             in_array($value, $possibleArray) ||
             in_array(Inflector::camelize($value, '-'), $possibleArray)
         ) {
