@@ -46,7 +46,7 @@ If you don't want to use a file for configuring the permissions, you just need t
 ```'autoload_config' => false,``` then define all your rules in AppController (not a good practice as the rules
 tend to grow over time).
 
-The Users Plugin will use the field ```role_field``` in the Users Table to match the role of the user and
+The Users Plugin will use the field ```role``` field in the Users Table to match the role of the user and
 check if there is a rule allowing him to access the url.
 
 The ```default_role``` will be used to set the role of the registered users by default.
