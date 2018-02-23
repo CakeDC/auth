@@ -191,4 +191,43 @@ class RememberMeAuthenticateTest extends TestCase
         $result = $this->rememberMe->authenticate($request, new Response());
         $this->assertFalse($result);
     }
+
+    /**
+     * test
+     *
+     * @return void
+     */
+    public function testAuthenticateFormTimeOut()
+    {
+        $request = new ServerRequest('/');
+        $request = $request->env('HTTP_USER_AGENT', 'user-agent');
+
+        $mockCookie = $this->getMockBuilder('Cake\Controller\Component\CookieComponent')
+            ->disableOriginalConstructor()
+            ->setMethods(['check', 'read'])
+            ->getMock();
+        $mockCookie
+            ->expects($this->once())
+            ->method('read')
+            ->with('remember_me')
+            ->will($this->returnValue([
+                'id' => '00000000-0000-0000-0000-000000000002',
+                'user_agent' => 'user-agent'
+            ]));
+        $this->controller->Cookie = $mockCookie;
+
+        $mockAuthenticate = $this->getMockBuilder('CakeDC\Auth\Auth\RememberMeAuthenticate')
+            ->disableOriginalConstructor()
+            ->setMethods(['getUser'])
+            ->getMock();
+        $mockAuthenticate
+            ->expects($this->never())
+            ->method('getUser');
+        $this->rememberMe = $mockAuthenticate;
+
+        $registry = new ComponentRegistry($this->controller);
+        $this->rememberMe = new RememberMeAuthenticate($registry);
+        $result = $this->rememberMe->getUser($request);
+        $this->assertEquals('user-2', $result['username']);
+    }
 }
