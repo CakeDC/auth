@@ -57,4 +57,20 @@ class RememberMeAuthenticate extends BaseAuthenticate
 
         return false;
     }
+
+    /**
+     * Get a user based on a valid cookie
+     *
+     * Calls own class authenticate() method.
+     *
+     * Called from AuthComponent::_getUser() when there's no user info in
+     * storage (e.g. after session time out).
+     *
+     * @param \Cake\Http\ServerRequest $request Request object.
+     * @return mixed Either false or an array of user information
+     */
+    public function getUser(ServerRequest $request)
+    {
+        return $this->authenticate($request, new Response());
+    }
 }
