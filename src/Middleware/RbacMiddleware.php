@@ -138,7 +138,7 @@ class RbacMiddleware
         $user = $request->getAttribute('identity');
         $userData = [];
         if ($user) {
-            $userData = Hash::get($user, 'User', []);
+            $userData = $user->getOriginalData();
             $userData = is_object($userData) ? $userData->toArray() : $userData;
         }
 
