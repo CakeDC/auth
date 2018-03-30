@@ -139,11 +139,13 @@ class RbacMiddleware
         $userData = [];
         if ($user) {
             $userData = Hash::get($user, 'User', []);
+            $userData = is_object($userData) ? $userData->toArray() : $userData;
         }
 
         if (!$this->rbac->checkPermissions($userData, $request)) {
             $response = $this->notAuthorized($userData, $request, $response);
         }
+        $request = $request->withAttribute('rbac', $this->rbac);
 
         return $next($request, $response);
     }
