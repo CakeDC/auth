@@ -63,7 +63,7 @@ class RememberMeAuthenticateTest extends TestCase
     public function testAuthenticateHappy()
     {
         $request = new ServerRequest('/');
-        $request = $request->env('HTTP_USER_AGENT', 'user-agent');
+        $request = $request->withEnv('HTTP_USER_AGENT', 'user-agent');
         $mockCookie = $this->getMockBuilder('Cake\Controller\Component\CookieComponent')
                 ->disableOriginalConstructor()
                 ->setMethods(['check', 'read'])
@@ -92,7 +92,7 @@ class RememberMeAuthenticateTest extends TestCase
     {
         Configure::write('Users.RememberMe.active', false);
         $request = new ServerRequest('/');
-        $request = $request->env('HTTP_USER_AGENT', 'user-agent');
+        $request = $request->withEnv('HTTP_USER_AGENT', 'user-agent');
         $mockCookie = $this->getMockBuilder('Cake\Controller\Component\CookieComponent')
                 ->disableOriginalConstructor()
                 ->setMethods(['check', 'read'])
@@ -117,7 +117,7 @@ class RememberMeAuthenticateTest extends TestCase
     public function testAuthenticateBadUser()
     {
         $request = new ServerRequest('/');
-        $request->env('HTTP_USER_AGENT', 'user-agent');
+        $request = $request->withEnv('HTTP_USER_AGENT', 'user-agent');
         $mockCookie = $this->getMockBuilder('Cake\Controller\Component\CookieComponent')
                 ->disableOriginalConstructor()
                 ->setMethods(['check', 'read'])
@@ -146,7 +146,7 @@ class RememberMeAuthenticateTest extends TestCase
     public function testAuthenticateBadAgent()
     {
         $request = new ServerRequest('/');
-        $request->env('HTTP_USER_AGENT', 'user-agent');
+        $request = $request->withEnv('HTTP_USER_AGENT', 'user-agent');
         $mockCookie = $this->getMockBuilder('Cake\Controller\Component\CookieComponent')
                 ->disableOriginalConstructor()
                 ->setMethods(['check', 'read'])
@@ -174,7 +174,7 @@ class RememberMeAuthenticateTest extends TestCase
     public function testAuthenticateNoCookie()
     {
         $request = new ServerRequest('/');
-        $request->env('HTTP_USER_AGENT', 'user-agent');
+        $request = $request->withEnv('HTTP_USER_AGENT', 'user-agent');
         $mockCookie = $this->getMockBuilder('Cake\Controller\Component\CookieComponent')
                 ->disableOriginalConstructor()
                 ->setMethods(['check', 'read'])

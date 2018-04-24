@@ -49,7 +49,7 @@ class RbacMiddlewareTest extends TestCase
 
     /**
      * @test
-     * @expectedException \Cake\Network\Exception\ForbiddenException
+     * @expectedException \Cake\Http\Exception\ForbiddenException
      */
     public function testInvokeForbidden()
     {
