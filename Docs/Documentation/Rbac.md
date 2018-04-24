@@ -95,10 +95,10 @@ Check the [Owner Rule](OwnerRule.md) documentation for more details
 
 ## Creating rule classes
 
-The only requirement is to implement `\CakeDC\Auth\Auth\Rules\Rule` interface which has one method:
+The only requirement is to implement `\CakeDC\Auth\Rbac\Rules\Rule` interface which has one method:
 
 ```php
-class YourRule implements \CakeDC\Auth\Auth\Rules\Rule
+class YourRule implements \CakeDC\Auth\Rbac\Rules\Rule
 {
     /**
      * Check the current entity is owned by the logged in user
@@ -117,5 +117,5 @@ class YourRule implements \CakeDC\Auth\Auth\Rules\Rule
 
 This logic can be anything: database, external auth, etc.
 
-Also, if you are using DB, you can choose to extend `\CakeDC\Auth\Auth\Rules\AbstractRule` since it provides convenience methods for reading from DB
+Also, if you are using DB, you can choose to extend `\CakeDC\Auth\Rbac\Rules\AbstractRule` since it provides convenience methods for reading from DB
 
