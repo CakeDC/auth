@@ -57,7 +57,7 @@ class ConfigProvider extends AbstractProvider
         try {
             Configure::load($key, 'default');
             $permissions = Configure::read('CakeDC/Auth.permissions');
-            if (!$permissions && $legacyPermissions = Configure::read('CakeDC/Auth.permissions')) {
+            if (!$permissions && $legacyPermissions = Configure::read('Users.SimpleRbac.permissions')) {
                 $permissions = $legacyPermissions;
             }
         } catch (\Exception $ex) {

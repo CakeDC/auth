@@ -53,7 +53,7 @@ Permission rules syntax
     * The `*` is checked and if found the result is inverted
     * The final boolean value is **the result of permission** checker. This means if it is `false` then no other permissions are checked and the user is denied access.
     For this reason the `allowed` key must be placed at the end of permission since no other rules are executed after it
-* Another special key is `bypassAuth`, if set to true will allow the request, even if there is no user data. This would work as the `AuthComponent::allow` method. 
+* ONLY when using Rbac within the RbacMiddleware: Another special key is `bypassAuth`, if set to true will allow the request, even if there is no user data. Note this won't work with the regular AuthComponent setup, and you'll require using `AuthComponent::allow` method to specify public actions. 
 
 **Notes**:
 
@@ -89,16 +89,16 @@ Example *ownership* callback, to allow users to edit their own Posts:
 If you see that you are duplicating logic in your callbacks, you can create rule class to re-use the logic.
 For example, the above ownership callback is included in CakeDC\Users as `Owner` rule
 ```php
-'allowed' => new \CakeDC\Auth\Auth\Rules\Owner() //will pick by default the post id from the first pass param
+'allowed' => new \CakeDC\Auth\Rbac\Rules\Owner() //will pick by default the post id from the first pass param
 ```
 Check the [Owner Rule](OwnerRule.md) documentation for more details
 
 ## Creating rule classes
 
-The only requirement is to implement `\CakeDC\Auth\Auth\Rules\Rule` interface which has one method:
+The only requirement is to implement `\CakeDC\Auth\Rbac\Rules\Rule` interface which has one method:
 
 ```php
-class YourRule implements \CakeDC\Auth\Auth\Rules\Rule
+class YourRule implements \CakeDC\Auth\Rbac\Rules\Rule
 {
     /**
      * Check the current entity is owned by the logged in user
@@ -117,5 +117,5 @@ class YourRule implements \CakeDC\Auth\Auth\Rules\Rule
 
 This logic can be anything: database, external auth, etc.
 
-Also, if you are using DB, you can choose to extend `\CakeDC\Auth\Auth\Rules\AbstractRule` since it provides convenience methods for reading from DB
+Also, if you are using DB, you can choose to extend `\CakeDC\Auth\Rbac\Rules\AbstractRule` since it provides convenience methods for reading from DB
 
