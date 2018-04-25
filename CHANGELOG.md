@@ -4,6 +4,12 @@ Changelog
 Releases
 --------
 
+* 3.0.0
+  * Compatibility with CakePHP 3.6
+  * Rule value strictly against URL fragment #19
+  * Rbac middleware should convert user object into array to check permissions
+  * Documentation improvements and fixes
+
 * 2.0.2
   * Fix a bug with the BC compatible key in permissions.php
 
