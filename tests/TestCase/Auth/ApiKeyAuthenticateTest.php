@@ -106,7 +106,7 @@ class ApiKeyAuthenticateTest extends TestCase
     /**
      * test
      *
-     * @expectedException \Cake\Network\Exception\ForbiddenException
+     * @expectedException \Cake\Http\Exception\ForbiddenException
      * @expectedExceptionMessage SSL is required for ApiKey Authentication
      *
      */

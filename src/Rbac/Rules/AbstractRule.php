@@ -77,7 +77,7 @@ abstract class AbstractRule implements Rule
         $controller = Hash::get($params, 'controller');
         $modelClass = ($plugin ? $plugin . '.' : '') . $controller;
 
-        $this->modelFactory('Table', [$this->tableLocator(), 'get']);
+        $this->modelFactory('Table', [$this->getTableLocator(), 'get']);
         if (empty($modelClass)) {
             throw new OutOfBoundsException('Missing Table alias, we could not extract a default table from the request');
         }
