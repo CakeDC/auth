@@ -9,6 +9,7 @@ Releases
   * Rule value strictly against URL fragment #19
   * Rbac middleware should convert user object into array to check permissions
   * Documentation improvements and fixes
+  * Fix issue with rememberMe cookie
 
 * 2.0.2
   * Fix a bug with the BC compatible key in permissions.php
