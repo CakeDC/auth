@@ -200,7 +200,7 @@ class RememberMeAuthenticateTest extends TestCase
     public function testAuthenticateFormTimeOut()
     {
         $request = new ServerRequest('/');
-        $request = $request->env('HTTP_USER_AGENT', 'user-agent');
+        $request = $request->withEnv('HTTP_USER_AGENT', 'user-agent');
 
         $mockCookie = $this->getMockBuilder('Cake\Controller\Component\CookieComponent')
             ->disableOriginalConstructor()
