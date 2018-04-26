@@ -215,7 +215,7 @@ class OwnerTest extends TestCase
      */
     public function testNotAllowedBecauseNotOwner()
     {
-        $this->request = $this->request->addParams([
+        $this->request = $this->request->withAttribute('params', [
             'plugin' => 'CakeDC/Users',
             'controller' => 'Posts',
             'pass' => ['00000000-0000-0000-0000-000000000002']
@@ -233,7 +233,7 @@ class OwnerTest extends TestCase
      */
     public function testNotAllowedBecauseUserNotFound()
     {
-        $this->request = $this->request->addParams([
+        $this->request = $this->request->withAttribute('params', [
             'plugin' => 'CakeDC/Users',
             'controller' => 'Posts',
             'pass' => ['00000000-0000-0000-0000-000000000002']
@@ -251,7 +251,7 @@ class OwnerTest extends TestCase
      */
     public function testNotAllowedBecausePostNotFound()
     {
-        $this->request = $this->request->addParams([
+        $this->request = $this->request->withAttribute('params', [
             'plugin' => 'CakeDC/Users',
             'controller' => 'Posts',
             'pass' => ['99999999-0000-0000-0000-000000000000'] //not found
@@ -271,7 +271,7 @@ class OwnerTest extends TestCase
      */
     public function testNotAllowedBecauseNoDefaultTable()
     {
-        $this->request = $this->request->addParams([
+        $this->request = $this->request->withAttribute('params', [
             'plugin' => 'CakeDC/Users',
             'controller' => 'NoDefaultTable',
             'pass' => ['00000000-0000-0000-0000-000000000001']
@@ -293,7 +293,7 @@ class OwnerTest extends TestCase
             'table' => 'PostsUsers',
             'id' => 'post_id',
         ]);
-        $this->request = $this->request->addParams([
+        $this->request = $this->request->withAttribute('params', [
             'plugin' => 'CakeDC/Users',
             'controller' => 'IsNotUsed',
             'pass' => ['00000000-0000-0000-0000-000000000001']
@@ -315,7 +315,7 @@ class OwnerTest extends TestCase
             'table' => 'PostsUsers',
             'id' => 'post_id',
         ]);
-        $this->request = $this->request->addParams([
+        $this->request = $this->request->withAttribute('params', [
             'plugin' => 'CakeDC/Users',
             'controller' => 'IsNotUsed',
             'pass' => ['00000000-0000-0000-0000-000000000002']

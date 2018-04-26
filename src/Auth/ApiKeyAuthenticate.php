@@ -13,9 +13,9 @@ namespace CakeDC\Auth\Auth;
 
 use Cake\Auth\BaseAuthenticate;
 use Cake\Core\Configure;
+use Cake\Http\Exception\ForbiddenException;
 use Cake\Http\Response;
 use Cake\Http\ServerRequest;
-use Cake\Network\Exception\ForbiddenException;
 use \OutOfBoundsException;
 
 /**
