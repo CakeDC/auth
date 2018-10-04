@@ -27,7 +27,12 @@ class RememberMeAuthenticateTest extends TestCase
     /**
      * @var RememberMeAuthenticate
      */
-    protected $_rememberMe;
+    protected $rememberMe;
+
+    /**
+     * @var \Cake\Controller\Controller
+     */
+    protected $controller;
 
     /**
      * Sets up the fixture, for example, opens a network connection.
@@ -77,7 +82,7 @@ class RememberMeAuthenticateTest extends TestCase
                     'user_agent' => 'user-agent'
                 ]));
         $registry = new ComponentRegistry($this->controller);
-        $this->controller->Cookie = $mockCookie;
+        $this->controller->components()->set('Cookie', $mockCookie);
         $this->rememberMe = new RememberMeAuthenticate($registry);
         $result = $this->rememberMe->authenticate($request, new Response());
         $this->assertEquals('user-1', $result['username']);
@@ -102,7 +107,7 @@ class RememberMeAuthenticateTest extends TestCase
                 ->method('read');
 
         $registry = new ComponentRegistry($this->controller);
-        $this->controller->Cookie = $mockCookie;
+        $this->controller->components()->set('Cookie', $mockCookie);
         $this->rememberMe = new RememberMeAuthenticate($registry);
         $result = $this->rememberMe->authenticate($request, new Response());
         $this->assertFalse($result);
@@ -132,7 +137,7 @@ class RememberMeAuthenticateTest extends TestCase
                     'user_agent' => 'user-agent'
                 ]));
         $registry = new ComponentRegistry($this->controller);
-        $this->controller->Cookie = $mockCookie;
+        $this->controller->components()->set('Cookie', $mockCookie);
         $this->rememberMe = new RememberMeAuthenticate($registry);
         $result = $this->rememberMe->authenticate($request, new Response());
         $this->assertFalse($result);
@@ -160,7 +165,7 @@ class RememberMeAuthenticateTest extends TestCase
                     'user_agent' => 'bad-agent'
                 ]));
         $registry = new ComponentRegistry($this->controller);
-        $this->controller->Cookie = $mockCookie;
+        $this->controller->components()->set('Cookie', $mockCookie);
         $this->rememberMe = new RememberMeAuthenticate($registry);
         $result = $this->rememberMe->authenticate($request, new Response());
         $this->assertFalse($result);
@@ -186,7 +191,7 @@ class RememberMeAuthenticateTest extends TestCase
                 ->will($this->returnValue(null));
 
         $registry = new ComponentRegistry($this->controller);
-        $this->controller->Cookie = $mockCookie;
+        $this->controller->components()->set('Cookie', $mockCookie);
         $this->rememberMe = new RememberMeAuthenticate($registry);
         $result = $this->rememberMe->authenticate($request, new Response());
         $this->assertFalse($result);
@@ -214,7 +219,7 @@ class RememberMeAuthenticateTest extends TestCase
                 'id' => '00000000-0000-0000-0000-000000000002',
                 'user_agent' => 'user-agent'
             ]));
-        $this->controller->Cookie = $mockCookie;
+        $this->controller->components()->set('Cookie', $mockCookie);
 
         $mockAuthenticate = $this->getMockBuilder('CakeDC\Auth\Auth\RememberMeAuthenticate')
             ->disableOriginalConstructor()
