@@ -39,10 +39,11 @@ class RememberMeAuthenticate extends BaseAuthenticate
         $cookieName = $this->getConfig('Cookie.name') ?:
             Configure::read('Users.RememberMe.Cookie.name') ?:
                 'remember_me';
-        if (!$this->_registry->getController()->Cookie) {
-            $this->_registry->getController()->loadComponent('Cookie');
+        $controller = $this->_registry->getController();
+        if (!$controller->components()->has('Cookie')) {
+            $controller->loadComponent('Cookie');
         }
-        $cookie = $this->_registry->getController()->Cookie->read($cookieName);
+        $cookie = $controller->components()->get('Cookie')->read($cookieName);
         if (empty($cookie)) {
             return false;
         }
