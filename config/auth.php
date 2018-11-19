@@ -64,5 +64,14 @@ return [
                 'callbackLinkSocialUri' => Router::fullBaseUrl() . '/callback-link-social/amazon',
             ]
         ],
-    ]
+    ],
+    'OneTimePasswordAuthenticator' => [
+    'checker' => \CakeDC\Auth\Authentication\DefaultTwoFactorAuthenticationChecker::class,
+    'verifyAction' => [
+        'plugin' => 'CakeDC/Users',
+        'controller' => 'Users',
+        'action' => 'verify',
+        'prefix' => false,
+    ],
+],
 ];
