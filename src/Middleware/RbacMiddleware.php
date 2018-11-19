@@ -1,11 +1,11 @@
 <?php
 /**
- * Copyright 2010 - 2017, Cake Development Corporation (https://www.cakedc.com)
+ * Copyright 2010 - 2018, Cake Development Corporation (https://www.cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2010 - 2017, Cake Development Corporation (https://www.cakedc.com)
+ * @copyright Copyright 2010 - 2018, Cake Development Corporation (https://www.cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
@@ -138,8 +138,12 @@ class RbacMiddleware
         $user = $request->getAttribute('identity');
         $userData = [];
         if ($user) {
-            $userData = $user->getOriginalData();
+            $userData = is_object($user) ? $user->getOriginalData() : $user;
             $userData = is_object($userData) ? $userData->toArray() : $userData;
+        }
+
+        if (isset($userData['User'])) {
+            $userData = $userData['User'];
         }
 
         if (!$this->rbac->checkPermissions($userData, $request)) {
