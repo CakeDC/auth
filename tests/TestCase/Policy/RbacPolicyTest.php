@@ -12,8 +12,8 @@
 namespace CakeDC\Auth\Test\TestCase\Policy;
 
 use Authentication\Identity;
-use CakeDC\Auth\Rbac\Rbac;
 use CakeDC\Auth\Policy\RbacPolicy;
+use CakeDC\Auth\Rbac\Rbac;
 use Cake\Http\ServerRequestFactory;
 use Cake\ORM\Entity;
 use Cake\TestSuite\TestCase;
