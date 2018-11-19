@@ -40,7 +40,8 @@
         "satooshi/php-coveralls": "^2.0",
         "league/oauth1-client": "^1.7",
         "cakephp/authorization": "^1.0@beta",
-        "cakephp/cakephp-codesniffer": "^3.0"
+        "cakephp/cakephp-codesniffer": "^3.0",
+        "cakephp/authentication": "^1.0"
     },
     "suggest": {
     },
