@@ -12,8 +12,8 @@ namespace CakeDC\Auth\Test\TestCase\Authenticator;
 
 use Authentication\Authenticator\Result;
 use Authentication\Identifier\IdentifierCollection;
-use CakeDC\Auth\Social\Service\ServiceFactory;
 use CakeDC\Auth\Authenticator\SocialAuthenticator;
+use CakeDC\Auth\Social\Service\ServiceFactory;
 use Cake\Core\Configure;
 use Cake\Http\Response;
 use Cake\Http\ServerRequestFactory;

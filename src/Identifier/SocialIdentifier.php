@@ -13,8 +13,6 @@ namespace CakeDC\Auth\Identifier;
 
 use Authentication\Identifier\AbstractIdentifier;
 use Authentication\Identifier\Resolver\ResolverAwareTrait;
-use Cake\Core\Configure;
-use Cake\ORM\Locator\LocatorAwareTrait;
 
 class SocialIdentifier extends AbstractIdentifier
 {

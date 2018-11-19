@@ -10,9 +10,8 @@
  */
 namespace CakeDC\Auth\Test\TestCase\Identifier;
 
-use CakeDC\Auth\Social\Mapper\Facebook;
-use CakeDC\Auth\Exception\MissingEmailException;
 use CakeDC\Auth\Identifier\SocialIdentifier;
+use CakeDC\Auth\Social\Mapper\Facebook;
 use Cake\TestSuite\TestCase;
 
 class SocialIdentifierTest extends TestCase
