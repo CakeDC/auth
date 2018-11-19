@@ -28,16 +28,20 @@ class DefaultTwoFactorAuthenticationCheckerTest extends TestCase
      */
     public function testIsEnabled()
     {
-        Configure::write('Users.OneTimePasswordAuthenticator.login', false);
-        $Checker = new DefaultTwoFactorAuthenticationChecker('Users.OneTimePasswordAuthenticator.login');
+        Configure::write('OneTimePasswordAuthenticator.login', false);
+        $Checker = new DefaultTwoFactorAuthenticationChecker('OneTimePasswordAuthenticator.login');
         $this->assertFalse($Checker->isEnabled());
 
         Configure::write('Users.OneTimePasswordAuthenticator.login', true);
         $Checker = new DefaultTwoFactorAuthenticationChecker('Users.OneTimePasswordAuthenticator.login');
         $this->assertTrue($Checker->isEnabled());
 
-        Configure::delete('Users.OneTimePasswordAuthenticator.login');
-        $Checker = new DefaultTwoFactorAuthenticationChecker('Users.OneTimePasswordAuthenticator.login');
+        Configure::write('OneTimePasswordAuthenticator.login', true);
+        $Checker = new DefaultTwoFactorAuthenticationChecker('OneTimePasswordAuthenticator.login');
+        $this->assertTrue($Checker->isEnabled());
+
+        Configure::delete('OneTimePasswordAuthenticator.login');
+        $Checker = new DefaultTwoFactorAuthenticationChecker('OneTimePasswordAuthenticator.login');
         $this->assertTrue($Checker->isEnabled());
     }
 
@@ -48,15 +52,15 @@ class DefaultTwoFactorAuthenticationCheckerTest extends TestCase
      */
     public function testIsRequired()
     {
-        Configure::write('Users.OneTimePasswordAuthenticator.login', false);
+        Configure::write('OneTimePasswordAuthenticator.login', false);
         $Checker = new DefaultTwoFactorAuthenticationChecker();
         $this->assertFalse($Checker->isRequired(['id' => 10]));
 
-        Configure::write('Users.OneTimePasswordAuthenticator.login', true);
+        Configure::write('OneTimePasswordAuthenticator.login', true);
         $Checker = new DefaultTwoFactorAuthenticationChecker();
         $this->assertTrue($Checker->isRequired(['id' => 10]));
 
-        Configure::delete('Users.OneTimePasswordAuthenticator.login');
+        Configure::delete('OneTimePasswordAuthenticator.login');
         $Checker = new DefaultTwoFactorAuthenticationChecker();
         $this->assertTrue($Checker->isRequired(['id' => 10]));
 
