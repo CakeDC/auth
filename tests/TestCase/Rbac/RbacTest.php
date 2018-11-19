@@ -683,7 +683,7 @@ class RbacTest extends TestCase
                     'controller' => ['Tests'],
                     'action' => ['one', 'two'],
                     'allowed' => function ($user, $role, $request) {
-                        return $user['id'] === 1 && $role = 'test' && $request->plugin == 'Tests';
+                        return $user['id'] === 1 && $role = 'test' && $request->getParam('plugin') == 'Tests';
                     }
                 ]],
                 //user
