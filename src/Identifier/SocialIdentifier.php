@@ -22,6 +22,10 @@ class SocialIdentifier extends AbstractIdentifier
 
     const CREDENTIAL_KEY = 'socialAuthUser';
 
+    protected $_defaultConfig = [
+        'resolver' => 'Authentication.ORM'
+    ];
+
     /**
      * Identifies an user or service by the passed credentials
      *
