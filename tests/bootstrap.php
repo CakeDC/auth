@@ -89,17 +89,20 @@ Cake\Core\Configure::write('Session', [
 
 //init router
 \Cake\Routing\Router::reload();
-
-\Cake\Core\Plugin::load('CakeDC/Users', [
+Cake\Core\Configure::write('OAuth.path', [
+    'plugin' => 'CakeDC/Users',
+    'controller' => 'Users',
+    'action' => 'socialLogin',
+    'prefix' => null
+]);
+\Cake\Core\Plugin::load('CakeDC/Auth', [
     'path' => dirname(dirname(__FILE__)) . DS,
-    'routes' => true
+    'routes' => true,
+    'bootstrap' => true
 ]);
 if (file_exists($root . '/config/bootstrap.php')) {
     require $root . '/config/bootstrap.php';
 }
-
-Cake\Routing\DispatcherFactory::add('Routing');
-Cake\Routing\DispatcherFactory::add('ControllerFactory');
 
 // Ensure default test connection is defined
 if (!getenv('db_dsn')) {
