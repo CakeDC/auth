@@ -11,8 +11,8 @@
 
 namespace CakeDC\Auth\Middleware;
 
-use Cake\Core\Configure;
 use CakeDC\Auth\Authentication\AuthenticationService;
+use Cake\Core\Configure;
 use Cake\Http\ServerRequest;
 use Cake\Routing\Router;
 use Psr\Http\Message\ResponseInterface;
