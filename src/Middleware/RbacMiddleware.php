@@ -15,7 +15,6 @@ use CakeDC\Auth\Rbac\Rbac;
 use Cake\Core\InstanceConfigTrait;
 use Cake\Http\Exception\ForbiddenException;
 use Cake\Routing\Router;
-use Cake\Utility\Hash;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 

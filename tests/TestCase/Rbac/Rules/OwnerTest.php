@@ -163,7 +163,7 @@ class OwnerTest extends TestCase
     public function testAllowedUsingTableInstance()
     {
         $this->Owner = new Owner([
-            'table' => TableRegistry::get('CakeDC/Users.Posts'),
+            'table' => TableRegistry::getTableLocator()->get('CakeDC/Users.Posts'),
         ]);
         $this->request = $this->request->withParam('pass', ['00000000-0000-0000-0000-000000000001']);
         $user = [
@@ -198,7 +198,7 @@ class OwnerTest extends TestCase
     public function testAllowedShouldThrowExceptionBecauseForeignKeyNotPresentInTable()
     {
         $this->Owner = new Owner([
-            'table' => TableRegistry::get('CakeDC/Users.Posts'),
+            'table' => TableRegistry::getTableLocator()->get('CakeDC/Users.Posts'),
             'ownerForeignKey' => 'column_not_found',
         ]);
         $this->request = $this->request->withParam('pass', ['00000000-0000-0000-0000-000000000001']);

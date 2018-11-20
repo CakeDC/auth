@@ -59,7 +59,7 @@ abstract class AbstractRule implements Rule
             return $table;
         }
 
-        return TableRegistry::get($table);
+        return TableRegistry::getTableLocator()->get($table);
     }
 
     /**

@@ -39,7 +39,7 @@ class OAuth2Service extends OAuthServiceAbstract
      * @param \Cake\Http\ServerRequest $request Request object.
      * @return bool
      */
-    public function isGetUserStep(ServerRequest $request): bool
+    public function isGetUserStep(ServerRequest $request)
     {
         return !empty($request->getQuery('code'));
     }
@@ -67,7 +67,7 @@ class OAuth2Service extends OAuthServiceAbstract
      * @throws BadRequestException when oauth2 state is invalid
      * @return array
      */
-    public function getUser(ServerRequest $request): array
+    public function getUser(ServerRequest $request)
     {
         if (!$this->validate($request)) {
             throw new BadRequestException('Invalid OAuth2 state');

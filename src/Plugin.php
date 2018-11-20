@@ -11,9 +11,6 @@
 namespace CakeDC\Auth;
 
 use Cake\Core\BasePlugin;
-use Cake\Core\Configure;
-use Cake\Core\PluginApplicationInterface;
-use Cake\Routing\Router;
 
 /**
  * Class Plugin

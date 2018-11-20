@@ -21,7 +21,7 @@ interface ServiceInterface
      * @param \Cake\Http\ServerRequest $request Request object.
      * @return bool
      */
-    public function isGetUserStep(ServerRequest $request): bool;
+    public function isGetUserStep(ServerRequest $request);
 
     /**
      * Get a authentication url for user
@@ -37,14 +37,14 @@ interface ServiceInterface
      * @param \Cake\Http\ServerRequest $request Request object.
      * @return array
      */
-    public function getUser(ServerRequest $request): array;
+    public function getUser(ServerRequest $request);
 
     /**
      * Get the provider name
      *
      * @return string
      */
-    public function getProviderName(): string;
+    public function getProviderName();
 
     /**
      * Set the provider name
@@ -53,7 +53,7 @@ interface ServiceInterface
      *
      * @return self
      */
-    public function setProviderName(string $name);
+    public function setProviderName($name);
 
     /**
      * Get current config

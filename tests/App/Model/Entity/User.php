@@ -12,10 +12,7 @@
 namespace CakeDC\Auth\Test\App\Model\Entity;
 
 use Authentication\PasswordHasher\DefaultPasswordHasher;
-use Cake\Core\Configure;
-use Cake\I18n\Time;
 use Cake\ORM\Entity;
-use Cake\Utility\Security;
 
 /**
  * User Entity.

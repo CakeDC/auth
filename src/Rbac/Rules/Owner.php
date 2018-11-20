@@ -106,7 +106,6 @@ class Owner extends AbstractRule
      */
     protected function getTableId(ServerRequestInterface $request)
     {
-        $requestKeyTypeData = [];
         $tableKeyType = $this->getConfig('tableKeyType');
         switch ($tableKeyType) {
             case self::TYPE_TABLE_KEY_PARAMS:

@@ -57,7 +57,7 @@ class OAuth1ServiceTest extends TestCase
                 'linkSocialUri' => '/link-social/twitter',
                 'callback_uri' => '/callback-link-social/twitter',
                 'identifier' => '20003030300303',
-                'secret' => 'weakpassword', 'identifier' => 'clientId',
+                'secret' => 'weakpassword',
             ],
         ])->setMethods([
             'getTemporaryCredentials', 'getAuthorizationUrl', 'getTokenCredentials', 'getUserDetails'

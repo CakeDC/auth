@@ -25,7 +25,7 @@ class ServiceFactory
      *
      * @return self
      */
-    public function setRedirectUriField(string $redirectUriField)
+    public function setRedirectUriField($redirectUriField)
     {
         $this->redirectUriField = $redirectUriField;
 
@@ -39,7 +39,7 @@ class ServiceFactory
      *
      * @return ServiceInterface
      */
-    public function createFromProvider($provider): ServiceInterface
+    public function createFromProvider($provider)
     {
         $config = (new ProviderConfig())->getConfig($provider);
 
@@ -62,8 +62,11 @@ class ServiceFactory
      *
      * @return ServiceInterface
      */
-    public function createFromRequest(ServerRequest $request): ServiceInterface
+    public function createFromRequest(ServerRequest $request)
     {
-        return $this->createFromProvider($request->getAttribute('params')['provider'] ?? null);
+        $params = $request->getAttribute('params');
+        $provider = isset($params['provider']) ? $params['provider'] : null;
+
+        return $this->createFromProvider($provider);
     }
 }

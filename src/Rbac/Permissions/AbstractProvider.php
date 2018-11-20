@@ -11,10 +11,8 @@
 
 namespace CakeDC\Auth\Rbac\Permissions;
 
-use Cake\Core\Configure;
 use Cake\Core\InstanceConfigTrait;
 use Cake\Log\LogTrait;
-use Psr\Log\LogLevel;
 
 /**
  * Class AbstractProvider, handles getting permission from different sources,

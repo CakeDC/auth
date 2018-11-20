@@ -131,7 +131,7 @@ class ProviderConfig
      * @param string $alias for provider
      * @return array
      */
-    public function getConfig($alias): array
+    public function getConfig($alias)
     {
         return Hash::get($this->providers, $alias, []);
     }

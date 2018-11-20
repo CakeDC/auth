@@ -50,7 +50,7 @@ class OAuth1Service extends OAuthServiceAbstract
      * @param \Cake\Http\ServerRequest $request Request object.
      * @return bool
      */
-    public function isGetUserStep(ServerRequest $request): bool
+    public function isGetUserStep(ServerRequest $request)
     {
         $oauthToken = $request->getQuery('oauth_token');
         $oauthVerifier = $request->getQuery('oauth_verifier');
@@ -78,7 +78,7 @@ class OAuth1Service extends OAuthServiceAbstract
      * @param \Cake\Http\ServerRequest $request Request object.
      * @return array
      */
-    public function getUser(ServerRequest $request): array
+    public function getUser(ServerRequest $request)
     {
         $oauthToken = $request->getQuery('oauth_token');
         $oauthVerifier = $request->getQuery('oauth_verifier');
