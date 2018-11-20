@@ -66,12 +66,24 @@ return [
         ],
     ],
     'OneTimePasswordAuthenticator' => [
-    'checker' => \CakeDC\Auth\Authentication\DefaultTwoFactorAuthenticationChecker::class,
-    'verifyAction' => [
-        'plugin' => 'CakeDC/Users',
-        'controller' => 'Users',
-        'action' => 'verify',
-        'prefix' => false,
+        'checker' => \CakeDC\Auth\Authentication\DefaultTwoFactorAuthenticationChecker::class,
+        'verifyAction' => [
+            'plugin' => 'CakeDC/Users',
+            'controller' => 'Users',
+            'action' => 'verify',
+            'prefix' => false,
+        ],
+        'login' => false,//Enable?
+        'issuer' => null,
+        // The number of digits the resulting codes will be
+        'digits' => 6,
+        // The number of seconds a code will be valid
+        'period' => 30,
+        // The algorithm used
+        'algorithm' => 'sha1',
+        // QR-code provider (more on this later)
+        'qrcodeprovider' => null,
+        // Random Number Generator provider (more on this later)
+        'rngprovider' => null
     ],
-],
 ];
