@@ -45,20 +45,12 @@ class SocialAuthenticator extends AbstractAuthenticator
     protected $_defaultConfig = [];
 
     /**
-     * Authenticates the identity contained in a request. Will use the `config.userModel`, and `config.fields`
-     * to find POST data that is used to find a matching record in the `config.userModel`. Will return false if
-     * there is no post data, either username or password is missing, or if the scope conditions have not been met.
+     * Authenticates the identity contained in a request.
      *
      * @param \Psr\Http\Message\ServerRequestInterface $request The request that contains login information.
      * @param \Psr\Http\Message\ResponseInterface $response Unused response object.
      * @throws \Exception
      * @return \Authentication\Authenticator\ResultInterface
-     */
-    /**
-     * @param ServerRequestInterface $request the cake request.
-     * @param ResponseInterface $response the cake response.
-     * @return Result|\Authentication\Authenticator\ResultInterface
-     * @throws \Exception
      */
     public function authenticate(ServerRequestInterface $request, ResponseInterface $response)
     {
@@ -72,6 +64,18 @@ class SocialAuthenticator extends AbstractAuthenticator
             return new Result(null, Result::FAILURE_IDENTITY_NOT_FOUND);
         }
 
+        return $this->identify($rawData);
+    }
+
+    /**
+     * Identify user with credential data
+     *
+     * @param array $rawData social user raw data
+     *
+     * @return Result
+     */
+    protected function identify($rawData)
+    {
         $user = $this->getIdentifier()->identify([SocialIdentifier::CREDENTIAL_KEY => $rawData]);
         if (!empty($user)) {
             return new Result($user, Result::SUCCESS);
