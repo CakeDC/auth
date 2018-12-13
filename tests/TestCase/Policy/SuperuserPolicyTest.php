@@ -1,0 +1,61 @@
+<?php
+/**
+ * Copyright 2010 - 2018, Cake Development Corporation (https://www.cakedc.com)
+ *
+ * Licensed under The MIT License
+ * Redistributions of files must retain the above copyright notice.
+ *
+ * @copyright Copyright 2010 - 2018, Cake Development Corporation (https://www.cakedc.com)
+ * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
+ */
+
+namespace CakeDC\Auth\Test\TestCase\Policy;
+
+use Authentication\Identity;
+use CakeDC\Auth\Policy\SuperuserPolicy;
+use Cake\Http\ServerRequestFactory;
+use Cake\ORM\Entity;
+use Cake\TestSuite\TestCase;
+
+class SuperuserPolicyTest extends TestCase
+{
+    /**
+     * Data provider for testCanAccess
+     * @return array
+     */
+    public function dataProviderCanAccess()
+    {
+        return [
+            [['is_superuser' => true], true],
+            [['is_superuser' => false], false],
+            [[], false],
+            [['is_superuser' => true], false, ['superuser_field' => 'is_master']],
+            [['is_master' => true], true, ['superuser_field' => 'is_master']],
+            [['is_master' => false], false, ['superuser_field' => 'is_master']],
+            [['is_superuser' => false], false, ['superuser_field' => 'is_master']],
+            [[], false, ['superuser_field' => 'is_master']],
+        ];
+    }
+    /**
+     * Test canAccess method
+     *
+     * @param array $userData custom user data for testing.
+     * @param bool $expected The expected result.
+     * @param array $config policy configurations.
+     * @dataProvider dataProviderCanAccess
+     *
+     * @return void
+     */
+    public function testCanAccess($userData, $expected, $config = [])
+    {
+        $user = new Entity($userData + [
+            'id' => '00000000-0000-0000-0000-000000000001',
+        ]);
+        $identity = new Identity($user);
+        $request = ServerRequestFactory::fromGlobals();
+
+        $policy = new SuperuserPolicy($config);
+        $actual = $policy->canAccess($identity, $request);
+        $this->assertSame($expected, $actual);
+    }
+}
