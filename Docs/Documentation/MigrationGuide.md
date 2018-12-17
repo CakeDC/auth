@@ -14,8 +14,8 @@ In this version we're using the [cakephp/authentication](https://github.com/cake
 
 Please check [Authentication](Authentication.md) and [Authorization](Authorization.md) sections.
 
-* Added [Authentication](Authentication.md) namespace
-* Added [Authorization](Authorization.md) namespace
+* Added [Authentication](Authentication.md) features with social, two-factor, form and cookie authenticators
+* Added [Authorization](Authorization.md) features
 * Added social identifier
 * Added social middleware
 * Added one-time password middleware
