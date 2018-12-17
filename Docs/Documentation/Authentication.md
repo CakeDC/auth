@@ -18,7 +18,9 @@ like in social authentication.
     - baseClassName, optional fullname class for base form authenticator
 
 - **SocialAuthenticaor**, allows to authenticate a user with social provider (facebook, google, twitter, etc).
-You need to use the middleware `CakeDC\Auth\Middleware\SocialAuthMiddleware` to make this authenticator work correctly.
+You need to use the middleware `CakeDC\Auth\Middleware\SocialAuthMiddleware` and identifier
+`CakeDC\Auth\Identifier\SocialIdentifier` to make this authenticator work correctly.
+Check how enabled social authentication at [users plugin.](https://github.com/CakeDC/Users)
 
 - **TwoFactorAuthenticator**, used to complete the two-factor authentication. Configurations:
 
