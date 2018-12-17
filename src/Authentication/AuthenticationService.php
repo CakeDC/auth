@@ -82,7 +82,7 @@ class AuthenticationService extends BaseService
 
             if ($result->isValid()) {
                 $twoFaRequired = $twoFaCheck->isRequired($result->getData()->toArray());
-                if ($twoFaRequired && $authenticator->getConfig('skipGoogleVerify') !== true) {
+                if ($twoFaRequired && $authenticator->getConfig('skipTwoFactorVerify') !== true) {
                     return $this->proceedToGoogleVerify($request, $response, $result);
                 }
 

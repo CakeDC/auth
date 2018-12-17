@@ -171,10 +171,10 @@ class AuthenticationServiceTest extends TestCase
             ],
             'authenticators' => [
                 'Authentication.Session' => [
-                    'skipGoogleVerify' => true,
+                    'skipTwoFactorVerify' => true,
                 ],
                 'CakeDC/Auth.Form' => [
-                    'skipGoogleVerify' => false,
+                    'skipTwoFactorVerify' => false,
                 ]
             ]
         ]);
@@ -225,10 +225,10 @@ class AuthenticationServiceTest extends TestCase
             ],
             'authenticators' => [
                 'Authentication.Session' => [
-                    'skipGoogleVerify' => true,
+                    'skipTwoFactorVerify' => true,
                 ],
                 'CakeDC/Auth.Form' => [
-                    'skipGoogleVerify' => false,
+                    'skipTwoFactorVerify' => false,
                 ]
             ]
         ]);
