@@ -1,6 +1,6 @@
 Home
 ====
-
+* [Authentication](Documentation/Authentication.md)
 * [ApiKeyAuthenticate](Documentation/ApiKeyAuthenticate.md)
 * [SimpleRbacAuthorize](Documentation/SimpleRbacAuthorize.md) RBAC Authorize based on configuration
   * [Rbac](Documentation/Rbac.md) Standalone RBAC permissions class
