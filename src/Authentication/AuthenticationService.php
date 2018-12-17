@@ -21,9 +21,9 @@ use RuntimeException;
 
 class AuthenticationService extends BaseService
 {
-    const NEED_GOOGLE_VERIFY = 'NEED_GOOGLE_VERIFY';
+    const NEED_TWO_FACTOR_VERIFY = 'NEED_TWO_FACTOR_VERIFY';
 
-    const GOOGLE_VERIFY_SESSION_KEY = 'temporarySession';
+    const TWO_FACTOR_VERIFY_SESSION_KEY = 'temporarySession';
 
     /**
      * All failures authenticators
@@ -41,9 +41,9 @@ class AuthenticationService extends BaseService
      */
     protected function proceedToGoogleVerify(ServerRequestInterface $request, ResponseInterface $response, ResultInterface $result)
     {
-        $request->getSession()->write(self::GOOGLE_VERIFY_SESSION_KEY, $result->getData());
+        $request->getSession()->write(self::TWO_FACTOR_VERIFY_SESSION_KEY, $result->getData());
 
-        $result = new Result(null, self::NEED_GOOGLE_VERIFY);
+        $result = new Result(null, self::NEED_TWO_FACTOR_VERIFY);
 
         $this->_successfulAuthenticator = null;
         $this->_result = $result;

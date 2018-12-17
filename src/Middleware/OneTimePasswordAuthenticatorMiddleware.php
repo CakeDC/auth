@@ -31,7 +31,7 @@ class OneTimePasswordAuthenticatorMiddleware
     {
         $service = $request->getAttribute('authentication');
 
-        if (!$service->getResult() || $service->getResult()->getStatus() !== AuthenticationService::NEED_GOOGLE_VERIFY) {
+        if (!$service->getResult() || $service->getResult()->getStatus() !== AuthenticationService::NEED_TWO_FACTOR_VERIFY) {
             return $next($request, $response);
         }
 

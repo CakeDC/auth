@@ -184,7 +184,7 @@ class AuthenticationServiceTest extends TestCase
         $this->assertInstanceOf(ServerRequestInterface::class, $result['request']);
         $this->assertInstanceOf(ResponseInterface::class, $result['response']);
         $this->assertFalse($result['result']->isValid());
-        $this->assertEquals(AuthenticationService::NEED_GOOGLE_VERIFY, $result['result']->getStatus());
+        $this->assertEquals(AuthenticationService::NEED_TWO_FACTOR_VERIFY, $result['result']->getStatus());
         $this->assertNull($request->getAttribute('session')->read('Auth.username'));
         $this->assertEquals(
             'user-1',
