@@ -7,8 +7,27 @@ offers an improved way to handle authentication, we have created some additional
  - cookie login with session;
  - two-factor  (one-time password) authentication
 
+Custom Authenticators
+---------------------
+- **CookieAuthenticator**, preserve cookie auth token at session, needed for login that perform redirect
+like in social authentication.
+
+- **FormAuthenticator**, allows to use reCaptcha verification in your login form. Configurations:
+    
+    - keyCheckEnabledRecaptcha, config key used to check if reCaptcha is enabled. Default, 'Users.reCaptcha.login'
+    - baseClassName, optional fullname class for base form authenticator
+
+- **SocialAuthenticaor**, allows to authenticate a user with social provider (facebook, google, twitter, etc).
+You need to use the middleware `CakeDC\Auth\Middleware\SocialAuthMiddleware` to make this authenticator work correctly.
+
+- **TwoFactorAuthenticator**, used to complete the two-factor authentication. Configurations:
+
+    - loginUrl: The login URL, string or array of URLs. Default is null and all pages will be checked.
+    - urlChecker: The URL checker class or object. Default is DefaultUrlChecker.
+
+
 Authentication Service
-------------------------
+----------------------
 The custom authentication service allows you to use two-factor authentication and get a list of 
 failure processed (see `\CakeDC\Auth\Authentication\AuthenticationService::getFailures`).
 When the authenticator get a valid result the service will proceed to two-factor verification,
