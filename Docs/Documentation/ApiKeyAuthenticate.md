@@ -7,9 +7,10 @@ Setup
 ApiKeyAuthenticate default configuration is
 ```php
     protected $_defaultConfig = [
-        //type, can be either querystring or header
+        //type, can be either querystring or header.
         'type' => self::TYPE_QUERYSTRING,
-        //name to retrieve the api key value from
+        //name to retrieve the api key value from.
+        // If using headers, underscores (_) may not be allowed by your server configuration
         'name' => 'api_key',
         //db field where the key is stored
         'field' => 'api_token',
