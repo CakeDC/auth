@@ -20,10 +20,10 @@ ApiKeyAuthenticate default configuration is
 ```
 
 We are using query strings for passing the api_key token. And we require SSL by default.
-Note you can override these options using
+Note you can override these options in `config/users.php` using
 
 ```php
-$config['Auth']['authenticate']['CakeDC/Users.ApiKey'] = [
+$config['Auth']['authenticate']['CakeDC/Auth.ApiKey'] = [
     'type' => 'header',
     ];
 ```
