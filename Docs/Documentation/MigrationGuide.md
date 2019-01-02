@@ -21,7 +21,7 @@ Please check [Authentication](Authentication.md) and [Authorization](Authorizati
 * Added one-time password middleware
 * Added rbac policy
 * Added superuser policy
-* Added social namespace compatible with OAuth1 and OAuth2 with many providers
+* Added [social namespace](Social.md) compatible with OAuth1 and OAuth2 with many providers
     - Amazon
     - Facebook
     - Google

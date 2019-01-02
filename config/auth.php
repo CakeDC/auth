@@ -11,6 +11,7 @@
 
 use Cake\Routing\Router;
 return [
+    'OAuth.path' => ['plugin' => 'CakeDC/Users', 'controller' => 'Users', 'action' => 'socialLogin', 'prefix' => null],
     'OAuth.providers' => [
         'facebook' => [
             'service' => 'CakeDC\Auth\Social\Service\OAuth2Service',
