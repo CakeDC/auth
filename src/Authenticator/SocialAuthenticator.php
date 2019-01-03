@@ -97,8 +97,9 @@ class SocialAuthenticator extends AbstractAuthenticator
         $rawData = null;
         try {
             $rawData = $service->getUser($request);
+            $mapper = new MapUser();
 
-            return (new MapUser())($service, $rawData);
+            return $mapper($service, $rawData);
         } catch (\Exception $exception) {
             $list = [BadRequestException::class, \UnexpectedValueException::class];
             $this->throwIfNotInlist($exception, $list);
