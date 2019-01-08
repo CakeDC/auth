@@ -95,21 +95,6 @@ Cake\Core\Configure::write('OAuth.path', [
     'action' => 'socialLogin',
     'prefix' => null
 ]);
-\Cake\Core\Plugin::load('CakeDC/Auth', [
-    'path' => dirname(dirname(__FILE__)) . DS,
-    'routes' => true,
-    'bootstrap' => true
-]);
-if (file_exists($root . '/config/bootstrap.php')) {
-    require $root . '/config/bootstrap.php';
-}
-
-// Ensure default test connection is defined
-if (!getenv('db_dsn')) {
-    putenv('db_dsn=sqlite:///:memory:');
-}
-
-Cake\Datasource\ConnectionManager::setConfig('test', [
-    'url' => getenv('db_dsn'),
-    'timezone' => 'UTC'
-]);
+$app = new \CakeDC\Auth\Test\TestApplication(__DIR__ . DS . 'config');
+$app->bootstrap();
+$app->pluginBootstrap();
