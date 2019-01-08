@@ -17,8 +17,8 @@ use Cake\TestSuite\TestCase;
 class SocialIdentifierTest extends TestCase
 {
     public $fixtures = [
-        'plugin.CakeDC/Auth.users',
-        'plugin.CakeDC/Auth.social_accounts'
+        'plugin.CakeDC/Auth.Users',
+        'plugin.CakeDC/Auth.SocialAccounts'
     ];
 
     /**

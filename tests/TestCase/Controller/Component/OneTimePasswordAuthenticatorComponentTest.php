@@ -21,7 +21,7 @@ use Cake\Utility\Security;
 class OneTimePasswordAuthenticatorComponentTest extends TestCase
 {
     public $fixtures = [
-        'plugin.CakeDC/Auth.users'
+        'plugin.CakeDC/Auth.Users'
     ];
 
     /**
