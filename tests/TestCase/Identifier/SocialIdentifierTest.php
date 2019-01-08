@@ -140,7 +140,8 @@ class SocialIdentifierTest extends TestCase
             'cover_photo_url' => 'https://scontent.xx.fbcdn.net/v/test.jpg'
         ];
 
-        $user = (new Facebook())($data);
+        $mapper = new Facebook();
+        $user = $mapper($data);
         $user['provider'] = 'facebook';
 
         $result = $identifier->identify(['socialAuthUser' => $user]);
@@ -182,7 +183,8 @@ class SocialIdentifierTest extends TestCase
         ];
 
         $identifier = new SocialIdentifier([]);
-        $user = (new Facebook())($data);
+        $mapper = new Facebook();
+        $user = $mapper($data);
         $user['provider'] = 'facebook';
 
         $result = $identifier->identify(['socialAuthUser' => $user]);
