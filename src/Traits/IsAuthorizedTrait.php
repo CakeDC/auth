@@ -61,7 +61,8 @@ trait IsAuthorizedTrait
     protected function checkRbacPermissions($url)
     {
         $uri = new Uri($url);
-        $Rbac = $this->request ? $this->request->getAttribute('rbac') : null;
+        $request = $this->getRequest();
+        $Rbac = $request->getAttribute('rbac');
         if ($Rbac === null) {
             $Rbac = new Rbac();
         }
@@ -71,7 +72,7 @@ trait IsAuthorizedTrait
         $params = Router::parseRequest($targetRequest);
         $targetRequest = $targetRequest->withAttribute('params', $params);
 
-        $user = $this->request->getAttribute('identity');
+        $user = $request->getAttribute('identity');
         $userData = [];
         if ($user) {
             $userData = $user->getOriginalData()->toArray();
