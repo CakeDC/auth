@@ -9,6 +9,7 @@
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 namespace CakeDC\Auth\Test;
+
 /**
  * Class TestApplication
  *
