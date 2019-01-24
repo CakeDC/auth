@@ -38,6 +38,31 @@ class AuthenticationServiceTest extends TestCase
      *
      * @return void
      */
+    public function testAuthenticateEmptyAuthenticators()
+    {
+        $request = ServerRequestFactory::fromGlobals(
+            ['REQUEST_URI' => '/testpath'],
+            [],
+            ['username' => 'user-not-found', 'password' => 'password']
+        );
+        $response = new Response();
+
+        $service = new AuthenticationService([
+            'identifiers' => [
+                'Authentication.Password'
+            ],
+            'authenticators' => []
+        ]);
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('No authenticators loaded. You need to load at least one authenticator.');
+        $service->authenticate($request, $response);
+    }
+
+    /**
+     * testAuthenticate
+     *
+     * @return void
+     */
     public function testAuthenticateFail()
     {
         $Table = TableRegistry::getTableLocator()->get('CakeDC/Auth.Users');
