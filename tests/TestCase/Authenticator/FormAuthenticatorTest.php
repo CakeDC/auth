@@ -152,7 +152,8 @@ class FormAuthenticatorTest extends TestCase
                 $this->equalTo('BD-S2333-156465897897')
             )
             ->will($this->returnValue(true));
-
+        $actualIdentifiers = $Authenticator->getIdentifier();
+        $this->assertInstanceOf(IdentifierCollection::class, $actualIdentifiers);
         $result = $Authenticator->authenticate($request, $response);
         $this->assertInstanceOf(Result::class, $result);
         $this->assertEquals(Result::SUCCESS, $result->getStatus());
