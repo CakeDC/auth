@@ -301,4 +301,102 @@ class FormAuthenticatorTest extends TestCase
         $this->assertNull($result->getData());
         $this->assertSame($result, $Authenticator->getLastResult());
     }
+
+    /**
+     * test getBaseAuthenticator
+     *
+     * @return void
+     */
+    public function testGetBaseAuthenticator()
+    {
+        $identifiers = new IdentifierCollection([
+            'Authentication.Password'
+        ]);
+
+        $Authenticator = new FormAuthenticator(
+            $identifiers,
+            [
+                'fields' => [
+                    IdentifierInterface::CREDENTIAL_USERNAME => 'email',
+                    IdentifierInterface::CREDENTIAL_PASSWORD => 'password'
+                ],
+                'keyCheckEnabledRecaptcha' => 'Users.reCaptcha.login'
+            ]
+        );
+        $actual = $Authenticator->getBaseAuthenticator();
+        $this->assertInstanceOf(\Authentication\Authenticator\FormAuthenticator::class, $actual);
+        $this->assertNotInstanceOf(FormAuthenticator::class, $actual);
+        $expected = [
+            'fields' => [
+                IdentifierInterface::CREDENTIAL_USERNAME => 'email',
+                IdentifierInterface::CREDENTIAL_PASSWORD => 'password'
+            ],
+            'loginUrl' => null,
+            'urlChecker' => 'Authentication.Default'
+        ];
+        $this->assertEquals($expected, $actual->getConfig());
+    }
+
+    /**
+     * test getBaseAuthenticator
+     *
+     * @return void
+     */
+    public function testGetBaseAuthenticatorCustom()
+    {
+        $identifiers = new IdentifierCollection([
+            'Authentication.Password'
+        ]);
+
+        $Authenticator = new FormAuthenticator(
+            $identifiers,
+            [
+                'fields' => [
+                    IdentifierInterface::CREDENTIAL_USERNAME => 'email',
+                    IdentifierInterface::CREDENTIAL_PASSWORD => 'password'
+                ],
+                'keyCheckEnabledRecaptcha' => 'Users.reCaptcha.login',
+                'baseClassName' => \Authentication\Authenticator\FormAuthenticator::class
+            ]
+        );
+        $actual = $Authenticator->getBaseAuthenticator();
+        $this->assertInstanceOf(\Authentication\Authenticator\FormAuthenticator::class, $actual);
+        $this->assertNotInstanceOf(FormAuthenticator::class, $actual);
+        $expected = [
+            'fields' => [
+                IdentifierInterface::CREDENTIAL_USERNAME => 'email',
+                IdentifierInterface::CREDENTIAL_PASSWORD => 'password'
+            ],
+            'loginUrl' => null,
+            'urlChecker' => 'Authentication.Default'
+        ];
+        $this->assertEquals($expected, $actual->getConfig());
+    }
+
+    /**
+     * test getBaseAuthenticator
+     *
+     * @return void
+     */
+    public function testGetBaseAuthenticatorError()
+    {
+        $identifiers = new IdentifierCollection([
+            'Authentication.Password'
+        ]);
+
+        $Authenticator = new FormAuthenticator(
+            $identifiers,
+            [
+                'fields' => [
+                    IdentifierInterface::CREDENTIAL_USERNAME => 'email',
+                    IdentifierInterface::CREDENTIAL_PASSWORD => 'password'
+                ],
+                'keyCheckEnabledRecaptcha' => 'Users.reCaptcha.login',
+                'baseClassName' => 'NotExistingAuthenticator'
+            ]
+        );
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Base class for FormAuthenticator NotExistingAuthenticator does not exist');
+        $Authenticator->getBaseAuthenticator();
+    }
 }

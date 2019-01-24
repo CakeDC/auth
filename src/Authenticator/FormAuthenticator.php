@@ -74,7 +74,7 @@ class FormAuthenticator implements AuthenticatorInterface, AuthenticatorFeedback
      *
      * @return \Authentication\Authenticator\FormAuthenticator
      */
-    protected function getBaseAuthenticator()
+    public function getBaseAuthenticator()
     {
         if ($this->baseAuthenticator === null) {
             $this->baseAuthenticator = $this->createBaseAuthenticator($this->identifier, $this->getConfig());
@@ -93,6 +93,7 @@ class FormAuthenticator implements AuthenticatorInterface, AuthenticatorFeedback
      */
     protected function createBaseAuthenticator(IdentifierInterface $identifier, array $config = [])
     {
+        unset($config['keyCheckEnabledRecaptcha']);
         if (!isset($config['baseClassName'])) {
             return new BaseFormAuthenticator($identifier, $config);
         }
@@ -102,8 +103,6 @@ class FormAuthenticator implements AuthenticatorInterface, AuthenticatorFeedback
         if (!class_exists($className)) {
             throw new \InvalidArgumentException(__("Base class for FormAuthenticator {0} does not exist", $className));
         }
-
-        unset($config['keyCheckEnabledRecaptcha']);
 
         return new $className($identifier, $config);
     }
