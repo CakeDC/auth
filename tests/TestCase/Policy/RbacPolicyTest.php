@@ -70,4 +70,27 @@ class RbacPolicyTest extends TestCase
         $policy = new RbacPolicy();
         $this->assertFalse($policy->canAccess($identity, $request));
     }
+
+    /**
+     * Test getRbac method
+     */
+    public function testGetRbac()
+    {
+        $request = ServerRequestFactory::fromGlobals();
+        $rbac = $this->getMockBuilder(Rbac::class)->setMethods(['checkPermissions'])->getMock();
+        $request = $request->withAttribute('rbac', $rbac);
+        $policy = new RbacPolicy();
+        $actual = $policy->getRbac($request);
+        $this->assertSame($rbac, $actual);
+    }
+    /**
+     * Test getRbac method
+     */
+    public function testGetRbacCreateNew()
+    {
+        $request = ServerRequestFactory::fromGlobals();
+        $policy = new RbacPolicy();
+        $actual = $policy->getRbac($request);
+        $this->assertInstanceOf(Rbac::class, $actual);
+    }
 }

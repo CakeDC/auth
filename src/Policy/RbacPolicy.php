@@ -25,13 +25,26 @@ class RbacPolicy
      */
     public function canAccess($identity, $resource)
     {
+        $rbac = $this->getRbac($resource);
+
+        $user = $identity ? $identity->getOriginalData()->toArray() : [];
+
+        return (bool)$rbac->checkPermissions($user, $resource);
+    }
+
+    /**
+     * Get the rbac object from source or create a new one
+     *
+     * @param ServerRequestInterface $resource server request
+     * @return Rbac
+     */
+    public function getRbac($resource)
+    {
         $rbac = $resource->getAttribute('rbac');
         if ($rbac === null) {
             $rbac = new Rbac();
         }
 
-        $user = $identity ? $identity->getOriginalData()->toArray() : [];
-
-        return (bool)$rbac->checkPermissions($user, $resource);
+        return $rbac;
     }
 }
