@@ -289,6 +289,67 @@ class SocialAuthenticatorTest extends TestCase
     }
 
     /**
+     * Test authenticate method with error, getRawData is null
+     *
+     * @return void
+     */
+    public function testAuthenticateGetRawDataNotExpectedException()
+    {
+        $uri = new Uri('/auth/facebook');
+        $this->Request = $this->Request->withUri($uri);
+        $this->Request = $this->Request->withQueryParams([
+            'code' => 'ZPO9972j3092304230',
+            'state' => '__TEST_STATE__'
+        ]);
+        $this->Request = $this->Request->withAttribute('params', [
+            'plugin' => 'CakeDC/Auth',
+            'controller' => 'Users',
+            'action' => 'socialLogin',
+            'provider' => 'facebook'
+        ]);
+        $this->Request->getSession()->write('oauth2state', '__TEST_STATE__');
+
+        $Token = new \League\OAuth2\Client\Token\AccessToken([
+            'access_token' => 'test-token',
+            'expires' => 1490988496
+        ]);
+
+        $this->Provider->expects($this->never())
+            ->method('getAuthorizationUrl');
+
+        $this->Provider->expects($this->never())
+            ->method('getState');
+
+        $this->Provider->expects($this->any())
+            ->method('getAccessToken')
+            ->with(
+                $this->equalTo('authorization_code'),
+                $this->equalTo(['code' => 'ZPO9972j3092304230'])
+            )
+            ->will($this->returnValue($Token));
+
+        $this->Provider->expects($this->any())
+            ->method('getResourceOwner')
+            ->with(
+                $this->equalTo($Token)
+            )
+            ->will($this->throwException(
+                new \InvalidArgumentException('Invalid argument at getResourceOwner')
+            ));
+
+        $service = (new ServiceFactory())->createFromProvider('facebook');
+        $this->Request = $this->Request->withAttribute('socialService', $service);
+        $identifiers = new IdentifierCollection([
+            'CakeDC/Auth.Social'
+        ]);
+        $Authenticator = new SocialAuthenticator($identifiers);
+        $Response = new Response();
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Invalid argument at getResourceOwner');
+        $Authenticator->authenticate($this->Request, $Response);
+    }
+
+    /**
      * Test authenticate method when social identifier return null
      *
      * @return void
