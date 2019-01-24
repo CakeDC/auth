@@ -11,12 +11,10 @@
 
 use Authentication\Authenticator\Result;
 use Authentication\Identifier\IdentifierCollection;
-use Authentication\Identifier\IdentifierInterface;
-use Cake\ORM\Entity;
 use CakeDC\Auth\Authenticator\TwoFactorAuthenticator;
-use Cake\Core\Configure;
 use Cake\Http\Client\Response;
 use Cake\Http\ServerRequestFactory;
+use Cake\ORM\Entity;
 use Cake\TestSuite\TestCase;
 
 class TwoFactorAuthenticatorTest extends TestCase
