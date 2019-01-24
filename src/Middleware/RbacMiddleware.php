@@ -168,9 +168,10 @@ class RbacMiddleware
         if ($behavior === self::UNAUTHORIZED_BEHAVIOR_THROW) {
             throw new ForbiddenException();
         }
-
+        $accept = (array)$request->getHeader('Accept');
         if ($behavior === self::UNAUTHORIZED_BEHAVIOR_AUTO &&
-            $request->getHeader('Accept') === 'application/json') {
+            in_array('application/json', $accept, true)
+        ) {
             throw new ForbiddenException();
         }
 

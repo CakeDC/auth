@@ -67,6 +67,25 @@ class RbacMiddlewareTest extends TestCase
 
     /**
      * @test
+     * @expectedException \Cake\Http\Exception\ForbiddenException
+     */
+    public function testInvokeForbiddenAjax()
+    {
+        $request = new ServerRequest();
+        $request = $request->withHeader('Accept', 'application/json');
+        $response = new Response();
+        $next = function () {
+            return 'unreachable';
+        };
+        $rbacMiddleware = $this->rbacMiddleware;
+        $rbacMiddleware->setConfig([
+            'unauthorizedBehavior' => RbacMiddleware::UNAUTHORIZED_BEHAVIOR_AUTO
+        ]);
+        $rbacMiddleware($request, $response, $next);
+    }
+
+    /**
+     * @test
      */
     public function testInvokeRedirect()
     {
