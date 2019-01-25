@@ -135,15 +135,7 @@ class FormAuthenticator implements AuthenticatorInterface, AuthenticatorFeedback
             return $this->lastResult = $result;
         }
 
-        $data = $request->getParsedBody();
-        $captcha = $data['g-recaptcha-response'] ? $data['g-recaptcha-response'] : null;
-
-        $valid = $this->validateReCaptcha(
-            $captcha,
-            $request->clientIp()
-        );
-
-        if ($valid) {
+        if ($this->validateReCaptchaFromRequest($request)) {
             return $this->lastResult = $result;
         }
 

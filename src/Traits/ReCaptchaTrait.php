@@ -19,7 +19,23 @@ use Cake\Core\Configure;
  */
 trait ReCaptchaTrait
 {
+    /**
+     * Validates reCaptcha response with specific request
+     *
+     * @param \Cake\Http\ServerRequest $request The request that contains login information.
+     *
+     * @return bool
+     */
+    public function validateReCaptchaFromRequest($request)
+    {
+        $data = $request->getParsedBody();
+        $captcha = $data['g-recaptcha-response'] ? $data['g-recaptcha-response'] : null;
 
+        return $this->validateReCaptcha(
+            $captcha,
+            $request->clientIp()
+        );
+    }
     /**
      * Validates reCaptcha response
      *
