@@ -24,6 +24,11 @@ use Psr\Http\Message\ServerRequestInterface;
 class CookieAuthenticator extends BaseAuthenticator implements PersistenceInterface
 {
     /**
+     * Session key used to save tmp data
+     */
+    const SESSION_DATA_KEY = 'CookieAuth';
+
+    /**
      * {@inheritDoc}
      */
     public function persistIdentity(ServerRequestInterface $request, ResponseInterface $response, $identity)
@@ -33,8 +38,8 @@ class CookieAuthenticator extends BaseAuthenticator implements PersistenceInterf
         $bodyData = $request->getParsedBody();
         if (empty($bodyData)) {
             $session = $request->getAttribute('session');
-            $bodyData = $session->read('CookieAuth');
-            $session->delete('CookieAuth');
+            $bodyData = $session->read(self::SESSION_DATA_KEY);
+            $session->delete(self::SESSION_DATA_KEY);
         }
 
         if (!$this->_checkUrl($request) || !is_array($bodyData) || empty($bodyData[$field])) {

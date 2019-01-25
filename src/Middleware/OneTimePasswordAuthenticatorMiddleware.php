@@ -15,6 +15,7 @@ use CakeDC\Auth\Authentication\AuthenticationService;
 use Cake\Core\Configure;
 use Cake\Http\ServerRequest;
 use Cake\Routing\Router;
+use CakeDC\Auth\Authenticator\CookieAuthenticator;
 use Psr\Http\Message\ResponseInterface;
 
 class OneTimePasswordAuthenticatorMiddleware
@@ -35,7 +36,7 @@ class OneTimePasswordAuthenticatorMiddleware
             return $next($request, $response);
         }
 
-        $request->getSession()->write('CookieAuth', [
+        $request->getSession()->write(CookieAuthenticator::SESSION_DATA_KEY, [
             'remember_me' => $request->getData('remember_me')
         ]);
 
