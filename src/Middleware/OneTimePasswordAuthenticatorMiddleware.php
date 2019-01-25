@@ -12,10 +12,10 @@
 namespace CakeDC\Auth\Middleware;
 
 use CakeDC\Auth\Authentication\AuthenticationService;
+use CakeDC\Auth\Authenticator\CookieAuthenticator;
 use Cake\Core\Configure;
 use Cake\Http\ServerRequest;
 use Cake\Routing\Router;
-use CakeDC\Auth\Authenticator\CookieAuthenticator;
 use Psr\Http\Message\ResponseInterface;
 
 class OneTimePasswordAuthenticatorMiddleware
