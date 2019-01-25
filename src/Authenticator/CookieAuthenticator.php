@@ -37,7 +37,7 @@ class CookieAuthenticator extends BaseAuthenticator implements PersistenceInterf
 
         $bodyData = $request->getParsedBody();
         if (empty($bodyData)) {
-            $session = $request->getAttribute('session');
+            $session = $request->getSession();
             $bodyData = $session->read(self::SESSION_DATA_KEY);
             $session->delete(self::SESSION_DATA_KEY);
         }
