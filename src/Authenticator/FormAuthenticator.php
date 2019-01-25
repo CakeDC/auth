@@ -21,7 +21,7 @@ use Cake\Core\InstanceConfigTrait;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-class FormAuthenticator implements AuthenticatorInterface, AuthenticatorFeedbackInterface
+class FormAuthenticator implements AuthenticatorInterface
 {
     use InstanceConfigTrait;
     use ReCaptchaTrait;
@@ -51,11 +51,6 @@ class FormAuthenticator implements AuthenticatorInterface, AuthenticatorFeedback
     protected $_defaultConfig = [
         'keyCheckEnabledRecaptcha' => 'Users.reCaptcha.login'
     ];
-
-    /**
-     * @var Result|null
-     */
-    protected $lastResult;
 
     /**
      * Constructor
@@ -108,16 +103,6 @@ class FormAuthenticator implements AuthenticatorInterface, AuthenticatorFeedback
     }
 
     /**
-     * Get the last result of authenticator
-     *
-     * @return Result|null
-     */
-    public function getLastResult()
-    {
-        return $this->lastResult;
-    }
-
-    /**
      * Authenticates the identity contained in a request. Wrapper for Authentication\Authenticator\FormAuthenticator
      * to also check reCaptcha. Will use the `config.userModel`, and `config.fields`
      * to find POST data that is used to find a matching record in the `config.userModel`. Will return false if
@@ -132,14 +117,14 @@ class FormAuthenticator implements AuthenticatorInterface, AuthenticatorFeedback
         $result = $this->getBaseAuthenticator()->authenticate($request, $response);
         $checkKey = $this->getConfig('keyCheckEnabledRecaptcha');
         if (!Configure::read($checkKey) || in_array($result->getStatus(), [Result::FAILURE_OTHER, Result::FAILURE_CREDENTIALS_MISSING])) {
-            return $this->lastResult = $result;
+            return $result;
         }
 
         if ($this->validateReCaptchaFromRequest($request)) {
-            return $this->lastResult = $result;
+            return $result;
         }
 
-        return $this->lastResult = new Result(null, self::FAILURE_INVALID_RECAPTCHA);
+        return new Result(null, self::FAILURE_INVALID_RECAPTCHA);
     }
 
     /**

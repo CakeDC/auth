@@ -83,7 +83,6 @@ class FormAuthenticatorTest extends TestCase
         $this->assertInstanceOf(Result::class, $result);
         $this->assertEquals(Result::FAILURE_OTHER, $result->getStatus());
         $this->assertSame($baseResult, $result);
-        $this->assertSame($baseResult, $Authenticator->getLastResult());
     }
 
     /**
@@ -158,7 +157,6 @@ class FormAuthenticatorTest extends TestCase
         $this->assertInstanceOf(Result::class, $result);
         $this->assertEquals(Result::SUCCESS, $result->getStatus());
         $this->assertSame($baseResult, $result);
-        $this->assertSame($baseResult, $Authenticator->getLastResult());
     }
 
     /**
@@ -227,7 +225,6 @@ class FormAuthenticatorTest extends TestCase
         $this->assertInstanceOf(Result::class, $result);
         $this->assertEquals(Result::SUCCESS, $result->getStatus());
         $this->assertSame($baseResult, $result);
-        $this->assertSame($baseResult, $Authenticator->getLastResult());
     }
 
     /**
@@ -300,7 +297,6 @@ class FormAuthenticatorTest extends TestCase
         $this->assertInstanceOf(Result::class, $result);
         $this->assertEquals(FormAuthenticator::FAILURE_INVALID_RECAPTCHA, $result->getStatus());
         $this->assertNull($result->getData());
-        $this->assertSame($result, $Authenticator->getLastResult());
     }
 
     /**
