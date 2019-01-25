@@ -1,11 +1,11 @@
 <?php
 /**
- * Copyright 2010 - 2017, Cake Development Corporation (https://www.cakedc.com)
+ * Copyright 2010 - 2019, Cake Development Corporation (https://www.cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2010 - 2017, Cake Development Corporation (https://www.cakedc.com)
+ * @copyright Copyright 2010 - 2018, Cake Development Corporation (https://www.cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
@@ -15,7 +15,6 @@ use CakeDC\Auth\Rbac\Rbac;
 use Cake\Core\InstanceConfigTrait;
 use Cake\Http\Exception\ForbiddenException;
 use Cake\Routing\Router;
-use Cake\Utility\Hash;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -138,8 +137,12 @@ class RbacMiddleware
         $user = $request->getAttribute('identity');
         $userData = [];
         if ($user) {
-            $userData = Hash::get($user, 'User', []);
+            $userData = is_object($user) ? $user->getOriginalData() : $user;
             $userData = is_object($userData) ? $userData->toArray() : $userData;
+        }
+
+        if (isset($userData['User'])) {
+            $userData = $userData['User'];
         }
 
         if (!$this->rbac->checkPermissions($userData, $request)) {
@@ -165,9 +168,10 @@ class RbacMiddleware
         if ($behavior === self::UNAUTHORIZED_BEHAVIOR_THROW) {
             throw new ForbiddenException();
         }
-
+        $accept = (array)$request->getHeader('Accept');
         if ($behavior === self::UNAUTHORIZED_BEHAVIOR_AUTO &&
-            $request->getHeader('Accept') === 'application/json') {
+            in_array('application/json', $accept, true)
+        ) {
             throw new ForbiddenException();
         }
 

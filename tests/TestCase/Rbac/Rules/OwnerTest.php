@@ -1,11 +1,11 @@
 <?php
 /**
- * Copyright 2010 - 2017, Cake Development Corporation (https://www.cakedc.com)
+ * Copyright 2010 - 2019, Cake Development Corporation (https://www.cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2010 - 2017, Cake Development Corporation (https://www.cakedc.com)
+ * @copyright Copyright 2010 - 2018, Cake Development Corporation (https://www.cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
@@ -23,9 +23,9 @@ use Cake\TestSuite\TestCase;
 class OwnerTest extends TestCase
 {
     public $fixtures = [
-        'plugin.CakeDC/Auth.posts',
-        'plugin.CakeDC/Auth.users',
-        'plugin.CakeDC/Auth.posts_users',
+        'plugin.CakeDC/Auth.Posts',
+        'plugin.CakeDC/Auth.Users',
+        'plugin.CakeDC/Auth.PostsUsers',
     ];
 
     /**
@@ -163,7 +163,7 @@ class OwnerTest extends TestCase
     public function testAllowedUsingTableInstance()
     {
         $this->Owner = new Owner([
-            'table' => TableRegistry::get('CakeDC/Users.Posts'),
+            'table' => TableRegistry::getTableLocator()->get('CakeDC/Users.Posts'),
         ]);
         $this->request = $this->request->withParam('pass', ['00000000-0000-0000-0000-000000000001']);
         $user = [
@@ -198,7 +198,7 @@ class OwnerTest extends TestCase
     public function testAllowedShouldThrowExceptionBecauseForeignKeyNotPresentInTable()
     {
         $this->Owner = new Owner([
-            'table' => TableRegistry::get('CakeDC/Users.Posts'),
+            'table' => TableRegistry::getTableLocator()->get('CakeDC/Users.Posts'),
             'ownerForeignKey' => 'column_not_found',
         ]);
         $this->request = $this->request->withParam('pass', ['00000000-0000-0000-0000-000000000001']);
