@@ -78,14 +78,14 @@ class TwoFactorAuthenticator extends AbstractAuthenticator
 
         $data = $request->getSession()->read(self::USER_SESSION_KEY);
 
-        if ($data === null) {
-            return new Result(null, Result::FAILURE_CREDENTIALS_MISSING, [
-                'Login credentials not found'
-            ]);
+        if (!empty($data)) {
+            $request->getSession()->delete(self::USER_SESSION_KEY);
+
+            return new Result($data, Result::SUCCESS);
         }
 
-        $request->getSession()->delete(self::USER_SESSION_KEY);
-
-        return new Result($data, Result::SUCCESS);
+        return new Result(null, Result::FAILURE_CREDENTIALS_MISSING, [
+            'Login credentials not found'
+        ]);
     }
 }
