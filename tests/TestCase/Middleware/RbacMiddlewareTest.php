@@ -1,11 +1,11 @@
 <?php
 /**
- * Copyright 2010 - 2017, Cake Development Corporation (https://www.cakedc.com)
+ * Copyright 2010 - 2019, Cake Development Corporation (https://www.cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2010 - 2017, Cake Development Corporation (https://www.cakedc.com)
+ * @copyright Copyright 2010 - 2018, Cake Development Corporation (https://www.cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
@@ -61,6 +61,25 @@ class RbacMiddlewareTest extends TestCase
         $rbacMiddleware = $this->rbacMiddleware;
         $rbacMiddleware->setConfig([
             'unauthorizedBehavior' => RbacMiddleware::UNAUTHORIZED_BEHAVIOR_THROW
+        ]);
+        $rbacMiddleware($request, $response, $next);
+    }
+
+    /**
+     * @test
+     * @expectedException \Cake\Http\Exception\ForbiddenException
+     */
+    public function testInvokeForbiddenAjax()
+    {
+        $request = new ServerRequest();
+        $request = $request->withHeader('Accept', 'application/json');
+        $response = new Response();
+        $next = function () {
+            return 'unreachable';
+        };
+        $rbacMiddleware = $this->rbacMiddleware;
+        $rbacMiddleware->setConfig([
+            'unauthorizedBehavior' => RbacMiddleware::UNAUTHORIZED_BEHAVIOR_AUTO
         ]);
         $rbacMiddleware($request, $response, $next);
     }

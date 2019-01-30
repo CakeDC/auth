@@ -1,11 +1,11 @@
 <?php
 /**
- * Copyright 2010 - 2017, Cake Development Corporation (https://www.cakedc.com)
+ * Copyright 2010 - 2019, Cake Development Corporation (https://www.cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2010 - 2017, Cake Development Corporation (https://www.cakedc.com)
+ * @copyright Copyright 2010 - 2018, Cake Development Corporation (https://www.cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
@@ -89,24 +89,12 @@ Cake\Core\Configure::write('Session', [
 
 //init router
 \Cake\Routing\Router::reload();
-
-\Cake\Core\Plugin::load('CakeDC/Users', [
-    'path' => dirname(dirname(__FILE__)) . DS,
-    'routes' => true
+Cake\Core\Configure::write('OAuth.path', [
+    'plugin' => 'CakeDC/Users',
+    'controller' => 'Users',
+    'action' => 'socialLogin',
+    'prefix' => null
 ]);
-if (file_exists($root . '/config/bootstrap.php')) {
-    require $root . '/config/bootstrap.php';
-}
-
-Cake\Routing\DispatcherFactory::add('Routing');
-Cake\Routing\DispatcherFactory::add('ControllerFactory');
-
-// Ensure default test connection is defined
-if (!getenv('db_dsn')) {
-    putenv('db_dsn=sqlite:///:memory:');
-}
-
-Cake\Datasource\ConnectionManager::setConfig('test', [
-    'url' => getenv('db_dsn'),
-    'timezone' => 'UTC'
-]);
+$app = new \CakeDC\Auth\Test\TestApplication(__DIR__ . DS . 'config');
+$app->bootstrap();
+$app->pluginBootstrap();
