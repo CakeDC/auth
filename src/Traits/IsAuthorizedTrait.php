@@ -38,19 +38,7 @@ trait IsAuthorizedTrait
             return $this->_checkCanAccess(Router::normalize(Router::reverse($url)), $action);
         }
 
-        try {
-            //remove base from $url if exists
-            $normalizedUrl = Router::normalize($url);
-
-            return $this->_checkCanAccess($url, $action);
-        } catch (MissingRouteException $ex) {
-            //if it's a url pointing to our own app
-            if (substr($normalizedUrl, 0, 1) === '/') {
-                throw $ex;
-            }
-
-            return true;
-        }
+        return $this->_checkCanAccess($url, $action);
     }
 
     /**
@@ -69,7 +57,7 @@ trait IsAuthorizedTrait
         $request = $this->getRequest();
         $service = $request->getAttribute('authorization');
         if (!$service instanceof AuthorizationServiceInterface) {
-            throw new RuntimeException(__('Could not find the authorization service in the request.'));
+            throw new \RuntimeException(__('Could not find the authorization service in the request.'));
         }
         $identity = $request->getAttribute('identity');
         $targetRequest = $this->_createUrlRequestToCheck($url);
@@ -98,35 +86,5 @@ trait IsAuthorizedTrait
         );
 
         return $targetRequest;
-    }
-
-    /**
-     * Check if current user permissions of url
-     *
-     * @param string $url to check permissions
-     *
-     * @return bool
-     */
-    protected function checkRbacPermissions($url)
-    {
-        $uri = new Uri($url);
-        $request = $this->getRequest();
-        $Rbac = $request->getAttribute('rbac');
-        if ($Rbac === null) {
-            $Rbac = new Rbac();
-        }
-        $targetRequest = new ServerRequest([
-            'uri' => $uri
-        ]);
-        $params = Router::parseRequest($targetRequest);
-        $targetRequest = $targetRequest->withAttribute('params', $params);
-
-        $user = $request->getAttribute('identity');
-        $userData = [];
-        if ($user) {
-            $userData = $user->getOriginalData()->toArray();
-        }
-
-        return $Rbac->checkPermissions($userData, $targetRequest);
     }
 }

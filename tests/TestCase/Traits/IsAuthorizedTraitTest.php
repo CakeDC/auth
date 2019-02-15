@@ -32,23 +32,54 @@ use Cake\TestSuite\TestCase;
  */
 class IsAuthorizedTraitTest extends TestCase
 {
+    /**
+     * Data provider for testIsAuthorized
+     *
+     * @return array
+     */
     public function dataProviderIsAuthorized()
     {
+        $url = [
+            'plugin' => 'CakeDC/Users',
+            'controller' => 'Users',
+            'action' => 'myTest'
+        ];
+
         return [
-            [true],
-            [false]
+            [$url, true],
+            [$url, false],
+            ['/my-test', true],
+            ['/my-test', false],
         ];
     }
 
     /**
-     * Test link
+     * Test isAuthorized empty url
      *
+     * @return void
+     */
+    public function testIsAuthorizedEmpty()
+    {
+        $Trait = $this->getMockBuilder('\CakeDC\Auth\Traits\IsAuthorizedTrait')
+            ->setMethods(['getRequest'])
+            ->getMockForTrait();
+        $Trait->expects($this->never())
+            ->method('getRequest');
+        $this->assertFalse($Trait->isAuthorized(null));
+        $this->assertFalse($Trait->isAuthorized([]));
+        $this->assertFalse($Trait->isAuthorized(''));
+    }
+
+    /**
+     * Test isAuthorized
+     *
+     * @param mixed $url The url to test.
      * @param bool $authorize Is authorized?
      *
      * @dataProvider dataProviderIsAuthorized
      * @return void
      */
-    public function testIsAuthorizedWithMock($authorize)
+    public function testIsAuthorizedWithMock($url, $authorize, $invalidUrl = false)
     {
         $user = new Entity([
             'id' => '00000000-0000-0000-0000-000000000001',
@@ -89,38 +120,36 @@ class IsAuthorizedTraitTest extends TestCase
             ->method('getRequest')
             ->will($this->returnValue($request));
 
-        $result = $Trait->isAuthorized([
-            'plugin' => 'CakeDC/Users',
-            'controller' => 'Users',
-            'action' => 'myTest'
-        ]);
+        $result = $Trait->isAuthorized($url);
         $this->assertSame($authorize, $result);
     }
 
     /**
-     * Test isAuthorized
+     * Test isAuthorized without authorization service
      *
      * @return void
      */
-    public function tedsdtIsAuthorizedAuthorizedHappy()
+    public function testIsAuthorizedWithoutService()
     {
-        $user = new User([
-            'id' => '00000000-0000-0000-0000-000000000001',
-            'password' => '12345'
-        ]);
-        $identity = new Identity($user);
-        $this->AuthLink->getView()->setRequest($this->AuthLink->getView()->getRequest()->withAttribute('identity', $identity));
+        $request = new ServerRequest();
         $rbac = $this->getMockBuilder(Rbac::class)->setMethods(['checkPermissions'])->getMock();
-        $rbac->expects($this->once())
-            ->method('checkPermissions')
-            ->with($identity->getOriginalData()->toArray())
-            ->will($this->returnValue(true));
-        $this->AuthLink->getView()->setRequest($this->AuthLink->getView()->getRequest()->withAttribute('rbac', $rbac));
-        $link = $this->AuthLink->link(
-            'title',
-            ['plugin' => 'CakeDC/Users', 'controller' => 'Users', 'action' => 'profile'],
-            ['before' => 'before_', 'after' => '_after', 'class' => 'link-class']
-        );
-        $this->assertSame('before_<a href="/profile" class="link-class">title</a>_after', $link);
+        $rbac->expects($this->never())
+            ->method('checkPermissions');
+        $request = $request->withAttribute('rbac', $rbac);
+
+        $Trait = $this->getMockBuilder('\CakeDC\Auth\Traits\IsAuthorizedTrait')
+            ->setMethods(['getRequest'])
+            ->getMockForTrait();
+        $Trait->expects($this->any())
+            ->method('getRequest')
+            ->will($this->returnValue($request));
+
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('Could not find the authorization service in the request.');
+        $Trait->isAuthorized([
+            'plugin' => 'CakeDC/Users',
+            'controller' => 'Users',
+            'action' => 'myTest'
+        ]);
     }
 }
