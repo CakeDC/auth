@@ -12,10 +12,29 @@
 namespace CakeDC\Auth\Policy;
 
 use CakeDC\Auth\Rbac\Rbac;
+use Cake\Core\InstanceConfigTrait;
 use Psr\Http\Message\ServerRequestInterface;
 
 class RbacPolicy
 {
+    use InstanceConfigTrait;
+
+    protected $_defaultConfig = [
+        'adapter' => [
+            'className' => Rbac::class
+        ]
+    ];
+
+    /**
+     * RbacPolicy constructor.
+     *
+     * @param array $config Policy configurations
+     */
+    public function __construct(array $config = [])
+    {
+        $this->setConfig($config);
+    }
+
     /**
      * Check rbac permission
      *
@@ -41,10 +60,33 @@ class RbacPolicy
     public function getRbac($resource)
     {
         $rbac = $resource->getAttribute('rbac');
-        if ($rbac === null) {
-            $rbac = new Rbac();
+        if ($rbac !== null) {
+            return $rbac;
+        }
+        $adapter = $this->getConfig('adapter');
+        if (is_object($adapter)) {
+            return $adapter;
         }
 
-        return $rbac;
+        return $this->createRbac($adapter);
+    }
+
+    /**
+     * Create an instance of Rbac
+     *
+     * @param array $config Rbac config
+     *
+     * @return \CakeDC\Auth\Rbac\Rbac
+     */
+    protected function createRbac($config)
+    {
+        if (isset($config['className'])) {
+            $className = $config['className'];
+            unset($config['className']);
+
+            return new $className($config);
+        }
+
+        throw new \InvalidArgumentException('Config "adapter" should be an object or an array with key className');
     }
 }
