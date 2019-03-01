@@ -14,6 +14,28 @@ The resource must be and request object, normally an instance of `Cake\Http\Serv
 policy uses the `CakeDC\Auth\Rbac\Rbac`, it will create a new instance for rbac if the request
 'rbac' attribute is `null`.
 
+You can set a custom config for Rbac with array data:
+
+```
+Configure::write('Auth.RbacPolicy', [
+    'adapter' => [
+        'autoload_config' => 'permissions',
+        'role_field' => 'role',
+        'default_role' => 'user',
+        'permissions' => [],
+        'log' => false
+    ]
+]);
+```
+
+You could also set an instance of Rbac directly:
+```
+Configure::write('Auth.RbacPolicy', [
+    'adapter' => new Rbac()
+]);
+```
+
+
 SuperuserPolicy
 ---------------
 This policy allow all for a superuser. Configurations:
