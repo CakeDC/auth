@@ -17,7 +17,7 @@ policy uses the `CakeDC\Auth\Rbac\Rbac`, it will create a new instance for rbac 
 You can set a custom config for Rbac with array data:
 
 ```
-Configure::write('Auth.RbacPolicy', [
+new RbacPolicy([
     'adapter' => [
         'autoload_config' => 'permissions',
         'role_field' => 'role',
@@ -30,11 +30,10 @@ Configure::write('Auth.RbacPolicy', [
 
 You could also set an instance of Rbac directly:
 ```
-Configure::write('Auth.RbacPolicy', [
+new RbacPolicy([
     'adapter' => new Rbac()
 ]);
 ```
-
 
 SuperuserPolicy
 ---------------
