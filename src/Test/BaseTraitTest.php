@@ -34,6 +34,14 @@ trait BaseTraitTest
     }
 
     /**
+     * @return bool
+     */
+    protected function _isVerboseOrDebug()
+    {
+        return !empty(array_intersect(['--debug', '--verbose', '-v'], $_SERVER['argv']));
+    }
+
+    /**
      * @param $url
      * @param $username
      * @param $method
@@ -45,10 +53,13 @@ trait BaseTraitTest
     protected function _testPermissions($url, $username, $method, $ajax, $responseCode, $responseContains)
     {
 
-        (new ConsoleIo())->info(__(
-            "\nUrl: {0} Username: {1} Method: {2} Ajax?: {3} Response Code: {4} Response Contains: {5} ",
-            $url, $username, $method, $ajax, $responseCode, $responseContains
-        ), 0);
+       if ($this->_isVerboseOrDebug()) {
+            (new ConsoleIo())->info(__(
+                "\nUrl: {0} Username: {1} Method: {2} Ajax?: {3} Response Code: {4} Response Contains: {5} ",
+                $url, $username, $method, $ajax, $responseCode, $responseContains
+            ), 0);
+            die();
+        }
         $this->loginAsUserName($username);
         if ($ajax === 'ajax') {
             $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
