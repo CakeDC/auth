@@ -6,7 +6,7 @@ Migration Guide
 
 * Change namespace of Rules to `CakeDC\Auth\Rbac\Rules`, for example `CakeDC\Auth\Rbac\Rules\Owner`
 
-2.x to 3.x
+3.x to 4.x
 ----------
 
 In this version we're using the [cakephp/authentication](https://github.com/cakephp/authentication/) and
