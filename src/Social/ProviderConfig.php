@@ -75,6 +75,7 @@ class ProviderConfig
                 'className' => null,
                 'service' => null,
                 'mapper' => null,
+                'authParams' => [],
                 'options' => [],
                 'collaborators' => [],
                 'signature' => null,

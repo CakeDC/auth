@@ -132,6 +132,7 @@ class ProviderConfigTest extends TestCase
             'service' => 'CakeDC\Auth\Social\Service\OAuth2Service',
             'className' => 'League\OAuth2\Client\Provider\Facebook',
             'mapper' => 'CakeDC\Auth\Social\Mapper\Facebook',
+            'authParams' => ['scope' => ['public_profile', 'email', 'user_birthday', 'user_gender', 'user_link']],
             'options' => [
                 'customOption' => 'hello',
                 'graphApiVersion' => 'v2.8',
@@ -174,6 +175,7 @@ class ProviderConfigTest extends TestCase
             'service' => 'CakeDC\Auth\Social\Service\OAuth2Service',
             'className' => 'League\OAuth2\Client\Provider\Facebook',
             'mapper' => 'CakeDC\Auth\Social\Mapper\Facebook',
+            'authParams' => ['scope' => ['public_profile', 'email', 'user_birthday', 'user_gender', 'user_link']],
             'options' => [
                 'graphApiVersion' => 'v2.8',
                 'redirectUri' => '/auth/facebook',
@@ -200,6 +202,7 @@ class ProviderConfigTest extends TestCase
             'service' => 'CakeDC\Auth\Social\Service\OAuth1Service',
             'className' => 'League\OAuth1\Client\Server\Twitter',
             'mapper' => 'CakeDC\Auth\Social\Mapper\Twitter',
+            'authParams' => [],
             'options' => [
                 'redirectUri' => '/auth/twitter',
                 'linkSocialUri' => '/link-social/twitter',
@@ -224,6 +227,7 @@ class ProviderConfigTest extends TestCase
             'service' => 'CakeDC\Auth\Social\Service\OAuth2Service',
             'className' => 'Luchianenco\OAuth2\Client\Provider\Amazon',
             'mapper' => 'CakeDC\Auth\Social\Mapper\Amazon',
+            'authParams' => [],
             'options' => [
                 'redirectUri' => '/auth/amazon',
                 'linkSocialUri' => '/link-social/amazon',

@@ -56,7 +56,9 @@ class OAuth2Service extends OAuthServiceAbstract
             $request->getSession()->write('oauth2state', $this->provider->getState());
         }
 
-        return $this->provider->getAuthorizationUrl();
+        return $this->provider->getAuthorizationUrl(
+            $this->getConfig('authParams', [])
+        );
     }
 
     /**
