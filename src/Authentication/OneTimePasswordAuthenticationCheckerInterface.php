@@ -10,7 +10,7 @@
  */
 namespace CakeDC\Auth\Authentication;
 
-interface TwoFactorAuthenticationCheckerInterface
+interface OneTimePasswordAuthenticationCheckerInterface
 {
     /**
      * Check if two factor authentication is enabled

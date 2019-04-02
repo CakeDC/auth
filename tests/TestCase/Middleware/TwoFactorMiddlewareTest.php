@@ -13,7 +13,7 @@ namespace CakeDC\Auth\Test\TestCase\Middleware;
 
 use Authentication\Authenticator\Result;
 use CakeDC\Auth\Authentication\AuthenticationService;
-use CakeDC\Auth\Middleware\OneTimePasswordAuthenticatorMiddleware;
+use CakeDC\Auth\Middleware\TwoFactorMiddleware;
 use Cake\Core\Configure;
 use Cake\Http\Response;
 use Cake\Http\ServerRequest;
@@ -25,12 +25,12 @@ use Cake\TestSuite\TestCase;
  * Class OneTimePasswordAuthenticatorMiddlewareTest
  * @package TestCase\Middleware
  */
-class OneTimePasswordAuthenticatorMiddlewareTest extends TestCase
+class TwoFactorMiddlewareTest extends TestCase
 {
     /**
-     * @var OneTimePasswordAuthenticatorMiddleware
+     * @var TwoFactorMiddleware
      */
-    protected $OneTimePasswordAuthenticatorMiddleware;
+    protected $TwoFactorMiddleware;
 
     /**
      * Sets up the fixture, for example, opens a network connection.
@@ -38,7 +38,7 @@ class OneTimePasswordAuthenticatorMiddlewareTest extends TestCase
      */
     public function setUp()
     {
-        $this->OneTimePasswordAuthenticatorMiddleware = new OneTimePasswordAuthenticatorMiddleware();
+        $this->TwoFactorMiddleware = new TwoFactorMiddleware();
     }
 
     /**
@@ -47,7 +47,7 @@ class OneTimePasswordAuthenticatorMiddlewareTest extends TestCase
      */
     public function tearDown()
     {
-        unset($this->OneTimePasswordAuthenticatorMiddleware);
+        unset($this->TwoFactorMiddleware);
     }
 
     /**
@@ -75,7 +75,7 @@ class OneTimePasswordAuthenticatorMiddlewareTest extends TestCase
             ->will($this->returnValue($result));
 
         $request = $request->withAttribute('authentication', $service);
-        $middleware = $this->OneTimePasswordAuthenticatorMiddleware;
+        $middleware = $this->TwoFactorMiddleware;
         $self = $this;
         $result = false;
         $next = function ($aRequest, $aResponse) use ($request, $response, $self, &$result) {
@@ -124,7 +124,7 @@ class OneTimePasswordAuthenticatorMiddlewareTest extends TestCase
             ->will($this->returnValue($result));
 
         $request = $request->withAttribute('authentication', $service);
-        $middleware = $this->OneTimePasswordAuthenticatorMiddleware;
+        $middleware = $this->TwoFactorMiddleware;
         $next = function () {
             throw new \UnexpectedValueException("Should not be called");
         };

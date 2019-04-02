@@ -77,7 +77,7 @@ return [
         ],
     ],
     'OneTimePasswordAuthenticator' => [
-        'checker' => \CakeDC\Auth\Authentication\DefaultTwoFactorAuthenticationChecker::class,
+        'checker' => \CakeDC\Auth\Authentication\DefaultOneTimePasswordAuthenticationChecker::class,
         'verifyAction' => [
             'plugin' => 'CakeDC/Users',
             'controller' => 'Users',
