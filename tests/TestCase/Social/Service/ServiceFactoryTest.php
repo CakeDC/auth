@@ -51,6 +51,7 @@ class ServiceFactoryTest extends TestCase
             'service' => 'CakeDC\Auth\Social\Service\OAuth2Service',
             'className' => 'League\OAuth2\Client\Provider\Facebook',
             'mapper' => 'CakeDC\Auth\Social\Mapper\Facebook',
+            'authParams' => ['scope' => ['public_profile', 'email', 'user_birthday', 'user_gender', 'user_link']],
             'options' => [
                 'state' => '__TEST_STATE__',
                 'graphApiVersion' => 'v2.8',
@@ -92,6 +93,7 @@ class ServiceFactoryTest extends TestCase
             'service' => 'CakeDC\Auth\Social\Service\OAuth2Service',
             'className' => 'League\OAuth2\Client\Provider\Facebook',
             'mapper' => 'CakeDC\Auth\Social\Mapper\Facebook',
+            'authParams' => ['scope' => ['public_profile', 'email', 'user_birthday', 'user_gender', 'user_link']],
             'options' => [
                 'state' => '__TEST_STATE__',
                 'graphApiVersion' => 'v2.8',
@@ -124,6 +126,7 @@ class ServiceFactoryTest extends TestCase
             'service' => 'CakeDC\Auth\Social\Service\OAuth2Service',
             'className' => 'League\OAuth2\Client\Provider\Facebook',
             'mapper' => 'CakeDC\Auth\Social\Mapper\Facebook',
+            'authParams' => ['scope' => ['public_profile', 'email', 'user_birthday', 'user_gender', 'user_link']],
             'options' => [
                 'state' => '__TEST_STATE__',
                 'graphApiVersion' => 'v2.8',
@@ -166,6 +169,7 @@ class ServiceFactoryTest extends TestCase
             'service' => 'CakeDC\Auth\Social\Service\OAuth2Service',
             'className' => 'League\OAuth2\Client\Provider\Facebook',
             'mapper' => 'CakeDC\Auth\Social\Mapper\Facebook',
+            'authParams' => ['scope' => ['public_profile', 'email', 'user_birthday', 'user_gender', 'user_link']],
             'options' => [
                 'state' => '__TEST_STATE__',
                 'graphApiVersion' => 'v2.8',
@@ -198,6 +202,7 @@ class ServiceFactoryTest extends TestCase
             'service' => 'CakeDC\Auth\Social\Service\OAuth1Service',
             'className' => 'League\OAuth1\Client\Server\Twitter',
             'mapper' => 'CakeDC\Auth\Social\Mapper\Twitter',
+            'authParams' => ['scope' => ['public_profile', 'email', 'user_birthday', 'user_gender', 'user_link']],
             'options' => [
                 'redirectUri' => '/auth/twitter',
                 'linkSocialUri' => '/link-social/twitter',
