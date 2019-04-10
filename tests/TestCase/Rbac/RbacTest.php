@@ -37,6 +37,41 @@ class RbacTest extends TestCase
     {
         $request = new ServerRequest();
         $this->defaultPermissions = [
+            //all bypass
+            [
+                'prefix' => false,
+                'plugin' => 'CakeDC/Users',
+                'controller' => 'Users',
+                'action' => [
+                    // LoginTrait
+                    'socialLogin',
+                    'login',
+                    'logout',
+                    'socialEmail',
+                    'verify',
+                    // RegisterTrait
+                    'register',
+                    'validateEmail',
+                    // PasswordManagementTrait used in RegisterTrait
+                    'changePassword',
+                    'resetPassword',
+                    'requestResetPassword',
+                    // UserValidationTrait used in PasswordManagementTrait
+                    'resendTokenValidation',
+                    'linkSocial'
+                ],
+                'bypassAuth' => true,
+            ],
+            [
+                'prefix' => false,
+                'plugin' => 'CakeDC/Users',
+                'controller' => 'SocialAccounts',
+                'action' => [
+                    'validateAccount',
+                    'resendValidation',
+                ],
+                'bypassAuth' => true,
+            ],
             //admin role allowed to all the things
             [
                 'role' => 'admin',
@@ -51,13 +86,13 @@ class RbacTest extends TestCase
                 'role' => '*',
                 'plugin' => 'CakeDC/Users',
                 'controller' => 'Users',
-                'action' => ['profile', 'logout'],
+                'action' => ['profile', 'logout', 'linkSocial', 'callbackLinkSocial'],
             ],
             [
                 'role' => '*',
                 'plugin' => 'CakeDC/Users',
                 'controller' => 'Users',
-                'action' => 'resetGoogleAuthenticator',
+                'action' => 'resetOneTimePasswordAuthenticator',
                 'allowed' => true
             ],
             //all roles allowed to Pages/display
@@ -86,8 +121,8 @@ class RbacTest extends TestCase
     {
         $this->rbac = new Rbac();
         $result = $this->rbac->getPermissions();
-        $this->assertTrue(is_callable($result[2]['allowed']));
-        $result[2]['allowed'] = true;
+        $this->assertTrue(is_callable($result[4]['allowed']));
+        $result[4]['allowed'] = true;
         $this->assertSame($this->defaultPermissions, $result);
     }
 
