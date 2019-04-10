@@ -52,9 +52,11 @@ class CookieAuthenticatorTest extends TestCase
         $identifiers = new IdentifierCollection([
             'Authentication.Password'
         ]);
-        $request = ServerRequestFactory::fromGlobals(
-            ['REQUEST_URI' => '/login']
-        );
+        $uri = new \Zend\Diactoros\Uri('/login');
+        $uri->base = null;
+        $request = new \Cake\Http\ServerRequest();
+        $request = $request->withUri($uri);
+
         $request = $request->withParsedBody($post);
         $request->getSession()->write('CookieAuth', $session);
         $response = new Response();
