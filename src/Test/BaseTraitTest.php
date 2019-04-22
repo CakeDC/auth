@@ -58,7 +58,6 @@ trait BaseTraitTest
                 "\nUrl: {0} Username: {1} Method: {2} Ajax?: {3} Response Code: {4} Response Contains: {5} ",
                 $url, $username, $method, $ajax, $responseCode, $responseContains
             ), 0);
-            die();
         }
         $this->loginAsUserName($username);
         if ($ajax === 'ajax') {
