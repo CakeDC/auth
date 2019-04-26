@@ -73,7 +73,7 @@ trait BaseTraitTest
         if ($responseCode === '200') {
             $this->assertResponseOk();
         } else {
-            $this->assertResponseCode($responseCode);
+            $this->assertResponseCode((int)$responseCode);
         }
 
         if ($responseContains) {
