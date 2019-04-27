@@ -52,7 +52,7 @@ class SocialAuthenticator extends AbstractAuthenticator
      * @throws \Exception
      * @return \Authentication\Authenticator\ResultInterface
      */
-    public function authenticate(ServerRequestInterface $request, ResponseInterface $response)
+    public function authenticate(ServerRequestInterface $request)
     {
         $service = $request->getAttribute(self::SOCIAL_SERVICE_ATTRIBUTE);
         if ($service === null) {

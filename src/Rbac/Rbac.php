@@ -226,7 +226,7 @@ class Rbac
         if ($possibleValues === '*' ||
             $value === $possibleValues ||
             in_array($value, $possibleArray) ||
-            in_array(Inflector::camelize($value, '-'), $possibleArray)
+            in_array(Inflector::camelize((string)$value, '-'), $possibleArray)
         ) {
             return true;
         }

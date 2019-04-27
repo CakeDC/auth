@@ -87,18 +87,18 @@ class AuthenticationServiceTest extends TestCase
             ]
         ]);
 
-        $result = $service->authenticate($request, $response);
+        $result = $service->authenticate($request);
         $this->assertInstanceOf(Result::class, $result['result']);
         $this->assertInstanceOf(ServerRequestInterface::class, $result['request']);
-        $this->assertInstanceOf(ResponseInterface::class, $result['response']);
+        //$this->assertInstanc eOf(ResponseInterface::class, $result['response']);
         $this->assertFalse($result['result']->isValid());
         $result = $service->getAuthenticationProvider();
         $this->assertNull($result);
         $this->assertNull(
             $request->getAttribute('session')->read('Auth')
         );
-        $this->assertEmpty($response->getHeaderLine('Location'));
-        $this->assertNull($response->getStatusCode());
+//        $this->assertEmpty($response->getHeaderLine('Location'));
+//        $this->assertNull($response->getStatusCode());
 
         $sessionFailure = new Failure(
             $service->authenticators()->get('Session'),

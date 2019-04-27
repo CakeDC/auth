@@ -70,7 +70,7 @@ class TwoFactorAuthenticator extends AbstractAuthenticator
      * @param \Psr\Http\Message\ResponseInterface $response Unused response object.
      * @return \Authentication\Authenticator\ResultInterface
      */
-    public function authenticate(ServerRequestInterface $request, ResponseInterface $response)
+    public function authenticate(ServerRequestInterface $request)
     {
         if (!$this->_checkUrl($request)) {
             return $this->_buildLoginUrlErrorResult($request);

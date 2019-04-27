@@ -10,6 +10,8 @@
  */
 namespace CakeDC\Auth\Test;
 
+use Cake\Http\MiddlewareQueue;
+
 /**
  * Class TestApplication
  *
@@ -25,7 +27,7 @@ class TestApplication extends \Cake\Http\BaseApplication
      *
      * @return \Cake\Http\MiddlewareQueue
      */
-    public function middleware($middleware)
+    public function middleware(MiddlewareQueue $middleware): MiddlewareQueue
     {
         return $middleware;
     }
@@ -33,7 +35,7 @@ class TestApplication extends \Cake\Http\BaseApplication
     /**
      * {@inheritDoc}
      */
-    public function bootstrap()
+    public function bootstrap(): void
     {
         parent::bootstrap();
         $this->addPlugin('CakeDC/Auth', [

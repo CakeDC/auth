@@ -39,7 +39,7 @@ class AuthenticationService extends BaseService
      * @param ResultInterface $result valid result
      * @return array with result, request and response keys
      */
-    protected function proceedToGoogleVerify(ServerRequestInterface $request, ResponseInterface $response, ResultInterface $result)
+    protected function proceedToGoogleVerify(ServerRequestInterface $request, /*ResponseInterface $response, */ResultInterface $result)
     {
         $request->getSession()->write(self::TWO_FACTOR_VERIFY_SESSION_KEY, $result->getData());
 
@@ -48,7 +48,7 @@ class AuthenticationService extends BaseService
         $this->_successfulAuthenticator = null;
         $this->_result = $result;
 
-        return compact('result', 'request', 'response');
+        return compact('result', 'request'/*, 'response'*/);
     }
 
     /**
@@ -66,7 +66,7 @@ class AuthenticationService extends BaseService
      *
      * @throws \RuntimeException Throws a runtime exception when no authenticators are loaded.
      */
-    public function authenticate(ServerRequestInterface $request, ResponseInterface $response)
+    public function authenticate(ServerRequestInterface $request)
     {
         if ($this->authenticators()->isEmpty()) {
             throw new RuntimeException(
@@ -78,19 +78,20 @@ class AuthenticationService extends BaseService
         $this->failures = [];
         $result = null;
         foreach ($this->authenticators() as $authenticator) {
-            $result = $authenticator->authenticate($request, $response);
+            $result = $authenticator->authenticate($request);
 
             if ($result->isValid()) {
                 $twoFaRequired = $twoFaCheck->isRequired($result->getData()->toArray());
                 if ($twoFaRequired && $authenticator->getConfig('skipTwoFactorVerify') !== true) {
-                    return $this->proceedToGoogleVerify($request, $response, $result);
+                    return $this->proceedToGoogleVerify($request, /*$response, */$result);
                 }
 
-                if (!($authenticator instanceof StatelessInterface)) {
+
+/*                if (!($authenticator instanceof StatelessInterface)) {
                     $requestResponse = $this->persistIdentity($request, $response, $result->getData());
                     $request = $requestResponse['request'];
                     $response = $requestResponse['response'];
-                }
+                }*/
 
                 $this->_successfulAuthenticator = $authenticator;
                 $this->_result = $result;
@@ -98,7 +99,7 @@ class AuthenticationService extends BaseService
                 return [
                     'result' => $result,
                     'request' => $request,
-                    'response' => $response
+//                    'response' => $response
                 ];
             } else {
                 $this->failures[] = new Failure($authenticator, $result);
@@ -115,7 +116,7 @@ class AuthenticationService extends BaseService
         return [
             'result' => $result,
             'request' => $request,
-            'response' => $response
+//            'response' => $response
         ];
     }
 

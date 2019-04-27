@@ -112,9 +112,9 @@ class FormAuthenticator implements AuthenticatorInterface
      * @param \Psr\Http\Message\ResponseInterface $response Unused response object.
      * @return \Authentication\Authenticator\ResultInterface
      */
-    public function authenticate(ServerRequestInterface $request, ResponseInterface $response)
+    public function authenticate(ServerRequestInterface $request)
     {
-        $result = $this->getBaseAuthenticator()->authenticate($request, $response);
+        $result = $this->getBaseAuthenticator()->authenticate($request);
         $checkKey = $this->getConfig('keyCheckEnabledRecaptcha');
         if (!Configure::read($checkKey) || in_array($result->getStatus(), [Result::FAILURE_OTHER, Result::FAILURE_CREDENTIALS_MISSING])) {
             return $result;
