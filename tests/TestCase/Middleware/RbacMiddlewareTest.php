@@ -12,13 +12,13 @@ declare(strict_types=1);
 
 namespace CakeDC\Auth\Test\TestCase\Middleware;
 
-use CakeDC\Auth\Middleware\RbacMiddleware;
-use CakeDC\Auth\Rbac\Rbac;
 use Cake\Http\Response;
 use Cake\Http\Runner;
 use Cake\Http\ServerRequest;
 use Cake\Routing\Router;
 use Cake\TestSuite\TestCase;
+use CakeDC\Auth\Middleware\RbacMiddleware;
+use CakeDC\Auth\Rbac\Rbac;
 
 /**
  * Class RbacMiddlewareTest

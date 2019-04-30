@@ -19,8 +19,6 @@ use Cake\TestSuite\TestCase;
 use CakeDC\Auth\Authentication\AuthenticationService;
 use CakeDC\Auth\Authentication\Failure;
 use CakeDC\Auth\Authenticator\FormAuthenticator;
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
 
 class AuthenticationServiceTest extends TestCase
 {

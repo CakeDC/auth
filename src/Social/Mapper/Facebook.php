@@ -27,7 +27,8 @@ class Facebook extends AbstractMapper
 
     /**
      * Map for provider fields
-     * @var
+     *
+     * @var array
      */
     protected $_mapFields = [
         'full_name' => 'name',

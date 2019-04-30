@@ -32,7 +32,7 @@ class FormAuthenticator implements AuthenticatorInterface
     public const FAILURE_INVALID_RECAPTCHA = 'FAILURE_INVALID_RECAPTCHA';
 
     /**
-     * @var \Authentication\Authenticator\FormAuthenticator
+     * @var \Authentication\Authenticator\AuthenticatorInterface
      */
     protected $baseAuthenticator;
 
@@ -67,7 +67,7 @@ class FormAuthenticator implements AuthenticatorInterface
     /**
      * Gets the actual base authenticator
      *
-     * @return \Authentication\Authenticator\FormAuthenticator
+     * @return \Authentication\Authenticator\AuthenticatorInterface
      */
     public function getBaseAuthenticator()
     {

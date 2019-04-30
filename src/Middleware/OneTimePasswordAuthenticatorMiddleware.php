@@ -12,11 +12,11 @@ declare(strict_types=1);
 
 namespace CakeDC\Auth\Middleware;
 
-use CakeDC\Auth\Authentication\AuthenticationService;
-use CakeDC\Auth\Authenticator\CookieAuthenticator;
 use Cake\Core\Configure;
 use Cake\Http\Response;
 use Cake\Routing\Router;
+use CakeDC\Auth\Authentication\AuthenticationService;
+use CakeDC\Auth\Authenticator\CookieAuthenticator;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;

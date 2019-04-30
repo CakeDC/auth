@@ -27,7 +27,8 @@ class Twitter extends AbstractMapper
 
     /**
      * Map for provider fields
-     * @var null
+     *
+     * @var array
      */
     protected $_mapFields = [
         'id' => 'uid',

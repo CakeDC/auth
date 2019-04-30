@@ -16,7 +16,8 @@ class Pinterest extends AbstractMapper
 {
     /**
      * Map for provider fields
-     * @var
+     *
+     * @var array
      */
     protected $_mapFields = [
         'avatar' => 'image.60x60.url',

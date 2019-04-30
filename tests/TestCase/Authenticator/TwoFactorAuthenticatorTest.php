@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 use Authentication\Authenticator\Result;
 use Authentication\Identifier\IdentifierCollection;
-use Cake\Http\Client\Response;
 use Cake\ORM\Entity;
 use Cake\TestSuite\TestCase;
 use CakeDC\Auth\Authenticator\TwoFactorAuthenticator;

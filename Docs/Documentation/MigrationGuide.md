@@ -36,3 +36,8 @@ Please check [Authentication](Authentication.md) and [Authorization](Authorizati
 * Removed SimpleRbacAuthorize.php if favor of RbacPolicy with [Request Authorization Middleware](https://github.com/cakephp/authorization/blob/master/src/Middleware/RequestAuthorizationMiddleware.php)
 * Removed SuperuserAuthorize.php in favor of [SuperuserPolicy](../../src/Policy/SuperuserPolicy.php)
 
+
+4.x to 5.x
+----------
+* Required cakephp 4
+* Renamed \CakeDC\Auth\Test\BaseTraitTest to \CakeDC\Auth\Test\BaseTestTrait

@@ -13,12 +13,12 @@ namespace CakeDC\Auth\Test\TestCase\Authenticator;
 
 use Authentication\Authenticator\Result;
 use Authentication\Identifier\IdentifierCollection;
-use CakeDC\Auth\Authenticator\SocialAuthenticator;
-use CakeDC\Auth\Social\Service\ServiceFactory;
 use Cake\Core\Configure;
 use Cake\Http\ServerRequestFactory;
 use Cake\ORM\Entity;
 use Cake\TestSuite\TestCase;
+use CakeDC\Auth\Authenticator\SocialAuthenticator;
+use CakeDC\Auth\Social\Service\ServiceFactory;
 use League\OAuth2\Client\Provider\FacebookUser;
 use Zend\Diactoros\Uri;
 
