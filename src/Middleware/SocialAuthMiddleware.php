@@ -13,12 +13,12 @@ declare(strict_types=1);
 namespace CakeDC\Auth\Middleware;
 
 use Authentication\UrlChecker\UrlCheckerTrait;
-use CakeDC\Auth\Authenticator\SocialAuthenticator;
-use CakeDC\Auth\Social\Service\ServiceFactory;
 use Cake\Core\InstanceConfigTrait;
 use Cake\Http\Response;
 use Cake\Http\ServerRequest;
 use Cake\Log\LogTrait;
+use CakeDC\Auth\Authenticator\SocialAuthenticator;
+use CakeDC\Auth\Social\Service\ServiceFactory;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;

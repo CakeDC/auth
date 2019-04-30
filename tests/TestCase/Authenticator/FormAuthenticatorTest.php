@@ -13,10 +13,10 @@ declare(strict_types=1);
 use Authentication\Authenticator\Result;
 use Authentication\Identifier\IdentifierCollection;
 use Authentication\Identifier\IdentifierInterface;
-use CakeDC\Auth\Authenticator\FormAuthenticator;
 use Cake\Core\Configure;
 use Cake\Http\ServerRequestFactory;
 use Cake\TestSuite\TestCase;
+use CakeDC\Auth\Authenticator\FormAuthenticator;
 
 class FormAuthenticatorTest extends TestCase
 {

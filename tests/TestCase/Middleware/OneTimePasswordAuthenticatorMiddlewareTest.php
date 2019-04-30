@@ -13,8 +13,6 @@ declare(strict_types=1);
 namespace CakeDC\Auth\Test\TestCase\Middleware;
 
 use Authentication\Authenticator\Result;
-use CakeDC\Auth\Authentication\AuthenticationService;
-use CakeDC\Auth\Middleware\OneTimePasswordAuthenticatorMiddleware;
 use Cake\Core\Configure;
 use Cake\Http\Response;
 use Cake\Http\Runner;
@@ -22,6 +20,8 @@ use Cake\Http\ServerRequest;
 use Cake\Http\ServerRequestFactory;
 use Cake\Routing\Router;
 use Cake\TestSuite\TestCase;
+use CakeDC\Auth\Authentication\AuthenticationService;
+use CakeDC\Auth\Middleware\OneTimePasswordAuthenticatorMiddleware;
 
 /**
  * Class OneTimePasswordAuthenticatorMiddlewareTest

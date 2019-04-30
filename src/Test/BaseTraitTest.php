@@ -11,7 +11,8 @@ trait BaseTraitTest
     /**
      * Sets up the session as a logged in user for an user with id $id
      *
-     * @param $id
+     * @param string $id User id to login.
+     *
      * @return void
      */
     public function loginAsUserId($id)
@@ -24,7 +25,8 @@ trait BaseTraitTest
     /**
      * Login as a username
      *
-     * @param $username
+     * @param string $username Username to login.
+     *
      * @return void
      */
     public function loginAsUserName($username)
@@ -43,17 +45,18 @@ trait BaseTraitTest
     }
 
     /**
-     * @param $url
-     * @param $username
-     * @param $method
-     * @param $ajax
-     * @param $responseCode
-     * @param $responseContains
+     * Run permissions tests
+     *
+     * @param string $url Test url
+     * @param string $username Username.
+     * @param string $method Request method.
+     * @param string $ajax Ajax value
+     * @param string $responseCode Reponse code.
+     * @param string $responseContains Text the response should contains.
      * @throws \PHPUnit\Exception
      */
     protected function _testPermissions($url, $username, $method, $ajax, $responseCode, $responseContains)
     {
-
         if ($this->_isVerboseOrDebug()) {
             (new ConsoleIo())->info(__(
                 "\nUrl: {0} Username: {1} Method: {2} Ajax?: {3} Response Code: {4} Response Contains: {5} ",
@@ -90,7 +93,9 @@ trait BaseTraitTest
     }
 
     /**
-     * @param $csv
+     * Test permissions
+     *
+     * @param string $csv CSV name
      * @return array
      * @dataProvider provider
      */

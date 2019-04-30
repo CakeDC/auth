@@ -12,13 +12,13 @@ declare(strict_types=1);
 
 namespace CakeDC\Auth\Test\TestCase\Middleware;
 
-use CakeDC\Auth\Middleware\SocialAuthMiddleware;
-use CakeDC\Auth\Social\Service\OAuth2Service;
 use Cake\Core\Configure;
 use Cake\Http\Response;
 use Cake\Http\Runner;
 use Cake\Http\ServerRequestFactory;
 use Cake\TestSuite\TestCase;
+use CakeDC\Auth\Middleware\SocialAuthMiddleware;
+use CakeDC\Auth\Social\Service\OAuth2Service;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Zend\Diactoros\Uri;
