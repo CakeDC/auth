@@ -163,13 +163,13 @@ class RbacTest extends TestCase
     /**
      * @dataProvider providerAuthorize
      */
-    public function testAuthorize($permissions, $user, $requestParams, $expected, $msg = null)
+    public function testAuthorize($permissions, $user, $requestParams, $expected)
     {
         $this->rbac = new Rbac(compact('permissions'));
         $request = $this->_requestFromArray($requestParams);
 
         $result = $this->rbac->checkPermissions($user, $request);
-        $this->assertSame($expected, $result, $msg);
+        $this->assertSame($expected, $result);
     }
 
     public function providerAuthorize()
