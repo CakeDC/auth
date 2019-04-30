@@ -48,7 +48,6 @@ class SocialAuthenticator extends AbstractAuthenticator
      * Authenticates the identity contained in a request.
      *
      * @param \Psr\Http\Message\ServerRequestInterface $request The request that contains login information.
-     * @param \Psr\Http\Message\ResponseInterface $response Unused response object.
      * @throws \Exception
      * @return \Authentication\Authenticator\ResultInterface
      */

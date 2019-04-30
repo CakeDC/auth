@@ -35,7 +35,6 @@ class AuthenticationService extends BaseService
      * Proceed to google verify action after a valid result result
      *
      * @param \Psr\Http\Message\ServerRequestInterface $request response to manipulate
-     * @param \Psr\Http\Message\ResponseInterface $result base response to manipulate
      * @param \Authentication\Authenticator\ResultInterface $result valid result
      * @return array with result, request and response keys
      */
