@@ -14,10 +14,13 @@ namespace CakeDC\Auth\Middleware;
 
 use Cake\Core\InstanceConfigTrait;
 use Cake\Http\Exception\ForbiddenException;
+use Cake\Http\Response;
 use Cake\Routing\Router;
 use CakeDC\Auth\Rbac\Rbac;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\MiddlewareInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 
 /**
  * WARNING: This middleware is considered alpha, until cakephp/authentication is completed
@@ -78,7 +81,7 @@ use Psr\Http\Message\ServerRequestInterface;
  *
  * @package Middleware
  */
-class RbacMiddleware
+class RbacMiddleware implements MiddlewareInterface
 {
     use InstanceConfigTrait;
 
@@ -126,14 +129,9 @@ class RbacMiddleware
     }
 
     /**
-     * Middleware logic
-     *
-     * @param \Psr\Http\Message\ServerRequestInterface $request The request
-     * @param \Psr\Http\Message\ResponseInterface $response The response
-     * @param callable $next The next middleware to call
-     * @return \Psr\Http\Message\ResponseInterface A response
+     * @inheritDoc
      */
-    public function __invoke(ServerRequestInterface $request, ResponseInterface $response, $next)
+    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $user = $request->getAttribute('identity');
         $userData = [];
@@ -146,23 +144,23 @@ class RbacMiddleware
             $userData = $userData['User'];
         }
 
-        if (!$this->rbac->checkPermissions($userData, $request)) {
-            $response = $this->notAuthorized($userData, $request, $response);
-        }
-        $request = $request->withAttribute('rbac', $this->rbac);
+        if ($this->rbac->checkPermissions($userData, $request)) {
+            $request = $request->withAttribute('rbac', $this->rbac);
 
-        return $next($request, $response);
+            return $handler->handle($request);
+        }
+
+        return $this->notAuthorized($request);
     }
 
     /**
      * Handles a not authorized request
      *
-     * @param array $userData user data
      * @param \Psr\Http\Message\ServerRequestInterface $request request
-     * @param \Psr\Http\Message\ResponseInterface $response response
+     *
      * @return \Psr\Http\Message\ResponseInterface
      */
-    protected function notAuthorized(array $userData, ServerRequestInterface $request, ResponseInterface $response)
+    protected function notAuthorized(ServerRequestInterface $request): ResponseInterface
     {
         $behavior = $this->getConfig('unauthorizedBehavior');
 
@@ -176,19 +174,18 @@ class RbacMiddleware
             throw new ForbiddenException();
         }
 
-        return $this->unauthorizedRedirect($response);
+        return $this->unauthorizedRedirect();
     }
 
     /**
      * Redirects to unauthorizedRedirect the response
      *
-     * @param \Psr\Http\Message\ResponseInterface $response response
      * @return \Psr\Http\Message\ResponseInterface
      */
-    protected function unauthorizedRedirect(ResponseInterface $response)
+    protected function unauthorizedRedirect()
     {
         $url = $this->getConfig('unauthorizedRedirect');
-        $redirectResponse = $response
+        $redirectResponse = (new Response())
             ->withAddedHeader('Location', Router::url($url, true))
             ->withStatus(302);
 
