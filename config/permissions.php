@@ -39,7 +39,7 @@
         'action' => ['edit', 'delete'],
         'allowed' => function(array $user, $role, Request $request) {
             $postId = Hash::get($request->params, 'pass.0');
-            $post = TableRegistry::get('Posts')->get($postId);
+            $post = TableRegistry::getTableLocator()->get('Posts')->get($postId);
             $userId = Hash::get($user, 'id');
             if (!empty($post->user_id) && !empty($userId)) {
                 return $post->user_id === $userId;
@@ -51,6 +51,41 @@
 
 return [
     'CakeDC/Auth.permissions' => [
+        //all bypass
+        [
+            'prefix' => false,
+            'plugin' => 'CakeDC/Users',
+            'controller' => 'Users',
+            'action' => [
+                // LoginTrait
+                'socialLogin',
+                'login',
+                'logout',
+                'socialEmail',
+                'verify',
+                // RegisterTrait
+                'register',
+                'validateEmail',
+                // PasswordManagementTrait used in RegisterTrait
+                'changePassword',
+                'resetPassword',
+                'requestResetPassword',
+                // UserValidationTrait used in PasswordManagementTrait
+                'resendTokenValidation',
+                'linkSocial'
+            ],
+            'bypassAuth' => true,
+        ],
+        [
+            'prefix' => false,
+            'plugin' => 'CakeDC/Users',
+            'controller' => 'SocialAccounts',
+            'action' => [
+                'validateAccount',
+                'resendValidation',
+            ],
+            'bypassAuth' => true,
+        ],
         //admin role allowed to all the things
         [
             'role' => 'admin',
@@ -71,7 +106,7 @@ return [
             'role' => '*',
             'plugin' => 'CakeDC/Users',
             'controller' => 'Users',
-            'action' => 'resetGoogleAuthenticator',
+            'action' => 'resetOneTimePasswordAuthenticator',
             'allowed' => function (array $user, $role, \Cake\Http\ServerRequest $request) {
                 $userId = \Cake\Utility\Hash::get($request->getAttribute('params'), 'pass.0');
                 if (!empty($userId) && !empty($user)) {
