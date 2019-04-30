@@ -30,7 +30,7 @@ trait ReCaptchaTrait
     public function validateReCaptchaFromRequest($request)
     {
         $data = $request->getParsedBody();
-        $captcha = $data['g-recaptcha-response'] ? $data['g-recaptcha-response'] : null;
+        $captcha = $data['g-recaptcha-response'] ?? null;
 
         return $this->validateReCaptcha(
             $captcha,
