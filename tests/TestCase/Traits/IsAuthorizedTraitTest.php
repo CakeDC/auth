@@ -19,6 +19,7 @@ use Authorization\Policy\OrmResolver;
 use Authorization\Policy\ResolverCollection;
 use Cake\Http\ServerRequest;
 use Cake\ORM\Entity;
+use Cake\Routing\Router;
 use Cake\TestSuite\TestCase;
 use CakeDC\Auth\Policy\CollectionPolicy;
 use CakeDC\Auth\Policy\RbacPolicy;
@@ -81,6 +82,11 @@ class IsAuthorizedTraitTest extends TestCase
      */
     public function testIsAuthorizedWithMock($url, $authorize, $invalidUrl = false)
     {
+        Router::connect('/my-test', [
+            'plugin' => 'CakeDC/Users',
+            'controller' => 'Users',
+            'action' => 'myTest',
+        ]);
         $user = new Entity([
             'id' => '00000000-0000-0000-0000-000000000001',
             'password' => '12345',
@@ -131,6 +137,11 @@ class IsAuthorizedTraitTest extends TestCase
      */
     public function testIsAuthorizedWithoutService()
     {
+        Router::connect('/my-test', [
+            'plugin' => 'CakeDC/Users',
+            'controller' => 'Users',
+            'action' => 'myTest',
+        ]);
         $request = new ServerRequest();
         $rbac = $this->getMockBuilder(Rbac::class)->setMethods(['checkPermissions'])->getMock();
         $rbac->expects($this->never())
