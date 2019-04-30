@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright 2010 - 2019, Cake Development Corporation (https://www.cakedc.com)
  *
@@ -11,8 +12,8 @@
 
 namespace CakeDC\Auth\Test\TestCase\Rbac\Permissions;
 
-use CakeDC\Auth\Rbac\Permissions\ConfigProvider;
 use Cake\TestSuite\TestCase;
+use CakeDC\Auth\Rbac\Permissions\ConfigProvider;
 
 /**
  * ConfigProviderTest
@@ -50,7 +51,7 @@ class ConfigProviderTest extends TestCase
             [
                 'controller' => 'Posts',
                 'action' => 'default',
-            ]
+            ],
         ]);
         $permissions = $this->configProvider->getPermissions();
         $this->assertSame($this->configProvider->getDefaultPermissions(), $permissions);

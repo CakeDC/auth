@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright 2010 - 2019, Cake Development Corporation (https://www.cakedc.com)
  *
@@ -11,13 +12,13 @@
 
 namespace CakeDC\Auth\Test\TestCase\Social\Service;
 
-use CakeDC\Auth\Social\Service\OAuth1Service;
-use CakeDC\Auth\Social\Service\ServiceInterface;
 use Cake\Core\Configure;
 use Cake\Http\ServerRequest;
 use Cake\Http\ServerRequestFactory;
 use Cake\Http\Session;
 use Cake\TestSuite\TestCase;
+use CakeDC\Auth\Social\Service\OAuth1Service;
+use CakeDC\Auth\Social\Service\ServiceInterface;
 use League\OAuth1\Client\Credentials\TemporaryCredentials;
 use League\OAuth1\Client\Credentials\TokenCredentials;
 use League\OAuth1\Client\Server\User;
@@ -60,7 +61,7 @@ class OAuth1ServiceTest extends TestCase
                 'secret' => 'weakpassword',
             ],
         ])->setMethods([
-            'getTemporaryCredentials', 'getAuthorizationUrl', 'getTokenCredentials', 'getUserDetails'
+            'getTemporaryCredentials', 'getAuthorizationUrl', 'getTokenCredentials', 'getUserDetails',
         ])->getMock();
 
         $config = [
@@ -75,8 +76,8 @@ class OAuth1ServiceTest extends TestCase
                 'plugin' => 'CakeDC/Users',
                 'controller' => 'Users',
                 'action' => 'socialLogin',
-                'prefix' => null
-            ]
+                'prefix' => null,
+            ],
         ];
 
         $this->Service = new OAuth1Service($config);
@@ -111,7 +112,7 @@ class OAuth1ServiceTest extends TestCase
                 'linkSocialUri' => '/link-social/twitter',
                 'callbackLinkSocialUri' => '/callback-link-social/twitter',
                 'clientId' => '20003030300303',
-                'clientSecret' => 'weakpassword'
+                'clientSecret' => 'weakpassword',
             ],
             'collaborators' => [],
             'signature' => null,
@@ -120,8 +121,8 @@ class OAuth1ServiceTest extends TestCase
                 'plugin' => 'CakeDC/Users',
                 'controller' => 'Users',
                 'action' => 'socialLogin',
-                'prefix' => null
-            ]
+                'prefix' => null,
+            ],
         ]);
         $this->assertInstanceOf(ServiceInterface::class, $service);
     }
@@ -349,8 +350,8 @@ class OAuth1ServiceTest extends TestCase
             'extra' => [],
             'token' => [
                 'accessToken' => '50589595670964649809890',
-                'tokenSecret' => 'tokensecretpasswordnew'
-            ]
+                'tokenSecret' => 'tokensecretpasswordnew',
+            ],
         ];
         $this->assertEquals($expected, $actual);
     }

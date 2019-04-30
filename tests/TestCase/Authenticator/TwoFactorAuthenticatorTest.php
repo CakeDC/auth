@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright 2010 - 2019, Cake Development Corporation (https://www.cakedc.com)
  *
@@ -11,11 +12,10 @@
 
 use Authentication\Authenticator\Result;
 use Authentication\Identifier\IdentifierCollection;
-use CakeDC\Auth\Authenticator\TwoFactorAuthenticator;
 use Cake\Http\Client\Response;
-use Cake\Http\ServerRequestFactory;
 use Cake\ORM\Entity;
 use Cake\TestSuite\TestCase;
+use CakeDC\Auth\Authenticator\TwoFactorAuthenticator;
 
 class TwoFactorAuthenticatorTest extends TestCase
 {
@@ -32,11 +32,11 @@ class TwoFactorAuthenticatorTest extends TestCase
         $request = $request->withUri($uri);
         $response = new Response();
         $identifiers = new IdentifierCollection([
-            'Authentication.Password'
+            'Authentication.Password',
         ]);
 
         $Authenticator = new TwoFactorAuthenticator($identifiers, [
-            'loginUrl' => '/testpath'
+            'loginUrl' => '/testpath',
         ]);
 
         $result = $Authenticator->authenticate($request, $response);
@@ -60,15 +60,15 @@ class TwoFactorAuthenticatorTest extends TestCase
             new Entity([
                 'id' => '42',
                 'username' => 'marcelo',
-                'role' => 'user'
+                'role' => 'user',
             ])
         );
         $response = new Response();
         $identifiers = new IdentifierCollection([
-            'Authentication.Password'
+            'Authentication.Password',
         ]);
         $Authenticator = new TwoFactorAuthenticator($identifiers, [
-            'loginUrl' => '/testpathnotsame'
+            'loginUrl' => '/testpathnotsame',
         ]);
 
         $result = $Authenticator->authenticate($request, $response);
@@ -92,15 +92,15 @@ class TwoFactorAuthenticatorTest extends TestCase
             new Entity([
                 'id' => '42',
                 'username' => 'marcelo',
-                'role' => 'user'
+                'role' => 'user',
             ])
         );
         $response = new Response();
         $identifiers = new IdentifierCollection([
-            'Authentication.Password'
+            'Authentication.Password',
         ]);
         $Authenticator = new TwoFactorAuthenticator($identifiers, [
-            'loginUrl' => '/testpath'
+            'loginUrl' => '/testpath',
         ]);
 
         $result = $Authenticator->authenticate($request, $response);

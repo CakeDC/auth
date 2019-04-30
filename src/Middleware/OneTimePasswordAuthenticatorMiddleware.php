@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright 2010 - 2019, Cake Development Corporation (https://www.cakedc.com)
  *
@@ -11,11 +12,11 @@
 
 namespace CakeDC\Auth\Middleware;
 
-use CakeDC\Auth\Authentication\AuthenticationService;
-use CakeDC\Auth\Authenticator\CookieAuthenticator;
 use Cake\Core\Configure;
 use Cake\Http\ServerRequest;
 use Cake\Routing\Router;
+use CakeDC\Auth\Authentication\AuthenticationService;
+use CakeDC\Auth\Authenticator\CookieAuthenticator;
 use Psr\Http\Message\ResponseInterface;
 
 class OneTimePasswordAuthenticatorMiddleware
@@ -37,7 +38,7 @@ class OneTimePasswordAuthenticatorMiddleware
         }
 
         $request->getSession()->write(CookieAuthenticator::SESSION_DATA_KEY, [
-            'remember_me' => $request->getData('remember_me')
+            'remember_me' => $request->getData('remember_me'),
         ]);
 
         $url = Router::url(Configure::read('OneTimePasswordAuthenticator.verifyAction'));

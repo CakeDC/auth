@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright 2010 - 2019, Cake Development Corporation (https://www.cakedc.com)
  *
@@ -26,7 +27,7 @@ class CookieAuthenticator extends BaseAuthenticator implements PersistenceInterf
     /**
      * Session key used to save tmp data
      */
-    const SESSION_DATA_KEY = 'CookieAuth';
+    public const SESSION_DATA_KEY = 'CookieAuth';
 
     /**
      * {@inheritDoc}
@@ -45,7 +46,7 @@ class CookieAuthenticator extends BaseAuthenticator implements PersistenceInterf
         if (!$this->_checkUrl($request) || !is_array($bodyData) || empty($bodyData[$field])) {
             return [
                 'request' => $request,
-                'response' => $response
+                'response' => $response,
             ];
         }
 
@@ -54,7 +55,7 @@ class CookieAuthenticator extends BaseAuthenticator implements PersistenceInterf
 
         return [
             'request' => $request,
-            'response' => $response->withAddedHeader('Set-Cookie', $cookie->toHeaderValue())
+            'response' => $response->withAddedHeader('Set-Cookie', $cookie->toHeaderValue()),
         ];
     }
 }

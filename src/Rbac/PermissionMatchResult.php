@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright 2010 - 2019, Cake Development Corporation (https://www.cakedc.com)
  *
@@ -43,7 +44,7 @@ class PermissionMatchResult
 
     /**
      * @param bool $allowed allowed value
-     * @return PermissionMatchResult
+     * @return \CakeDC\Auth\Rbac\PermissionMatchResult
      */
     public function setAllowed($allowed)
     {
@@ -62,7 +63,7 @@ class PermissionMatchResult
 
     /**
      * @param string $reason reason
-     * @return PermissionMatchResult
+     * @return \CakeDC\Auth\Rbac\PermissionMatchResult
      */
     public function setReason($reason)
     {

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright 2010 - 2019, Cake Development Corporation (https://www.cakedc.com)
  *
@@ -12,14 +13,14 @@
 namespace CakeDC\Auth\Test\TestCase\Middleware;
 
 use Authentication\Authenticator\Result;
-use CakeDC\Auth\Authentication\AuthenticationService;
-use CakeDC\Auth\Middleware\OneTimePasswordAuthenticatorMiddleware;
 use Cake\Core\Configure;
 use Cake\Http\Response;
 use Cake\Http\ServerRequest;
 use Cake\Http\ServerRequestFactory;
 use Cake\Routing\Router;
 use Cake\TestSuite\TestCase;
+use CakeDC\Auth\Authentication\AuthenticationService;
+use CakeDC\Auth\Middleware\OneTimePasswordAuthenticatorMiddleware;
 
 /**
  * Class OneTimePasswordAuthenticatorMiddlewareTest
@@ -61,13 +62,13 @@ class OneTimePasswordAuthenticatorMiddlewareTest extends TestCase
         $service = $this->getMockBuilder(AuthenticationService::class)->setConstructorArgs([
             [
                 'identifiers' => [
-                    'Authentication.Password'
+                    'Authentication.Password',
                 ],
                 'authenticators' => [
                     'Authentication.Session',
-                    'CakeDC/Auth.Form'
-                ]
-            ]
+                    'CakeDC/Auth.Form',
+                ],
+            ],
         ])->setMethods(['getResult'])->getMock();
         $result = new Result(['id' => 10, 'username' => 'johndoe'], Result::SUCCESS);
         $service->expects($this->any())
@@ -110,13 +111,13 @@ class OneTimePasswordAuthenticatorMiddlewareTest extends TestCase
         $service = $this->getMockBuilder(AuthenticationService::class)->setConstructorArgs([
             [
                 'identifiers' => [
-                    'Authentication.Password'
+                    'Authentication.Password',
                 ],
                 'authenticators' => [
                     'Authentication.Session',
-                    'CakeDC/Auth.Form'
-                ]
-            ]
+                    'CakeDC/Auth.Form',
+                ],
+            ],
         ])->setMethods(['getResult'])->getMock();
         $result = new Result(null, AuthenticationService::NEED_TWO_FACTOR_VERIFY);
         $service->expects($this->any())
@@ -131,7 +132,7 @@ class OneTimePasswordAuthenticatorMiddlewareTest extends TestCase
         $actual = $middleware($request, $response, $next);
         $this->assertInstanceOf(Response::class, $actual);
         $expected = [
-            '/verify'
+            '/verify',
         ];
         $this->assertEquals($expected, $actual->getHeader('Location'));
         $this->assertSame(1, $request->getSession()->read('CookieAuth.remember_me'));

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright 2010 - 2019, Cake Development Corporation (https://www.cakedc.com)
  *
@@ -49,7 +50,7 @@ class DefaultTwoFactorAuthenticationChecker implements TwoFactorAuthenticationCh
      *
      * @return bool
      */
-    public function isRequired(array $user = null)
+    public function isRequired(?array $user = null)
     {
         return !empty($user) && $this->isEnabled();
     }

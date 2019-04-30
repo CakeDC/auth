@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright 2010 - 2019, Cake Development Corporation (https://www.cakedc.com)
  *
@@ -12,11 +13,11 @@
 namespace CakeDC\Auth\Test\TestCase\Policy;
 
 use Authentication\Identity;
-use CakeDC\Auth\Policy\RbacPolicy;
-use CakeDC\Auth\Rbac\Rbac;
 use Cake\Http\ServerRequestFactory;
 use Cake\ORM\Entity;
 use Cake\TestSuite\TestCase;
+use CakeDC\Auth\Policy\RbacPolicy;
+use CakeDC\Auth\Rbac\Rbac;
 
 class RbacPolicyTest extends TestCase
 {
@@ -27,7 +28,7 @@ class RbacPolicyTest extends TestCase
     {
         $user = new Entity([
             'id' => '00000000-0000-0000-0000-000000000001',
-            'password' => '12345'
+            'password' => '12345',
         ]);
         $identity = new Identity($user);
         $request = ServerRequestFactory::fromGlobals();
@@ -52,7 +53,7 @@ class RbacPolicyTest extends TestCase
     {
         $user = new Entity([
             'id' => '00000000-0000-0000-0000-000000000001',
-            'password' => '12345'
+            'password' => '12345',
         ]);
         $identity = new Identity($user);
         $request = ServerRequestFactory::fromGlobals();
@@ -93,7 +94,7 @@ class RbacPolicyTest extends TestCase
         $rbac = $this->getMockBuilder(Rbac::class)->setMethods(['checkPermissions'])->getMock();
         $request = $request->withAttribute('rbac', $rbac);
         $policy = new RbacPolicy([
-            'adapter' => new Rbac(['role' => 'my_role'])
+            'adapter' => new Rbac(['role' => 'my_role']),
         ]);
         $actual = $policy->getRbac($request);
         $this->assertSame($rbac, $actual);
@@ -107,7 +108,7 @@ class RbacPolicyTest extends TestCase
         $request = ServerRequestFactory::fromGlobals();
         $rbac = $this->getMockBuilder(Rbac::class)->setMethods(['checkPermissions'])->getMock();
         $policy = new RbacPolicy([
-            'adapter' => $rbac
+            'adapter' => $rbac,
         ]);
         $actual = $policy->getRbac($request);
         $this->assertSame($rbac, $actual);
@@ -122,7 +123,7 @@ class RbacPolicyTest extends TestCase
             'adapter' => [
                 'autoload_config' => 'my_permissions',
                 'role_field' => 'group',
-            ]
+            ],
         ]);
         $rbaResult = $policy->getRbac($request);
         $this->assertInstanceOf(Rbac::class, $rbaResult);
@@ -145,7 +146,7 @@ class RbacPolicyTest extends TestCase
     {
         $request = ServerRequestFactory::fromGlobals();
         $policy = new RbacPolicy([
-            'adapter' => 'Invalid'
+            'adapter' => 'Invalid',
         ]);
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('Config "adapter" should be an object or an array with key className');

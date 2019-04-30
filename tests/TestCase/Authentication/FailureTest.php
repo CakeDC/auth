@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright 2010 - 2019, Cake Development Corporation (https://www.cakedc.com)
  *
@@ -11,9 +12,9 @@
 
 use Authentication\Authenticator\Result;
 use Authentication\Identifier\IdentifierCollection;
+use Cake\TestSuite\TestCase;
 use CakeDC\Auth\Authentication\Failure;
 use CakeDC\Auth\Authenticator\FormAuthenticator;
-use Cake\TestSuite\TestCase;
 
 class FailureTest extends TestCase
 {

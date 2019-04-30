@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright 2010 - 2019, Cake Development Corporation (https://www.cakedc.com)
  *
@@ -16,14 +17,13 @@ use Authorization\IdentityDecorator;
 use Authorization\Policy\MapResolver;
 use Authorization\Policy\OrmResolver;
 use Authorization\Policy\ResolverCollection;
+use Cake\Http\ServerRequest;
+use Cake\ORM\Entity;
+use Cake\TestSuite\TestCase;
 use CakeDC\Auth\Policy\CollectionPolicy;
 use CakeDC\Auth\Policy\RbacPolicy;
 use CakeDC\Auth\Policy\SuperuserPolicy;
 use CakeDC\Auth\Rbac\Rbac;
-use CakeDC\Auth\Traits\IsAuthorizedTrait;
-use Cake\Http\ServerRequest;
-use Cake\ORM\Entity;
-use Cake\TestSuite\TestCase;
 
 /**
  * Class IsAuthorizedTraitTest
@@ -42,7 +42,7 @@ class IsAuthorizedTraitTest extends TestCase
         $url = [
             'plugin' => 'CakeDC/Users',
             'controller' => 'Users',
-            'action' => 'myTest'
+            'action' => 'myTest',
         ];
 
         return [
@@ -83,7 +83,7 @@ class IsAuthorizedTraitTest extends TestCase
     {
         $user = new Entity([
             'id' => '00000000-0000-0000-0000-000000000001',
-            'password' => '12345'
+            'password' => '12345',
         ]);
         $identity = new Identity($user);
         $request = new ServerRequest();
@@ -101,13 +101,13 @@ class IsAuthorizedTraitTest extends TestCase
             ServerRequest::class,
             new CollectionPolicy([
                 SuperuserPolicy::class,
-                RbacPolicy::class
+                RbacPolicy::class,
             ])
         );
         $orm = new OrmResolver();
         $resolver = new ResolverCollection([
             $map,
-            $orm
+            $orm,
         ]);
         $service = new AuthorizationService($resolver);
         $request = $request->withAttribute('authorization', $service);
@@ -149,7 +149,7 @@ class IsAuthorizedTraitTest extends TestCase
         $Trait->isAuthorized([
             'plugin' => 'CakeDC/Users',
             'controller' => 'Users',
-            'action' => 'myTest'
+            'action' => 'myTest',
         ]);
     }
 }

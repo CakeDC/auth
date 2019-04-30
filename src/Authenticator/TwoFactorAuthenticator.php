@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright 2010 - 2019, Cake Development Corporation (https://www.cakedc.com)
  *
@@ -14,7 +15,6 @@ namespace CakeDC\Auth\Authenticator;
 use Authentication\Authenticator\AbstractAuthenticator;
 use Authentication\Authenticator\Result;
 use Authentication\UrlChecker\UrlCheckerTrait;
-use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 /**
@@ -24,10 +24,9 @@ use Psr\Http\Message\ServerRequestInterface;
  */
 class TwoFactorAuthenticator extends AbstractAuthenticator
 {
-
     use UrlCheckerTrait;
 
-    const USER_SESSION_KEY = 'TwoFactorAuthenticator.User';
+    public const USER_SESSION_KEY = 'TwoFactorAuthenticator.User';
 
     /**
      * Default config for this object.
@@ -55,7 +54,7 @@ class TwoFactorAuthenticator extends AbstractAuthenticator
                 'Login URL `%s` did not match `%s`.',
                 (string)$request->getUri(),
                 implode('` or `', (array)$this->getConfig('loginUrl'))
-            )
+            ),
         ];
 
         return new Result(null, Result::FAILURE_OTHER, $errors);
@@ -85,7 +84,7 @@ class TwoFactorAuthenticator extends AbstractAuthenticator
         }
 
         return new Result(null, Result::FAILURE_CREDENTIALS_MISSING, [
-            'Login credentials not found'
+            'Login credentials not found',
         ]);
     }
 }

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright 2010 - 2019, Cake Development Corporation (https://www.cakedc.com)
  *
@@ -11,12 +12,12 @@
 
 namespace CakeDC\Auth\Test\TestCase\Middleware;
 
-use CakeDC\Auth\Middleware\RbacMiddleware;
-use CakeDC\Auth\Rbac\Rbac;
 use Cake\Http\Response;
 use Cake\Http\ServerRequest;
 use Cake\Routing\Router;
 use Cake\TestSuite\TestCase;
+use CakeDC\Auth\Middleware\RbacMiddleware;
+use CakeDC\Auth\Rbac\Rbac;
 
 /**
  * Class RbacMiddlewareTest
@@ -60,7 +61,7 @@ class RbacMiddlewareTest extends TestCase
         };
         $rbacMiddleware = $this->rbacMiddleware;
         $rbacMiddleware->setConfig([
-            'unauthorizedBehavior' => RbacMiddleware::UNAUTHORIZED_BEHAVIOR_THROW
+            'unauthorizedBehavior' => RbacMiddleware::UNAUTHORIZED_BEHAVIOR_THROW,
         ]);
         $rbacMiddleware($request, $response, $next);
     }
@@ -79,7 +80,7 @@ class RbacMiddlewareTest extends TestCase
         };
         $rbacMiddleware = $this->rbacMiddleware;
         $rbacMiddleware->setConfig([
-            'unauthorizedBehavior' => RbacMiddleware::UNAUTHORIZED_BEHAVIOR_AUTO
+            'unauthorizedBehavior' => RbacMiddleware::UNAUTHORIZED_BEHAVIOR_AUTO,
         ]);
         $rbacMiddleware($request, $response, $next);
     }
@@ -114,7 +115,7 @@ class RbacMiddlewareTest extends TestCase
             'User' => [
                 'id' => 1,
                 'role' => 'user',
-            ]
+            ],
         ];
         $request = $request->withAttribute('identity', $userData);
         $response = new Response();
@@ -129,7 +130,7 @@ class RbacMiddlewareTest extends TestCase
             ->with($userData['User'], $request)
             ->willReturn(true);
         $rbacMiddleware = new RbacMiddleware($rbac, [
-            'unauthorizedBehavior' => RbacMiddleware::UNAUTHORIZED_BEHAVIOR_THROW
+            'unauthorizedBehavior' => RbacMiddleware::UNAUTHORIZED_BEHAVIOR_THROW,
         ]);
         $this->assertSame('pass', $rbacMiddleware($request, $response, $next));
     }

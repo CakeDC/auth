@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace CakeDC\Auth\Test;
 
 use Cake\Console\ConsoleIo;
@@ -53,10 +54,15 @@ trait BaseTraitTest
     protected function _testPermissions($url, $username, $method, $ajax, $responseCode, $responseContains)
     {
 
-       if ($this->_isVerboseOrDebug()) {
+        if ($this->_isVerboseOrDebug()) {
             (new ConsoleIo())->info(__(
                 "\nUrl: {0} Username: {1} Method: {2} Ajax?: {3} Response Code: {4} Response Contains: {5} ",
-                $url, $username, $method, $ajax, $responseCode, $responseContains
+                $url,
+                $username,
+                $method,
+                $ajax,
+                $responseCode,
+                $responseContains
             ), 0);
         }
         $this->loginAsUserName($username);
@@ -96,11 +102,10 @@ trait BaseTraitTest
             if ($row[0][0] === '#') {
                 continue;
             }
-            list($url, $username, $method, $ajax, $responseCode, $responseContains) = array_pad($row, 6, null);
+            [$url, $username, $method, $ajax, $responseCode, $responseContains] = array_pad($row, 6, null);
             $this->setUp();
             $this->_testPermissions($url, $username, $method, $ajax, $responseCode, $responseContains);
             $this->tearDown();
         }
-
     }
 }

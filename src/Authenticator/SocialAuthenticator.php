@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright 2010 - 2019, Cake Development Corporation (https://www.cakedc.com)
  *
@@ -14,12 +15,11 @@ namespace CakeDC\Auth\Authenticator;
 use Authentication\Authenticator\AbstractAuthenticator;
 use Authentication\Authenticator\Result;
 use Authentication\UrlChecker\UrlCheckerTrait;
+use Cake\Http\Exception\BadRequestException;
+use Cake\Log\LogTrait;
 use CakeDC\Auth\Identifier\SocialIdentifier;
 use CakeDC\Auth\Social\MapUser;
 use CakeDC\Auth\Social\Service\ServiceInterface;
-use Cake\Http\Exception\BadRequestException;
-use Cake\Log\LogTrait;
-use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 /**
@@ -32,7 +32,7 @@ class SocialAuthenticator extends AbstractAuthenticator
     use LogTrait;
     use UrlCheckerTrait;
 
-    const SOCIAL_SERVICE_ATTRIBUTE = 'socialService';
+    public const SOCIAL_SERVICE_ATTRIBUTE = 'socialService';
 
     /**
      * Default config for this object.
@@ -72,7 +72,7 @@ class SocialAuthenticator extends AbstractAuthenticator
      *
      * @param array $rawData social user raw data
      *
-     * @return Result
+     * @return \Authentication\Authenticator\Result
      */
     protected function identify($rawData)
     {
@@ -87,8 +87,8 @@ class SocialAuthenticator extends AbstractAuthenticator
     /**
      * Get user raw data from social provider
      *
-     * @param ServerRequestInterface $request request object
-     * @param ServiceInterface $service social service
+     * @param \Psr\Http\Message\ServerRequestInterface $request request object
+     * @param \CakeDC\Auth\Social\Service\ServiceInterface $service social service
      * @throws \Exception
      * @return array|null
      */

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright 2010 - 2019, Cake Development Corporation (https://www.cakedc.com)
  *
@@ -11,8 +12,8 @@
 
 namespace CakeDC\Auth\Auth\Test\TestCase\Auth\Auth;
 
-use CakeDC\Auth\Rbac\PermissionMatchResult;
 use Cake\TestSuite\TestCase;
+use CakeDC\Auth\Rbac\PermissionMatchResult;
 
 class PermissionMatchResultTest extends TestCase
 {

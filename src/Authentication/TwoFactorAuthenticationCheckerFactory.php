@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright 2010 - 2019, Cake Development Corporation (https://www.cakedc.com)
  *
@@ -22,7 +23,7 @@ class TwoFactorAuthenticationCheckerFactory
     /**
      * Get the two factor authentication checker
      *
-     * @return TwoFactorAuthenticationCheckerInterface
+     * @return \CakeDC\Auth\Authentication\TwoFactorAuthenticationCheckerInterface
      */
     public function build()
     {

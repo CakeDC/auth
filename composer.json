@@ -63,8 +63,8 @@
             "@test",
             "@cs-check"
         ],
-        "cs-check": "vendor/bin/phpcs -n -p --standard=vendor/cakephp/cakephp-codesniffer/CakePHP ./src ./tests",
-        "cs-fix": "vendor/bin/phpcbf --standard=vendor/cakephp/cakephp-codesniffer/CakePHP ./src ./tests",
+        "cs-check": "phpcs -n -p --standard=vendor/cakephp/cakephp-codesniffer/CakePHP ./src ./tests",
+        "cs-fix": "phpcbf --standard=vendor/cakephp/cakephp-codesniffer/CakePHP ./src ./tests",
         "test": "phpunit --stderr",
         "stan": "phpstan analyse src/ && psalm --show-info=false",
         "psalm": "psalm --show-info=false",

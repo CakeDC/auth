@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright 2010 - 2019, Cake Development Corporation (https://www.cakedc.com)
  *
@@ -11,8 +12,8 @@
 
 namespace CakeDC\Auth\Test\TestCase\Exception;
 
-use CakeDC\Auth\Exception\InvalidSettingsException;
 use Cake\TestSuite\TestCase;
+use CakeDC\Auth\Exception\InvalidSettingsException;
 
 class InvalidSettingsExceptionTest extends TestCase
 {

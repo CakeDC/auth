@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright 2010 - 2019, Cake Development Corporation (https://www.cakedc.com)
  *
@@ -11,12 +12,12 @@
 namespace CakeDC\Auth\Test\TestCase\Policy;
 
 use Authentication\Identity;
-use CakeDC\Auth\Policy\CollectionPolicy;
-use CakeDC\Auth\Policy\RbacPolicy;
-use CakeDC\Auth\Policy\SuperuserPolicy;
 use Cake\Http\ServerRequestFactory;
 use Cake\ORM\Entity;
 use Cake\TestSuite\TestCase;
+use CakeDC\Auth\Policy\CollectionPolicy;
+use CakeDC\Auth\Policy\RbacPolicy;
+use CakeDC\Auth\Policy\SuperuserPolicy;
 
 /**
  * Class CollectionPolicyTest
@@ -56,7 +57,7 @@ class CollectionPolicyTest extends TestCase
         return [
             [true, $rbacPolicyNever(), true],
             [false, $rbacPolicy(false), false],
-            [false, $rbacPolicy(true), true]
+            [false, $rbacPolicy(true), true],
         ];
     }
 
@@ -81,7 +82,7 @@ class CollectionPolicyTest extends TestCase
 
         $policy = new CollectionPolicy([
             SuperuserPolicy::class,
-            $rbacPolicy
+            $rbacPolicy,
         ]);
 
         $actual = $policy->canAccess($identity, $request);

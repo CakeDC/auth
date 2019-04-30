@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright 2010 - 2019, Cake Development Corporation (https://www.cakedc.com)
  *
@@ -11,13 +12,13 @@
 
 namespace CakeDC\Auth\Rbac;
 
-use CakeDC\Auth\Rbac\Permissions\AbstractProvider;
-use CakeDC\Auth\Rbac\Rules\Rule;
 use Cake\Core\Configure;
 use Cake\Core\InstanceConfigTrait;
 use Cake\Log\LogTrait;
 use Cake\Utility\Hash;
 use Cake\Utility\Inflector;
+use CakeDC\Auth\Rbac\Permissions\AbstractProvider;
+use CakeDC\Auth\Rbac\Rules\Rule;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LogLevel;
 
@@ -131,9 +132,9 @@ class Rbac
      * @param array $permission The permission configuration
      * @param array $user Current user data
      * @param string $role Effective user's role
-     * @param ServerRequestInterface $request Current request
+     * @param \Psr\Http\Message\ServerRequestInterface $request Current request
      *
-     * @return null|PermissionMatchResult Null if permission is discarded, PermissionMatchResult if a final
+     * @return null|\CakeDC\Auth\Rbac\PermissionMatchResult Null if permission is discarded, PermissionMatchResult if a final
      * result is produced
      */
     protected function _matchPermission(array $permission, array $user, $role, ServerRequestInterface $request)

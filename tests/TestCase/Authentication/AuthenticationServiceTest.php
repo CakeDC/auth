@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright 2010 - 2019, Cake Development Corporation (https://www.cakedc.com)
  *
@@ -10,14 +11,14 @@
  */
 
 use Authentication\Authenticator\Result;
-use CakeDC\Auth\Authentication\AuthenticationService;
-use CakeDC\Auth\Authentication\Failure;
-use CakeDC\Auth\Authenticator\FormAuthenticator;
 use Cake\Core\Configure;
 use Cake\Http\Client\Response;
 use Cake\Http\ServerRequestFactory;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
+use CakeDC\Auth\Authentication\AuthenticationService;
+use CakeDC\Auth\Authentication\Failure;
+use CakeDC\Auth\Authenticator\FormAuthenticator;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -30,7 +31,7 @@ class AuthenticationServiceTest extends TestCase
      */
     public $fixtures = [
         'plugin.CakeDC/Auth.Users',
-        'plugin.CakeDC/Auth.SocialAccounts'
+        'plugin.CakeDC/Auth.SocialAccounts',
     ];
 
     /**
@@ -49,9 +50,9 @@ class AuthenticationServiceTest extends TestCase
 
         $service = new AuthenticationService([
             'identifiers' => [
-                'Authentication.Password'
+                'Authentication.Password',
             ],
-            'authenticators' => []
+            'authenticators' => [],
         ]);
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage('No authenticators loaded. You need to load at least one authenticator.');
@@ -79,12 +80,12 @@ class AuthenticationServiceTest extends TestCase
 
         $service = new AuthenticationService([
             'identifiers' => [
-                'Authentication.Password'
+                'Authentication.Password',
             ],
             'authenticators' => [
                 'Authentication.Session',
-                'CakeDC/Auth.Form'
-            ]
+                'CakeDC/Auth.Form',
+            ],
         ]);
 
         $result = $service->authenticate($request);
@@ -107,7 +108,7 @@ class AuthenticationServiceTest extends TestCase
         $formFailure = new Failure(
             $service->authenticators()->get('Form'),
             new Result(null, Result::FAILURE_IDENTITY_NOT_FOUND, [
-                'Password' => []
+                'Password' => [],
             ])
         );
         $expected = [$sessionFailure, $formFailure];
@@ -137,12 +138,12 @@ class AuthenticationServiceTest extends TestCase
 
         $service = new AuthenticationService([
             'identifiers' => [
-                'Authentication.Password'
+                'Authentication.Password',
             ],
             'authenticators' => [
                 'Authentication.Session',
-                'CakeDC/Auth.Form'
-            ]
+                'CakeDC/Auth.Form',
+            ],
         ]);
 
         $result = $service->authenticate($request, $response);
@@ -192,7 +193,7 @@ class AuthenticationServiceTest extends TestCase
 
         $service = new AuthenticationService([
             'identifiers' => [
-                'Authentication.Password' => []
+                'Authentication.Password' => [],
             ],
             'authenticators' => [
                 'Authentication.Session' => [
@@ -200,8 +201,8 @@ class AuthenticationServiceTest extends TestCase
                 ],
                 'CakeDC/Auth.Form' => [
                     'skipTwoFactorVerify' => false,
-                ]
-            ]
+                ],
+            ],
         ]);
 
         $result = $service->authenticate($request, $response);
@@ -246,7 +247,7 @@ class AuthenticationServiceTest extends TestCase
 
         $service = new AuthenticationService([
             'identifiers' => [
-                'Authentication.Password' => []
+                'Authentication.Password' => [],
             ],
             'authenticators' => [
                 'Authentication.Session' => [
@@ -254,8 +255,8 @@ class AuthenticationServiceTest extends TestCase
                 ],
                 'CakeDC/Auth.Form' => [
                     'skipTwoFactorVerify' => false,
-                ]
-            ]
+                ],
+            ],
         ]);
 
         $result = $service->authenticate($request, $response);

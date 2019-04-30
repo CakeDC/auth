@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright 2010 - 2019, Cake Development Corporation (https://www.cakedc.com)
  *
@@ -59,7 +60,7 @@ abstract class AbstractProvider
                     'requestResetPassword',
                     // UserValidationTrait used in PasswordManagementTrait
                     'resendTokenValidation',
-                    'linkSocial'
+                    'linkSocial',
                 ],
                 'bypassAuth' => true,
             ],
@@ -101,7 +102,7 @@ abstract class AbstractProvider
                     }
 
                     return false;
-                }
+                },
             ],
             //all roles allowed to Pages/display
             [

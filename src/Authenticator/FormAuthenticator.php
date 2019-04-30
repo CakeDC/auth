@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright 2010 - 2019, Cake Development Corporation (https://www.cakedc.com)
  *
@@ -15,10 +16,9 @@ use Authentication\Authenticator\AuthenticatorInterface;
 use Authentication\Authenticator\FormAuthenticator as BaseFormAuthenticator;
 use Authentication\Authenticator\Result;
 use Authentication\Identifier\IdentifierInterface;
-use CakeDC\Auth\Traits\ReCaptchaTrait;
 use Cake\Core\Configure;
 use Cake\Core\InstanceConfigTrait;
-use Psr\Http\Message\ResponseInterface;
+use CakeDC\Auth\Traits\ReCaptchaTrait;
 use Psr\Http\Message\ServerRequestInterface;
 
 class FormAuthenticator implements AuthenticatorInterface
@@ -29,7 +29,7 @@ class FormAuthenticator implements AuthenticatorInterface
     /**
      * Failure due invalid reCAPTCHA
      */
-    const FAILURE_INVALID_RECAPTCHA = 'FAILURE_INVALID_RECAPTCHA';
+    public const FAILURE_INVALID_RECAPTCHA = 'FAILURE_INVALID_RECAPTCHA';
 
     /**
      * @var \Authentication\Authenticator\FormAuthenticator
@@ -49,7 +49,7 @@ class FormAuthenticator implements AuthenticatorInterface
      * @var array
      */
     protected $_defaultConfig = [
-        'keyCheckEnabledRecaptcha' => 'Users.reCaptcha.login'
+        'keyCheckEnabledRecaptcha' => 'Users.reCaptcha.login',
     ];
 
     /**

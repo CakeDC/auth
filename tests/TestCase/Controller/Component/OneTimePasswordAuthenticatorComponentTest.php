@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright 2010 - 2019, Cake Development Corporation (https://www.cakedc.com)
  *
@@ -11,17 +12,17 @@
 
 namespace CakeDC\Users\Test\TestCase\Controller\Component;
 
-use CakeDC\Auth\Controller\Component\OneTimePasswordAuthenticatorComponent;
 use Cake\Controller\Controller;
 use Cake\Core\Configure;
 use Cake\Routing\Router;
 use Cake\TestSuite\TestCase;
 use Cake\Utility\Security;
+use CakeDC\Auth\Controller\Component\OneTimePasswordAuthenticatorComponent;
 
 class OneTimePasswordAuthenticatorComponentTest extends TestCase
 {
     public $fixtures = [
-        'plugin.CakeDC/Auth.Users'
+        'plugin.CakeDC/Auth.Users',
     ];
 
     /**
@@ -38,12 +39,12 @@ class OneTimePasswordAuthenticatorComponentTest extends TestCase
         Router::connect('/route/*', [
             'plugin' => 'CakeDC/Users',
             'controller' => 'Users',
-            'action' => 'requestResetPassword'
+            'action' => 'requestResetPassword',
         ]);
         Router::connect('/notAllowed/*', [
             'plugin' => 'CakeDC/Users',
             'controller' => 'Users',
-            'action' => 'edit'
+            'action' => 'edit',
         ]);
 
         Security::setSalt('YJfIxfs2guVoUubWDYhG93b0qyJfIxfs2guwvniR2G0FgaC9mi');

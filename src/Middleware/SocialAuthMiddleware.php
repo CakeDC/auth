@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright 2010 - 2019, Cake Development Corporation (https://www.cakedc.com)
  *
@@ -12,11 +13,11 @@
 namespace CakeDC\Auth\Middleware;
 
 use Authentication\UrlChecker\UrlCheckerTrait;
-use CakeDC\Auth\Authenticator\SocialAuthenticator;
-use CakeDC\Auth\Social\Service\ServiceFactory;
 use Cake\Core\InstanceConfigTrait;
 use Cake\Http\ServerRequest;
 use Cake\Log\LogTrait;
+use CakeDC\Auth\Authenticator\SocialAuthenticator;
+use CakeDC\Auth\Social\Service\ServiceFactory;
 use Psr\Http\Message\ResponseInterface;
 
 class SocialAuthMiddleware
@@ -27,7 +28,7 @@ class SocialAuthMiddleware
 
     protected $_defaultConfig = [
         'loginUrl' => false,
-        'urlChecker' => 'Authentication.Default'
+        'urlChecker' => 'Authentication.Default',
     ];
 
     /**

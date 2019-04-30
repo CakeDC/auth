@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright 2010 - 2019, Cake Development Corporation (https://www.cakedc.com)
  *
@@ -61,9 +62,8 @@ Cake\Core\Configure::write('App', [
     'fullBaseUrl' => 'http://localhost',
     'imageBaseUrl' => 'img/',
     'jsBaseUrl' => 'js/',
-    'cssBaseUrl' => 'css/'
+    'cssBaseUrl' => 'css/',
 ]);
-
 
 Cake\Core\Configure::write('debug', true);
 Cake\Core\Configure::write('App.encoding', 'UTF-8');
@@ -97,7 +97,7 @@ $cache = [
 
 Cake\Cache\Cache::setConfig($cache);
 Cake\Core\Configure::write('Session', [
-    'defaults' => 'php'
+    'defaults' => 'php',
 ]);
 
 //init router
@@ -106,7 +106,7 @@ Cake\Core\Configure::write('OAuth.path', [
     'plugin' => 'CakeDC/Users',
     'controller' => 'Users',
     'action' => 'socialLogin',
-    'prefix' => null
+    'prefix' => null,
 ]);
 $app = new \CakeDC\Auth\Test\TestApplication(__DIR__ . DS . 'config');
 $app->bootstrap();

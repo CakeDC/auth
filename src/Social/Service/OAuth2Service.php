@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright 2010 - 2019, Cake Development Corporation (https://www.cakedc.com)
  *
@@ -66,7 +67,7 @@ class OAuth2Service extends OAuthServiceAbstract
      *
      * @param \Cake\Http\ServerRequest $request Request object.
      *
-     * @throws BadRequestException when oauth2 state is invalid
+     * @throws \Cake\Http\Exception\BadRequestException when oauth2 state is invalid
      * @return array
      */
     public function getUser(ServerRequest $request)

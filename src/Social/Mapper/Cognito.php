@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright 2010 - 2019, Cake Development Corporation (https://www.cakedc.com)
  *
@@ -19,7 +20,6 @@ use Cake\Utility\Hash;
  */
 class Cognito extends AbstractMapper
 {
-
     /**
      * Map for provider fields
      * @var
@@ -85,7 +85,7 @@ class Cognito extends AbstractMapper
         if ($value === null) {
             $names = explode(' ', Hash::get($rawData, 'name', ''));
 
-            return isset($names[$keyInName]) ? $names[$keyInName] : null;
+            return $names[$keyInName] ?? null;
         }
 
         return (string)$value;

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright 2010 - 2019, Cake Development Corporation (https://www.cakedc.com)
  *
@@ -30,7 +31,7 @@ class OAuth1Service extends OAuthServiceAbstract
         $map = [
             'identifier' => 'clientId',
             'secret' => 'clientSecret',
-            'callback_uri' => 'redirectUri'
+            'callback_uri' => 'redirectUri',
         ];
 
         foreach ($map as $to => $from) {

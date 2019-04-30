@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright 2010 - 2019, Cake Development Corporation (https://www.cakedc.com)
  *
@@ -11,17 +12,16 @@
 
 namespace CakeDC\Auth\Test\TestCase\Social\Service;
 
-use CakeDC\Auth\Social\Service\OAuth1Service;
-use CakeDC\Auth\Social\Service\OAuth2Service;
-use CakeDC\Auth\Social\Service\ServiceFactory;
 use Cake\Core\Configure;
 use Cake\Http\Exception\NotFoundException;
 use Cake\Http\ServerRequestFactory;
 use Cake\TestSuite\TestCase;
+use CakeDC\Auth\Social\Service\OAuth1Service;
+use CakeDC\Auth\Social\Service\OAuth2Service;
+use CakeDC\Auth\Social\Service\ServiceFactory;
 
 class ServiceFactoryTest extends TestCase
 {
-
     /**
      * @var ServiceFactory
      */
@@ -59,7 +59,7 @@ class ServiceFactoryTest extends TestCase
                 'linkSocialUri' => '/link-social/facebook',
                 'callbackLinkSocialUri' => '/callback-link-social/facebook',
                 'clientId' => '10003030300303',
-                'clientSecret' => 'secretpassword'
+                'clientSecret' => 'secretpassword',
             ],
             'collaborators' => [],
             'signature' => null,
@@ -68,21 +68,21 @@ class ServiceFactoryTest extends TestCase
                 'plugin' => 'CakeDC/Users',
                 'controller' => 'Users',
                 'action' => 'socialLogin',
-                'prefix' => null
-            ]
+                'prefix' => null,
+            ],
         ];
         Configure::write('OAuth.providers.facebook', $config);
 
         $request = ServerRequestFactory::fromGlobals();
         $request = $request->withQueryParams([
             'code' => 'ZPO9972j3092304230',
-            'state' => '__TEST_STATE__'
+            'state' => '__TEST_STATE__',
         ]);
         $request = $request->withAttribute('params', [
             'plugin' => 'CakeDC/Users',
             'controller' => 'Users',
             'action' => 'socialLogin',
-            'provider' => 'facebook'
+            'provider' => 'facebook',
         ]);
 
         $service = $this->Factory->createFromRequest($request);
@@ -99,7 +99,7 @@ class ServiceFactoryTest extends TestCase
                 'graphApiVersion' => 'v2.8',
                 'redirectUri' => '/auth/facebook',
                 'clientId' => '10003030300303',
-                'clientSecret' => 'secretpassword'
+                'clientSecret' => 'secretpassword',
             ],
             'collaborators' => [],
             'signature' => null,
@@ -108,8 +108,8 @@ class ServiceFactoryTest extends TestCase
                 'plugin' => 'CakeDC/Users',
                 'controller' => 'Users',
                 'action' => 'socialLogin',
-                'prefix' => null
-            ]
+                'prefix' => null,
+            ],
         ];
         $actual = $service->getConfig();
         $this->assertEquals($expected, $actual);
@@ -134,7 +134,7 @@ class ServiceFactoryTest extends TestCase
                 'linkSocialUri' => '/link-social/facebook',
                 'callbackLinkSocialUri' => '/callback-link-social/facebook',
                 'clientId' => '10003030300303',
-                'clientSecret' => 'secretpassword'
+                'clientSecret' => 'secretpassword',
             ],
             'collaborators' => [],
             'signature' => null,
@@ -143,21 +143,21 @@ class ServiceFactoryTest extends TestCase
                 'plugin' => 'CakeDC/Users',
                 'controller' => 'Users',
                 'action' => 'socialLogin',
-                'prefix' => null
-            ]
+                'prefix' => null,
+            ],
         ];
         Configure::write('OAuth.providers.facebook', $config);
 
         $request = ServerRequestFactory::fromGlobals();
         $request = $request->withQueryParams([
             'code' => 'ZPO9972j3092304230',
-            'state' => '__TEST_STATE__'
+            'state' => '__TEST_STATE__',
         ]);
         $request = $request->withAttribute('params', [
             'plugin' => 'CakeDC/Users',
             'controller' => 'Users',
             'action' => 'socialLogin',
-            'provider' => 'facebook'
+            'provider' => 'facebook',
         ]);
 
         $this->Factory->setRedirectUriField('callbackLinkSocialUri');
@@ -175,7 +175,7 @@ class ServiceFactoryTest extends TestCase
                 'graphApiVersion' => 'v2.8',
                 'redirectUri' => '/callback-link-social/facebook',
                 'clientId' => '10003030300303',
-                'clientSecret' => 'secretpassword'
+                'clientSecret' => 'secretpassword',
             ],
             'collaborators' => [],
             'signature' => null,
@@ -184,8 +184,8 @@ class ServiceFactoryTest extends TestCase
                 'plugin' => 'CakeDC/Users',
                 'controller' => 'Users',
                 'action' => 'socialLogin',
-                'prefix' => null
-            ]
+                'prefix' => null,
+            ],
         ];
         $actual = $service->getConfig();
         $this->assertEquals($expected, $actual);
@@ -208,7 +208,7 @@ class ServiceFactoryTest extends TestCase
                 'linkSocialUri' => '/link-social/twitter',
                 'callbackLinkSocialUri' => '/callback-link-social/twitter',
                 'clientId' => '20003030300303',
-                'clientSecret' => 'weakpassword'
+                'clientSecret' => 'weakpassword',
             ],
             'collaborators' => [],
             'signature' => null,
@@ -217,8 +217,8 @@ class ServiceFactoryTest extends TestCase
                 'plugin' => 'CakeDC/Users',
                 'controller' => 'Users',
                 'action' => 'socialLogin',
-                'prefix' => null
-            ]
+                'prefix' => null,
+            ],
         ];
         Configure::write('OAuth.providers.twitter', $config);
 
@@ -227,7 +227,7 @@ class ServiceFactoryTest extends TestCase
             'plugin' => 'CakeDC/Users',
             'controller' => 'Users',
             'action' => 'socialLogin',
-            'provider' => 'twitter'
+            'provider' => 'twitter',
         ]);
 
         $actual = $this->Factory->createFromRequest($request);
@@ -245,13 +245,13 @@ class ServiceFactoryTest extends TestCase
         $request = ServerRequestFactory::fromGlobals();
         $request = $request->withQueryParams([
             'code' => 'ZPO9972j3092304230',
-            'state' => '__TEST_STATE__'
+            'state' => '__TEST_STATE__',
         ]);
         $request = $request->withAttribute('params', [
             'plugin' => 'CakeDC/Users',
             'controller' => 'Users',
             'action' => 'socialLogin',
-            'provider' => 'facebook'
+            'provider' => 'facebook',
         ]);
 
         Configure::delete('OAuth.providers.facebook.options.redirectUri');

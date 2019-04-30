@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright 2010 - 2019, Cake Development Corporation (https://www.cakedc.com)
  *
@@ -11,17 +12,16 @@
 
 namespace CakeDC\Auth\Test\TestCase\Rbac;
 
-use CakeDC\Auth\Rbac\Rbac;
-use CakeDC\Auth\Rbac\Rules\Owner;
 use Cake\Http\ServerRequest;
 use Cake\TestSuite\TestCase;
 use Cake\Utility\Hash;
+use CakeDC\Auth\Rbac\Rbac;
+use CakeDC\Auth\Rbac\Rules\Owner;
 use Psr\Log\LogLevel;
 use ReflectionClass;
 
 class RbacTest extends TestCase
 {
-
     /**
      * @var Rbac
      */
@@ -58,7 +58,7 @@ class RbacTest extends TestCase
                     'requestResetPassword',
                     // UserValidationTrait used in PasswordManagementTrait
                     'resendTokenValidation',
-                    'linkSocial'
+                    'linkSocial',
                 ],
                 'bypassAuth' => true,
             ],
@@ -93,7 +93,7 @@ class RbacTest extends TestCase
                 'plugin' => 'CakeDC/Users',
                 'controller' => 'Users',
                 'action' => 'resetOneTimePasswordAuthenticator',
-                'allowed' => true
+                'allowed' => true,
             ],
             //all roles allowed to Pages/display
             [
@@ -191,7 +191,7 @@ class RbacTest extends TestCase
                         'action' => 'three', // Discard here
                         function () {
                             throw new \Exception();
-                        }
+                        },
                     ],
                     [
                         'plugin' => ['Tests'],
@@ -210,10 +210,10 @@ class RbacTest extends TestCase
                 [
                     'plugin' => 'Tests',
                     'controller' => 'Tests',
-                    'action' => 'one'
+                    'action' => 'one',
                 ],
                 //expected
-                true
+                true,
             ],
             'deny-first-discard-after' => [
                 //permissions
@@ -224,7 +224,7 @@ class RbacTest extends TestCase
                         'action' => 'one',
                         'allowed' => function () {
                             return false; // Deny here since under 'allowed' key
-                        }
+                        },
                     ],
                     [
                         // This permission isn't evaluated
@@ -247,10 +247,10 @@ class RbacTest extends TestCase
                 [
                     'plugin' => 'Tests',
                     'controller' => 'Tests',
-                    'action' => 'one'
+                    'action' => 'one',
                 ],
                 //expected
-                false
+                false,
             ],
             'star-invert' => [
                 //permissions
@@ -270,10 +270,10 @@ class RbacTest extends TestCase
                 [
                     'plugin' => 'something',
                     'controller' => 'something',
-                    'action' => 'something'
+                    'action' => 'something',
                 ],
                 //expected
-                true
+                true,
             ],
             'star-invert-deny' => [
                 //permissions
@@ -293,10 +293,10 @@ class RbacTest extends TestCase
                 [
                     'plugin' => 'something',
                     'controller' => 'something',
-                    'action' => 'test'
+                    'action' => 'test',
                 ],
                 //expected
-                false
+                false,
             ],
             'user-arr' => [
                 //permissions
@@ -308,7 +308,7 @@ class RbacTest extends TestCase
                         'user.profile.signature' => "Hi I'm luke",
                         'user.allowed' => false,
                         'controller' => 'Tests',
-                        'action' => 'one'
+                        'action' => 'one',
                     ],
                 ],
                 //user
@@ -318,17 +318,17 @@ class RbacTest extends TestCase
                     'role' => 'test',
                     'profile' => [
                         'id' => 256,
-                        'signature' => "Hi I'm luke"
+                        'signature' => "Hi I'm luke",
                     ],
-                    'allowed' => false
+                    'allowed' => false,
                 ],
                 //request
                 [
                     'controller' => 'Tests',
-                    'action' => 'one'
+                    'action' => 'one',
                 ],
                 //expected
-                true
+                true,
             ],
             'evaluate-order' => [
                 //permissions
@@ -339,7 +339,7 @@ class RbacTest extends TestCase
                             throw new \Exception();
                         },
                         'controller' => 'Tests',
-                        'action' => 'one'
+                        'action' => 'one',
                     ],
                 ],
                 //user
@@ -351,10 +351,10 @@ class RbacTest extends TestCase
                 //request
                 [
                     'controller' => 'Tests',
-                    'action' => 'one'
+                    'action' => 'one',
                 ],
                 //expected
-                false
+                false,
             ],
             'multiple-callables' => [
                 //permissions
@@ -368,7 +368,7 @@ class RbacTest extends TestCase
                             return true;
                         },
                         'controller' => 'Tests',
-                        'action' => 'one'
+                        'action' => 'one',
                     ],
                 ],
                 //user
@@ -380,10 +380,10 @@ class RbacTest extends TestCase
                 //request
                 [
                     'controller' => 'Tests',
-                    'action' => 'one'
+                    'action' => 'one',
                 ],
                 //expected
-                true
+                true,
             ],
             'happy-strict-all' => [
                 //permissions
@@ -404,10 +404,10 @@ class RbacTest extends TestCase
                 [
                     'plugin' => 'Tests',
                     'controller' => 'Tests',
-                    'action' => 'test'
+                    'action' => 'test',
                 ],
                 //expected
-                true
+                true,
             ],
             'happy-strict-all-deny' => [
                 //permissions
@@ -428,10 +428,10 @@ class RbacTest extends TestCase
                 [
                     'plugin' => 'Tests',
                     'controller' => 'Tests',
-                    'action' => 'test'
+                    'action' => 'test',
                 ],
                 //expected
-                false
+                false,
             ],
             'happy-plugin-null-allowed-null' => [
                 //permissions
@@ -450,10 +450,10 @@ class RbacTest extends TestCase
                 [
                     'plugin' => null,
                     'controller' => 'Tests',
-                    'action' => 'test'
+                    'action' => 'test',
                 ],
                 //expected
-                true
+                true,
             ],
             'happy-plugin-asterisk' => [
                 //permissions
@@ -473,10 +473,10 @@ class RbacTest extends TestCase
                 [
                     'plugin' => 'Any',
                     'controller' => 'Tests',
-                    'action' => 'test'
+                    'action' => 'test',
                 ],
                 //expected
-                true
+                true,
             ],
             'happy-plugin-asterisk-main-app' => [
                 //permissions
@@ -496,10 +496,10 @@ class RbacTest extends TestCase
                 [
                     'plugin' => null,
                     'controller' => 'Tests',
-                    'action' => 'test'
+                    'action' => 'test',
                 ],
                 //expected
-                true
+                true,
             ],
             'happy-role-asterisk' => [
                 //permissions
@@ -518,10 +518,10 @@ class RbacTest extends TestCase
                 [
                     'plugin' => null,
                     'controller' => 'Tests',
-                    'action' => 'test'
+                    'action' => 'test',
                 ],
                 //expected
-                true
+                true,
             ],
             'happy-controller-asterisk' => [
                 //permissions
@@ -541,10 +541,10 @@ class RbacTest extends TestCase
                 [
                     'plugin' => 'Tests',
                     'controller' => 'Tests',
-                    'action' => 'test'
+                    'action' => 'test',
                 ],
                 //expected
-                true
+                true,
             ],
             'happy-action-asterisk' => [
                 //permissions
@@ -564,10 +564,10 @@ class RbacTest extends TestCase
                 [
                     'plugin' => 'Tests',
                     'controller' => 'Tests',
-                    'action' => 'any'
+                    'action' => 'any',
                 ],
                 //expected
-                true
+                true,
             ],
             'happy-some-asterisk-allowed' => [
                 //permissions
@@ -587,10 +587,10 @@ class RbacTest extends TestCase
                 [
                     'plugin' => 'Tests',
                     'controller' => 'Tests',
-                    'action' => 'any'
+                    'action' => 'any',
                 ],
                 //expected
-                true
+                true,
             ],
             'happy-some-asterisk-deny' => [
                 //permissions
@@ -611,10 +611,10 @@ class RbacTest extends TestCase
                 [
                     'plugin' => 'Tests',
                     'controller' => 'Tests',
-                    'action' => 'any'
+                    'action' => 'any',
                 ],
                 //expected
-                false
+                false,
             ],
             'all-deny' => [
                 //permissions
@@ -635,10 +635,10 @@ class RbacTest extends TestCase
                 [
                     'plugin' => 'Any',
                     'controller' => 'Any',
-                    'action' => 'any'
+                    'action' => 'any',
                 ],
                 //expected
-                false
+                false,
             ],
             'dasherized' => [
                 //permissions
@@ -659,10 +659,10 @@ class RbacTest extends TestCase
                 [
                     'plugin' => 'tests',
                     'controller' => 'test-tests',
-                    'action' => 'test-action'
+                    'action' => 'test-action',
                 ],
                 //expected
-                true
+                true,
             ],
             'happy-array' => [
                 //permissions
@@ -682,10 +682,10 @@ class RbacTest extends TestCase
                 [
                     'plugin' => 'Tests',
                     'controller' => 'Tests',
-                    'action' => 'one'
+                    'action' => 'one',
                 ],
                 //expected
-                true
+                true,
             ],
             'happy-array-deny' => [
                 //permissions
@@ -705,10 +705,10 @@ class RbacTest extends TestCase
                 [
                     'plugin' => 'Tests',
                     'controller' => 'Tests',
-                    'action' => 'three'
+                    'action' => 'three',
                 ],
                 //expected
-                false
+                false,
             ],
             'happy-callback-check-params' => [
                 //permissions
@@ -719,7 +719,7 @@ class RbacTest extends TestCase
                     'action' => ['one', 'two'],
                     'allowed' => function ($user, $role, $request) {
                         return $user['id'] === 1 && $role = 'test' && $request->getParam('plugin') == 'Tests';
-                    }
+                    },
                 ]],
                 //user
                 [
@@ -731,10 +731,10 @@ class RbacTest extends TestCase
                 [
                     'plugin' => 'Tests',
                     'controller' => 'Tests',
-                    'action' => 'one'
+                    'action' => 'one',
                 ],
                 //expected
-                true
+                true,
             ],
             'happy-callback-deny' => [
                 //permissions
@@ -745,7 +745,7 @@ class RbacTest extends TestCase
                     'action' => ['one', 'two'],
                     'allowed' => function ($user, $role, $request) {
                         return false;
-                    }
+                    },
                 ]],
                 //user
                 [
@@ -757,10 +757,10 @@ class RbacTest extends TestCase
                 [
                     'plugin' => 'Tests',
                     'controller' => 'Tests',
-                    'action' => 'one'
+                    'action' => 'one',
                 ],
                 //expected
-                false
+                false,
             ],
             'happy-prefix' => [
                 //permissions
@@ -780,10 +780,10 @@ class RbacTest extends TestCase
                 [
                     'prefix' => 'admin',
                     'controller' => 'Tests',
-                    'action' => 'one'
+                    'action' => 'one',
                 ],
                 //expected
-                true
+                true,
             ],
             'deny-prefix' => [
                 //permissions
@@ -802,10 +802,10 @@ class RbacTest extends TestCase
                 //request
                 [
                     'controller' => 'Tests',
-                    'action' => 'one'
+                    'action' => 'one',
                 ],
                 //expected
-                false
+                false,
             ],
             'star-prefix' => [
                 //permissions
@@ -825,10 +825,10 @@ class RbacTest extends TestCase
                 [
                     'prefix' => 'admin',
                     'controller' => 'Tests',
-                    'action' => 'one'
+                    'action' => 'one',
                 ],
                 //expected
-                true
+                true,
             ],
             'array-prefix' => [
                 //permissions
@@ -848,10 +848,10 @@ class RbacTest extends TestCase
                 [
                     'prefix' => 'admin',
                     'controller' => 'Tests',
-                    'action' => 'one'
+                    'action' => 'one',
                 ],
                 //expected
-                true
+                true,
             ],
             'array-prefix-deny' => [
                 //permissions
@@ -872,10 +872,10 @@ class RbacTest extends TestCase
                 [
                     'prefix' => 'admin',
                     'controller' => 'Tests',
-                    'action' => 'one'
+                    'action' => 'one',
                 ],
                 //expected
-                false
+                false,
             ],
             'happy-ext' => [
                 //permissions
@@ -897,10 +897,10 @@ class RbacTest extends TestCase
                     'prefix' => 'admin',
                     '_ext' => 'csv',
                     'controller' => 'Tests',
-                    'action' => 'one'
+                    'action' => 'one',
                 ],
                 //expected
-                true
+                true,
             ],
             'deny-ext' => [
                 //permissions
@@ -921,10 +921,10 @@ class RbacTest extends TestCase
                 [
                     'controller' => 'Tests',
                     '_ext' => 'csv',
-                    'action' => 'one'
+                    'action' => 'one',
                 ],
                 //expected
-                false
+                false,
             ],
             'star-ext' => [
                 //permissions
@@ -946,10 +946,10 @@ class RbacTest extends TestCase
                     'prefix' => 'admin',
                     '_ext' => 'other',
                     'controller' => 'Tests',
-                    'action' => 'one'
+                    'action' => 'one',
                 ],
                 //expected
-                true
+                true,
             ],
             'array-ext' => [
                 //permissions
@@ -969,10 +969,10 @@ class RbacTest extends TestCase
                 [
                     '_ext' => 'csv',
                     'controller' => 'Tests',
-                    'action' => 'one'
+                    'action' => 'one',
                 ],
                 //expected
-                true
+                true,
             ],
             'array-ext-deny' => [
                 //permissions
@@ -993,10 +993,10 @@ class RbacTest extends TestCase
                 [
                     'prefix' => 'csv',
                     'controller' => 'Tests',
-                    'action' => 'one'
+                    'action' => 'one',
                 ],
                 //expected
-                false
+                false,
             ],
             'rule-class' => [
                 //permissions
@@ -1017,10 +1017,10 @@ class RbacTest extends TestCase
                 //request
                 [
                     'controller' => 'Tests',
-                    'action' => 'one'
+                    'action' => 'one',
                 ],
                 //expected
-                true
+                true,
             ],
             'bypass-auth' => [
                 //permissions
@@ -1036,7 +1036,7 @@ class RbacTest extends TestCase
                 [
                     'plugin' => 'Tests',
                     'controller' => 'Tests',
-                    'action' => 'test'
+                    'action' => 'test',
                 ],
                 //expected
                 true,
@@ -1055,7 +1055,7 @@ class RbacTest extends TestCase
                 [
                     'plugin' => 'Tests',
                     'controller' => 'Tests',
-                    'action' => 'test'
+                    'action' => 'test',
                 ],
                 //expected
                 false,
@@ -1080,7 +1080,7 @@ class RbacTest extends TestCase
                 [
                     'plugin' => 'Tests',
                     'controller' => 'Tests',
-                    'action' => 'test'
+                    'action' => 'test',
                 ],
                 //expected
                 true,
@@ -1105,7 +1105,7 @@ class RbacTest extends TestCase
                 [
                     'plugin' => 'Tests',
                     'controller' => 'Tests',
-                    'action' => 'test'
+                    'action' => 'test',
                 ],
                 //expected
                 false,
@@ -1129,7 +1129,7 @@ class RbacTest extends TestCase
                 [
                     'plugin' => 'Tests',
                     'controller' => 'Tests',
-                    'action' => 'test'
+                    'action' => 'test',
                 ],
                 //expected
                 false,
@@ -1185,7 +1185,7 @@ class RbacTest extends TestCase
                 [
                     'plugin' => 'Tests',
                     'controller' => 'Tests',
-                    'action' => 'test'
+                    'action' => 'test',
                 ],
                 //expected
                 "Cannot evaluate permission when 'controller' and/or 'action' keys are absent",
@@ -1209,7 +1209,7 @@ class RbacTest extends TestCase
                 [
                     'plugin' => 'Tests',
                     'controller' => 'Tests',
-                    'action' => 'test'
+                    'action' => 'test',
                 ],
                 //expected
                 "Cannot evaluate permission when 'controller' and/or 'action' keys are absent",
@@ -1233,7 +1233,7 @@ class RbacTest extends TestCase
                 [
                     'plugin' => 'Tests',
                     'controller' => 'Tests',
-                    'action' => 'test'
+                    'action' => 'test',
                 ],
                 //expected
                 "Cannot evaluate permission when 'controller' and/or 'action' keys are absent",
@@ -1258,7 +1258,7 @@ class RbacTest extends TestCase
                 [
                     'plugin' => 'Tests',
                     'controller' => 'Tests',
-                    'action' => 'test'
+                    'action' => 'test',
                 ],
                 //expected
                 "Cannot evaluate permission when 'controller' and/or 'action' keys are absent",
@@ -1283,7 +1283,7 @@ class RbacTest extends TestCase
                 [
                     'plugin' => 'Tests',
                     'controller' => 'Tests',
-                    'action' => 'test'
+                    'action' => 'test',
                 ],
                 //expected
                 "Permission key 'user' is illegal, cannot evaluate the permission",

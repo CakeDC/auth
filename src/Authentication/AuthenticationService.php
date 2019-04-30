@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright 2010 - 2019, Cake Development Corporation (https://www.cakedc.com)
  *
@@ -15,28 +16,27 @@ use Authentication\AuthenticationService as BaseService;
 use Authentication\Authenticator\Result;
 use Authentication\Authenticator\ResultInterface;
 use Authentication\Authenticator\StatelessInterface;
-use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use RuntimeException;
 
 class AuthenticationService extends BaseService
 {
-    const NEED_TWO_FACTOR_VERIFY = 'NEED_TWO_FACTOR_VERIFY';
+    public const NEED_TWO_FACTOR_VERIFY = 'NEED_TWO_FACTOR_VERIFY';
 
-    const TWO_FACTOR_VERIFY_SESSION_KEY = 'temporarySession';
+    public const TWO_FACTOR_VERIFY_SESSION_KEY = 'temporarySession';
 
     /**
      * All failures authenticators
      *
-     * @var Failure[]
+     * @var \CakeDC\Auth\Authentication\Failure[]
      */
     protected $failures = [];
     /**
      * Proceed to google verify action after a valid result result
      *
-     * @param ServerRequestInterface $request response to manipulate
-     * @param ResponseInterface $response base response to manipulate
-     * @param ResultInterface $result valid result
+     * @param \Psr\Http\Message\ServerRequestInterface $request response to manipulate
+     * @param \Psr\Http\Message\ResponseInterface $result base response to manipulate
+     * @param \Authentication\Authenticator\ResultInterface $result valid result
      * @return array with result, request and response keys
      */
     protected function proceedToGoogleVerify(ServerRequestInterface $request, /*ResponseInterface $response, */ResultInterface $result)
@@ -86,7 +86,6 @@ class AuthenticationService extends BaseService
                     return $this->proceedToGoogleVerify($request, /*$response, */$result);
                 }
 
-
 /*                if (!($authenticator instanceof StatelessInterface)) {
                     $requestResponse = $this->persistIdentity($request, $response, $result->getData());
                     $request = $requestResponse['request'];
@@ -123,7 +122,7 @@ class AuthenticationService extends BaseService
     /**
      * Get list the list of failures processed
      *
-     * @return Failure[]
+     * @return \CakeDC\Auth\Authentication\Failure[]
      */
     public function getFailures()
     {

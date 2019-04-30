@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright 2010 - 2019, Cake Development Corporation (https://www.cakedc.com)
  *
@@ -19,11 +20,10 @@ use Cake\Utility\Hash;
  */
 class Amazon extends AbstractMapper
 {
-
     /**
      * Url constants
      */
-    const AMAZON_BASE_URL = 'https://amazon.com/gp/profile/';
+    public const AMAZON_BASE_URL = 'https://amazon.com/gp/profile/';
 
     /**
      * Map for provider fields
@@ -31,7 +31,7 @@ class Amazon extends AbstractMapper
      * @var array
      */
     protected $_mapFields = [
-        'id' => 'user_id'
+        'id' => 'user_id',
     ];
 
     /**

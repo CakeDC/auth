@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright 2010 - 2019, Cake Development Corporation (https://www.cakedc.com)
  *
@@ -12,10 +13,10 @@
 namespace CakeDC\Auth\Test\TestCase\Policy;
 
 use Authentication\Identity;
-use CakeDC\Auth\Policy\SuperuserPolicy;
 use Cake\Http\ServerRequestFactory;
 use Cake\ORM\Entity;
 use Cake\TestSuite\TestCase;
+use CakeDC\Auth\Policy\SuperuserPolicy;
 
 class SuperuserPolicyTest extends TestCase
 {

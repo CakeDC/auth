@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright 2010 - 2019, Cake Development Corporation (https://www.cakedc.com)
  *
@@ -11,10 +12,10 @@
 
 namespace CakeDC\Auth\Middleware;
 
-use CakeDC\Auth\Rbac\Rbac;
 use Cake\Core\InstanceConfigTrait;
 use Cake\Http\Exception\ForbiddenException;
 use Cake\Routing\Router;
+use CakeDC\Auth\Rbac\Rbac;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -81,9 +82,9 @@ class RbacMiddleware
 {
     use InstanceConfigTrait;
 
-    const UNAUTHORIZED_BEHAVIOR_THROW = 0;
-    const UNAUTHORIZED_BEHAVIOR_REDIRECT = 1;
-    const UNAUTHORIZED_BEHAVIOR_AUTO = 2;
+    public const UNAUTHORIZED_BEHAVIOR_THROW = 0;
+    public const UNAUTHORIZED_BEHAVIOR_REDIRECT = 1;
+    public const UNAUTHORIZED_BEHAVIOR_AUTO = 2;
 
     protected $_defaultConfig = [
         /*
@@ -100,21 +101,21 @@ class RbacMiddleware
         'unauthorizedRedirect' => [
             'controller' => 'Users',
             'action' => 'login',
-        ]
+        ],
     ];
 
     /**
-     * @var Rbac
+     * @var \CakeDC\Auth\Rbac\Rbac
      */
     protected $rbac;
 
     /**
      * RbacMiddleware constructor
      *
-     * @param Rbac $rbac rbac instance
+     * @param \CakeDC\Auth\Rbac\Rbac $rbac rbac instance
      * @param array $options options
      */
-    public function __construct(Rbac $rbac = null, array $options = [])
+    public function __construct(?Rbac $rbac = null, array $options = [])
     {
         if ($rbac === null) {
             $rbac = new Rbac();
@@ -157,9 +158,9 @@ class RbacMiddleware
      * Handles a not authorized request
      *
      * @param array $userData user data
-     * @param ServerRequestInterface $request request
-     * @param ResponseInterface $response response
-     * @return ResponseInterface
+     * @param \Psr\Http\Message\ServerRequestInterface $request request
+     * @param \Psr\Http\Message\ResponseInterface $response response
+     * @return \Psr\Http\Message\ResponseInterface
      */
     protected function notAuthorized(array $userData, ServerRequestInterface $request, ResponseInterface $response)
     {
@@ -181,8 +182,8 @@ class RbacMiddleware
     /**
      * Redirects to unauthorizedRedirect the response
      *
-     * @param ResponseInterface $response response
-     * @return ResponseInterface
+     * @param \Psr\Http\Message\ResponseInterface $response response
+     * @return \Psr\Http\Message\ResponseInterface
      */
     protected function unauthorizedRedirect(ResponseInterface $response)
     {

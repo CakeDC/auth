@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright 2010 - 2019, Cake Development Corporation (https://www.cakedc.com)
  *
@@ -10,7 +11,7 @@
  */
 namespace CakeDC\Auth\Rbac\Rules;
 
-use \Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\ServerRequestInterface;
 
 interface Rule
 {

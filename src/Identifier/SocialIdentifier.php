@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright 2010 - 2019, Cake Development Corporation (https://www.cakedc.com)
  *
@@ -18,10 +19,10 @@ class SocialIdentifier extends AbstractIdentifier
 {
     use ResolverAwareTrait;
 
-    const CREDENTIAL_KEY = 'socialAuthUser';
+    public const CREDENTIAL_KEY = 'socialAuthUser';
 
     protected $_defaultConfig = [
-        'resolver' => 'Authentication.Orm'
+        'resolver' => 'Authentication.Orm',
     ];
 
     /**
@@ -37,7 +38,7 @@ class SocialIdentifier extends AbstractIdentifier
         }
 
         return $this->getResolver()->find([
-            'email' => $credentials[self::CREDENTIAL_KEY]['email']
+            'email' => $credentials[self::CREDENTIAL_KEY]['email'],
         ]);
     }
 }

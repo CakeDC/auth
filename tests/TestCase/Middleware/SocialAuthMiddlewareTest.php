@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright 2010 - 2019, Cake Development Corporation (https://www.cakedc.com)
  *
@@ -11,21 +12,20 @@
 
 namespace CakeDC\Auth\Test\TestCase\Middleware;
 
-use CakeDC\Auth\Middleware\SocialAuthMiddleware;
-use CakeDC\Auth\Social\Service\OAuth2Service;
 use Cake\Core\Configure;
 use Cake\Http\Response;
 use Cake\Http\ServerRequest;
 use Cake\Http\ServerRequestFactory;
 use Cake\TestSuite\TestCase;
+use CakeDC\Auth\Middleware\SocialAuthMiddleware;
+use CakeDC\Auth\Social\Service\OAuth2Service;
 use Zend\Diactoros\Uri;
 
 class SocialAuthMiddlewareTest extends TestCase
 {
-
     public $fixtures = [
         'plugin.CakeDC/Auth.Users',
-        'plugin.CakeDC/Auth.SocialAccounts'
+        'plugin.CakeDC/Auth.SocialAccounts',
     ];
 
     /**
@@ -56,11 +56,11 @@ class SocialAuthMiddlewareTest extends TestCase
                 'linkSocialUri' => '/link-social/facebook',
                 'callbackLinkSocialUri' => '/callback-link-social/facebook',
                 'clientId' => '10003030300303',
-                'clientSecret' => 'secretpassword'
+                'clientSecret' => 'secretpassword',
             ],
-            []
+            [],
         ])->setMethods([
-            'getAccessToken', 'getState', 'getAuthorizationUrl', 'getResourceOwner'
+            'getAccessToken', 'getState', 'getAuthorizationUrl', 'getResourceOwner',
         ])->getMock();
 
         $config = [
@@ -74,7 +74,7 @@ class SocialAuthMiddlewareTest extends TestCase
                 'linkSocialUri' => '/link-social/facebook',
                 'callbackLinkSocialUri' => '/callback-link-social/facebook',
                 'clientId' => '10003030300303',
-                'clientSecret' => 'secretpassword'
+                'clientSecret' => 'secretpassword',
             ],
             'collaborators' => [],
             'signature' => null,
@@ -83,8 +83,8 @@ class SocialAuthMiddlewareTest extends TestCase
                 'plugin' => 'CakeDC/Auth',
                 'controller' => 'Users',
                 'action' => 'socialLogin',
-                'prefix' => null
-            ]
+                'prefix' => null,
+            ],
         ];
         Configure::write('OAuth.providers.facebook', $config);
 
@@ -117,7 +117,7 @@ class SocialAuthMiddlewareTest extends TestCase
             'plugin' => 'CakeDC/Auth',
             'controller' => 'Users',
             'action' => 'socialLogin',
-            'provider' => 'facebook'
+            'provider' => 'facebook',
         ]);
 
         $this->Provider->expects($this->any())
@@ -130,7 +130,7 @@ class SocialAuthMiddlewareTest extends TestCase
 
         $Middleware = new SocialAuthMiddleware([
             'urlChecker' => 'Authentication.Default',
-            'loginUrl' => ['/auth/facebook']
+            'loginUrl' => ['/auth/facebook'],
         ]);
         $response = new Response();
         $next = function () {
@@ -163,18 +163,18 @@ class SocialAuthMiddlewareTest extends TestCase
         $this->Request = $this->Request->withUri($uri);
         $this->Request = $this->Request->withQueryParams([
             'code' => 'ZPO9972j3092304230',
-            'state' => '__TEST_STATE__'
+            'state' => '__TEST_STATE__',
         ]);
         $this->Request = $this->Request->withAttribute('params', [
             'plugin' => 'CakeDC/Auth',
             'controller' => 'Users',
             'action' => 'socialLogin',
-            'provider' => 'facebook'
+            'provider' => 'facebook',
         ]);
         $this->Request->getSession()->write('oauth2state', '__TEST_STATE__');
         $Middleware = new SocialAuthMiddleware([
             'urlChecker' => 'Authentication.Default',
-            'loginUrl' => ['/auth/facebook']
+            'loginUrl' => ['/auth/facebook'],
         ]);
 
         $ResponseOriginal = new Response();
@@ -206,7 +206,7 @@ class SocialAuthMiddlewareTest extends TestCase
     {
         $Middleware = new SocialAuthMiddleware([
             'urlChecker' => 'Authentication.Default',
-            'loginUrl' => ['/auth/facebook']
+            'loginUrl' => ['/auth/facebook'],
         ]);
         $response = new Response();
         $next = function ($request, $response) {

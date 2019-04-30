@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright 2010 - 2019, Cake Development Corporation (https://www.cakedc.com)
  *
@@ -11,8 +12,8 @@
 
 namespace CakeDC\Auth\Test\TestCase\Social\Mapper;
 
-use CakeDC\Auth\Social\Mapper\Twitter;
 use Cake\TestSuite\TestCase;
+use CakeDC\Auth\Social\Mapper\Twitter;
 
 class TwitterTest extends TestCase
 {
@@ -42,8 +43,8 @@ class TwitterTest extends TestCase
             'extra' => [],
             'token' => [
                 'accessToken' => 'test-token',
-                'tokenSecret' => 'test-secret'
-            ]
+                'tokenSecret' => 'test-secret',
+            ],
         ];
         $providerMapper = new Twitter();
         $user = $providerMapper($rawData);
@@ -63,9 +64,9 @@ class TwitterTest extends TestCase
             'credentials' => [
                 'token' => 'test-token',
                 'secret' => 'test-secret',
-                'expires' => null
+                'expires' => null,
             ],
-            'raw' => $rawData
+            'raw' => $rawData,
         ], $user);
     }
 }

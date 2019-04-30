@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright 2010 - 2019, Cake Development Corporation (https://www.cakedc.com)
  *
@@ -11,10 +12,10 @@
 
 namespace CakeDC\Auth\Test\TestCase\Rbac\Rules;
 
-use CakeDC\Auth\Rbac\Rules\Owner;
 use Cake\Http\ServerRequest;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
+use CakeDC\Auth\Rbac\Rules\Owner;
 
 /**
  * @property Owner Owner
@@ -73,7 +74,7 @@ class OwnerTest extends TestCase
     {
         $this->Owner->setConfig([
                 'tableKeyType' => Owner::TYPE_TABLE_KEY_QUERY,
-                'tableIdParamsKey' => 'key'
+                'tableIdParamsKey' => 'key',
             ]);
         $user = [
             'id' => '00000000-0000-0000-0000-000000000001',
@@ -97,7 +98,7 @@ class OwnerTest extends TestCase
     {
         $this->Owner->setConfig([
                 'tableKeyType' => Owner::TYPE_TABLE_KEY_DATA,
-                'tableIdParamsKey' => 'key'
+                'tableIdParamsKey' => 'key',
             ]);
         $user = [
             'id' => '00000000-0000-0000-0000-000000000001',
@@ -123,7 +124,7 @@ class OwnerTest extends TestCase
     {
         $this->Owner->setConfig([
                 'tableKeyType' => 'computer-says-no',
-                'tableIdParamsKey' => 'key'
+                'tableIdParamsKey' => 'key',
             ]);
         $user = [
             'id' => '00000000-0000-0000-0000-000000000001',
@@ -146,7 +147,7 @@ class OwnerTest extends TestCase
     public function testAllowedUsingTableAlias()
     {
         $this->Owner = new Owner([
-            'table' => 'Posts'
+            'table' => 'Posts',
         ]);
         $this->request = $this->request->withParam('pass', ['00000000-0000-0000-0000-000000000001']);
         $user = [
@@ -218,7 +219,7 @@ class OwnerTest extends TestCase
         $this->request = $this->request->withAttribute('params', [
             'plugin' => 'CakeDC/Users',
             'controller' => 'Posts',
-            'pass' => ['00000000-0000-0000-0000-000000000002']
+            'pass' => ['00000000-0000-0000-0000-000000000002'],
         ]);
         $user = [
             'id' => '00000000-0000-0000-0000-000000000001',
@@ -236,7 +237,7 @@ class OwnerTest extends TestCase
         $this->request = $this->request->withAttribute('params', [
             'plugin' => 'CakeDC/Users',
             'controller' => 'Posts',
-            'pass' => ['00000000-0000-0000-0000-000000000002']
+            'pass' => ['00000000-0000-0000-0000-000000000002'],
         ]);
         $user = [
             'id' => '99999999-0000-0000-0000-000000000000',
@@ -254,7 +255,7 @@ class OwnerTest extends TestCase
         $this->request = $this->request->withAttribute('params', [
             'plugin' => 'CakeDC/Users',
             'controller' => 'Posts',
-            'pass' => ['99999999-0000-0000-0000-000000000000'] //not found
+            'pass' => ['99999999-0000-0000-0000-000000000000'], //not found
         ]);
         $user = [
             'id' => '00000000-0000-0000-0000-000000000001',
@@ -274,7 +275,7 @@ class OwnerTest extends TestCase
         $this->request = $this->request->withAttribute('params', [
             'plugin' => 'CakeDC/Users',
             'controller' => 'NoDefaultTable',
-            'pass' => ['00000000-0000-0000-0000-000000000001']
+            'pass' => ['00000000-0000-0000-0000-000000000001'],
         ]);
         $user = [
             'id' => '00000000-0000-0000-0000-000000000001',
@@ -296,7 +297,7 @@ class OwnerTest extends TestCase
         $this->request = $this->request->withAttribute('params', [
             'plugin' => 'CakeDC/Users',
             'controller' => 'IsNotUsed',
-            'pass' => ['00000000-0000-0000-0000-000000000001']
+            'pass' => ['00000000-0000-0000-0000-000000000001'],
         ]);
         $user = [
             'id' => '00000000-0000-0000-0000-000000000001',
@@ -318,7 +319,7 @@ class OwnerTest extends TestCase
         $this->request = $this->request->withAttribute('params', [
             'plugin' => 'CakeDC/Users',
             'controller' => 'IsNotUsed',
-            'pass' => ['00000000-0000-0000-0000-000000000002']
+            'pass' => ['00000000-0000-0000-0000-000000000002'],
         ]);
         $user = [
             'id' => '00000000-0000-0000-0000-000000000001',

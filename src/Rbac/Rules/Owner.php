@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright 2010 - 2019, Cake Development Corporation (https://www.cakedc.com)
  *
@@ -20,9 +21,9 @@ use Psr\Http\Message\ServerRequestInterface;
  */
 class Owner extends AbstractRule
 {
-    const TYPE_TABLE_KEY_PARAMS = 'params';
-    const TYPE_TABLE_KEY_QUERY = 'query';
-    const TYPE_TABLE_KEY_DATA = 'data';
+    public const TYPE_TABLE_KEY_PARAMS = 'params';
+    public const TYPE_TABLE_KEY_QUERY = 'query';
+    public const TYPE_TABLE_KEY_DATA = 'data';
 
     protected $_defaultConfig = [
         //field in the owned table matching the user_id
@@ -91,7 +92,7 @@ class Owner extends AbstractRule
         }
         $conditions = array_merge([
             $idColumn => $id,
-            $this->getConfig('ownerForeignKey') => $userId
+            $this->getConfig('ownerForeignKey') => $userId,
         ], $this->getConfig('conditions'));
 
         return $table->exists($conditions);
@@ -100,7 +101,7 @@ class Owner extends AbstractRule
     /**
      * Get the table id, inspecting the request
      *
-     * @param ServerRequestInterface $request request
+     * @param \Psr\Http\Message\ServerRequestInterface $request request
      * @return string
      * @throws \RuntimeException when invalid table key is used
      */

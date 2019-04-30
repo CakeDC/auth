@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright 2010 - 2019, Cake Development Corporation (https://www.cakedc.com)
  *
@@ -11,8 +12,8 @@
 
 namespace CakeDC\Auth\Test\TestCase\Social\Mapper;
 
-use CakeDC\Auth\Social\Mapper\Cognito;
 use Cake\TestSuite\TestCase;
+use CakeDC\Auth\Social\Mapper\Cognito;
 
 /**
  * Class CognitoTest
@@ -25,7 +26,7 @@ class CognitoTest extends TestCase
     {
         $token = new \League\OAuth2\Client\Token\AccessToken([
             'access_token' => 'test-token',
-            'expires' => 1490988496
+            'expires' => 1490988496,
         ]);
         $rawData = [
             'token' => $token,
@@ -56,9 +57,9 @@ class CognitoTest extends TestCase
             'credentials' => [
                 'token' => 'test-token',
                 'secret' => null,
-                'expires' => 1490988496
+                'expires' => 1490988496,
             ],
-            'raw' => $rawData
+            'raw' => $rawData,
         ];
         $providerMapper = new Cognito();
         $user = $providerMapper($rawData);

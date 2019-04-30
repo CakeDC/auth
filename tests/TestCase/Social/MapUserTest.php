@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright 2010 - 2019, Cake Development Corporation (https://www.cakedc.com)
  *
@@ -11,11 +12,11 @@
 
 namespace CakeDC\Auth\Test\TestCase\Social;
 
+use Cake\Core\Configure;
+use Cake\TestSuite\TestCase;
 use CakeDC\Auth\Social\MapUser;
 use CakeDC\Auth\Social\Service\OAuth2Service;
 use CakeDC\Auth\Social\Service\ServiceFactory;
-use Cake\Core\Configure;
-use Cake\TestSuite\TestCase;
 use League\OAuth2\Client\Provider\Facebook;
 use League\OAuth2\Client\Provider\FacebookUser;
 
@@ -39,11 +40,11 @@ class MapUserTest extends TestCase
                 'linkSocialUri' => '/link-social/facebook',
                 'callbackLinkSocialUri' => '/callback-link-social/facebook',
                 'clientId' => '10003030300303',
-                'clientSecret' => 'secretpassword'
+                'clientSecret' => 'secretpassword',
             ],
-            []
+            [],
         ])->setMethods([
-            'getAccessToken', 'getState', 'getAuthorizationUrl', 'getResourceOwner'
+            'getAccessToken', 'getState', 'getAuthorizationUrl', 'getResourceOwner',
         ])->getMock();
 
         $config = [
@@ -57,7 +58,7 @@ class MapUserTest extends TestCase
                 'linkSocialUri' => '/link-social/facebook',
                 'callbackLinkSocialUri' => '/callback-link-social/facebook',
                 'clientId' => '10003030300303',
-                'clientSecret' => 'secretpassword'
+                'clientSecret' => 'secretpassword',
             ],
             'collaborators' => [],
             'signature' => null,
@@ -66,8 +67,8 @@ class MapUserTest extends TestCase
                 'plugin' => 'CakeDC/Users',
                 'controller' => 'Users',
                 'action' => 'socialLogin',
-                'prefix' => null
-            ]
+                'prefix' => null,
+            ],
         ];
         Configure::write('OAuth.providers.facebook', $config);
     }
@@ -81,7 +82,7 @@ class MapUserTest extends TestCase
 
         $Token = new \League\OAuth2\Client\Token\AccessToken([
             'access_token' => 'test-token',
-            'expires' => 1490988496
+            'expires' => 1490988496,
         ]);
         $user = new FacebookUser([
             'id' => '1',
@@ -91,29 +92,29 @@ class MapUserTest extends TestCase
             'email' => 'test@gmail.com',
             'hometown' => [
                 'id' => '108226049197930',
-                'name' => 'Madrid'
+                'name' => 'Madrid',
             ],
             'picture' => [
                 'data' => [
                     'url' => 'https://scontent.xx.fbcdn.net/v/test.jpg',
-                    'is_silhouette' => false
-                ]
+                    'is_silhouette' => false,
+                ],
             ],
             'cover' => [
                 'source' => 'https://scontent.xx.fbcdn.net/v/test.jpg',
-                'id' => '1'
+                'id' => '1',
             ],
             'gender' => 'male',
             'locale' => 'en_US',
             'link' => 'https://www.facebook.com/app_scoped_user_id/1/',
             'timezone' => -5,
             'age_range' => [
-                'min' => 21
+                'min' => 21,
             ],
             'bio' => 'I am the best test user in the world.',
             'picture_url' => 'https://scontent.xx.fbcdn.net/v/test.jpg',
             'is_silhouette' => false,
-            'cover_photo_url' => 'https://scontent.xx.fbcdn.net/v/test.jpg'
+            'cover_photo_url' => 'https://scontent.xx.fbcdn.net/v/test.jpg',
         ]);
         $user = ['token' => $Token] + $user->toArray();
         $expected = [
@@ -132,7 +133,7 @@ class MapUserTest extends TestCase
             'credentials' => [
                 'token' => 'test-token',
                 'secret' => null,
-                'expires' => 1490988496
+                'expires' => 1490988496,
             ],
             'provider' => 'facebook',
             'raw' => $user,
@@ -155,7 +156,7 @@ class MapUserTest extends TestCase
                 'graphApiVersion' => 'v2.8',
                 'redirectUri' => '/auth/facebook',
                 'clientId' => '10003030300303',
-                'clientSecret' => 'secretpassword'
+                'clientSecret' => 'secretpassword',
             ],
             'collaborators' => [],
             'signature' => null,
@@ -164,8 +165,8 @@ class MapUserTest extends TestCase
                 'plugin' => 'CakeDC/Users',
                 'controller' => 'Users',
                 'action' => 'socialLogin',
-                'prefix' => null
-            ]
+                'prefix' => null,
+            ],
         ]);
         $user = new FacebookUser([
             'id' => '1',

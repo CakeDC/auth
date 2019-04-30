@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright 2010 - 2019, Cake Development Corporation (https://www.cakedc.com)
  *
@@ -11,9 +12,8 @@
 
 namespace CakeDC\Auth\Policy;
 
-use CakeDC\Auth\Rbac\Rbac;
 use Cake\Core\InstanceConfigTrait;
-use Psr\Http\Message\ServerRequestInterface;
+use CakeDC\Auth\Rbac\Rbac;
 
 class RbacPolicy
 {
@@ -21,8 +21,8 @@ class RbacPolicy
 
     protected $_defaultConfig = [
         'adapter' => [
-            'className' => Rbac::class
-        ]
+            'className' => Rbac::class,
+        ],
     ];
 
     /**
@@ -39,7 +39,7 @@ class RbacPolicy
      * Check rbac permission
      *
      * @param \Authorization\IdentityInterface|null $identity user identity
-     * @param ServerRequestInterface $resource server request
+     * @param \Psr\Http\Message\ServerRequestInterface $resource server request
      * @return bool
      */
     public function canAccess($identity, $resource)
@@ -54,8 +54,8 @@ class RbacPolicy
     /**
      * Get the rbac object from source or create a new one
      *
-     * @param ServerRequestInterface $resource server request
-     * @return Rbac
+     * @param \Psr\Http\Message\ServerRequestInterface $resource server request
+     * @return \CakeDC\Auth\Rbac\Rbac
      */
     public function getRbac($resource)
     {

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright 2010 - 2019, Cake Development Corporation (https://www.cakedc.com)
  *
@@ -11,11 +12,11 @@
 
 namespace CakeDC\Auth\Test\TestCase\Social;
 
+use Cake\Core\Configure;
+use Cake\TestSuite\TestCase;
 use CakeDC\Auth\Exception\InvalidProviderException;
 use CakeDC\Auth\Exception\InvalidSettingsException;
 use CakeDC\Auth\Social\ProviderConfig;
-use Cake\Core\Configure;
-use Cake\TestSuite\TestCase;
 
 /**
  * Users\Social\ProviderConfig Test Case
@@ -80,16 +81,16 @@ class ProviderConfigTest extends TestCase
                 'plugin' => 'CakeDC/Users',
                 'controller' => 'Users',
                 'action' => 'socialLogin',
-                'prefix' => null
+                'prefix' => null,
             ],
             'providers' => [
                 'facebook' => [
                     'service' => 'CakeDC\Auth\Social\Service\OAuth2Service',
                     'className' => 'League\OAuth2\Client\Provider\Facebook',
                     'mapper' => 'CakeDC\Auth\Social\Mapper\Facebook',
-                    'options' => 'invalid options'
+                    'options' => 'invalid options',
                 ],
-            ]
+            ],
         ];
         (new ProviderConfig())->normalizeConfig($config);
     }
@@ -125,7 +126,7 @@ class ProviderConfigTest extends TestCase
 
         $Config = new ProviderConfig([
             'options' => [
-                'customOption' => 'hello'
+                'customOption' => 'hello',
             ],
         ]);
         $expected = [
@@ -140,7 +141,7 @@ class ProviderConfigTest extends TestCase
                 'linkSocialUri' => '/link-social/facebook',
                 'callbackLinkSocialUri' => '/callback-link-social/facebook',
                 'clientId' => '10003030300303',
-                'clientSecret' => 'secretpassword'
+                'clientSecret' => 'secretpassword',
             ],
             'collaborators' => [],
             'signature' => null,
@@ -149,8 +150,8 @@ class ProviderConfigTest extends TestCase
                 'plugin' => 'CakeDC/Users',
                 'controller' => 'Users',
                 'action' => 'socialLogin',
-                'prefix' => null
-            ]
+                'prefix' => null,
+            ],
         ];
         $actual = $Config->getConfig('facebook');
         $this->assertEquals($expected, $actual);
@@ -182,7 +183,7 @@ class ProviderConfigTest extends TestCase
                 'linkSocialUri' => '/link-social/facebook',
                 'callbackLinkSocialUri' => '/callback-link-social/facebook',
                 'clientId' => '10003030300303',
-                'clientSecret' => 'secretpassword'
+                'clientSecret' => 'secretpassword',
             ],
             'collaborators' => [],
             'signature' => null,
@@ -191,8 +192,8 @@ class ProviderConfigTest extends TestCase
                 'plugin' => 'CakeDC/Users',
                 'controller' => 'Users',
                 'action' => 'socialLogin',
-                'prefix' => null
-            ]
+                'prefix' => null,
+            ],
         ];
         $actual = $Config->getConfig('facebook');
 
@@ -208,7 +209,7 @@ class ProviderConfigTest extends TestCase
                 'linkSocialUri' => '/link-social/twitter',
                 'callbackLinkSocialUri' => '/callback-link-social/twitter',
                 'clientId' => '20003030300303',
-                'clientSecret' => 'weakpassword'
+                'clientSecret' => 'weakpassword',
             ],
             'collaborators' => [],
             'signature' => null,
@@ -217,8 +218,8 @@ class ProviderConfigTest extends TestCase
                 'plugin' => 'CakeDC/Users',
                 'controller' => 'Users',
                 'action' => 'socialLogin',
-                'prefix' => null
-            ]
+                'prefix' => null,
+            ],
         ];
         $actual = $Config->getConfig('twitter');
         $this->assertEquals($expected, $actual);
@@ -233,7 +234,7 @@ class ProviderConfigTest extends TestCase
                 'linkSocialUri' => '/link-social/amazon',
                 'callbackLinkSocialUri' => '/callback-link-social/amazon',
                 'clientId' => '3003030300303',
-                'clientSecret' => 'weaksecretpassword'
+                'clientSecret' => 'weaksecretpassword',
             ],
             'collaborators' => [],
             'signature' => null,
@@ -242,8 +243,8 @@ class ProviderConfigTest extends TestCase
                 'plugin' => 'CakeDC/Users',
                 'controller' => 'Users',
                 'action' => 'socialLogin',
-                'prefix' => null
-            ]
+                'prefix' => null,
+            ],
         ];
         $actual = $Config->getConfig('amazon');
         $this->assertEquals($expected, $actual);

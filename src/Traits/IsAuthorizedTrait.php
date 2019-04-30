@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright 2010 - 2019, Cake Development Corporation (https://www.cakedc.com)
  *
@@ -12,9 +13,7 @@
 namespace CakeDC\Auth\Traits;
 
 use Authorization\AuthorizationServiceInterface;
-use CakeDC\Auth\Rbac\Rbac;
 use Cake\Http\ServerRequest;
-use Cake\Routing\Exception\MissingRouteException;
 use Cake\Routing\Router;
 use Zend\Diactoros\Uri;
 
@@ -70,13 +69,13 @@ trait IsAuthorizedTrait
      *
      * @param string $url The target url.
      *
-     * @return ServerRequest
+     * @return \Cake\Http\ServerRequest
      */
     protected function _createUrlRequestToCheck($url)
     {
         $uri = new Uri($url);
         $targetRequest = new ServerRequest([
-            'uri' => $uri
+            'uri' => $uri,
         ]);
         $params = Router::parseRequest($targetRequest);
         $targetRequest = $targetRequest->withAttribute('params', $params);

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright 2010 - 2019, Cake Development Corporation (https://www.cakedc.com)
  *
@@ -11,10 +12,10 @@
 
 namespace CakeDC\Auth\Social;
 
-use CakeDC\Auth\Exception\InvalidProviderException;
-use CakeDC\Auth\Exception\InvalidSettingsException;
 use Cake\Core\Configure;
 use Cake\Utility\Hash;
+use CakeDC\Auth\Exception\InvalidProviderException;
+use CakeDC\Auth\Exception\InvalidSettingsException;
 
 class ProviderConfig
 {

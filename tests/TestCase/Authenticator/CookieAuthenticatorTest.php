@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright 2010 - 2019, Cake Development Corporation (https://www.cakedc.com)
  *
@@ -10,10 +11,9 @@
  */
 
 use Authentication\Identifier\IdentifierCollection;
-use CakeDC\Auth\Authenticator\CookieAuthenticator;
 use Cake\Http\Response;
-use Cake\Http\ServerRequestFactory;
 use Cake\TestSuite\TestCase;
+use CakeDC\Auth\Authenticator\CookieAuthenticator;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
@@ -50,7 +50,7 @@ class CookieAuthenticatorTest extends TestCase
     public function testPersistIdentity($setCookie, $field, array $post, array $session)
     {
         $identifiers = new IdentifierCollection([
-            'Authentication.Password'
+            'Authentication.Password',
         ]);
         $uri = new \Zend\Diactoros\Uri('/login');
         $uri->base = null;
@@ -62,11 +62,11 @@ class CookieAuthenticatorTest extends TestCase
         $response = new Response();
         $authenticator = new CookieAuthenticator($identifiers, [
             'loginUrl' => '/login',
-            'rememberMeField' => $field
+            'rememberMeField' => $field,
         ]);
         $identity = new ArrayObject([
             'username' => 'johndoe',
-            'password' => '$2a$10$u05j8FjsvLBNdfhBhc21LOuVMpzpabVXQ9OpC2wO3pSO0q6t7HHMO'
+            'password' => '$2a$10$u05j8FjsvLBNdfhBhc21LOuVMpzpabVXQ9OpC2wO3pSO0q6t7HHMO',
         ]);
         $result = $authenticator->persistIdentity($request, $response, $identity);
         $this->assertInternalType('array', $result);

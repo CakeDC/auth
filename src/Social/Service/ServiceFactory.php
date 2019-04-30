@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Copyright 2010 - 2019, Cake Development Corporation (https://www.cakedc.com)
  *
@@ -11,13 +12,12 @@
 
 namespace CakeDC\Auth\Social\Service;
 
-use CakeDC\Auth\Social\ProviderConfig;
 use Cake\Http\Exception\NotFoundException;
 use Cake\Http\ServerRequest;
+use CakeDC\Auth\Social\ProviderConfig;
 
 class ServiceFactory
 {
-
     protected $redirectUriField = 'redirectUri';
 
     /**
@@ -37,7 +37,7 @@ class ServiceFactory
      *
      * @param string $provider provider alias
      *
-     * @return ServiceInterface
+     * @return \CakeDC\Auth\Social\Service\ServiceInterface
      */
     public function createFromProvider($provider)
     {
@@ -58,14 +58,14 @@ class ServiceFactory
     /**
      * Create a new service based on request
      *
-     * @param ServerRequest $request in use
+     * @param \Cake\Http\ServerRequest $request in use
      *
-     * @return ServiceInterface
+     * @return \CakeDC\Auth\Social\Service\ServiceInterface
      */
     public function createFromRequest(ServerRequest $request)
     {
         $params = $request->getAttribute('params');
-        $provider = isset($params['provider']) ? $params['provider'] : null;
+        $provider = $params['provider'] ?? null;
 
         return $this->createFromProvider($provider);
     }
