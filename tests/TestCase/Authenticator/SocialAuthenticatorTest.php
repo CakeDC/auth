@@ -13,13 +13,12 @@ namespace CakeDC\Auth\Test\TestCase\Authenticator;
 
 use Authentication\Authenticator\Result;
 use Authentication\Identifier\IdentifierCollection;
+use CakeDC\Auth\Authenticator\SocialAuthenticator;
+use CakeDC\Auth\Social\Service\ServiceFactory;
 use Cake\Core\Configure;
-use Cake\Http\Response;
 use Cake\Http\ServerRequestFactory;
 use Cake\ORM\Entity;
 use Cake\TestSuite\TestCase;
-use CakeDC\Auth\Authenticator\SocialAuthenticator;
-use CakeDC\Auth\Social\Service\ServiceFactory;
 use League\OAuth2\Client\Provider\FacebookUser;
 use Zend\Diactoros\Uri;
 
@@ -123,8 +122,7 @@ class SocialAuthenticatorTest extends TestCase
             'CakeDC/Auth.Social',
         ]);
         $Authenticator = new SocialAuthenticator($identifiers);
-        $Response = new Response();
-        $result = $Authenticator->authenticate($this->Request, $Response);
+        $result = $Authenticator->authenticate($this->Request);
         $this->assertInstanceOf(Result::class, $result);
         $this->assertEquals(Result::FAILURE_CREDENTIALS_MISSING, $result->getStatus());
         $actual = $result->getData();
@@ -217,8 +215,8 @@ class SocialAuthenticatorTest extends TestCase
             'CakeDC/Auth.Social',
         ]);
         $Authenticator = new SocialAuthenticator($identifiers);
-        $Response = new Response();
-        $result = $Authenticator->authenticate($this->Request, $Response);
+
+        $result = $Authenticator->authenticate($this->Request);
         $this->assertInstanceOf(Result::class, $result);
         $this->assertEquals(Result::SUCCESS, $result->getStatus());
         $actual = $result->getData();
@@ -280,8 +278,7 @@ class SocialAuthenticatorTest extends TestCase
             'CakeDC/Auth.Social',
         ]);
         $Authenticator = new SocialAuthenticator($identifiers);
-        $Response = new Response();
-        $result = $Authenticator->authenticate($this->Request, $Response);
+        $result = $Authenticator->authenticate($this->Request);
         $this->assertInstanceOf(Result::class, $result);
         $this->assertEquals(Result::FAILURE_IDENTITY_NOT_FOUND, $result->getStatus());
         $actual = $result->getData();
@@ -343,10 +340,9 @@ class SocialAuthenticatorTest extends TestCase
             'CakeDC/Auth.Social',
         ]);
         $Authenticator = new SocialAuthenticator($identifiers);
-        $Response = new Response();
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('Invalid argument at getResourceOwner');
-        $Authenticator->authenticate($this->Request, $Response);
+        $Authenticator->authenticate($this->Request);
     }
 
     /**
@@ -432,9 +428,8 @@ class SocialAuthenticatorTest extends TestCase
         $this->Request = $this->Request->withAttribute('socialService', $service);
         $identifiers = new IdentifierCollection([]);
         $Authenticator = new SocialAuthenticator($identifiers);
-        $Response = new Response();
-        $Authenticator->authenticate($this->Request, $Response);
-        $result = $Authenticator->authenticate($this->Request, $Response);
+        $Authenticator->authenticate($this->Request);
+        $result = $Authenticator->authenticate($this->Request);
         $this->assertInstanceOf(Result::class, $result);
         $this->assertEquals(Result::FAILURE_IDENTITY_NOT_FOUND, $result->getStatus());
         $actual = $result->getData();
