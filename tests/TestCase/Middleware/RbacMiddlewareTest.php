@@ -12,16 +12,13 @@ declare(strict_types=1);
 
 namespace CakeDC\Auth\Test\TestCase\Middleware;
 
+use CakeDC\Auth\Middleware\RbacMiddleware;
+use CakeDC\Auth\Rbac\Rbac;
 use Cake\Http\Response;
 use Cake\Http\Runner;
 use Cake\Http\ServerRequest;
 use Cake\Routing\Router;
 use Cake\TestSuite\TestCase;
-use CakeDC\Auth\Middleware\RbacMiddleware;
-use CakeDC\Auth\Rbac\Rbac;
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
-use Zend\HttpHandlerRunner\RequestHandlerRunner;
 
 /**
  * Class RbacMiddlewareTest
@@ -98,9 +95,7 @@ class RbacMiddlewareTest extends TestCase
     public function testInvokeRedirect()
     {
         $request = new ServerRequest();
-        $response = new Response();
         $rbacMiddleware = $this->rbacMiddleware;
-//        Router::$initialized = true;
         Router::connect('/login', [
             'controller' => 'Users',
             'action' => 'login',

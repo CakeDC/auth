@@ -12,11 +12,11 @@ declare(strict_types=1);
 
 namespace CakeDC\Auth\Middleware;
 
+use CakeDC\Auth\Rbac\Rbac;
 use Cake\Core\InstanceConfigTrait;
 use Cake\Http\Exception\ForbiddenException;
 use Cake\Http\Response;
 use Cake\Routing\Router;
-use CakeDC\Auth\Rbac\Rbac;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
