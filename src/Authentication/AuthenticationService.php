@@ -34,8 +34,10 @@ class AuthenticationService extends BaseService
     /**
      * Proceed to google verify action after a valid result result
      *
-     * @param \Authentication\Authenticator\ResultInterface $request valid result
-     * @return array with result, request and response keys
+     * @param \Psr\Http\Message\ServerRequestInterface $request The request.
+     * @param \Authentication\Authenticator\ResultInterface $result The original result
+     *
+     * @return \Authentication\Authenticator\ResultInterface The result object.
      */
     protected function proceedToGoogleVerify(ServerRequestInterface $request, ResultInterface $result)
     {

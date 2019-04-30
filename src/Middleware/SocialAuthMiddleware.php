@@ -67,7 +67,7 @@ class SocialAuthMiddleware implements MiddlewareInterface
     /**
      * Check if is target url
      *
-     * @param \Psr\Http\Message\ServerRequestInterface $request The request.
+     * @param \Cake\Http\ServerRequest $request The request.
      *
      * @return bool
      */
