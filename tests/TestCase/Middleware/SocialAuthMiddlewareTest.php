@@ -12,13 +12,15 @@ declare(strict_types=1);
 
 namespace CakeDC\Auth\Test\TestCase\Middleware;
 
-use Cake\Core\Configure;
-use Cake\Http\Response;
-use Cake\Http\ServerRequest;
-use Cake\Http\ServerRequestFactory;
-use Cake\TestSuite\TestCase;
 use CakeDC\Auth\Middleware\SocialAuthMiddleware;
 use CakeDC\Auth\Social\Service\OAuth2Service;
+use Cake\Core\Configure;
+use Cake\Http\Response;
+use Cake\Http\Runner;
+use Cake\Http\ServerRequestFactory;
+use Cake\TestSuite\TestCase;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
 use Zend\Diactoros\Uri;
 
 class SocialAuthMiddlewareTest extends TestCase
@@ -132,16 +134,14 @@ class SocialAuthMiddlewareTest extends TestCase
             'urlChecker' => 'Authentication.Default',
             'loginUrl' => ['/auth/facebook'],
         ]);
-        $response = new Response();
-        $next = function () {
-            $this->fail('Should not call $next');
-        };
+        $handler = $this->getMockBuilder(Runner::class)
+            ->setMethods(['handle'])
+            ->getMock();
+        $handler->expects($this->never())
+            ->method('handle');
 
-        $result = $Middleware($this->Request, $response, $next);
+        $result = $Middleware->process($this->Request, $handler);
         $this->assertInstanceOf(Response::class, $result);
-        if (!$result) {
-            $this->fail('No response set, cannot assert location header. ');
-        }
 
         $actual = $this->Request->getSession()->read('oauth2state');
         $expected = '_NEW_STATE_';
@@ -177,24 +177,42 @@ class SocialAuthMiddlewareTest extends TestCase
             'loginUrl' => ['/auth/facebook'],
         ]);
 
-        $ResponseOriginal = new Response();
-        $checked = false;
-        $next = function (ServerRequest $request, Response $response) use ($ResponseOriginal, &$checked) {
-            /**
-             * @var OAuth2Service $service
-             */
-            $service = $request->getAttribute('socialService');
-            $this->assertInstanceOf(OAuth2Service::class, $service);
-            $this->assertEquals('facebook', $service->getProviderName());
-            $this->assertTrue($service->isGetUserStep($request));
-            $this->assertSame($response, $ResponseOriginal);
-            $checked = true;
+        $response = new Response();
+        $response = $response->withStringBody(__METHOD__ . time());
 
-            return $response;
+        $handler = new class extends Runner {
+            /**
+             * @var \Cake\Http\ServerRequest
+             */
+            public $request;
+
+            /**
+             * @var \Cake\Http\Response
+             */
+            public $testResponse;
+            /**
+             * Handles a request and produces a response.
+             *
+             * May call other collaborating code to generate the response.
+             */
+            public function handle(ServerRequestInterface $request): ResponseInterface
+            {
+                $this->request = $request;
+
+                return $this->testResponse;
+            }
         };
-        $result = $Middleware($this->Request, $ResponseOriginal, $next);
-        $this->assertSame($result, $ResponseOriginal);
-        $this->assertTrue($checked);
+        $handler->testResponse = $response;
+        $result = $Middleware->process($this->Request, $handler);
+        $this->assertSame($result, $handler->testResponse);
+
+        /**
+         * @var OAuth2Service $service
+         */
+        $service = $handler->request->getAttribute('socialService');
+        $this->assertInstanceOf(OAuth2Service::class, $service);
+        $this->assertEquals('facebook', $service->getProviderName());
+        $this->assertTrue($service->isGetUserStep($handler->request));
     }
 
     /**
@@ -209,13 +227,16 @@ class SocialAuthMiddlewareTest extends TestCase
             'loginUrl' => ['/auth/facebook'],
         ]);
         $response = new Response();
-        $next = function ($request, $response) {
-            return compact('request', 'response');
-        };
+        $response = $response->withStringBody(__METHOD__ . time());
+        $handler = $this->getMockBuilder(Runner::class)
+            ->setMethods(['handle'])
+            ->getMock();
+        $handler->expects($this->once())
+            ->method('handle')
+            ->with($this->equalTo($this->Request))
+            ->willReturn($response);
 
-        $result = $Middleware($this->Request, $response, $next);
-        $this->assertTrue(is_array($result));
-
-        $this->assertEquals(200, $result['response']->getStatusCode());
+        $result = $Middleware->process($this->Request, $handler);
+        $this->assertSame($response, $result);
     }
 }

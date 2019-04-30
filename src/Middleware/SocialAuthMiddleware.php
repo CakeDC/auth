@@ -13,14 +13,18 @@ declare(strict_types=1);
 namespace CakeDC\Auth\Middleware;
 
 use Authentication\UrlChecker\UrlCheckerTrait;
-use Cake\Core\InstanceConfigTrait;
-use Cake\Http\ServerRequest;
-use Cake\Log\LogTrait;
 use CakeDC\Auth\Authenticator\SocialAuthenticator;
 use CakeDC\Auth\Social\Service\ServiceFactory;
+use Cake\Core\InstanceConfigTrait;
+use Cake\Http\Response;
+use Cake\Http\ServerRequest;
+use Cake\Log\LogTrait;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\MiddlewareInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 
-class SocialAuthMiddleware
+class SocialAuthMiddleware implements MiddlewareInterface
 {
     use InstanceConfigTrait;
     use LogTrait;
@@ -42,26 +46,22 @@ class SocialAuthMiddleware
     }
 
     /**
-     * Perform social auth
-     *
-     * @param \Psr\Http\Message\ServerRequestInterface $request The request.
-     * @param \Psr\Http\Message\ResponseInterface $response The response.
-     * @param callable $next Callback to invoke the next middleware.
-     * @return \Psr\Http\Message\ResponseInterface A response
+     * @inheritDoc
      */
-    public function __invoke(ServerRequest $request, ResponseInterface $response, $next)
+    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         if (!$this->checkUrl($request)) {
-            return $next($request, $response);
+            return $handler->handle($request);
         }
 
         $service = (new ServiceFactory())->createFromRequest($request);
         if (!$service->isGetUserStep($request)) {
-            return $response->withLocation($service->getAuthorizationUrl($request));
+            return (new Response())
+                ->withLocation($service->getAuthorizationUrl($request));
         }
         $request = $request->withAttribute(SocialAuthenticator::SOCIAL_SERVICE_ATTRIBUTE, $service);
 
-        return $next($request, $response);
+        return $handler->handle($request);
     }
 
     /**
