@@ -167,7 +167,7 @@ class Rbac
         ];
 
         foreach ($permission as $key => $value) {
-            $inverse = $this->_startsWith($key, '*');
+            $inverse = is_string($key) && $this->_startsWith($key, '*');
             if ($inverse) {
                 $key = ltrim($key, '*');
             }

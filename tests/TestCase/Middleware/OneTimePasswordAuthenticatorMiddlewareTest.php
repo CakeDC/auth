@@ -13,14 +13,15 @@ declare(strict_types=1);
 namespace CakeDC\Auth\Test\TestCase\Middleware;
 
 use Authentication\Authenticator\Result;
+use CakeDC\Auth\Authentication\AuthenticationService;
+use CakeDC\Auth\Middleware\OneTimePasswordAuthenticatorMiddleware;
 use Cake\Core\Configure;
 use Cake\Http\Response;
+use Cake\Http\Runner;
 use Cake\Http\ServerRequest;
 use Cake\Http\ServerRequestFactory;
 use Cake\Routing\Router;
 use Cake\TestSuite\TestCase;
-use CakeDC\Auth\Authentication\AuthenticationService;
-use CakeDC\Auth\Middleware\OneTimePasswordAuthenticatorMiddleware;
 
 /**
  * Class OneTimePasswordAuthenticatorMiddlewareTest
@@ -58,6 +59,13 @@ class OneTimePasswordAuthenticatorMiddlewareTest extends TestCase
     {
         $request = new ServerRequest();
         $response = new Response();
+        $response = $response->withStringBody(__METHOD__ . time());
+        $handler = $this->getMockBuilder(Runner::class)
+            ->setMethods(['handle'])
+            ->getMock();
+        $handler->expects($this->once())
+            ->method('handle')
+            ->willReturn($response);
 
         $service = $this->getMockBuilder(AuthenticationService::class)->setConstructorArgs([
             [
@@ -77,15 +85,8 @@ class OneTimePasswordAuthenticatorMiddlewareTest extends TestCase
 
         $request = $request->withAttribute('authentication', $service);
         $middleware = $this->OneTimePasswordAuthenticatorMiddleware;
-        $self = $this;
-        $result = false;
-        $next = function ($aRequest, $aResponse) use ($request, $response, $self, &$result) {
-            $self->assertSame($request, $aRequest);
-            $self->assertSame($response, $aResponse);
-            $result = true;
-        };
-        $middleware($request, $response, $next);
-        $this->assertTrue($result);
+        $actual = $middleware->process($request, $handler);
+        $this->assertSame($response, $actual);
     }
 
     /**
@@ -98,12 +99,15 @@ class OneTimePasswordAuthenticatorMiddlewareTest extends TestCase
             [],
             ['username' => 'user-1', 'password' => 'password', 'remember_me' => 1]
         );
-        $response = new Response();
+        $handler = $this->getMockBuilder(Runner::class)
+            ->setMethods(['handle'])
+            ->getMock();
+        $handler->expects($this->never())
+            ->method('handle');
         Configure::write('OneTimePasswordAuthenticator.verifyAction', [
             'controller' => 'Users',
             'action' => 'verify',
         ]);
-        Router::$initialized = true;
         Router::connect('/verify', [
             'controller' => 'Users',
             'action' => 'verify',
@@ -126,10 +130,7 @@ class OneTimePasswordAuthenticatorMiddlewareTest extends TestCase
 
         $request = $request->withAttribute('authentication', $service);
         $middleware = $this->OneTimePasswordAuthenticatorMiddleware;
-        $next = function () {
-            throw new \UnexpectedValueException("Should not be called");
-        };
-        $actual = $middleware($request, $response, $next);
+        $actual = $middleware->process($request, $handler);
         $this->assertInstanceOf(Response::class, $actual);
         $expected = [
             '/verify',

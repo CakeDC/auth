@@ -12,29 +12,27 @@ declare(strict_types=1);
 
 namespace CakeDC\Auth\Middleware;
 
-use Cake\Core\Configure;
-use Cake\Http\ServerRequest;
-use Cake\Routing\Router;
 use CakeDC\Auth\Authentication\AuthenticationService;
 use CakeDC\Auth\Authenticator\CookieAuthenticator;
+use Cake\Core\Configure;
+use Cake\Http\Response;
+use Cake\Routing\Router;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\MiddlewareInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 
-class OneTimePasswordAuthenticatorMiddleware
+class OneTimePasswordAuthenticatorMiddleware implements MiddlewareInterface
 {
     /**
-     * Proceed to second step of two factor authentication. See CakeDC\Auth\Controller\Traits\verify
-     *
-     * @param \Psr\Http\Message\ServerRequestInterface $request The request.
-     * @param \Psr\Http\Message\ResponseInterface $response The response.
-     * @param callable $next Callback to invoke the next middleware.
-     * @return \Psr\Http\Message\ResponseInterface A response
+     * @inheritDoc
      */
-    public function __invoke(ServerRequest $request, ResponseInterface $response, $next)
+    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $service = $request->getAttribute('authentication');
 
         if (!$service->getResult() || $service->getResult()->getStatus() !== AuthenticationService::NEED_TWO_FACTOR_VERIFY) {
-            return $next($request, $response);
+            return $handler->handle($request);
         }
 
         $request->getSession()->write(CookieAuthenticator::SESSION_DATA_KEY, [
@@ -43,7 +41,7 @@ class OneTimePasswordAuthenticatorMiddleware
 
         $url = Router::url(Configure::read('OneTimePasswordAuthenticator.verifyAction'));
 
-        return $response
+        return (new Response())
             ->withHeader('Location', $url)
             ->withStatus(302);
     }

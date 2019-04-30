@@ -89,17 +89,11 @@ class AuthenticationServiceTest extends TestCase
         ]);
 
         $result = $service->authenticate($request);
-        $this->assertInstanceOf(Result::class, $result['result']);
-        $this->assertInstanceOf(ServerRequestInterface::class, $result['request']);
-        //$this->assertInstanc eOf(ResponseInterface::class, $result['response']);
-        $this->assertFalse($result['result']->isValid());
-        $result = $service->getAuthenticationProvider();
-        $this->assertNull($result);
-        $this->assertNull(
-            $request->getAttribute('session')->read('Auth')
-        );
-//        $this->assertEmpty($response->getHeaderLine('Location'));
-//        $this->assertNull($response->getStatusCode());
+        $this->assertNull($result->getdata());
+        $this->assertInstanceOf(Result::class, $result);
+        $this->assertFalse($result->isValid());
+        $provider = $service->getAuthenticationProvider();
+        $this->assertNull($provider);
 
         $sessionFailure = new Failure(
             $service->authenticators()->get('Session'),
@@ -134,7 +128,6 @@ class AuthenticationServiceTest extends TestCase
             [],
             ['username' => 'user-1', 'password' => 'password']
         );
-        $response = new Response();
 
         $service = new AuthenticationService([
             'identifiers' => [
@@ -146,21 +139,15 @@ class AuthenticationServiceTest extends TestCase
             ],
         ]);
 
-        $result = $service->authenticate($request, $response);
-        $this->assertInstanceOf(Result::class, $result['result']);
-        $this->assertInstanceOf(ServerRequestInterface::class, $result['request']);
-        $this->assertInstanceOf(ResponseInterface::class, $result['response']);
-        $this->assertTrue($result['result']->isValid());
-
-        $result = $service->getAuthenticationProvider();
-        $this->assertInstanceOf(FormAuthenticator::class, $result);
-
+        $result = $service->authenticate($request);
+        $this->assertInstanceOf(Result::class, $result);
+        $this->assertTrue($result->isValid());
         $this->assertEquals(
             'user-1',
-            $request->getAttribute('session')->read('Auth.username')
+            $result->getData()['username']
         );
-        $this->assertEmpty($response->getHeaderLine('Location'));
-        $this->assertNull($response->getStatusCode());
+        $provider = $service->getAuthenticationProvider();
+        $this->assertInstanceOf(FormAuthenticator::class, $provider);
 
         $sessionFailure = new Failure(
             $service->authenticators()->get('Session'),
@@ -189,7 +176,6 @@ class AuthenticationServiceTest extends TestCase
             [],
             ['username' => 'user-1', 'password' => 'password']
         );
-        $response = new Response();
 
         $service = new AuthenticationService([
             'identifiers' => [
@@ -205,13 +191,11 @@ class AuthenticationServiceTest extends TestCase
             ],
         ]);
 
-        $result = $service->authenticate($request, $response);
-        $this->assertInstanceOf(Result::class, $result['result']);
-        $this->assertInstanceOf(ServerRequestInterface::class, $result['request']);
-        $this->assertInstanceOf(ResponseInterface::class, $result['response']);
-        $this->assertFalse($result['result']->isValid());
-        $this->assertEquals(AuthenticationService::NEED_TWO_FACTOR_VERIFY, $result['result']->getStatus());
-        $this->assertNull($request->getAttribute('session')->read('Auth.username'));
+        $result = $service->authenticate($request);
+        $this->assertInstanceOf(Result::class, $result);
+        $this->assertFalse($result->isValid());
+        $this->assertEquals(AuthenticationService::NEED_TWO_FACTOR_VERIFY, $result->getStatus());
+        $this->assertNull($result->getData());
         $this->assertEquals(
             'user-1',
             $request->getAttribute('session')->read('temporarySession.username')
@@ -243,7 +227,6 @@ class AuthenticationServiceTest extends TestCase
             [],
             ['username' => 'user-1', 'password' => 'password']
         );
-        $response = new Response();
 
         $service = new AuthenticationService([
             'identifiers' => [
@@ -259,22 +242,16 @@ class AuthenticationServiceTest extends TestCase
             ],
         ]);
 
-        $result = $service->authenticate($request, $response);
-        $this->assertInstanceOf(Result::class, $result['result']);
-        $this->assertInstanceOf(ServerRequestInterface::class, $result['request']);
-        $this->assertInstanceOf(ResponseInterface::class, $result['response']);
-
-        $this->assertTrue($result['result']->isValid());
-
+        $result = $service->authenticate($request);
+        $this->assertInstanceOf(Result::class, $result);
+        $this->assertTrue($result->isValid());
+        $this->assertEquals(
+            'user-1',
+            $result->getData()['username']
+        );
         $result = $service->getAuthenticationProvider();
         $this->assertInstanceOf(FormAuthenticator::class, $result);
 
-        $this->assertEquals(
-            'user-1',
-            $request->getAttribute('session')->read('Auth.username')
-        );
-        $this->assertEmpty($response->getHeaderLine('Location'));
-        $this->assertNull($response->getStatusCode());
         $sessionFailure = new Failure(
             $service->authenticators()->get('Session'),
             new Result(null, Result::FAILURE_IDENTITY_NOT_FOUND)

@@ -34,20 +34,18 @@ class AuthenticationService extends BaseService
     /**
      * Proceed to google verify action after a valid result result
      *
-     * @param \Psr\Http\Message\ServerRequestInterface $request response to manipulate
      * @param \Authentication\Authenticator\ResultInterface $result valid result
      * @return array with result, request and response keys
      */
-    protected function proceedToGoogleVerify(ServerRequestInterface $request, /*ResponseInterface $response, */ResultInterface $result)
+    protected function proceedToGoogleVerify(ServerRequestInterface $request, ResultInterface $result)
     {
         $request->getSession()->write(self::TWO_FACTOR_VERIFY_SESSION_KEY, $result->getData());
 
         $result = new Result(null, self::NEED_TWO_FACTOR_VERIFY);
 
         $this->_successfulAuthenticator = null;
-        $this->_result = $result;
 
-        return compact('result', 'request'/*, 'response'*/);
+        return $this->_result = $result;
     }
 
     /**
@@ -73,49 +71,31 @@ class AuthenticationService extends BaseService
             );
         }
 
-        $twoFaCheck = $this->getTwoFactorAuthenticationChecker();
-        $this->failures = [];
         $result = null;
+        $twoFaCheck = $this->getTwoFactorAuthenticationChecker();
         foreach ($this->authenticators() as $authenticator) {
             $result = $authenticator->authenticate($request);
-
             if ($result->isValid()) {
                 $twoFaRequired = $twoFaCheck->isRequired($result->getData()->toArray());
-                if ($twoFaRequired && $authenticator->getConfig('skipTwoFactorVerify') !== true) {
-                    return $this->proceedToGoogleVerify($request, /*$response, */$result);
+                if ($twoFaRequired === false || $authenticator->getConfig('skipTwoFactorVerify') === true) {
+                    $this->_successfulAuthenticator = $authenticator;
+
+                    return $this->_result = $result;
                 }
 
-/*                if (!($authenticator instanceof StatelessInterface)) {
-                    $requestResponse = $this->persistIdentity($request, $response, $result->getData());
-                    $request = $requestResponse['request'];
-                    $response = $requestResponse['response'];
-                }*/
-
-                $this->_successfulAuthenticator = $authenticator;
-                $this->_result = $result;
-
-                return [
-                    'result' => $result,
-                    'request' => $request,
-//                    'response' => $response
-                ];
+                return $this->proceedToGoogleVerify($request, $result);
             } else {
                 $this->failures[] = new Failure($authenticator, $result);
             }
 
-            if (!$result->isValid() && $authenticator instanceof StatelessInterface) {
+            if ($authenticator instanceof StatelessInterface) {
                 $authenticator->unauthorizedChallenge($request);
             }
         }
 
         $this->_successfulAuthenticator = null;
-        $this->_result = $result;
 
-        return [
-            'result' => $result,
-            'request' => $request,
-//            'response' => $response
-        ];
+        return $this->_result = $result;
     }
 
     /**

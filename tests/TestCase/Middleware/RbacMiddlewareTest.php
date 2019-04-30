@@ -12,12 +12,13 @@ declare(strict_types=1);
 
 namespace CakeDC\Auth\Test\TestCase\Middleware;
 
+use CakeDC\Auth\Middleware\RbacMiddleware;
+use CakeDC\Auth\Rbac\Rbac;
 use Cake\Http\Response;
+use Cake\Http\Runner;
 use Cake\Http\ServerRequest;
 use Cake\Routing\Router;
 use Cake\TestSuite\TestCase;
-use CakeDC\Auth\Middleware\RbacMiddleware;
-use CakeDC\Auth\Rbac\Rbac;
 
 /**
  * Class RbacMiddlewareTest
@@ -55,15 +56,17 @@ class RbacMiddlewareTest extends TestCase
     public function testInvokeForbidden()
     {
         $request = new ServerRequest();
-        $response = new Response();
-        $next = function () {
-            return 'unreachable';
-        };
         $rbacMiddleware = $this->rbacMiddleware;
+        $handler = $this->getMockBuilder(Runner::class)
+            ->setMethods(['handle'])
+            ->getMock();
+        $handler->expects($this->never())
+            ->method('handle');
+
         $rbacMiddleware->setConfig([
             'unauthorizedBehavior' => RbacMiddleware::UNAUTHORIZED_BEHAVIOR_THROW,
         ]);
-        $rbacMiddleware($request, $response, $next);
+        $rbacMiddleware->process($request, $handler);
     }
 
     /**
@@ -74,15 +77,16 @@ class RbacMiddlewareTest extends TestCase
     {
         $request = new ServerRequest();
         $request = $request->withHeader('Accept', 'application/json');
-        $response = new Response();
-        $next = function () {
-            return 'unreachable';
-        };
+        $handler = $this->getMockBuilder(Runner::class)
+            ->setMethods(['handle'])
+            ->getMock();
+        $handler->expects($this->never())
+            ->method('handle');
         $rbacMiddleware = $this->rbacMiddleware;
         $rbacMiddleware->setConfig([
             'unauthorizedBehavior' => RbacMiddleware::UNAUTHORIZED_BEHAVIOR_AUTO,
         ]);
-        $rbacMiddleware($request, $response, $next);
+        $rbacMiddleware->process($request, $handler);
     }
 
     /**
@@ -91,18 +95,21 @@ class RbacMiddlewareTest extends TestCase
     public function testInvokeRedirect()
     {
         $request = new ServerRequest();
-        $response = new Response();
         $rbacMiddleware = $this->rbacMiddleware;
-        Router::$initialized = true;
         Router::connect('/login', [
             'controller' => 'Users',
             'action' => 'login',
         ]);
-        $next = function ($request, Response $response) {
-            $this->assertSame(302, $response->getStatusCode());
-            $this->assertSame('/login', $response->getHeaderLine('Location'));
-        };
-        $rbacMiddleware($request, $response, $next);
+
+        $handler = $this->getMockBuilder(Runner::class)
+            ->setMethods(['handle'])
+            ->getMock();
+        $handler->expects($this->never())
+            ->method('handle');
+
+        $response = $rbacMiddleware->process($request, $handler);
+        $this->assertSame(302, $response->getStatusCode());
+        $this->assertSame('http://localhost/login', $response->getHeaderLine('Location'));
     }
 
     /**
@@ -119,9 +126,14 @@ class RbacMiddlewareTest extends TestCase
         ];
         $request = $request->withAttribute('identity', $userData);
         $response = new Response();
-        $next = function () {
-            return 'pass';
-        };
+        $response = $response->withStringBody(__METHOD__ . time());
+        $handler = $this->getMockBuilder(Runner::class)
+            ->setMethods(['handle'])
+            ->getMock();
+        $handler->expects($this->once())
+            ->method('handle')
+            ->willReturn($response);
+
         $rbac = $this->getMockBuilder(Rbac::class)
             ->setMethods(['checkPermissions'])
             ->getMock();
@@ -132,6 +144,7 @@ class RbacMiddlewareTest extends TestCase
         $rbacMiddleware = new RbacMiddleware($rbac, [
             'unauthorizedBehavior' => RbacMiddleware::UNAUTHORIZED_BEHAVIOR_THROW,
         ]);
-        $this->assertSame('pass', $rbacMiddleware($request, $response, $next));
+        $actual = $rbacMiddleware->process($request, $handler);
+        $this->assertSame($response, $actual);
     }
 }

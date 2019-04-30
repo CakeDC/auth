@@ -13,11 +13,10 @@ declare(strict_types=1);
 use Authentication\Authenticator\Result;
 use Authentication\Identifier\IdentifierCollection;
 use Authentication\Identifier\IdentifierInterface;
+use CakeDC\Auth\Authenticator\FormAuthenticator;
 use Cake\Core\Configure;
-use Cake\Http\Client\Response;
 use Cake\Http\ServerRequestFactory;
 use Cake\TestSuite\TestCase;
-use CakeDC\Auth\Authenticator\FormAuthenticator;
 
 class FormAuthenticatorTest extends TestCase
 {
@@ -41,7 +40,6 @@ class FormAuthenticatorTest extends TestCase
             [],
             ['username' => 'marcelo', 'password' => 'password', 'g-recaptcha-response' => 'BD-S2333-156465897897']
         );
-        $response = new Response();
 
         $baseResult = new Result(
             null,
@@ -49,7 +47,7 @@ class FormAuthenticatorTest extends TestCase
         );
         $BaseAuthenticator->expects($this->once())
             ->method('authenticate')
-            ->with($request, $response)
+            ->with($request)
             ->will($this->returnValue($baseResult));
 
         $Authenticator = $this->getMockBuilder(FormAuthenticator::class)->setConstructorArgs([
@@ -80,7 +78,7 @@ class FormAuthenticatorTest extends TestCase
         $Authenticator->expects($this->never())
             ->method('validateReCaptcha');
 
-        $result = $Authenticator->authenticate($request, $response);
+        $result = $Authenticator->authenticate($request);
         $this->assertInstanceOf(Result::class, $result);
         $this->assertEquals(Result::FAILURE_OTHER, $result->getStatus());
         $this->assertSame($baseResult, $result);
@@ -106,7 +104,6 @@ class FormAuthenticatorTest extends TestCase
             [],
             ['username' => 'marcelo', 'password' => 'password', 'g-recaptcha-response' => 'BD-S2333-156465897897']
         );
-        $response = new Response();
 
         $baseResult = new Result(
             [
@@ -118,7 +115,7 @@ class FormAuthenticatorTest extends TestCase
         );
         $BaseAuthenticator->expects($this->once())
             ->method('authenticate')
-            ->with($request, $response)
+            ->with($request)
             ->will($this->returnValue($baseResult));
 
         $Authenticator = $this->getMockBuilder(FormAuthenticator::class)->setConstructorArgs([
@@ -154,7 +151,7 @@ class FormAuthenticatorTest extends TestCase
             ->will($this->returnValue(true));
         $actualIdentifiers = $Authenticator->getIdentifier();
         $this->assertInstanceOf(IdentifierCollection::class, $actualIdentifiers);
-        $result = $Authenticator->authenticate($request, $response);
+        $result = $Authenticator->authenticate($request);
         $this->assertInstanceOf(Result::class, $result);
         $this->assertEquals(Result::SUCCESS, $result->getStatus());
         $this->assertSame($baseResult, $result);
@@ -180,7 +177,6 @@ class FormAuthenticatorTest extends TestCase
             [],
             ['username' => 'marcelo', 'password' => 'password', 'g-recaptcha-response' => 'BD-S2333-156465897897']
         );
-        $response = new Response();
 
         $baseResult = new Result(
             [
@@ -192,7 +188,7 @@ class FormAuthenticatorTest extends TestCase
         );
         $BaseAuthenticator->expects($this->once())
             ->method('authenticate')
-            ->with($request, $response)
+            ->with($request)
             ->will($this->returnValue($baseResult));
 
         $Authenticator = $this->getMockBuilder(FormAuthenticator::class)->setConstructorArgs([
@@ -222,7 +218,7 @@ class FormAuthenticatorTest extends TestCase
         $Authenticator->expects($this->never())
             ->method('validateReCaptcha');
 
-        $result = $Authenticator->authenticate($request, $response);
+        $result = $Authenticator->authenticate($request);
         $this->assertInstanceOf(Result::class, $result);
         $this->assertEquals(Result::SUCCESS, $result->getStatus());
         $this->assertSame($baseResult, $result);
@@ -248,7 +244,6 @@ class FormAuthenticatorTest extends TestCase
             [],
             ['username' => 'marcelo', 'password' => 'password', 'g-recaptcha-response' => 'BD-S2333-156465897897']
         );
-        $response = new Response();
 
         $baseResult = new Result(
             [
@@ -260,7 +255,7 @@ class FormAuthenticatorTest extends TestCase
         );
         $BaseAuthenticator->expects($this->once())
             ->method('authenticate')
-            ->with($request, $response)
+            ->with($request)
             ->will($this->returnValue($baseResult));
 
         $Authenticator = $this->getMockBuilder(FormAuthenticator::class)->setConstructorArgs([
@@ -294,7 +289,7 @@ class FormAuthenticatorTest extends TestCase
             )
             ->will($this->returnValue(false));
 
-        $result = $Authenticator->authenticate($request, $response);
+        $result = $Authenticator->authenticate($request);
         $this->assertInstanceOf(Result::class, $result);
         $this->assertEquals(FormAuthenticator::FAILURE_INVALID_RECAPTCHA, $result->getStatus());
         $this->assertNull($result->getData());

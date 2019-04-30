@@ -30,7 +30,6 @@ class TwoFactorAuthenticatorTest extends TestCase
         $uri->base = null;
         $request = new \Cake\Http\ServerRequest();
         $request = $request->withUri($uri);
-        $response = new Response();
         $identifiers = new IdentifierCollection([
             'Authentication.Password',
         ]);
@@ -39,7 +38,7 @@ class TwoFactorAuthenticatorTest extends TestCase
             'loginUrl' => '/testpath',
         ]);
 
-        $result = $Authenticator->authenticate($request, $response);
+        $result = $Authenticator->authenticate($request);
         $this->assertInstanceOf(Result::class, $result);
         $this->assertEquals(Result::FAILURE_CREDENTIALS_MISSING, $result->getStatus());
     }
@@ -63,7 +62,6 @@ class TwoFactorAuthenticatorTest extends TestCase
                 'role' => 'user',
             ])
         );
-        $response = new Response();
         $identifiers = new IdentifierCollection([
             'Authentication.Password',
         ]);
@@ -71,7 +69,7 @@ class TwoFactorAuthenticatorTest extends TestCase
             'loginUrl' => '/testpathnotsame',
         ]);
 
-        $result = $Authenticator->authenticate($request, $response);
+        $result = $Authenticator->authenticate($request);
         $this->assertInstanceOf(Result::class, $result);
         $this->assertEquals(Result::FAILURE_OTHER, $result->getStatus());
     }
@@ -95,7 +93,6 @@ class TwoFactorAuthenticatorTest extends TestCase
                 'role' => 'user',
             ])
         );
-        $response = new Response();
         $identifiers = new IdentifierCollection([
             'Authentication.Password',
         ]);
@@ -103,7 +100,7 @@ class TwoFactorAuthenticatorTest extends TestCase
             'loginUrl' => '/testpath',
         ]);
 
-        $result = $Authenticator->authenticate($request, $response);
+        $result = $Authenticator->authenticate($request);
         $this->assertInstanceOf(Result::class, $result);
         $this->assertEquals(Result::SUCCESS, $result->getStatus());
     }
