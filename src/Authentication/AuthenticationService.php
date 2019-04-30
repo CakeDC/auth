@@ -107,7 +107,6 @@ class AuthenticationService extends BaseService
             );
         }
 
-
         $this->failures = [];
         $result = null;
         foreach ($this->authenticators() as $authenticator) {

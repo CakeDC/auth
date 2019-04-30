@@ -32,7 +32,7 @@ class TwoFactorMiddleware
     {
         $service = $request->getAttribute('authentication');
         $status = $service->getResult() ? $service->getResult()->getStatus() : null;
-        switch($status) {
+        switch ($status) {
             case AuthenticationService::NEED_TWO_FACTOR_VERIFY:
                 $url = Configure::read('OneTimePasswordAuthenticator.verifyAction');
                 break;
