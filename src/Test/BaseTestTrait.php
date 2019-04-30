@@ -6,7 +6,7 @@ use Cake\Console\ConsoleIo;
 use Cake\Core\Configure;
 use Cake\ORM\TableRegistry;
 
-trait BaseTraitTest
+trait BaseTestTrait
 {
     /**
      * Sets up the session as a logged in user for an user with id $id
