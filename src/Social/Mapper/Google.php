@@ -22,7 +22,8 @@ class Google extends AbstractMapper
 {
     /**
      * Map for provider fields
-     * @var
+     *
+     * @var array
      */
     protected $_mapFields = [
         'id' => 'sub',

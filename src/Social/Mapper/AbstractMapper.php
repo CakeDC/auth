@@ -23,19 +23,22 @@ abstract class AbstractMapper
 {
     /**
      * Provider Raw data
-     * @var
+     *
+     * @var array
      */
-    protected $_rawData;
+    protected $_rawData = [];
 
     /**
      * Map for provider fields
-     * @var null
+     *
+     * @var array
      */
-    protected $_mapFields;
+    protected $_mapFields = [];
 
     /**
      * Default Map for provider fields
-     * @var
+     *
+     * @var array
      */
     protected $_defaultMapFields = [
         'id' => 'id',

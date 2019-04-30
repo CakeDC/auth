@@ -27,7 +27,8 @@ class Instagram extends AbstractMapper
 
     /**
      * Map for provider fields
-     * @var
+     *
+     * @var array
      */
     protected $_mapFields = [
         'full_name' => 'full_name',

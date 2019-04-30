@@ -19,7 +19,7 @@ use League\OAuth2\Client\Provider\AbstractProvider;
 class OAuth2Service extends OAuthServiceAbstract
 {
     /**
-     * @var \League\Oauth2\Client\Provider\GenericProvider
+     * @var \League\OAuth2\Client\Provider\AbstractProvider
      */
     protected $provider;
 

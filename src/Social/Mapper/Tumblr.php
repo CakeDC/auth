@@ -20,7 +20,8 @@ class Tumblr extends AbstractMapper
 {
     /**
      * Map for provider fields
-     * @var null
+     *
+     * @var array
      */
     protected $_mapFields = [
         'id' => 'uid',
@@ -44,6 +45,6 @@ class Tumblr extends AbstractMapper
      */
     protected function _id($rawData)
     {
-        return crc32($rawData['nickname']);
+        return (string)crc32($rawData['nickname']);
     }
 }

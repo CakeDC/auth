@@ -39,10 +39,12 @@ abstract class OAuthServiceAbstract implements ServiceInterface
      * Set the social provider name
      *
      * @param string $providerName social provider
-     * @return void
+     * @return self
      */
     public function setProviderName($providerName)
     {
         $this->providerName = $providerName;
+
+        return $this;
     }
 }
