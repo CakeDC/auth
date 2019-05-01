@@ -34,9 +34,12 @@ class OneTimePasswordAuthenticatorMiddleware implements MiddlewareInterface
         if (!$service->getResult() || $service->getResult()->getStatus() !== AuthenticationService::NEED_TWO_FACTOR_VERIFY) {
             return $handler->handle($request);
         }
-
-        $request->getSession()->write(CookieAuthenticator::SESSION_DATA_KEY, [
-            'remember_me' => $request->getData('remember_me'),
+        /**
+         * @var \Cake\Http\Session $session
+         */
+        $session = $request->getAttribute('session');
+        $session->write(CookieAuthenticator::SESSION_DATA_KEY, [
+            'remember_me' => $request->getParsedBody()['remember_me'] ?? null,
         ]);
 
         $url = Router::url(Configure::read('OneTimePasswordAuthenticator.verifyAction'));
