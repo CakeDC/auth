@@ -51,7 +51,9 @@ class Rbac
     ];
 
     /**
-     * @var array rules array
+     * A list of rules
+     *
+     * @var array[] rules array
      */
     protected $permissions;
 
@@ -130,14 +132,14 @@ class Rbac
      * Match the rule for current permission
      *
      * @param array $permission The permission configuration
-     * @param array $user Current user data
+     * @param array|\ArrayAccess $user Current user data
      * @param string $role Effective user's role
      * @param \Psr\Http\Message\ServerRequestInterface $request Current request
      *
      * @return null|\CakeDC\Auth\Rbac\PermissionMatchResult Null if permission is discarded, PermissionMatchResult if a final
      * result is produced
      */
-    protected function _matchPermission(array $permission, array $user, $role, ServerRequestInterface $request)
+    protected function _matchPermission(array $permission, $user, $role, ServerRequestInterface $request)
     {
         $issetController = isset($permission['controller']) || isset($permission['*controller']);
         $issetAction = isset($permission['action']) || isset($permission['*action']);

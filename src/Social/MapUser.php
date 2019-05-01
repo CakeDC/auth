@@ -42,7 +42,7 @@ class MapUser
      *
      * @return callable
      */
-    protected function buildMapper($className)
+    protected function buildMapper(string $className)
     {
         if (!class_exists($className)) {
             throw new \InvalidArgumentException(__("Provider mapper class {0} does not exist", $className));

@@ -38,8 +38,10 @@ class OneTimePasswordAuthenticatorMiddleware implements MiddlewareInterface
          * @var \Cake\Http\Session $session
          */
         $session = $request->getAttribute('session');
+        $data = $request->getParsedBody();
+        $data = is_array($data) ? $data : [];
         $session->write(CookieAuthenticator::SESSION_DATA_KEY, [
-            'remember_me' => $request->getParsedBody()['remember_me'] ?? null,
+            'remember_me' => $data['remember_me'] ?? null,
         ]);
 
         $url = Router::url(Configure::read('OneTimePasswordAuthenticator.verifyAction'));

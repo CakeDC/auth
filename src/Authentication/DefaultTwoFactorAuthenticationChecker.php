@@ -20,6 +20,9 @@ use Cake\Core\Configure;
  */
 class DefaultTwoFactorAuthenticationChecker implements TwoFactorAuthenticationCheckerInterface
 {
+    /**
+     * @var string
+     */
     protected $enabledKey = 'OneTimePasswordAuthenticator.login';
 
     /**

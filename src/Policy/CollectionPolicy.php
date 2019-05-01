@@ -21,6 +21,7 @@ class CollectionPolicy
 {
     /**
      * List of policies
+     *
      * @var array
      */
     protected $policies;
@@ -54,7 +55,7 @@ class CollectionPolicy
                 $policy = new $policy($config);
             }
 
-            if ($policy->canAccess($identity, $resource)) {
+            if (is_object($policy) && $policy->canAccess($identity, $resource)) {
                 return true;
             }
         }

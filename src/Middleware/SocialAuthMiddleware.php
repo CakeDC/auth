@@ -30,6 +30,11 @@ class SocialAuthMiddleware implements MiddlewareInterface
     use LogTrait;
     use UrlCheckerTrait;
 
+    /**
+     * The default config.
+     *
+     * @var array
+     */
     protected $_defaultConfig = [
         'loginUrl' => false,
         'urlChecker' => 'Authentication.Default',

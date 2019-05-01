@@ -19,6 +19,11 @@ class RbacPolicy
 {
     use InstanceConfigTrait;
 
+    /**
+     * The default config.
+     *
+     * @var array
+     */
     protected $_defaultConfig = [
         'adapter' => [
             'className' => Rbac::class,
@@ -85,7 +90,10 @@ class RbacPolicy
             $className = $config['className'];
             unset($config['className']);
 
-            return new $className($config);
+            $rbac = new $className($config);
+            if ($rbac instanceof Rbac) {
+                return $rbac;
+            }
         }
 
         throw new \InvalidArgumentException('Config "adapter" should be an object or an array with key className');
