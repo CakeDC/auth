@@ -101,7 +101,7 @@ abstract class AbstractMapper
     protected function _map($rawData)
     {
         $result = [];
-        collection($this->_mapFields)->each(function ($mappedField, $field) use (&$result, $rawData) {
+        collection($this->_mapFields)->each(function (string $mappedField, string $field) use (&$result, $rawData): void {
             $value = Hash::get($rawData, $mappedField);
             $function = '_' . Inflector::camelize($field);
             if (method_exists($this, $function)) {

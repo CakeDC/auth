@@ -83,7 +83,11 @@ class OAuth1Service extends OAuthServiceAbstract
     {
         $oauthToken = $request->getQuery('oauth_token');
         $oauthVerifier = $request->getQuery('oauth_verifier');
-
+        $oauthToken = is_string($oauthToken) ? $oauthToken : '';
+        $oauthVerifier = is_string($oauthVerifier) ? $oauthVerifier : '';
+        /**
+         * @var \League\OAuth1\Client\Credentials\TemporaryCredentials $temporaryCredentials
+         */
         $temporaryCredentials = $request->getSession()->read('temporary_credentials');
         $tokenCredentials = $this->provider->getTokenCredentials($temporaryCredentials, $oauthToken, $oauthVerifier);
         $user = (array)$this->provider->getUserDetails($tokenCredentials);

@@ -18,19 +18,26 @@ abstract class OAuthServiceAbstract implements ServiceInterface
 {
     use InstanceConfigTrait;
 
+    /**
+     * The default config.
+     *
+     * @var array
+     */
     protected $_defaultConfig = [];
 
     /**
+     * The provider name.
+     *
      * @var string
      */
-    protected $providerName;
+    protected $providerName = '';
 
     /**
      * Get the social provider name
      *
      * @return string
      */
-    public function getProviderName()
+    public function getProviderName(): string
     {
         return $this->providerName;
     }
@@ -41,7 +48,7 @@ abstract class OAuthServiceAbstract implements ServiceInterface
      * @param string $providerName social provider
      * @return self
      */
-    public function setProviderName($providerName)
+    public function setProviderName(string $providerName)
     {
         $this->providerName = $providerName;
 
