@@ -18,14 +18,21 @@ use CakeDC\Auth\Social\ProviderConfig;
 
 class ServiceFactory
 {
+    /**
+     * The redirect uri field
+     *
+     * @var string
+     */
     protected $redirectUriField = 'redirectUri';
 
     /**
+     * Set the redirect uri field name
+     *
      * @param string $redirectUriField field used for redirect uri
      *
      * @return self
      */
-    public function setRedirectUriField($redirectUriField)
+    public function setRedirectUriField(string $redirectUriField)
     {
         $this->redirectUriField = $redirectUriField;
 
@@ -39,7 +46,7 @@ class ServiceFactory
      *
      * @return \CakeDC\Auth\Social\Service\ServiceInterface
      */
-    public function createFromProvider($provider)
+    public function createFromProvider($provider): ServiceInterface
     {
         $config = (new ProviderConfig())->getConfig($provider);
 
@@ -49,6 +56,9 @@ class ServiceFactory
 
         $config['options']['redirectUri'] = $config['options'][$this->redirectUriField];
         unset($config['options']['linkSocialUri'], $config['options']['callbackLinkSocialUri']);
+        /**
+         * @var \CakeDC\Auth\Social\Service\ServiceInterface $service
+         */
         $service = new $config['service']($config);
         $service->setProviderName($provider);
 

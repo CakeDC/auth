@@ -12,7 +12,6 @@ declare(strict_types=1);
 namespace CakeDC\Auth\Policy;
 
 use Cake\Core\InstanceConfigTrait;
-use Cake\Utility\Hash;
 
 /**
  * Class RequestPolicy
@@ -49,14 +48,13 @@ class SuperuserPolicy
      *
      * @return bool
      */
-    public function canAccess($identity)
+    public function canAccess($identity): bool
     {
-        $user = $identity ? $identity->getOriginalData()->toArray() : [];
+        $user = $identity ? $identity->getOriginalData() : [];
         $superuserField = $this->getConfig('superuser_field');
-        if (Hash::check($user, $superuserField)) {
-            return (bool)Hash::get($user, $superuserField);
-        }
 
-        return false;
+        $isSuperUser = $user[$superuserField] ?? false;
+
+        return $isSuperUser === true;
     }
 }

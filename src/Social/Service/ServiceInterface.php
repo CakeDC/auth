@@ -54,7 +54,7 @@ interface ServiceInterface
      *
      * @return self
      */
-    public function setProviderName($name);
+    public function setProviderName(string $name);
 
     /**
      * Get current config

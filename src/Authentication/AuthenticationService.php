@@ -41,7 +41,11 @@ class AuthenticationService extends BaseService
      */
     protected function proceedToGoogleVerify(ServerRequestInterface $request, ResultInterface $result)
     {
-        $request->getSession()->write(self::TWO_FACTOR_VERIFY_SESSION_KEY, $result->getData());
+        /**
+         * @var \Cake\Http\Session $session
+         */
+        $session = $request->getAttribute('session');
+        $session->write(self::TWO_FACTOR_VERIFY_SESSION_KEY, $result->getData());
 
         $result = new Result(null, self::NEED_TWO_FACTOR_VERIFY);
 

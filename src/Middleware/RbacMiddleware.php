@@ -89,6 +89,11 @@ class RbacMiddleware implements MiddlewareInterface
     public const UNAUTHORIZED_BEHAVIOR_REDIRECT = 1;
     public const UNAUTHORIZED_BEHAVIOR_AUTO = 2;
 
+    /**
+     * The default config.
+     *
+     * @var array
+     */
     protected $_defaultConfig = [
         /*
          * Manage what to do if the request is not authorized,
@@ -137,7 +142,6 @@ class RbacMiddleware implements MiddlewareInterface
         $userData = [];
         if ($user) {
             $userData = is_object($user) ? $user->getOriginalData() : $user;
-            $userData = is_object($userData) ? $userData->toArray() : $userData;
         }
 
         if (isset($userData['User'])) {

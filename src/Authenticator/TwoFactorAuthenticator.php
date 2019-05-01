@@ -73,11 +73,15 @@ class TwoFactorAuthenticator extends AbstractAuthenticator
         if (!$this->_checkUrl($request)) {
             return $this->_buildLoginUrlErrorResult($request);
         }
+        /**
+         * @var \Cake\Http\Session $session
+         */
+        $session = $request->getAttribute('session');
 
-        $data = $request->getSession()->read(self::USER_SESSION_KEY);
+        $data = $session->read(self::USER_SESSION_KEY);
 
         if (!empty($data)) {
-            $request->getSession()->delete(self::USER_SESSION_KEY);
+            $session->delete(self::USER_SESSION_KEY);
 
             return new Result($data, Result::SUCCESS);
         }

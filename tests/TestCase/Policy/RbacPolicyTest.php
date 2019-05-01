@@ -38,7 +38,7 @@ class RbacPolicyTest extends TestCase
         $rbac->expects($this->once())
             ->method('checkPermissions')
             ->with(
-                $this->equalTo($identity->getOriginalData()->toArray()),
+                $this->equalTo($identity->getOriginalData()),
                 $this->equalTo($request)
             )
             ->will($this->returnValue(true));
@@ -63,7 +63,7 @@ class RbacPolicyTest extends TestCase
         $rbac->expects($this->once())
             ->method('checkPermissions')
             ->with(
-                $this->equalTo($identity->getOriginalData()->toArray()),
+                $this->equalTo($identity->getOriginalData()),
                 $this->equalTo($request)
             )
             ->will($this->returnValue(false));
@@ -145,9 +145,8 @@ class RbacPolicyTest extends TestCase
     public function testGetRbacConfigArrayWithoutClassName()
     {
         $request = ServerRequestFactory::fromGlobals();
-        $policy = new RbacPolicy([
-            'adapter' => 'Invalid',
-        ]);
+        $policy = new RbacPolicy([]);
+        $policy->setConfig('adapter', [], false);
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('Config "adapter" should be an object or an array with key className');
         $policy->getRbac($request);
