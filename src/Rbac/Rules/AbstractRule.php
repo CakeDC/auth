@@ -22,6 +22,8 @@ use Psr\Http\Message\ServerRequestInterface;
 
 /**
  * Class AbstractRule
+ *
+ * @method \Cake\ORM\Table loadModel($modelClass = null, $modelType = null)
  * @package CakeDC\Auth\Auth\Rules
  */
 abstract class AbstractRule implements Rule
@@ -49,7 +51,7 @@ abstract class AbstractRule implements Rule
      *
      * @param \Psr\Http\Message\ServerRequestInterface $request request
      * @param mixed $table table
-     * @return \Cake\Datasource\RepositoryInterface
+     * @return \Cake\ORM\Table
      */
     protected function _getTable(ServerRequestInterface $request, $table = null)
     {
@@ -67,7 +69,7 @@ abstract class AbstractRule implements Rule
      * Inspect the request and try to retrieve a table based on the current controller
      *
      * @param \Psr\Http\Message\ServerRequestInterface $request request
-     * @return \Cake\Datasource\RepositoryInterface
+     * @return \Cake\ORM\Table
      * @throws \OutOfBoundsException if table alias can't be extracted from request
      */
     protected function _getTableFromRequest(ServerRequestInterface $request)

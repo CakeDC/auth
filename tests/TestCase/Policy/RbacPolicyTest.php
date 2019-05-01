@@ -145,9 +145,8 @@ class RbacPolicyTest extends TestCase
     public function testGetRbacConfigArrayWithoutClassName()
     {
         $request = ServerRequestFactory::fromGlobals();
-        $policy = new RbacPolicy([
-            'adapter' => 'Invalid',
-        ]);
+        $policy = new RbacPolicy([]);
+        $policy->setConfig('adapter', [], false);
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('Config "adapter" should be an object or an array with key className');
         $policy->getRbac($request);

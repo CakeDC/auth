@@ -137,7 +137,6 @@ class RbacMiddleware implements MiddlewareInterface
         $userData = [];
         if ($user) {
             $userData = is_object($user) ? $user->getOriginalData() : $user;
-            $userData = is_object($userData) ? $userData->toArray() : $userData;
         }
 
         if (isset($userData['User'])) {
