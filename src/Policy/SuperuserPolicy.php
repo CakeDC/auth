@@ -12,7 +12,6 @@ declare(strict_types=1);
 namespace CakeDC\Auth\Policy;
 
 use Cake\Core\InstanceConfigTrait;
-use Cake\Utility\Hash;
 
 /**
  * Class RequestPolicy
