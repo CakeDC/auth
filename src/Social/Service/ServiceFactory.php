@@ -39,7 +39,7 @@ class ServiceFactory
      *
      * @return \CakeDC\Auth\Social\Service\ServiceInterface
      */
-    public function createFromProvider($provider)
+    public function createFromProvider($provider): ServiceInterface
     {
         $config = (new ProviderConfig())->getConfig($provider);
 
@@ -49,6 +49,9 @@ class ServiceFactory
 
         $config['options']['redirectUri'] = $config['options'][$this->redirectUriField];
         unset($config['options']['linkSocialUri'], $config['options']['callbackLinkSocialUri']);
+        /*
+         * @var \CakeDC\Auth\Social\Service\ServiceInterface $service
+         */
         $service = new $config['service']($config);
         $service->setProviderName($provider);
 

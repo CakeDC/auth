@@ -102,11 +102,11 @@ class Rbac
      * Match against permissions, return if matched
      * Permissions are processed based on the 'permissions' config values
      *
-     * @param array $user current user array
+     * @param array|\ArrayAccess $user current user array
      * @param \Psr\Http\Message\ServerRequestInterface $request request
      * @return bool true if there is a match in permissions
      */
-    public function checkPermissions(array $user, ServerRequestInterface $request)
+    public function checkPermissions($user, ServerRequestInterface $request)
     {
         $roleField = $this->getConfig('role_field');
         $defaultRole = $this->getConfig('default_role');

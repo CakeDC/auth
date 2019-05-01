@@ -97,7 +97,7 @@ class IsAuthorizedTraitTest extends TestCase
         $rbac->expects($this->once())
             ->method('checkPermissions')
             ->with(
-                $this->equalTo($identity->getOriginalData()->toArray())
+                $this->equalTo($identity->getOriginalData())
             )
             ->will($this->returnValue($authorize));
         $request = $request->withAttribute('rbac', $rbac);

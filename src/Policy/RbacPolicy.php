@@ -42,11 +42,11 @@ class RbacPolicy
      * @param \Psr\Http\Message\ServerRequestInterface $resource server request
      * @return bool
      */
-    public function canAccess($identity, $resource)
+    public function canAccess($identity, $resource): bool
     {
         $rbac = $this->getRbac($resource);
 
-        $user = $identity ? $identity->getOriginalData()->toArray() : [];
+        $user = $identity ? $identity->getOriginalData() : [];
 
         return (bool)$rbac->checkPermissions($user, $resource);
     }
@@ -57,18 +57,18 @@ class RbacPolicy
      * @param \Psr\Http\Message\ServerRequestInterface $resource server request
      * @return \CakeDC\Auth\Rbac\Rbac
      */
-    public function getRbac($resource)
+    public function getRbac($resource): Rbac
     {
         $rbac = $resource->getAttribute('rbac');
         if ($rbac !== null) {
             return $rbac;
         }
         $adapter = $this->getConfig('adapter');
-        if (is_object($adapter)) {
-            return $adapter;
+        if (is_array($adapter)) {
+            return $this->createRbac($adapter);
         }
 
-        return $this->createRbac($adapter);
+        return $adapter;
     }
 
     /**
@@ -76,9 +76,10 @@ class RbacPolicy
      *
      * @param array $config Rbac config
      *
+     * @throws \InvalidArgumentException When 'key' className is missing in $config
      * @return \CakeDC\Auth\Rbac\Rbac
      */
-    protected function createRbac($config)
+    protected function createRbac($config): Rbac
     {
         if (isset($config['className'])) {
             $className = $config['className'];

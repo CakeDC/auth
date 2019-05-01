@@ -38,7 +38,7 @@ class RbacPolicyTest extends TestCase
         $rbac->expects($this->once())
             ->method('checkPermissions')
             ->with(
-                $this->equalTo($identity->getOriginalData()->toArray()),
+                $this->equalTo($identity->getOriginalData()),
                 $this->equalTo($request)
             )
             ->will($this->returnValue(true));
@@ -63,7 +63,7 @@ class RbacPolicyTest extends TestCase
         $rbac->expects($this->once())
             ->method('checkPermissions')
             ->with(
-                $this->equalTo($identity->getOriginalData()->toArray()),
+                $this->equalTo($identity->getOriginalData()),
                 $this->equalTo($request)
             )
             ->will($this->returnValue(false));
