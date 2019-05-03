@@ -17,12 +17,12 @@ use CakeDC\Auth\Social\Mapper\Twitter;
 
 class TwitterTest extends TestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         parent::tearDown();
     }
