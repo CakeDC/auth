@@ -68,6 +68,7 @@ class OAuth2ServiceTest extends TestCase
             'service' => 'CakeDC\Auth\Social\Service\OAuth2Service',
             'className' => $this->Provider,
             'mapper' => 'CakeDC\Auth\Social\Mapper\Facebook',
+            'authParams' => ['scope' => ['public_profile', 'email', 'user_birthday', 'user_gender', 'user_link']],
             'options' => [
                 'state' => '__TEST_STATE__'
             ],
@@ -109,6 +110,7 @@ class OAuth2ServiceTest extends TestCase
         $service = new OAuth2Service([
             'className' => 'League\OAuth2\Client\Provider\Facebook',
             'mapper' => 'CakeDC\Auth\Social\Mapper\Facebook',
+            'authParams' => ['scope' => ['public_profile', 'email', 'user_birthday', 'user_gender', 'user_link']],
             'options' => [
                 'customOption' => 'hello',
                 'graphApiVersion' => 'v2.8',
@@ -216,6 +218,9 @@ class OAuth2ServiceTest extends TestCase
 
         $this->Provider->expects($this->at(1))
             ->method('getAuthorizationUrl')
+            ->with($this->equalTo([
+                'scope' => ['public_profile', 'email', 'user_birthday', 'user_gender', 'user_link']
+            ]))
             ->will($this->returnValue('http://facebook.com/redirect/url'));
 
         $actual = $this->Service->getAuthorizationUrl($this->Request);

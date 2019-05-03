@@ -83,14 +83,72 @@ class RbacPolicyTest extends TestCase
         $actual = $policy->getRbac($request);
         $this->assertSame($rbac, $actual);
     }
+
+    /**
+     * Test getRbac method
+     */
+    public function testGetRbacIgnoreConfigObject()
+    {
+        $request = ServerRequestFactory::fromGlobals();
+        $rbac = $this->getMockBuilder(Rbac::class)->setMethods(['checkPermissions'])->getMock();
+        $request = $request->withAttribute('rbac', $rbac);
+        $policy = new RbacPolicy([
+            'adapter' => new Rbac(['role' => 'my_role'])
+        ]);
+        $actual = $policy->getRbac($request);
+        $this->assertSame($rbac, $actual);
+    }
+
+    /**
+     * Test getRbac method
+     */
+    public function testGetRbacUseObject()
+    {
+        $request = ServerRequestFactory::fromGlobals();
+        $rbac = $this->getMockBuilder(Rbac::class)->setMethods(['checkPermissions'])->getMock();
+        $policy = new RbacPolicy([
+            'adapter' => $rbac
+        ]);
+        $actual = $policy->getRbac($request);
+        $this->assertSame($rbac, $actual);
+    }
     /**
      * Test getRbac method
      */
     public function testGetRbacCreateNew()
     {
         $request = ServerRequestFactory::fromGlobals();
-        $policy = new RbacPolicy();
-        $actual = $policy->getRbac($request);
-        $this->assertInstanceOf(Rbac::class, $actual);
+        $policy = new RbacPolicy([
+            'adapter' => [
+                'autoload_config' => 'my_permissions',
+                'role_field' => 'group',
+            ]
+        ]);
+        $rbaResult = $policy->getRbac($request);
+        $this->assertInstanceOf(Rbac::class, $rbaResult);
+        $expected = [
+            'autoload_config' => 'my_permissions',
+            'role_field' => 'group',
+            'default_role' => 'user',
+            'permissions_provider_class' => '\CakeDC\Auth\Rbac\Permissions\ConfigProvider',
+            'permissions' => null,
+            'log' => true,
+        ];
+        $actual = $rbaResult->getConfig();
+        $this->assertEquals($expected, $actual);
+    }
+
+    /**
+     * Test getRbac method
+     */
+    public function testGetRbacConfigArrayWithoutClassName()
+    {
+        $request = ServerRequestFactory::fromGlobals();
+        $policy = new RbacPolicy([
+            'adapter' => 'Invalid'
+        ]);
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Config "adapter" should be an object or an array with key className');
+        $policy->getRbac($request);
     }
 }

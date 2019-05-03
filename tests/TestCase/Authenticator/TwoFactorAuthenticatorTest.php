@@ -26,14 +26,15 @@ class TwoFactorAuthenticatorTest extends TestCase
      */
     public function testAuthenticateFailedNoData()
     {
-        $request = ServerRequestFactory::fromGlobals(
-            ['REQUEST_URI' => '/testpath'],
-            []
-        );
+        $uri = new \Zend\Diactoros\Uri('/testpath');
+        $uri->base = null;
+        $request = new \Cake\Http\ServerRequest();
+        $request = $request->withUri($uri);
         $response = new Response();
         $identifiers = new IdentifierCollection([
             'Authentication.Password'
         ]);
+
         $Authenticator = new TwoFactorAuthenticator($identifiers, [
             'loginUrl' => '/testpath'
         ]);
@@ -50,10 +51,10 @@ class TwoFactorAuthenticatorTest extends TestCase
      */
     public function testAuthenticateFailedInvalidUrl()
     {
-        $request = ServerRequestFactory::fromGlobals(
-            ['REQUEST_URI' => '/testpath'],
-            []
-        );
+        $uri = new \Zend\Diactoros\Uri('/testpath');
+        $uri->base = null;
+        $request = new \Cake\Http\ServerRequest();
+        $request = $request->withUri($uri);
         $request->getSession()->write(
             TwoFactorAuthenticator::USER_SESSION_KEY,
             new Entity([
@@ -82,10 +83,10 @@ class TwoFactorAuthenticatorTest extends TestCase
      */
     public function testAuthenticate()
     {
-        $request = ServerRequestFactory::fromGlobals(
-            ['REQUEST_URI' => '/testpath'],
-            []
-        );
+        $uri = new \Zend\Diactoros\Uri('/testpath');
+        $uri->base = null;
+        $request = new \Cake\Http\ServerRequest();
+        $request = $request->withUri($uri);
         $request->getSession()->write(
             TwoFactorAuthenticator::USER_SESSION_KEY,
             new Entity([

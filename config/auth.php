@@ -17,6 +17,7 @@ return [
             'service' => 'CakeDC\Auth\Social\Service\OAuth2Service',
             'className' => 'League\OAuth2\Client\Provider\Facebook',
             'mapper' => 'CakeDC\Auth\Social\Mapper\Facebook',
+            'authParams' => ['scope' => ['public_profile', 'email', 'user_birthday', 'user_gender', 'user_link']],
             'options' => [
                 'graphApiVersion' => 'v2.8', //bio field was deprecated on >= v2.8
                 'redirectUri' => Router::fullBaseUrl() . '/auth/facebook',
