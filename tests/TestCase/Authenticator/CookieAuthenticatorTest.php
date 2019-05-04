@@ -69,15 +69,15 @@ class CookieAuthenticatorTest extends TestCase
             'password' => '$2a$10$u05j8FjsvLBNdfhBhc21LOuVMpzpabVXQ9OpC2wO3pSO0q6t7HHMO',
         ]);
         $result = $authenticator->persistIdentity($request, $response, $identity);
-        $this->assertInternalType('array', $result);
+        $this->assertIsArray($result);
         $this->assertArrayHasKey('request', $result);
         $this->assertArrayHasKey('response', $result);
         $this->assertInstanceOf(RequestInterface::class, $result['request']);
         $this->assertInstanceOf(ResponseInterface::class, $result['response']);
         if ($setCookie) {
-            $this->assertContains('CookieAuth=%5B%22johndoe%22%2C%22%242y%2410%24', $result['response']->getHeaderLine('Set-Cookie'));
+            $this->assertStringContainsString('CookieAuth=%5B%22johndoe%22%2C%22%242y%2410%24', $result['response']->getHeaderLine('Set-Cookie'));
         } else {
-            $this->assertNotContains('CookieAuth', $result['response']->getHeaderLine('Set-Cookie'));
+            $this->assertStringNotContainsString('CookieAuth', $result['response']->getHeaderLine('Set-Cookie'));
         }
     }
 }

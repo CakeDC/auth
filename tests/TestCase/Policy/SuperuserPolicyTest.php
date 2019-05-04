@@ -12,7 +12,8 @@ declare(strict_types=1);
 
 namespace CakeDC\Auth\Test\TestCase\Policy;
 
-use Authentication\Identity;
+use Authorization\AuthorizationServiceInterface;
+use Authorization\IdentityDecorator;
 use Cake\Http\ServerRequestFactory;
 use Cake\ORM\Entity;
 use Cake\TestSuite\TestCase;
@@ -52,11 +53,13 @@ class SuperuserPolicyTest extends TestCase
         $user = new Entity($userData + [
             'id' => '00000000-0000-0000-0000-000000000001',
         ]);
-        $identity = new Identity($user);
+        $service = $this->createMock(AuthorizationServiceInterface::class);
+        $identity = new IdentityDecorator($service, $user);
         $request = ServerRequestFactory::fromGlobals();
+        $request = $request->withAttribute('identity', $identity);
 
         $policy = new SuperuserPolicy($config);
-        $actual = $policy->canAccess($identity, $request);
+        $actual = $policy->canAccess($request->getAttribute('identity'), $request);
         $this->assertSame($expected, $actual);
     }
 }

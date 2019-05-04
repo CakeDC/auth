@@ -92,12 +92,12 @@ class OneTimePasswordAuthenticatorComponentTest extends TestCase
      * test base64 qr-code returned from component
      * @return void
      */
-    public function testgetQRCodeImageAsDataUri()
+    public function testGetQRCodeImageAsDataUri()
     {
         $this->Controller->OneTimePasswordAuthenticator->initialize([]);
         $result = $this->Controller->OneTimePasswordAuthenticator->getQRCodeImageAsDataUri('test@localhost.com', '123123');
 
-        $this->assertContains('data:image/png;base64', $result);
+        $this->assertStringContainsString('data:image/png;base64', $result);
     }
 
     /**

@@ -16,6 +16,8 @@ use Cake\Http\ServerRequest;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 use CakeDC\Auth\Rbac\Rules\Owner;
+use OutOfBoundsException;
+use RuntimeException;
 
 /**
  * @property Owner Owner
@@ -117,11 +119,11 @@ class OwnerTest extends TestCase
      * test
      *
      * @return void
-     * @expectedException \RuntimeException
-     * @expectedExceptionMessage TypeTableKey "computer-says-no" is invalid, please use "params", "data" or "query"
      */
     public function testExceptionThrownWhenInvalidTypeTableKey()
     {
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('TypeTableKey "computer-says-no" is invalid, please use "params", "data" or "query"');
         $this->Owner->setConfig([
                 'tableKeyType' => 'computer-says-no',
                 'tableIdParamsKey' => 'key',
@@ -177,11 +179,11 @@ class OwnerTest extends TestCase
      * test
      *
      * @return void
-     * @expectedException \OutOfBoundsException
-     * @expectedExceptionMessage Missing Table alias, we could not extract a default table from the request
      */
     public function testAllowedShouldThrowExceptionBecauseEmptyAliasFromRequest()
     {
+        $this->expectException(OutOfBoundsException::class);
+        $this->expectExceptionMessage('Missing Table alias, we could not extract a default table from the request');
         $this->request = $this->request->withParam('pass', ['00000000-0000-0000-0000-000000000001']);
         $user = [
             'id' => '00000000-0000-0000-0000-000000000001',
@@ -193,11 +195,11 @@ class OwnerTest extends TestCase
      * test
      *
      * @return void
-     * @expectedException \OutOfBoundsException
-     * @expectedExceptionMessage Missing column column_not_found in table Posts while checking ownership permissions for user 00000000-0000-0000-0000-000000000001
      */
     public function testAllowedShouldThrowExceptionBecauseForeignKeyNotPresentInTable()
     {
+        $this->expectException(OutOfBoundsException::class);
+        $this->expectExceptionMessage('Missing column column_not_found in table Posts while checking ownership permissions for user 00000000-0000-0000-0000-000000000001');
         $this->Owner = new Owner([
             'table' => TableRegistry::getTableLocator()->get('CakeDC/Users.Posts'),
             'ownerForeignKey' => 'column_not_found',
@@ -267,11 +269,11 @@ class OwnerTest extends TestCase
      * test
      *
      * @return void
-     * @expectedException \OutOfBoundsException
-     * @expectedExceptionMessage Missing column user_id in table NoDefaultTable while checking ownership permissions for user 00000000-0000-0000-0000-000000000001
      */
     public function testNotAllowedBecauseNoDefaultTable()
     {
+        $this->expectException(OutOfBoundsException::class);
+        $this->expectExceptionMessage('Missing column user_id in table NoDefaultTable while checking ownership permissions for user 00000000-0000-0000-0000-000000000001');
         $this->request = $this->request->withAttribute('params', [
             'plugin' => 'CakeDC/Users',
             'controller' => 'NoDefaultTable',

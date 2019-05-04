@@ -12,10 +12,12 @@ declare(strict_types=1);
 
 namespace CakeDC\Auth\Policy;
 
+use Authorization\IdentityInterface;
 use Cake\Core\InstanceConfigTrait;
 use CakeDC\Auth\Rbac\Rbac;
+use Psr\Http\Message\ServerRequestInterface;
 
-class RbacPolicy
+class RbacPolicy implements PolicyInterface
 {
     use InstanceConfigTrait;
 
@@ -47,7 +49,7 @@ class RbacPolicy
      * @param \Psr\Http\Message\ServerRequestInterface $resource server request
      * @return bool
      */
-    public function canAccess($identity, $resource): bool
+    public function canAccess(?IdentityInterface $identity, ServerRequestInterface $resource): bool
     {
         $rbac = $this->getRbac($resource);
 

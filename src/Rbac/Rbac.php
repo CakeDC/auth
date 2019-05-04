@@ -131,7 +131,7 @@ class Rbac
     /**
      * Match the rule for current permission
      *
-     * @param array $permission The permission configuration
+     * @param array<string, mixed> $permission The permission configuration
      * @param array|\ArrayAccess $user Current user data
      * @param string $role Effective user's role
      * @param \Psr\Http\Message\ServerRequestInterface $request Current request
@@ -185,11 +185,11 @@ class Rbac
             } elseif (array_key_exists($key, $reserved)) {
                 $return = $this->_matchOrAsterisk($value, $reserved[$key], true);
             } else {
-                if (!$this->_startsWith($key, 'user.')) {
+                if (!$this->_startsWith((string)$key, 'user.')) {
                     $key = 'user.' . $key;
                 }
 
-                $return = $this->_matchOrAsterisk($value, Hash::get($userArr, $key));
+                $return = $this->_matchOrAsterisk($value, Hash::get($userArr, (string)$key));
             }
 
             if ($inverse) {

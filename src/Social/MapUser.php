@@ -40,7 +40,7 @@ class MapUser
      *
      * @param string $className of mapper
      *
-     * @return callable
+     * @return \Closure
      */
     protected function buildMapper(string $className)
     {

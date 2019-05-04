@@ -15,7 +15,6 @@ namespace CakeDC\Auth\Middleware;
 use Authentication\UrlChecker\UrlCheckerTrait;
 use Cake\Core\InstanceConfigTrait;
 use Cake\Http\Response;
-use Cake\Http\ServerRequest;
 use Cake\Log\LogTrait;
 use CakeDC\Auth\Authenticator\SocialAuthenticator;
 use CakeDC\Auth\Social\Service\ServiceFactory;
@@ -72,11 +71,11 @@ class SocialAuthMiddleware implements MiddlewareInterface
     /**
      * Check if is target url
      *
-     * @param \Cake\Http\ServerRequest $request The request.
+     * @param \Psr\Http\Message\ServerRequestInterface $request The request.
      *
      * @return bool
      */
-    protected function checkUrl(ServerRequest $request)
+    protected function checkUrl(ServerRequestInterface $request)
     {
         return $this->_getUrlChecker()->check($request, $this->getConfig('loginUrl'));
     }

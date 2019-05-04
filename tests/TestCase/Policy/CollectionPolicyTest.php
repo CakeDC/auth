@@ -11,7 +11,8 @@ declare(strict_types=1);
  */
 namespace CakeDC\Auth\Test\TestCase\Policy;
 
-use Authentication\Identity;
+use Authorization\AuthorizationServiceInterface;
+use Authorization\IdentityDecorator;
 use Cake\Http\ServerRequestFactory;
 use Cake\ORM\Entity;
 use Cake\TestSuite\TestCase;
@@ -77,7 +78,8 @@ class CollectionPolicyTest extends TestCase
             'id' => '00000000-0000-0000-0000-000000000001',
             'is_superuser' => $isSuperuser,
         ]);
-        $identity = new Identity($user);
+        $service = $this->createMock(AuthorizationServiceInterface::class);
+        $identity = new IdentityDecorator($service, $user);
         $request = ServerRequestFactory::fromGlobals();
 
         $policy = new CollectionPolicy([

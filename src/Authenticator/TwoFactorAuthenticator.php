@@ -78,6 +78,7 @@ class TwoFactorAuthenticator extends AbstractAuthenticator
          */
         $session = $request->getAttribute('session');
 
+        /** @var array|\ArrayAccess $data */
         $data = $session->read(self::USER_SESSION_KEY);
 
         if (!empty($data)) {

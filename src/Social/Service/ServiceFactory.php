@@ -13,8 +13,8 @@ declare(strict_types=1);
 namespace CakeDC\Auth\Social\Service;
 
 use Cake\Http\Exception\NotFoundException;
-use Cake\Http\ServerRequest;
 use CakeDC\Auth\Social\ProviderConfig;
+use Psr\Http\Message\ServerRequestInterface;
 
 class ServiceFactory
 {
@@ -68,11 +68,11 @@ class ServiceFactory
     /**
      * Create a new service based on request
      *
-     * @param \Cake\Http\ServerRequest $request in use
+     * @param \Psr\Http\Message\ServerRequestInterface $request The request.
      *
      * @return \CakeDC\Auth\Social\Service\ServiceInterface
      */
-    public function createFromRequest(ServerRequest $request)
+    public function createFromRequest(ServerRequestInterface $request)
     {
         $params = $request->getAttribute('params');
         $provider = $params['provider'] ?? null;

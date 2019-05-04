@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace CakeDC\Auth\Test\TestCase\Middleware;
 
+use Cake\Http\Exception\ForbiddenException;
 use Cake\Http\Response;
 use Cake\Http\Runner;
 use Cake\Http\ServerRequest;
@@ -51,10 +52,10 @@ class RbacMiddlewareTest extends TestCase
 
     /**
      * @test
-     * @expectedException \Cake\Http\Exception\ForbiddenException
      */
     public function testInvokeForbidden()
     {
+        $this->expectException(ForbiddenException::class);
         $request = new ServerRequest();
         $rbacMiddleware = $this->rbacMiddleware;
         $handler = $this->getMockBuilder(Runner::class)
@@ -71,10 +72,10 @@ class RbacMiddlewareTest extends TestCase
 
     /**
      * @test
-     * @expectedException \Cake\Http\Exception\ForbiddenException
      */
     public function testInvokeForbiddenAjax()
     {
+        $this->expectException(ForbiddenException::class);
         $request = new ServerRequest();
         $request = $request->withHeader('Accept', 'application/json');
         $handler = $this->getMockBuilder(Runner::class)

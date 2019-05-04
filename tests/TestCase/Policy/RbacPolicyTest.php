@@ -12,7 +12,8 @@ declare(strict_types=1);
 
 namespace CakeDC\Auth\Test\TestCase\Policy;
 
-use Authentication\Identity;
+use Authorization\AuthorizationServiceInterface;
+use Authorization\IdentityDecorator;
 use Cake\Http\ServerRequestFactory;
 use Cake\ORM\Entity;
 use Cake\TestSuite\TestCase;
@@ -30,7 +31,8 @@ class RbacPolicyTest extends TestCase
             'id' => '00000000-0000-0000-0000-000000000001',
             'password' => '12345',
         ]);
-        $identity = new Identity($user);
+        $service = $this->createMock(AuthorizationServiceInterface::class);
+        $identity = new IdentityDecorator($service, $user);
         $request = ServerRequestFactory::fromGlobals();
         $request = $request->withAttribute('identity', $identity);
         $rbac = $this->getMockBuilder(Rbac::class)->setMethods(['checkPermissions'])->getMock();
@@ -55,7 +57,9 @@ class RbacPolicyTest extends TestCase
             'id' => '00000000-0000-0000-0000-000000000001',
             'password' => '12345',
         ]);
-        $identity = new Identity($user);
+        $service = $this->createMock(AuthorizationServiceInterface::class);
+        $identity = new IdentityDecorator($service, $user);
+
         $request = ServerRequestFactory::fromGlobals();
         $request = $request->withAttribute('identity', $identity);
         $rbac = $this->getMockBuilder(Rbac::class)->setMethods(['checkPermissions'])->getMock();
@@ -69,7 +73,7 @@ class RbacPolicyTest extends TestCase
             ->will($this->returnValue(false));
         $request = $request->withAttribute('rbac', $rbac);
         $policy = new RbacPolicy();
-        $this->assertFalse($policy->canAccess($identity, $request));
+        $this->assertFalse($policy->canAccess($request->getAttribute('identity'), $request));
     }
 
     /**

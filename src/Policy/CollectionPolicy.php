@@ -12,6 +12,9 @@ declare(strict_types=1);
 
 namespace CakeDC\Auth\Policy;
 
+use Authorization\IdentityInterface;
+use Psr\Http\Message\ServerRequestInterface;
+
 /**
  * Class CollectionPolicy
  *
@@ -44,7 +47,7 @@ class CollectionPolicy
      *
      * @return bool
      */
-    public function canAccess($identity, $resource)
+    public function canAccess(?IdentityInterface $identity, ServerRequestInterface $resource): bool
     {
         foreach ($this->policies as $policy => $config) {
             if (!is_array($config)) {
@@ -55,7 +58,7 @@ class CollectionPolicy
                 $policy = new $policy($config);
             }
 
-            if (is_object($policy) && $policy->canAccess($identity, $resource)) {
+            if ($policy instanceof PolicyInterface && $policy->canAccess($identity, $resource)) {
                 return true;
             }
         }

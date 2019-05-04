@@ -60,7 +60,7 @@ class Owner extends AbstractRule
     /**
      * {@inheritdoc}
      */
-    public function allowed(array $user, $role, ServerRequestInterface $request)
+    public function allowed($user, $role, ServerRequestInterface $request)
     {
         $table = $this->_getTable($request, $this->getConfig('table'));
         //retrieve entity id from request

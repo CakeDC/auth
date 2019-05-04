@@ -11,14 +11,16 @@ declare(strict_types=1);
  */
 namespace CakeDC\Auth\Policy;
 
+use Authorization\IdentityInterface;
 use Cake\Core\InstanceConfigTrait;
+use Psr\Http\Message\ServerRequestInterface;
 
 /**
  * Class RequestPolicy
  *
  * @package CakeDC\Auth\Policy
  */
-class SuperuserPolicy
+class SuperuserPolicy implements PolicyInterface
 {
     use InstanceConfigTrait;
     /**
@@ -45,10 +47,11 @@ class SuperuserPolicy
      * Check permission
      *
      * @param \Authorization\IdentityInterface|null $identity user identity
+     * @param \Psr\Http\Message\ServerRequestInterface $resource server request
      *
      * @return bool
      */
-    public function canAccess($identity): bool
+    public function canAccess(?IdentityInterface $identity, ServerRequestInterface $resource): bool
     {
         $user = $identity ? $identity->getOriginalData() : [];
         $superuserField = $this->getConfig('superuser_field');

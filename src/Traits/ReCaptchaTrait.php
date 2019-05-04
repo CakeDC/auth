@@ -13,6 +13,8 @@ declare(strict_types=1);
 namespace CakeDC\Auth\Traits;
 
 use Cake\Core\Configure;
+use Cake\Http\ServerRequest;
+use Psr\Http\Message\ServerRequestInterface;
 
 /**
  * Help reCaptacha usage
@@ -23,12 +25,15 @@ trait ReCaptchaTrait
     /**
      * Validates reCaptcha response with specific request
      *
-     * @param \Cake\Http\ServerRequest $request The request that contains login information.
+     * @param \Psr\Http\Message\ServerRequestInterface $request The request that contains login information.
      *
      * @return bool
      */
-    public function validateReCaptchaFromRequest($request)
+    public function validateReCaptchaFromRequest(ServerRequestInterface $request)
     {
+        if (!$request instanceof ServerRequest) {
+            throw new \BadMethodCallException('Request must be an instance of ServerRequest');
+        }
         $data = $request->getParsedBody();
         $captcha = $data['g-recaptcha-response'] ?? null;
 

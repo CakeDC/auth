@@ -15,6 +15,7 @@ namespace CakeDC\Auth\Social\Service;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\ServerRequest;
 use League\OAuth2\Client\Provider\AbstractProvider;
+use Psr\Http\Message\ServerRequestInterface;
 
 class OAuth2Service extends OAuthServiceAbstract
 {
@@ -38,22 +39,29 @@ class OAuth2Service extends OAuthServiceAbstract
      * Check if we are at getUserStep, meaning, we received a callback from provider.
      * Return true when querystring code is not empty
      *
-     * @param \Cake\Http\ServerRequest $request Request object.
+     * @param \Psr\Http\Message\ServerRequestInterface $request Request object.
      * @return bool
      */
-    public function isGetUserStep(ServerRequest $request)
+    public function isGetUserStep(ServerRequestInterface $request): bool
     {
+        if (!$request instanceof ServerRequest) {
+            throw new \BadMethodCallException('Request must be an instance of ServerRequest');
+        }
+
         return !empty($request->getQuery('code'));
     }
 
     /**
      * Get a authentication url for user
      *
-     * @param \Cake\Http\ServerRequest $request Request object.
+     * @param \Psr\Http\Message\ServerRequestInterface $request Request object.
      * @return string
      */
-    public function getAuthorizationUrl(ServerRequest $request)
+    public function getAuthorizationUrl(ServerRequestInterface $request)
     {
+        if (!$request instanceof ServerRequest) {
+            throw new \BadMethodCallException('Request must be an instance of ServerRequest');
+        }
         if ($this->getConfig('options.state')) {
             $request->getSession()->write('oauth2state', $this->provider->getState());
         }
@@ -66,18 +74,22 @@ class OAuth2Service extends OAuthServiceAbstract
     /**
      * Get a user in social provider
      *
-     * @param \Cake\Http\ServerRequest $request Request object.
+     * @param \Psr\Http\Message\ServerRequestInterface $request Request object.
      *
      * @throws \Cake\Http\Exception\BadRequestException when oauth2 state is invalid
      * @return array
      */
-    public function getUser(ServerRequest $request)
+    public function getUser(ServerRequestInterface $request): array
     {
+        if (!$request instanceof ServerRequest) {
+            throw new \BadMethodCallException('Request must be an instance of ServerRequest');
+        }
         if (!$this->validate($request)) {
             throw new BadRequestException('Invalid OAuth2 state');
         }
 
         $code = $request->getQuery('code');
+        /** @var \League\OAuth2\Client\Token\AccessToken $token */
         $token = $this->provider->getAccessToken('authorization_code', compact('code'));
 
         return compact('token') + $this->provider->getResourceOwner($token)->toArray();

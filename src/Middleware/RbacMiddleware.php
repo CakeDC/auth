@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace CakeDC\Auth\Middleware;
 
+use Authentication\IdentityInterface;
 use Cake\Core\InstanceConfigTrait;
 use Cake\Http\Exception\ForbiddenException;
 use Cake\Http\Response;
@@ -141,7 +142,7 @@ class RbacMiddleware implements MiddlewareInterface
         $user = $request->getAttribute('identity');
         $userData = [];
         if ($user) {
-            $userData = is_object($user) ? $user->getOriginalData() : $user;
+            $userData = $user instanceof IdentityInterface ? $user->getOriginalData() : $user;
         }
 
         if (isset($userData['User'])) {

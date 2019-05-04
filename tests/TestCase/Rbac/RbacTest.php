@@ -19,6 +19,7 @@ use CakeDC\Auth\Rbac\Rbac;
 use CakeDC\Auth\Rbac\Rules\Owner;
 use Psr\Log\LogLevel;
 use ReflectionClass;
+use RuntimeException;
 
 class RbacTest extends TestCase
 {
@@ -128,11 +129,11 @@ class RbacTest extends TestCase
 
     /**
      * @covers \CakeDC\Auth\Rbac\Rbac::__construct
-     * @expectedException \RuntimeException
-     * @expectedExceptionMessage Class "\Exception" must extend AbstractProvider
      */
     public function testConstructBadProvider()
     {
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('Class "\Exception" must extend AbstractProvider');
         $this->rbac = new Rbac([
             'permissions_provider_class' => '\Exception',
         ]);

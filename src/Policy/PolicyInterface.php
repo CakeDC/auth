@@ -9,19 +9,21 @@ declare(strict_types=1);
  * @copyright Copyright 2010 - 2019, Cake Development Corporation (https://www.cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
-namespace CakeDC\Auth\Rbac\Rules;
 
+namespace CakeDC\Auth\Policy;
+
+use Authorization\IdentityInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
-interface Rule
+interface PolicyInterface
 {
     /**
-     * Check the current entity is owned by the logged in user
+     * Check permission
      *
-     * @param array|\ArrayAccess $user Auth array with the logged in data
-     * @param string $role role of the user
-     * @param \Psr\Http\Message\ServerRequestInterface $request current request, used to get a default table if not provided
+     * @param \Authorization\IdentityInterface|null $identity user identity
+     * @param \Psr\Http\Message\ServerRequestInterface $resource server request
+     *
      * @return bool
      */
-    public function allowed($user, $role, ServerRequestInterface $request);
+    public function canAccess(?IdentityInterface $identity, ServerRequestInterface $resource): bool;
 }

@@ -14,6 +14,7 @@ namespace CakeDC\Auth\Social\Service;
 
 use Cake\Http\ServerRequest;
 use League\OAuth1\Client\Server\Server;
+use Psr\Http\Message\ServerRequestInterface;
 
 class OAuth1Service extends OAuthServiceAbstract
 {
@@ -48,11 +49,14 @@ class OAuth1Service extends OAuthServiceAbstract
     /**
      * Check if we are at getUserStep, meaning, we received a callback from provider.
      *
-     * @param \Cake\Http\ServerRequest $request Request object.
+     * @param \Psr\Http\Message\ServerRequestInterface $request Request object.
      * @return bool
      */
-    public function isGetUserStep(ServerRequest $request)
+    public function isGetUserStep(ServerRequestInterface $request): bool
     {
+        if (!$request instanceof ServerRequest) {
+            throw new \BadMethodCallException('Request must be an instance of ServerRequest');
+        }
         $oauthToken = $request->getQuery('oauth_token');
         $oauthVerifier = $request->getQuery('oauth_verifier');
 
@@ -62,11 +66,14 @@ class OAuth1Service extends OAuthServiceAbstract
     /**
      * Get a authentication url for user
      *
-     * @param \Cake\Http\ServerRequest $request Request object.
+     * @param \Psr\Http\Message\ServerRequestInterface $request Request object.
      * @return string
      */
-    public function getAuthorizationUrl(ServerRequest $request)
+    public function getAuthorizationUrl(ServerRequestInterface $request)
     {
+        if (!$request instanceof ServerRequest) {
+            throw new \BadMethodCallException('Request must be an instance of ServerRequest');
+        }
         $temporaryCredentials = $this->provider->getTemporaryCredentials();
         $request->getSession()->write('temporary_credentials', $temporaryCredentials);
 
@@ -76,11 +83,14 @@ class OAuth1Service extends OAuthServiceAbstract
     /**
      * Get a user in social provider
      *
-     * @param \Cake\Http\ServerRequest $request Request object.
+     * @param \Psr\Http\Message\ServerRequestInterface $request Request object.
      * @return array
      */
-    public function getUser(ServerRequest $request)
+    public function getUser(ServerRequestInterface $request): array
     {
+        if (!$request instanceof ServerRequest) {
+            throw new \BadMethodCallException('Request must be an instance of ServerRequest');
+        }
         $oauthToken = $request->getQuery('oauth_token');
         $oauthVerifier = $request->getQuery('oauth_verifier');
         $oauthToken = is_string($oauthToken) ? $oauthToken : '';

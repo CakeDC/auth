@@ -12,40 +12,40 @@ declare(strict_types=1);
 
 namespace CakeDC\Auth\Social\Service;
 
-use Cake\Http\ServerRequest;
+use Psr\Http\Message\ServerRequestInterface;
 
 interface ServiceInterface
 {
     /**
      * Check if we are at getUserStep, meaning, we received a callback from provider.
      *
-     * @param \Cake\Http\ServerRequest $request Request object.
+     * @param \Psr\Http\Message\ServerRequestInterface $request Request object.
      * @return bool
      */
-    public function isGetUserStep(ServerRequest $request);
+    public function isGetUserStep(ServerRequestInterface $request): bool;
 
     /**
      * Get a authentication url for user
      *
-     * @param \Cake\Http\ServerRequest $request Request object.
+     * @param \Psr\Http\Message\ServerRequestInterface $request Request object.
      * @return string
      */
-    public function getAuthorizationUrl(ServerRequest $request);
+    public function getAuthorizationUrl(ServerRequestInterface $request);
 
     /**
      * Get a user in social provider
      *
-     * @param \Cake\Http\ServerRequest $request Request object.
+     * @param \Psr\Http\Message\ServerRequestInterface $request Request object.
      * @return array
      */
-    public function getUser(ServerRequest $request);
+    public function getUser(ServerRequestInterface $request): array;
 
     /**
      * Get the provider name
      *
      * @return string
      */
-    public function getProviderName();
+    public function getProviderName(): string;
 
     /**
      * Set the provider name

@@ -91,11 +91,11 @@ abstract class AbstractRule implements Rule
     /**
      * Check the current entity is owned by the logged in user
      *
-     * @param array $user Auth array with the logged in data
+     * @param array|\ArrayAccess $user Auth array with the logged in data
      * @param string $role role of the user
      * @param \Psr\Http\Message\ServerRequestInterface $request current request, used to get a default table if not provided
      * @return bool
      * @throws \OutOfBoundsException if table is not found or it doesn't have the expected fields
      */
-    abstract public function allowed(array $user, $role, ServerRequestInterface $request);
+    abstract public function allowed($user, $role, ServerRequestInterface $request);
 }
