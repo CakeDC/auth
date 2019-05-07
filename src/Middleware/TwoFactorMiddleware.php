@@ -18,10 +18,10 @@ use Cake\Http\ServerRequest;
 use Cake\Routing\Router;
 use Psr\Http\Message\ResponseInterface;
 
-class OneTimePasswordAuthenticatorMiddleware
+class TwoFactorMiddleware
 {
     /**
-     * Proceed to second step of two factor authentication. See CakeDC\Auth\Controller\Traits\verify
+     * Proceed to u2f flow or one-time password flow if needed.
      *
      * @param \Psr\Http\Message\ServerRequestInterface $request The request.
      * @param \Psr\Http\Message\ResponseInterface $response The response.
@@ -31,16 +31,25 @@ class OneTimePasswordAuthenticatorMiddleware
     public function __invoke(ServerRequest $request, ResponseInterface $response, $next)
     {
         $service = $request->getAttribute('authentication');
-
-        if (!$service->getResult() || $service->getResult()->getStatus() !== AuthenticationService::NEED_TWO_FACTOR_VERIFY) {
-            return $next($request, $response);
+        $status = $service->getResult() ? $service->getResult()->getStatus() : null;
+        switch ($status) {
+            case AuthenticationService::NEED_TWO_FACTOR_VERIFY:
+                $url = Configure::read('OneTimePasswordAuthenticator.verifyAction');
+                break;
+            case AuthenticationService::NEED_U2F_VERIFY:
+                $url = Configure::read('U2f.startAction');
+                break;
+            default:
+                return $next($request, $response);
         }
 
         $request->getSession()->write(CookieAuthenticator::SESSION_DATA_KEY, [
             'remember_me' => $request->getData('remember_me')
         ]);
-
-        $url = Router::url(Configure::read('OneTimePasswordAuthenticator.verifyAction'));
+        $url = array_merge($url, [
+            '?' => $request->getQueryParams()
+        ]);
+        $url = Router::url($url);
 
         return $response
             ->withHeader('Location', $url)

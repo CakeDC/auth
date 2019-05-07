@@ -78,7 +78,7 @@ return [
         ],
     ],
     'OneTimePasswordAuthenticator' => [
-        'checker' => \CakeDC\Auth\Authentication\DefaultTwoFactorAuthenticationChecker::class,
+        'checker' => \CakeDC\Auth\Authentication\DefaultOneTimePasswordAuthenticationChecker::class,
         'verifyAction' => [
             'plugin' => 'CakeDC/Users',
             'controller' => 'Users',
@@ -97,5 +97,15 @@ return [
         'qrcodeprovider' => null,
         // Random Number Generator provider (more on this later)
         'rngprovider' => null
+    ],
+    'U2f' => [
+        'enabled' => false,
+        'checker' => \CakeDC\Auth\Authentication\DefaultU2fAuthenticationChecker::class,
+        'startAction' => [
+            'plugin' => 'CakeDC/Users',
+            'controller' => 'Users',
+            'action' => 'u2f',
+            'prefix' => false,
+        ]
     ],
 ];

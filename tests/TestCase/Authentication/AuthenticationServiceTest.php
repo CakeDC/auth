@@ -123,6 +123,7 @@ class AuthenticationServiceTest extends TestCase
     public function testAuthenticate()
     {
         Configure::write('OneTimePasswordAuthenticator.login', false);
+        Configure::write('U2f.enabled', false);
         $Table = TableRegistry::getTableLocator()->get('CakeDC/Auth.Users');
         $Table->setEntityClass(\CakeDC\Auth\Test\App\Model\Entity\User::class);
         $entity = $Table->get('00000000-0000-0000-0000-000000000001');
@@ -178,6 +179,7 @@ class AuthenticationServiceTest extends TestCase
     public function testAuthenticateShouldDoGoogleVerifyEnabled()
     {
         Configure::write('OneTimePasswordAuthenticator.login', true);
+        Configure::write('U2f.enabled', false);
         $Table = TableRegistry::getTableLocator()->get('CakeDC/Auth.Users');
         $Table->setEntityClass(\CakeDC\Auth\Test\App\Model\Entity\User::class);
         $entity = $Table->get('00000000-0000-0000-0000-000000000001');
@@ -231,7 +233,121 @@ class AuthenticationServiceTest extends TestCase
      */
     public function testAuthenticateShouldDoGoogleVerifyDisabled()
     {
+        Configure::write('U2f.enabled', false);
         Configure::write('OneTimePasswordAuthenticator.login', false);
+        $Table = TableRegistry::getTableLocator()->get('CakeDC/Auth.Users');
+        $Table->setEntityClass(\CakeDC\Auth\Test\App\Model\Entity\User::class);
+        $entity = $Table->get('00000000-0000-0000-0000-000000000001');
+        $entity->password = 'password';
+        $this->assertTrue((bool)$Table->save($entity));
+        $request = ServerRequestFactory::fromGlobals(
+            ['REQUEST_URI' => '/testpath'],
+            [],
+            ['username' => 'user-1', 'password' => 'password']
+        );
+        $response = new Response();
+
+        $service = new AuthenticationService([
+            'identifiers' => [
+                'Authentication.Password' => []
+            ],
+            'authenticators' => [
+                'Authentication.Session' => [
+                    'skipTwoFactorVerify' => true,
+                ],
+                'CakeDC/Auth.Form' => [
+                    'skipTwoFactorVerify' => false,
+                ]
+            ]
+        ]);
+
+        $result = $service->authenticate($request, $response);
+        $this->assertInstanceOf(Result::class, $result['result']);
+        $this->assertInstanceOf(ServerRequestInterface::class, $result['request']);
+        $this->assertInstanceOf(ResponseInterface::class, $result['response']);
+
+        $this->assertTrue($result['result']->isValid());
+
+        $result = $service->getAuthenticationProvider();
+        $this->assertInstanceOf(FormAuthenticator::class, $result);
+
+        $this->assertEquals(
+            'user-1',
+            $request->getAttribute('session')->read('Auth.username')
+        );
+        $this->assertEmpty($response->getHeaderLine('Location'));
+        $this->assertNull($response->getStatusCode());
+        $sessionFailure = new Failure(
+            $service->authenticators()->get('Session'),
+            new Result(null, Result::FAILURE_IDENTITY_NOT_FOUND)
+        );
+        $expected = [$sessionFailure];
+        $actual = $service->getFailures();
+        $this->assertEquals($expected, $actual);
+    }
+
+    /**
+     * testAuthenticate
+     *
+     * @return void
+     */
+    public function testAuthenticateShouldDoU2fEnabled()
+    {
+        Configure::write('U2f.enabled', true);
+        $Table = TableRegistry::getTableLocator()->get('CakeDC/Auth.Users');
+        $Table->setEntityClass(\CakeDC\Auth\Test\App\Model\Entity\User::class);
+        $entity = $Table->get('00000000-0000-0000-0000-000000000001');
+        $entity->password = 'password';
+        $this->assertTrue((bool)$Table->save($entity));
+        $request = ServerRequestFactory::fromGlobals(
+            ['REQUEST_URI' => '/testpath'],
+            [],
+            ['username' => 'user-1', 'password' => 'password']
+        );
+        $response = new Response();
+
+        $service = new AuthenticationService([
+            'identifiers' => [
+                'Authentication.Password' => []
+            ],
+            'authenticators' => [
+                'Authentication.Session' => [
+                    'skipTwoFactorVerify' => true,
+                ],
+                'CakeDC/Auth.Form' => [
+                    'skipTwoFactorVerify' => false,
+                ]
+            ]
+        ]);
+
+        $result = $service->authenticate($request, $response);
+        $this->assertInstanceOf(Result::class, $result['result']);
+        $this->assertInstanceOf(ServerRequestInterface::class, $result['request']);
+        $this->assertInstanceOf(ResponseInterface::class, $result['response']);
+        $this->assertFalse($result['result']->isValid());
+        $this->assertEquals(AuthenticationService::NEED_U2F_VERIFY, $result['result']->getStatus());
+        $this->assertNull($request->getAttribute('session')->read('Auth.username'));
+        $this->assertEquals(
+            'user-1',
+            $request->getAttribute('session')->read('U2f.User.username')
+        );
+        $sessionFailure = new Failure(
+            $service->authenticators()->get('Session'),
+            new Result(null, Result::FAILURE_IDENTITY_NOT_FOUND)
+        );
+        $expected = [$sessionFailure];
+        $actual = $service->getFailures();
+        $this->assertEquals($expected, $actual);
+    }
+
+    /**
+     * testAuthenticate
+     *
+     * @return void
+     */
+    public function testAuthenticateShouldDoU2fDisabled()
+    {
+        Configure::write('U2f.enabled', false);
         $Table = TableRegistry::getTableLocator()->get('CakeDC/Auth.Users');
         $Table->setEntityClass(\CakeDC\Auth\Test\App\Model\Entity\User::class);
         $entity = $Table->get('00000000-0000-0000-0000-000000000001');

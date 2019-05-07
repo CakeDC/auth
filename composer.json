@@ -41,7 +41,8 @@
         "league/oauth1-client": "^1.7",
         "cakephp/authorization": "^1.0@beta",
         "cakephp/cakephp-codesniffer": "^3.0",
-        "cakephp/authentication": "^1.0"
+        "cakephp/authentication": "^1.0",
+        "yubico/u2flib-server": "^1.0"
     },
     "suggest": {
     },

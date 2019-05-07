@@ -17,18 +17,18 @@ use Cake\Core\Configure;
  *
  * @package CakeDC\Auth\Authentication
  */
-class TwoFactorAuthenticationCheckerFactory
+class OneTimePasswordAuthenticationCheckerFactory
 {
     /**
      * Get the two factor authentication checker
      *
-     * @return TwoFactorAuthenticationCheckerInterface
+     * @return OneTimePasswordAuthenticationCheckerInterface
      */
     public function build()
     {
         $className = Configure::read('OneTimePasswordAuthenticator.checker');
         $interfaces = class_implements($className);
-        $required = TwoFactorAuthenticationCheckerInterface::class;
+        $required = OneTimePasswordAuthenticationCheckerInterface::class;
 
         if (in_array($required, $interfaces)) {
             return new $className();

@@ -17,7 +17,7 @@ use Cake\Core\Configure;
  *
  * @package CakeDC\Auth\Authentication
  */
-class DefaultTwoFactorAuthenticationChecker implements TwoFactorAuthenticationCheckerInterface
+class DefaultOneTimePasswordAuthenticationChecker implements OneTimePasswordAuthenticationCheckerInterface
 {
     protected $enabledKey = 'OneTimePasswordAuthenticator.login';
 

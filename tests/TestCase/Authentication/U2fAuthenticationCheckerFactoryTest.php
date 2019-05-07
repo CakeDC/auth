@@ -10,12 +10,12 @@
  */
 namespace CakeDC\Auth\Test\TestCase\Authentication;
 
-use CakeDC\Auth\Authentication\DefaultTwoFactorAuthenticationChecker;
-use CakeDC\Auth\Authentication\TwoFactorAuthenticationCheckerFactory;
+use CakeDC\Auth\Authentication\DefaultU2fAuthenticationChecker;
+use CakeDC\Auth\Authentication\U2fAuthenticationCheckerFactory;
 use Cake\Core\Configure;
 use Cake\TestSuite\TestCase;
 
-class TwoFactorAuthenticationCheckerFactoryTest extends TestCase
+class U2fAuthenticationCheckerFactoryTest extends TestCase
 {
     /**
      * Test getChecker method
@@ -24,8 +24,8 @@ class TwoFactorAuthenticationCheckerFactoryTest extends TestCase
      */
     public function testGetChecker()
     {
-        $result = (new TwoFactorAuthenticationCheckerFactory())->build();
-        $this->assertInstanceOf(DefaultTwoFactorAuthenticationChecker::class, $result);
+        $result = (new U2fAuthenticationCheckerFactory())->build();
+        $this->assertInstanceOf(DefaultU2fAuthenticationChecker::class, $result);
     }
 
     /**
@@ -35,9 +35,9 @@ class TwoFactorAuthenticationCheckerFactoryTest extends TestCase
      */
     public function testGetCheckerInvalidInterface()
     {
-        Configure::write('OneTimePasswordAuthenticator.checker', 'stdClass');
+        Configure::write('U2f.checker', 'stdClass');
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage("Invalid config for 'OneTimePasswordAuthenticator.checker', 'stdClass' does not implement 'CakeDC\Auth\Authentication\TwoFactorAuthenticationCheckerInterface'");
-        (new TwoFactorAuthenticationCheckerFactory())->build();
+        $this->expectExceptionMessage("Invalid config for 'U2f.checker', 'stdClass' does not implement 'CakeDC\Auth\Authentication\U2fAuthenticationCheckerInterface'");
+        (new U2fAuthenticationCheckerFactory())->build();
     }
 }

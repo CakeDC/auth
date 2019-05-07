@@ -10,14 +10,24 @@
  */
 namespace CakeDC\Auth\Authentication;
 
-interface TwoFactorAuthenticationCheckerInterface
+use Cake\Core\Configure;
+
+/**
+ * Default class to check if two factor authentication is enabled and required
+ *
+ * @package CakeDC\Auth\Auth
+ */
+class DefaultU2fAuthenticationChecker implements U2fAuthenticationCheckerInterface
 {
     /**
      * Check if two factor authentication is enabled
      *
      * @return bool
      */
-    public function isEnabled();
+    public function isEnabled()
+    {
+        return Configure::read('U2f.enabled') !== false;
+    }
 
     /**
      * Check if two factor authentication is required for a user
@@ -26,5 +36,8 @@ interface TwoFactorAuthenticationCheckerInterface
      *
      * @return bool
      */
-    public function isRequired(array $user = null);
+    public function isRequired(array $user = null)
+    {
+        return !empty($user) && $this->isEnabled();
+    }
 }

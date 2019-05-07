@@ -10,7 +10,7 @@
  */
 namespace CakeDC\Auth\Test\TestCase\Authentication;
 
-use CakeDC\Auth\Authentication\DefaultTwoFactorAuthenticationChecker;
+use CakeDC\Auth\Authentication\DefaultOneTimePasswordAuthenticationChecker;
 use Cake\Core\Configure;
 use Cake\TestSuite\TestCase;
 
@@ -19,7 +19,7 @@ use Cake\TestSuite\TestCase;
  *
  * @package CakeDC\Auth\Test\TestCase\Auth
  */
-class DefaultTwoFactorAuthenticationCheckerTest extends TestCase
+class DefaultOneTimePasswordAuthenticationCheckerTest extends TestCase
 {
     /**
      * Test isEnabled method
@@ -29,19 +29,19 @@ class DefaultTwoFactorAuthenticationCheckerTest extends TestCase
     public function testIsEnabled()
     {
         Configure::write('OneTimePasswordAuthenticator.login', false);
-        $Checker = new DefaultTwoFactorAuthenticationChecker('OneTimePasswordAuthenticator.login');
+        $Checker = new DefaultOneTimePasswordAuthenticationChecker('OneTimePasswordAuthenticator.login');
         $this->assertFalse($Checker->isEnabled());
 
         Configure::write('Users.OneTimePasswordAuthenticator.login', true);
-        $Checker = new DefaultTwoFactorAuthenticationChecker('Users.OneTimePasswordAuthenticator.login');
+        $Checker = new DefaultOneTimePasswordAuthenticationChecker('Users.OneTimePasswordAuthenticator.login');
         $this->assertTrue($Checker->isEnabled());
 
         Configure::write('OneTimePasswordAuthenticator.login', true);
-        $Checker = new DefaultTwoFactorAuthenticationChecker('OneTimePasswordAuthenticator.login');
+        $Checker = new DefaultOneTimePasswordAuthenticationChecker('OneTimePasswordAuthenticator.login');
         $this->assertTrue($Checker->isEnabled());
 
         Configure::delete('OneTimePasswordAuthenticator.login');
-        $Checker = new DefaultTwoFactorAuthenticationChecker('OneTimePasswordAuthenticator.login');
+        $Checker = new DefaultOneTimePasswordAuthenticationChecker('OneTimePasswordAuthenticator.login');
         $this->assertTrue($Checker->isEnabled());
     }
 
@@ -53,18 +53,18 @@ class DefaultTwoFactorAuthenticationCheckerTest extends TestCase
     public function testIsRequired()
     {
         Configure::write('OneTimePasswordAuthenticator.login', false);
-        $Checker = new DefaultTwoFactorAuthenticationChecker();
+        $Checker = new DefaultOneTimePasswordAuthenticationChecker();
         $this->assertFalse($Checker->isRequired(['id' => 10]));
 
         Configure::write('OneTimePasswordAuthenticator.login', true);
-        $Checker = new DefaultTwoFactorAuthenticationChecker();
+        $Checker = new DefaultOneTimePasswordAuthenticationChecker();
         $this->assertTrue($Checker->isRequired(['id' => 10]));
 
         Configure::delete('OneTimePasswordAuthenticator.login');
-        $Checker = new DefaultTwoFactorAuthenticationChecker();
+        $Checker = new DefaultOneTimePasswordAuthenticationChecker();
         $this->assertTrue($Checker->isRequired(['id' => 10]));
 
-        $Checker = new DefaultTwoFactorAuthenticationChecker();
+        $Checker = new DefaultOneTimePasswordAuthenticationChecker();
         $this->assertFalse($Checker->isRequired([]));
     }
 }
