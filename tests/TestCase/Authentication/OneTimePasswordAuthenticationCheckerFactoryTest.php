@@ -13,10 +13,10 @@ namespace CakeDC\Auth\Test\TestCase\Authentication;
 
 use Cake\Core\Configure;
 use Cake\TestSuite\TestCase;
-use CakeDC\Auth\Authentication\DefaultTwoFactorAuthenticationChecker;
-use CakeDC\Auth\Authentication\TwoFactorAuthenticationCheckerFactory;
+use CakeDC\Auth\Authentication\DefaultOneTimePasswordAuthenticationChecker;
+use CakeDC\Auth\Authentication\OneTimePasswordAuthenticationCheckerFactory;
 
-class TwoFactorAuthenticationCheckerFactoryTest extends TestCase
+class OneTimePasswordAuthenticationCheckerFactoryTest extends TestCase
 {
     /**
      * Test getChecker method
@@ -25,8 +25,8 @@ class TwoFactorAuthenticationCheckerFactoryTest extends TestCase
      */
     public function testGetChecker()
     {
-        $result = (new TwoFactorAuthenticationCheckerFactory())->build();
-        $this->assertInstanceOf(DefaultTwoFactorAuthenticationChecker::class, $result);
+        $result = (new OneTimePasswordAuthenticationCheckerFactory())->build();
+        $this->assertInstanceOf(DefaultOneTimePasswordAuthenticationChecker::class, $result);
     }
 
     /**
@@ -38,7 +38,7 @@ class TwoFactorAuthenticationCheckerFactoryTest extends TestCase
     {
         Configure::write('OneTimePasswordAuthenticator.checker', 'stdClass');
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage("Invalid config for 'OneTimePasswordAuthenticator.checker', 'stdClass' does not implement 'CakeDC\Auth\Authentication\TwoFactorAuthenticationCheckerInterface'");
-        (new TwoFactorAuthenticationCheckerFactory())->build();
+        $this->expectExceptionMessage("Invalid config for 'OneTimePasswordAuthenticator.checker', 'stdClass' does not implement 'CakeDC\Auth\Authentication\OneTimePasswordAuthenticationCheckerInterface'");
+        (new OneTimePasswordAuthenticationCheckerFactory())->build();
     }
 }

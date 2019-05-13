@@ -6,7 +6,7 @@ declare(strict_types=1);
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2010 - 2019, Cake Development Corporation (https://www.cakedc.com)
+ * @copyright Copyright 2010 - 2018, Cake Development Corporation (https://www.cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 namespace CakeDC\Auth\Authentication;
@@ -16,26 +16,10 @@ use Cake\Core\Configure;
 /**
  * Default class to check if two factor authentication is enabled and required
  *
- * @package CakeDC\Auth\Authentication
+ * @package CakeDC\Auth\Auth
  */
-class DefaultTwoFactorAuthenticationChecker implements TwoFactorAuthenticationCheckerInterface
+class DefaultU2fAuthenticationChecker implements U2fAuthenticationCheckerInterface
 {
-    /**
-     * @var string
-     */
-    protected $enabledKey = 'OneTimePasswordAuthenticator.login';
-
-    /**
-     * DefaultTwoFactorAuthenticationChecker constructor.
-     *
-     * @param string $enableKey configuration key to check if enabled
-     */
-    public function __construct($enableKey = null)
-    {
-        if ($enableKey !== null) {
-            $this->enabledKey = $enableKey;
-        }
-    }
     /**
      * Check if two factor authentication is enabled
      *
@@ -43,7 +27,7 @@ class DefaultTwoFactorAuthenticationChecker implements TwoFactorAuthenticationCh
      */
     public function isEnabled()
     {
-        return Configure::read($this->enabledKey) !== false;
+        return Configure::read('U2f.enabled') !== false;
     }
 
     /**

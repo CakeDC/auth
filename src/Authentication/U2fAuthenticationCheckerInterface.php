@@ -11,7 +11,7 @@ declare(strict_types=1);
  */
 namespace CakeDC\Auth\Authentication;
 
-interface TwoFactorAuthenticationCheckerInterface
+interface U2fAuthenticationCheckerInterface
 {
     /**
      * Check if two factor authentication is enabled

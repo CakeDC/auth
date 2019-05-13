@@ -21,18 +21,18 @@ use Cake\Http\ServerRequestFactory;
 use Cake\Routing\Router;
 use Cake\TestSuite\TestCase;
 use CakeDC\Auth\Authentication\AuthenticationService;
-use CakeDC\Auth\Middleware\OneTimePasswordAuthenticatorMiddleware;
+use CakeDC\Auth\Middleware\TwoFactorMiddleware;
 
 /**
  * Class OneTimePasswordAuthenticatorMiddlewareTest
  * @package TestCase\Middleware
  */
-class OneTimePasswordAuthenticatorMiddlewareTest extends TestCase
+class TwoFactorMiddlewareTest extends TestCase
 {
     /**
-     * @var OneTimePasswordAuthenticatorMiddleware
+     * @var TwoFactorMiddleware
      */
-    protected $OneTimePasswordAuthenticatorMiddleware;
+    protected $TwoFactorMiddleware;
 
     /**
      * Sets up the fixture, for example, opens a network connection.
@@ -40,7 +40,7 @@ class OneTimePasswordAuthenticatorMiddlewareTest extends TestCase
      */
     public function setUp(): void
     {
-        $this->OneTimePasswordAuthenticatorMiddleware = new OneTimePasswordAuthenticatorMiddleware();
+        $this->TwoFactorMiddleware = new TwoFactorMiddleware();
     }
 
     /**
@@ -49,7 +49,7 @@ class OneTimePasswordAuthenticatorMiddlewareTest extends TestCase
      */
     public function tearDown(): void
     {
-        unset($this->OneTimePasswordAuthenticatorMiddleware);
+        unset($this->TwoFactorMiddleware);
     }
 
     /**
@@ -84,7 +84,7 @@ class OneTimePasswordAuthenticatorMiddlewareTest extends TestCase
             ->will($this->returnValue($result));
 
         $request = $request->withAttribute('authentication', $service);
-        $middleware = $this->OneTimePasswordAuthenticatorMiddleware;
+        $middleware = $this->TwoFactorMiddleware;
         $actual = $middleware->process($request, $handler);
         $this->assertSame($response, $actual);
     }
@@ -129,7 +129,7 @@ class OneTimePasswordAuthenticatorMiddlewareTest extends TestCase
             ->will($this->returnValue($result));
 
         $request = $request->withAttribute('authentication', $service);
-        $middleware = $this->OneTimePasswordAuthenticatorMiddleware;
+        $middleware = $this->TwoFactorMiddleware;
         $actual = $middleware->process($request, $handler);
         $this->assertInstanceOf(Response::class, $actual);
         $expected = [

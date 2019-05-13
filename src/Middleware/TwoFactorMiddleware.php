@@ -22,7 +22,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
-class OneTimePasswordAuthenticatorMiddleware implements MiddlewareInterface
+class TwoFactorMiddleware implements MiddlewareInterface
 {
     /**
      * @inheritDoc
@@ -30,9 +30,16 @@ class OneTimePasswordAuthenticatorMiddleware implements MiddlewareInterface
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $service = $request->getAttribute('authentication');
-
-        if (!$service->getResult() || $service->getResult()->getStatus() !== AuthenticationService::NEED_TWO_FACTOR_VERIFY) {
-            return $handler->handle($request);
+        $status = $service->getResult() ? $service->getResult()->getStatus() : null;
+        switch ($status) {
+            case AuthenticationService::NEED_TWO_FACTOR_VERIFY:
+                $url = Configure::read('OneTimePasswordAuthenticator.verifyAction');
+                break;
+            case AuthenticationService::NEED_U2F_VERIFY:
+                $url = Configure::read('U2f.startAction');
+                break;
+            default:
+                return $handler->handle($request);
         }
         /**
          * @var \Cake\Http\Session $session
@@ -43,8 +50,10 @@ class OneTimePasswordAuthenticatorMiddleware implements MiddlewareInterface
         $session->write(CookieAuthenticator::SESSION_DATA_KEY, [
             'remember_me' => $data['remember_me'] ?? null,
         ]);
-
-        $url = Router::url(Configure::read('OneTimePasswordAuthenticator.verifyAction'));
+        $url = array_merge($url, [
+            '?' => $request->getQueryParams(),
+        ]);
+        $url = Router::url($url);
 
         return (new Response())
             ->withHeader('Location', $url)
