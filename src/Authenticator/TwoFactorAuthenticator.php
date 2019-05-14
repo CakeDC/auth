@@ -14,6 +14,7 @@ namespace CakeDC\Auth\Authenticator;
 
 use Authentication\Authenticator\AbstractAuthenticator;
 use Authentication\Authenticator\Result;
+use Authentication\Authenticator\ResultInterface;
 use Authentication\UrlChecker\UrlCheckerTrait;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -68,7 +69,7 @@ class TwoFactorAuthenticator extends AbstractAuthenticator
      * @param \Psr\Http\Message\ServerRequestInterface $request The request that contains login information.
      * @return \Authentication\Authenticator\ResultInterface
      */
-    public function authenticate(ServerRequestInterface $request)
+    public function authenticate(ServerRequestInterface $request): ResultInterface
     {
         if (!$this->_checkUrl($request)) {
             return $this->_buildLoginUrlErrorResult($request);

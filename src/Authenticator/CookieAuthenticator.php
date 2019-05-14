@@ -32,7 +32,7 @@ class CookieAuthenticator extends BaseAuthenticator implements PersistenceInterf
     /**
      * {@inheritDoc}
      */
-    public function persistIdentity(ServerRequestInterface $request, ResponseInterface $response, $identity)
+    public function persistIdentity(ServerRequestInterface $request, ResponseInterface $response, $identity): array
     {
         $field = $this->getConfig('rememberMeField');
 

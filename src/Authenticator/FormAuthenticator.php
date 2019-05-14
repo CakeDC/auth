@@ -15,6 +15,7 @@ namespace CakeDC\Auth\Authenticator;
 use Authentication\Authenticator\AuthenticatorInterface;
 use Authentication\Authenticator\FormAuthenticator as BaseFormAuthenticator;
 use Authentication\Authenticator\Result;
+use Authentication\Authenticator\ResultInterface;
 use Authentication\Identifier\IdentifierInterface;
 use Cake\Core\Configure;
 use Cake\Core\InstanceConfigTrait;
@@ -111,7 +112,7 @@ class FormAuthenticator implements AuthenticatorInterface
      * @param \Psr\Http\Message\ServerRequestInterface $request The request that contains login information.
      * @return \Authentication\Authenticator\ResultInterface
      */
-    public function authenticate(ServerRequestInterface $request)
+    public function authenticate(ServerRequestInterface $request): ResultInterface
     {
         $result = $this->getBaseAuthenticator()->authenticate($request);
         $checkKey = $this->getConfig('keyCheckEnabledRecaptcha');

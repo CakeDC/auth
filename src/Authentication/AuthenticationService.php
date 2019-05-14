@@ -100,7 +100,7 @@ class AuthenticationService extends BaseService
      *
      * @throws \RuntimeException Throws a runtime exception when no authenticators are loaded.
      */
-    public function authenticate(ServerRequestInterface $request)
+    public function authenticate(ServerRequestInterface $request): ResultInterface
     {
         if ($this->authenticators()->isEmpty()) {
             throw new RuntimeException(

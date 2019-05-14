@@ -14,6 +14,7 @@ namespace CakeDC\Auth\Authenticator;
 
 use Authentication\Authenticator\AbstractAuthenticator;
 use Authentication\Authenticator\Result;
+use Authentication\Authenticator\ResultInterface;
 use Authentication\UrlChecker\UrlCheckerTrait;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Log\LogTrait;
@@ -51,7 +52,7 @@ class SocialAuthenticator extends AbstractAuthenticator
      * @throws \Exception
      * @return \Authentication\Authenticator\ResultInterface
      */
-    public function authenticate(ServerRequestInterface $request)
+    public function authenticate(ServerRequestInterface $request): ResultInterface
     {
         $service = $request->getAttribute(self::SOCIAL_SERVICE_ATTRIBUTE);
         if ($service === null) {
