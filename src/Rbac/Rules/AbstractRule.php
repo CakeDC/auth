@@ -76,8 +76,8 @@ abstract class AbstractRule implements Rule
     {
         $params = $request->getAttribute('params');
 
-        $plugin = Hash::get($params, 'plugin');
-        $controller = Hash::get($params, 'controller');
+        $plugin = $params['plugin'] ?? null;
+        $controller = $params['controller'] ?? null;
         $modelClass = ($plugin ? $plugin . '.' : '') . $controller;
 
         $this->modelFactory('Table', [$this->getTableLocator(), 'get']);
