@@ -32,6 +32,7 @@ class DefaultTwoFactorAuthenticationChecker implements TwoFactorAuthenticationCh
             $this->enabledKey = $enableKey;
         }
     }
+
     /**
      * Check if two factor authentication is enabled
      *

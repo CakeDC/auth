@@ -31,6 +31,7 @@ class AuthenticationService extends BaseService
      * @var Failure[]
      */
     protected $failures = [];
+
     /**
      * Proceed to google verify action after a valid result result
      *
