@@ -43,7 +43,7 @@ class Facebook extends AbstractMapper
      */
     protected function _avatar($rawData)
     {
-        return self::FB_GRAPH_BASE_URL . Hash::get($rawData, 'id') . '/picture?type=large';
+        return self::FB_GRAPH_BASE_URL . ($rawData['id'] ?? '') . '/picture?type=large';
     }
 
     /**
@@ -55,6 +55,6 @@ class Facebook extends AbstractMapper
      */
     protected function _link($rawData)
     {
-        return Hash::get($rawData, 'link') ?: '#';
+        return ($rawData['link'] ?? null) ?: '#';
     }
 }

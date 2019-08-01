@@ -65,7 +65,7 @@ class Owner extends AbstractRule
         $table = $this->_getTable($request, $this->getConfig('table'));
         //retrieve entity id from request
         $id = $this->getTableId($request);
-        $userId = Hash::get($user, 'id');
+        $userId = $user['id'] ?? null;
 
         try {
             if (!$table->hasField($this->getConfig('ownerForeignKey'))) {

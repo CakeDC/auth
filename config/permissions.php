@@ -40,7 +40,7 @@
         'allowed' => function(array $user, $role, Request $request) {
             $postId = Hash::get($request->params, 'pass.0');
             $post = TableRegistry::getTableLocator()->get('Posts')->get($postId);
-            $userId = Hash::get($user, 'id');
+            $userId = $user['id'] ?? null;
             if (!empty($post->user_id) && !empty($userId)) {
                 return $post->user_id === $userId;
             }

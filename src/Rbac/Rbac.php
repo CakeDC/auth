@@ -160,11 +160,11 @@ class Rbac
         $userArr = ['user' => $user];
         $params = $request->getAttribute('params');
         $reserved = [
-            'prefix' => Hash::get($params, 'prefix'),
-            'plugin' => Hash::get($params, 'plugin'),
-            'extension' => Hash::get($params, '_ext'),
-            'controller' => Hash::get($params, 'controller'),
-            'action' => Hash::get($params, 'action'),
+            'prefix' => $params['prefix'] ?? null,
+            'plugin' => $params['plugin'] ?? null,
+            'extension' => $params['_ext'] ?? null,
+            'controller' => $params['controller'] ?? null,
+            'action' => $params['action'] ?? null,
             'role' => $role,
         ];
 

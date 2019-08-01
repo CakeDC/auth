@@ -1301,11 +1301,11 @@ class RbacTest extends TestCase
         $request = new ServerRequest();
 
         return $request
-            ->withParam('plugin', Hash::get($params, 'plugin'))
-            ->withParam('controller', Hash::get($params, 'controller'))
-            ->withParam('action', Hash::get($params, 'action'))
-            ->withParam('prefix', Hash::get($params, 'prefix'))
-            ->withParam('_ext', Hash::get($params, '_ext'));
+            ->withParam('plugin', $params['plugin'] ?? null)
+            ->withParam('controller', $params['controller'] ?? null)
+            ->withParam('action', $params['action'] ?? null)
+            ->withParam('prefix', $params['prefix'] ?? null)
+            ->withParam('_ext', $params['_ext'] ?? null);
     }
 
     public function testGetPermissions()
