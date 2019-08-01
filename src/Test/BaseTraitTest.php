@@ -52,7 +52,6 @@ trait BaseTraitTest
      */
     protected function _testPermissions($url, $username, $method, $ajax, $responseCode, $responseContains)
     {
-
         if ($this->_isVerboseOrDebug()) {
             (new ConsoleIo())->info(__(
                 "\nUrl: {0} Username: {1} Method: {2} Ajax?: {3} Response Code: {4} Response Contains: {5} ",
