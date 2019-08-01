@@ -1099,6 +1099,29 @@ class RbacTest extends TestCase
                 //expected
                 false,
             ],
+            'plugin-name-matches-callable-function' => [
+                //permissions
+                [[
+                    'plugin' => 'Ord',
+                    'controller' => 'Tests',
+                    'action' => 'test',
+                    'role' => 'admin',
+                ]],
+                //user
+                [
+                    'id' => 1,
+                    'username' => 'luke',
+                    'role' => 'admin',
+                ],
+                //request
+                [
+                    'plugin' => 'Ord',
+                    'controller' => 'Tests',
+                    'action' => 'test'
+                ],
+                //expected
+                true,
+            ],
         ];
     }
 

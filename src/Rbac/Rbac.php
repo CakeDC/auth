@@ -171,7 +171,7 @@ class Rbac
                 $key = ltrim($key, '*');
             }
 
-            if (is_callable($value)) {
+            if (!is_string($value) && is_callable($value)) {
                 $return = (bool)call_user_func($value, $user, $role, $request);
             } elseif ($value instanceof Rule) {
                 $return = (bool)$value->allowed($user, $role, $request);
