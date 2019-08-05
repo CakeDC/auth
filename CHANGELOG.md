@@ -3,7 +3,9 @@ Changelog
 
 Releases
 --------
-
+* 4.0.2
+  * Renamed BaseTraitTest to BaseTestTrait with alias from previous name for backwards compatibility
+  * Deprecated BaseTraitTest you should use BaseTestTrait
 * 4.0.1
   * Add BaseTraitTest for permissions testing
 * 4.0.0
