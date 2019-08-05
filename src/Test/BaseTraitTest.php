@@ -10,7 +10,7 @@ trait BaseTraitTest
     /**
      * Sets up the session as a logged in user for an user with id $id
      *
-     * @param $id
+     * @param string $id User id.
      * @return void
      */
     public function loginAsUserId($id)
@@ -23,7 +23,7 @@ trait BaseTraitTest
     /**
      * Login as a username
      *
-     * @param $username
+     * @param string $username The username to use.
      * @return void
      */
     public function loginAsUserName($username)
@@ -42,21 +42,28 @@ trait BaseTraitTest
     }
 
     /**
-     * @param $url
-     * @param $username
-     * @param $method
-     * @param $ajax
-     * @param $responseCode
-     * @param $responseContains
+     * Test permission of one $url when logged as a specific $username
+     *
+     * @param string $url The est url.
+     * @param string $username The test username.
+     * @param string $method The test request method, 'post' or 'get'.
+     * @param string $ajax The test request is ajax or not? 'ajax' for yes and 'no-ajax' if not.
+     * @param string $responseCode The expected response code.
+     * @param string $responseContains The expected value to contains in response. When expected response code 302 it
+     *                                 will check for 'Location' header, otherwise will check body response.
      * @throws \PHPUnit\Exception
      */
     protected function _testPermissions($url, $username, $method, $ajax, $responseCode, $responseContains)
     {
-
-       if ($this->_isVerboseOrDebug()) {
+        if ($this->_isVerboseOrDebug()) {
             (new ConsoleIo())->info(__(
                 "\nUrl: {0} Username: {1} Method: {2} Ajax?: {3} Response Code: {4} Response Contains: {5} ",
-                $url, $username, $method, $ajax, $responseCode, $responseContains
+                $url,
+                $username,
+                $method,
+                $ajax,
+                $responseCode,
+                $responseContains
             ), 0);
         }
         $this->loginAsUserName($username);
