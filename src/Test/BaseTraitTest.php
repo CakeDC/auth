@@ -84,9 +84,13 @@ trait BaseTraitTest
     }
 
     /**
-     * @param $csv
+     * Test permissions based on CSV file content, one test for each row.
+     *
+     * @param string $csv CSV name
+     *
      * @return array
      * @dataProvider provider
+     * @throws \PHPUnit\Exception
      */
     public function testPermissions($csv)
     {
@@ -101,6 +105,5 @@ trait BaseTraitTest
             $this->_testPermissions($url, $username, $method, $ajax, $responseCode, $responseContains);
             $this->tearDown();
         }
-
     }
 }
