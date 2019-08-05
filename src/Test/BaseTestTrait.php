@@ -5,7 +5,7 @@ use Cake\Console\ConsoleIo;
 use Cake\Core\Configure;
 use Cake\ORM\TableRegistry;
 
-trait BaseTraitTest
+trait BaseTestTrait
 {
     /**
      * Sets up the session as a logged in user for an user with id $id
@@ -114,3 +114,6 @@ trait BaseTraitTest
         }
     }
 }
+
+// @deprecated 4.0.2 Add backwards compatibility alias.
+class_alias('CakeDC\Auth\Test\BaseTestTrait', 'CakeDC\Auth\Test\BaseTraitTest');
