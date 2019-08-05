@@ -10,7 +10,7 @@ Create a new test class and extends to `IntegrationTestCase`
 ```php
 class PermissionsTest extends IntegrationTestCase
 {
-    use \CakeDC\Auth\Test\BaseTraitTest;
+    use \CakeDC\Auth\Test\BaseTestTrait;
 }
 ```
 
