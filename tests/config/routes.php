@@ -1,5 +1,6 @@
 <?php
 use \Cake\Routing\Router;
+
 Router::defaultRouteClass(\Cake\Routing\Route\DashedRoute::class);
 
 Router::scope('/', function (\Cake\Routing\RouteBuilder $routes) {
@@ -88,5 +89,3 @@ Router::scope('/admin', ['prefix' => 'admin'], function (\Cake\Routing\RouteBuil
         'action' => 'one',
     ]);
 });
-
-

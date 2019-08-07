@@ -36,6 +36,7 @@ trait ReCaptchaTrait
             $request->clientIp()
         );
     }
+
     /**
      * Validates reCaptcha response
      *

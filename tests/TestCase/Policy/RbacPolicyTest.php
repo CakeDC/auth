@@ -112,6 +112,7 @@ class RbacPolicyTest extends TestCase
         $actual = $policy->getRbac($request);
         $this->assertSame($rbac, $actual);
     }
+
     /**
      * Test getRbac method
      */

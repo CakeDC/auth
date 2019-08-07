@@ -11,12 +11,11 @@
 
 namespace CakeDC\Auth\Test\TestCase\Rbac;
 
-use Cake\Routing\Router;
 use CakeDC\Auth\Rbac\Rbac;
 use CakeDC\Auth\Rbac\Rules\Owner;
 use Cake\Http\ServerRequest;
+use Cake\Routing\Router;
 use Cake\TestSuite\TestCase;
-use Cake\Utility\Hash;
 use Psr\Log\LogLevel;
 use ReflectionClass;
 
@@ -1286,6 +1285,7 @@ class RbacTest extends TestCase
     {
         $request = new ServerRequest(Router::url($params));
         $params = Router::parseRequest($request);
+
         return $request->withAttribute('params', $params);
     }
 

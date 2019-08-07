@@ -36,6 +36,7 @@ class CookieAuthenticatorTest extends TestCase
             [false, 'my_remember', [], ['remember_me' => 1]],
         ];
     }
+
     /**
      * testPersistIdentity
      *
