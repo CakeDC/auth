@@ -36,6 +36,7 @@ class SuperuserPolicyTest extends TestCase
             [[], false, ['superuser_field' => 'is_master']],
         ];
     }
+
     /**
      * Test canAccess method
      *

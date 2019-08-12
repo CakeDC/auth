@@ -14,8 +14,8 @@ namespace CakeDC\Auth\Test\TestCase\Rbac;
 use CakeDC\Auth\Rbac\Rbac;
 use CakeDC\Auth\Rbac\Rules\Owner;
 use Cake\Http\ServerRequest;
+use Cake\Routing\Router;
 use Cake\TestSuite\TestCase;
-use Cake\Utility\Hash;
 use Psr\Log\LogLevel;
 use ReflectionClass;
 
@@ -1099,6 +1099,27 @@ class RbacTest extends TestCase
                 //expected
                 false,
             ],
+            'named-route' => [
+                //permissions
+                [[
+                    'plugin' => 'CakeDC/Users',
+                    'controller' => 'Users',
+                    'action' => '*',
+                    'role' => 'admin',
+                ]],
+                //user
+                [
+                    'id' => 1,
+                    'username' => 'luke',
+                    'role' => 'admin',
+                ],
+                //request
+                [
+                    '_name' => 'testNamed',
+                ],
+                //expected
+                true,
+            ],
         ];
     }
 
@@ -1262,14 +1283,10 @@ class RbacTest extends TestCase
      */
     protected function _requestFromArray($params)
     {
-        $request = new ServerRequest();
+        $request = new ServerRequest(Router::url($params));
+        $params = Router::parseRequest($request);
 
-        return $request
-            ->withParam('plugin', Hash::get($params, 'plugin'))
-            ->withParam('controller', Hash::get($params, 'controller'))
-            ->withParam('action', Hash::get($params, 'action'))
-            ->withParam('prefix', Hash::get($params, 'prefix'))
-            ->withParam('_ext', Hash::get($params, '_ext'));
+        return $request->withAttribute('params', $params);
     }
 
     public function testGetPermissions()
