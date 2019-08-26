@@ -15,6 +15,7 @@ namespace CakeDC\Auth\Policy;
 use Authorization\IdentityInterface;
 use Cake\Core\InstanceConfigTrait;
 use CakeDC\Auth\Rbac\Rbac;
+use CakeDC\Auth\Rbac\RbacInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 class RbacPolicy implements PolicyInterface
@@ -62,9 +63,9 @@ class RbacPolicy implements PolicyInterface
      * Get the rbac object from source or create a new one
      *
      * @param \Psr\Http\Message\ServerRequestInterface $resource server request
-     * @return \CakeDC\Auth\Rbac\Rbac
+     * @return \CakeDC\Auth\Rbac\RbacInterface
      */
-    public function getRbac($resource): Rbac
+    public function getRbac($resource): RbacInterface
     {
         $rbac = $resource->getAttribute('rbac');
         if ($rbac !== null) {
@@ -84,16 +85,16 @@ class RbacPolicy implements PolicyInterface
      * @param array $config Rbac config
      *
      * @throws \InvalidArgumentException When 'key' className is missing in $config
-     * @return \CakeDC\Auth\Rbac\Rbac
+     * @return \CakeDC\Auth\Rbac\RbacInterface
      */
-    protected function createRbac($config): Rbac
+    protected function createRbac($config): RbacInterface
     {
         if (isset($config['className'])) {
             $className = $config['className'];
             unset($config['className']);
 
             $rbac = new $className($config);
-            if ($rbac instanceof Rbac) {
+            if ($rbac instanceof RbacInterface) {
                 return $rbac;
             }
         }

@@ -27,7 +27,7 @@ use Psr\Log\LogLevel;
  *
  * @package Rbac
  */
-class Rbac
+class Rbac implements RbacInterface
 {
     use InstanceConfigTrait;
     use LogTrait;
