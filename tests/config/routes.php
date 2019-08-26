@@ -72,6 +72,11 @@ Router::scope('/', function (\Cake\Routing\RouteBuilder $routes) {
         'controller' => 'Tests',
         'action' => 'one',
     ]);
+    $routes->connect('/ord/tests/test', [
+        'plugin' => 'Ord',
+        'controller' => 'Tests',
+        'action' => 'test',
+    ]);
 
     $routes->fallbacks(\Cake\Routing\Route\DashedRoute::class);
 
