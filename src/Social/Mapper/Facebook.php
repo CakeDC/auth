@@ -1,5 +1,6 @@
 <?php
 declare(strict_types=1);
+
 /**
  * Copyright 2010 - 2019, Cake Development Corporation (https://www.cakedc.com)
  *
@@ -11,8 +12,6 @@ declare(strict_types=1);
  */
 
 namespace CakeDC\Auth\Social\Mapper;
-
-use Cake\Utility\Hash;
 
 /**
  * Facebook Mapper
@@ -55,6 +54,6 @@ class Facebook extends AbstractMapper
      */
     protected function _link($rawData)
     {
-        return ($rawData['link'] ?? null) ?: '#';
+        return $rawData['link'] ?? null ?: '#';
     }
 }

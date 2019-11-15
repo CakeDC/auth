@@ -1,5 +1,6 @@
 <?php
 declare(strict_types=1);
+
 /**
  * Copyright 2010 - 2019, Cake Development Corporation (https://www.cakedc.com)
  *
@@ -34,6 +35,7 @@ class AuthenticationService extends BaseService
      * @var \CakeDC\Auth\Authentication\Failure[]
      */
     protected $failures = [];
+
     /**
      * Proceed to google verify action after a valid result result
      *

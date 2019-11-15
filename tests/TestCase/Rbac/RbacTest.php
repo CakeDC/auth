@@ -1,5 +1,6 @@
 <?php
 declare(strict_types=1);
+
 /**
  * Copyright 2010 - 2019, Cake Development Corporation (https://www.cakedc.com)
  *
@@ -14,7 +15,6 @@ namespace CakeDC\Auth\Test\TestCase\Rbac;
 
 use Cake\Http\ServerRequest;
 use Cake\TestSuite\TestCase;
-use Cake\Utility\Hash;
 use CakeDC\Auth\Rbac\Rbac;
 use CakeDC\Auth\Rbac\Rules\Owner;
 use Psr\Log\LogLevel;

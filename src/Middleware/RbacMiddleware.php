@@ -1,5 +1,6 @@
 <?php
 declare(strict_types=1);
+
 /**
  * Copyright 2010 - 2019, Cake Development Corporation (https://www.cakedc.com)
  *
@@ -173,7 +174,8 @@ class RbacMiddleware implements MiddlewareInterface
             throw new ForbiddenException();
         }
         $accept = (array)$request->getHeader('Accept');
-        if ($behavior === self::UNAUTHORIZED_BEHAVIOR_AUTO &&
+        if (
+            $behavior === self::UNAUTHORIZED_BEHAVIOR_AUTO &&
             in_array('application/json', $accept, true)
         ) {
             throw new ForbiddenException();

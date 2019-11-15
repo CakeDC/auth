@@ -1,5 +1,6 @@
 <?php
 declare(strict_types=1);
+
 /**
  * Copyright 2010 - 2019, Cake Development Corporation (https://www.cakedc.com)
  *
@@ -36,6 +37,7 @@ class CookieAuthenticatorTest extends TestCase
             [false, 'my_remember', [], ['remember_me' => 1]],
         ];
     }
+
     /**
      * testPersistIdentity
      *

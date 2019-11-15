@@ -1,5 +1,6 @@
 <?php
 declare(strict_types=1);
+
 /**
  * Copyright 2010 - 2019, Cake Development Corporation (https://www.cakedc.com)
  *
@@ -12,15 +13,7 @@ declare(strict_types=1);
 
 namespace CakeDC\Auth\Rbac;
 
-use Cake\Core\Configure;
-use Cake\Core\InstanceConfigTrait;
-use Cake\Log\LogTrait;
-use Cake\Utility\Hash;
-use Cake\Utility\Inflector;
-use CakeDC\Auth\Rbac\Permissions\AbstractProvider;
-use CakeDC\Auth\Rbac\Rules\Rule;
 use Psr\Http\Message\ServerRequestInterface;
-use Psr\Log\LogLevel;
 
 /**
  * Class Rbac, determine if a request matches any of the given rbac rules
