@@ -10,7 +10,9 @@ declare(strict_types=1);
  * @copyright Copyright 2010 - 2019, Cake Development Corporation (https://www.cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
+namespace CakeDC\Auth\Test\TestCase\Authenticator;
 
+use ArrayObject;
 use Authentication\Identifier\IdentifierCollection;
 use Cake\Http\Response;
 use Cake\TestSuite\TestCase;
