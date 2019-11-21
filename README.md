@@ -17,8 +17,17 @@ It covers the following features:
 Requirements
 ------------
 
-* CakePHP 3.4.0+
-* PHP 5.6+
+* CakePHP 4.0.0+
+* PHP 7.2+
+
+Versions and branches
+---------------------
+
+| CakePHP | CakeDC Users Plugin | Tag   | Notes |
+| :-------------: | :------------------------: | :--:  | :---- |
+| 4.0             | [6.0](https://github.com/cakedc/users/tree/6.next)                      | 6.0.0 | stable |
+| 3.7            | [5.0](https://github.com/cakedc/users/tree/5.next)                      | 5.0.0 | stable |
+
 
 Documentation
 -------------
