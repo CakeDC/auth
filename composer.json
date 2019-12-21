@@ -28,7 +28,7 @@
     "minimum-stability": "dev",
     "require": {
         "php": ">=7.2.0",
-        "cakephp/cakephp": "4.x-dev as 4.0.0"
+        "cakephp/cakephp": "^4.0.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^8.0",
@@ -41,9 +41,9 @@
         "robthree/twofactorauth": "^1.6",
         "satooshi/php-coveralls": "^2.0",
         "league/oauth1-client": "^1.7",
-        "cakephp/authorization": "2.x-dev as 2.0",
-        "cakephp/cakephp-codesniffer": "dev-next",
-        "cakephp/authentication": "2.x-dev as 2.0",
+        "cakephp/authorization": "^2.0",
+        "cakephp/cakephp-codesniffer": "^4.0",
+        "cakephp/authentication": "^2.0",
         "yubico/u2flib-server": "^1.0"
     },
     "suggest": {
