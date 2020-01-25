@@ -329,4 +329,19 @@ class OwnerTest extends TestCase
         ];
         $this->assertFalse($this->Owner->allowed($user, 'user', $this->request));
     }
+
+    /**
+     * test
+     *
+     * @return void
+     */
+    public function testNotAllowedEmptyUserData()
+    {
+        $this->request = $this->request
+            ->withParam('plugin', 'CakeDC/Users')
+            ->withParam('controller', 'Posts')
+            ->withParam('pass', ['00000000-0000-0000-0000-000000000001']);
+        $user = [];
+        $this->assertFalse($this->Owner->allowed($user, 'user', $this->request));
+    }
 }
