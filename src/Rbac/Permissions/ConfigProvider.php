@@ -36,7 +36,19 @@ class ConfigProvider extends AbstractProvider
     public function getPermissions()
     {
         $autoload = $this->getConfig('autoload_config');
+
         if ($autoload) {
+            if (is_array($autoload)) {
+                $permissions = [];
+
+                foreach ($autoload as $configItem) {
+                    $permissions = array_merge($permissions, $this->_loadPermissions($configItem));
+
+                }
+
+                return $permissions;
+            }
+
             return $this->_loadPermissions($autoload);
         }
 
