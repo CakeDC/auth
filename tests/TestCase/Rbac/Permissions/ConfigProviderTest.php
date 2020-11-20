@@ -18,6 +18,7 @@ use CakeDC\Auth\Rbac\Permissions\ConfigProvider;
 
 /**
  * ConfigProviderTest
+ *
  * @property ConfigProvider configProvider
  */
 class ConfigProviderTest extends TestCase

@@ -289,6 +289,7 @@ class OwnerTest extends TestCase
     /**
      * Test using the Owner rule in a belongsToMany association
      * Posts belongsToMany Users
+     *
      * @return void
      */
     public function testAllowedBelongsToMany()
@@ -311,6 +312,7 @@ class OwnerTest extends TestCase
     /**
      * Test using the Owner rule in a belongsToMany association
      * Posts belongsToMany Users
+     *
      * @return void
      */
     public function testNotAllowedBelongsToMany()

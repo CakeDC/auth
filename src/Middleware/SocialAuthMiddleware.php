@@ -73,7 +73,6 @@ class SocialAuthMiddleware implements MiddlewareInterface
      * Check if is target url
      *
      * @param \Psr\Http\Message\ServerRequestInterface $request The request.
-     *
      * @return bool
      */
     protected function checkUrl(ServerRequestInterface $request)

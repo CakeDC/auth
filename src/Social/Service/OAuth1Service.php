@@ -26,6 +26,7 @@ class OAuth1Service extends OAuthServiceAbstract
 
     /**
      * OAuth2Service constructor.
+     *
      * @param array $providerConfig with className and options keys
      */
     public function __construct(array $providerConfig)

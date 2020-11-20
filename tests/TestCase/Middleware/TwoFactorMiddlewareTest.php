@@ -26,6 +26,7 @@ use CakeDC\Auth\Middleware\TwoFactorMiddleware;
 
 /**
  * Class OneTimePasswordAuthenticatorMiddlewareTest
+ *
  * @package TestCase\Middleware
  */
 class TwoFactorMiddlewareTest extends TestCase

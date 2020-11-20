@@ -47,7 +47,6 @@ class CookieAuthenticatorTest extends TestCase
      * @param string $field Remember me field.
      * @param array $post Post data
      * @param array $session Session data for CookieAuth key
-     *
      * @dataProvider dataProviderPersistIdentity
      * @return void
      */

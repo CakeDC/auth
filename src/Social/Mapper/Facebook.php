@@ -15,7 +15,6 @@ namespace CakeDC\Auth\Social\Mapper;
 
 /**
  * Facebook Mapper
- *
  */
 class Facebook extends AbstractMapper
 {
@@ -37,7 +36,6 @@ class Facebook extends AbstractMapper
      * Get avatar url
      *
      * @param mixed $rawData raw data
-     *
      * @return string
      */
     protected function _avatar($rawData)
@@ -49,7 +47,6 @@ class Facebook extends AbstractMapper
      * Get link property value
      *
      * @param mixed $rawData raw data
-     *
      * @return string
      */
     protected function _link($rawData)

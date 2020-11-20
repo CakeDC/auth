@@ -17,7 +17,6 @@ use Cake\Utility\Hash;
 
 /**
  * Cognito Mapper
- *
  */
 class Cognito extends AbstractMapper
 {
@@ -40,7 +39,6 @@ class Cognito extends AbstractMapper
      * Get link property value
      *
      * @param mixed $rawData raw data
-     *
      * @return string
      */
     protected function _link($rawData)
@@ -52,7 +50,6 @@ class Cognito extends AbstractMapper
      *  Get first_name property value
      *
      * @param mixed $rawData raw data
-     *
      * @return mixed
      */
     protected function _firstName($rawData)
@@ -64,7 +61,6 @@ class Cognito extends AbstractMapper
      * Get last_name property value
      *
      * @param mixed $rawData raw data
-     *
      * @return mixed
      */
     protected function _lastName($rawData)
@@ -78,7 +74,6 @@ class Cognito extends AbstractMapper
      * @param mixed $rawData raw data
      * @param string $field Name field (first_name, last_name)
      * @param int $keyInName key of string part in name field after exploder(' ', $value)
-     *
      * @return string|null
      */
     private function getNameValue($rawData, $field, $keyInName)

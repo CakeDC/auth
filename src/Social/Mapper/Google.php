@@ -17,7 +17,6 @@ use Cake\Utility\Hash;
 
 /**
  * Google Mapper
- *
  */
 class Google extends AbstractMapper
 {
@@ -41,7 +40,6 @@ class Google extends AbstractMapper
      * Get link property value
      *
      * @param mixed $rawData raw data
-     *
      * @return string
      */
     protected function _link($rawData)

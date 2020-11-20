@@ -13,7 +13,6 @@ trait BaseTestTrait
      * Sets up the session as a logged in user for an user with id $id
      *
      * @param string $id User id to login.
-     *
      * @return void
      */
     public function loginAsUserId($id)
@@ -27,7 +26,6 @@ trait BaseTestTrait
      * Login as a username
      *
      * @param string $username Username to login.
-     *
      * @return void
      */
     public function loginAsUserName($username)

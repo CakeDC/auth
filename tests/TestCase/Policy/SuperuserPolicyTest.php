@@ -24,6 +24,7 @@ class SuperuserPolicyTest extends TestCase
 {
     /**
      * Data provider for testCanAccess
+     *
      * @return array
      */
     public function dataProviderCanAccess()
@@ -47,7 +48,6 @@ class SuperuserPolicyTest extends TestCase
      * @param bool $expected The expected result.
      * @param array $config policy configurations.
      * @dataProvider dataProviderCanAccess
-     *
      * @return void
      */
     public function testCanAccess($userData, $expected, $config = [])

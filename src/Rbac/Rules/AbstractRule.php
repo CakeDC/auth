@@ -39,6 +39,7 @@ abstract class AbstractRule implements Rule
 
     /**
      * AbstractRule constructor.
+     *
      * @param array $config Rule config
      */
     public function __construct($config = [])

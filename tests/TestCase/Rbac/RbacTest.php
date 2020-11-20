@@ -1186,7 +1186,6 @@ class RbacTest extends TestCase
 
     /**
      * @dataProvider badPermissionProvider
-     *
      * @param array $permissions
      * @param array $user
      * @param array $requestParams

@@ -25,7 +25,6 @@ trait IsAuthorizedTrait
      *
      * @param string|array|null $url url that the user is making request.
      * @param string $action Authorization action.
-     *
      * @return bool
      */
     public function isAuthorized($url = null, $action = 'access')
@@ -46,7 +45,6 @@ trait IsAuthorizedTrait
      *
      * @param string $url to check permissions
      * @param string $action Authorization action.
-     *
      * @return bool
      */
     protected function _checkCanAccess($url, $action)
@@ -69,7 +67,6 @@ trait IsAuthorizedTrait
      * Create the url request to check authorization
      *
      * @param string $url The target url.
-     *
      * @return \Cake\Http\ServerRequest
      */
     protected function _createUrlRequestToCheck($url)

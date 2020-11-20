@@ -84,7 +84,6 @@ class RbacPolicy implements PolicyInterface
      * Create an instance of Rbac
      *
      * @param array $config Rbac config
-     *
      * @throws \InvalidArgumentException When 'key' className is missing in $config
      * @return \CakeDC\Auth\Rbac\RbacInterface
      */

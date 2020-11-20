@@ -30,6 +30,7 @@ class CollectionPolicyTest extends TestCase
 {
     /**
      * Data provider for testCanAccess
+     *
      * @return array
      */
     public function dataProviderCanAccess()
@@ -69,7 +70,6 @@ class CollectionPolicyTest extends TestCase
      * @param bool $isSuperuser Is this a super user
      * @param RbacPolicy $rbacPolicy Rbac policy instance
      * @param bool $expected The expected result;
-     *
      * @dataProvider dataProviderCanAccess
      * @return void
      */

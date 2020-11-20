@@ -136,7 +136,6 @@ class Rbac implements RbacInterface
      * @param array|\ArrayAccess $user Current user data
      * @param string $role Effective user's role
      * @param \Psr\Http\Message\ServerRequestInterface $request Current request
-     *
      * @return null|\CakeDC\Auth\Rbac\PermissionMatchResult Null if permission is discarded, PermissionMatchResult if a final
      * result is produced
      */
@@ -222,7 +221,6 @@ class Rbac implements RbacInterface
      * @param string|array|null $possibleValues Values that are accepted (from permission config)
      * @param string|mixed|null $value Value to check with. We'll check the 'dasherized' value too
      * @param bool $allowEmpty If true and $value is null, the rule will pass
-     *
      * @return bool
      */
     protected function _matchOrAsterisk($possibleValues, $value, $allowEmpty = false)
@@ -245,10 +243,8 @@ class Rbac implements RbacInterface
      * Checks if $haystack begins with $needle
      *
      * @see http://stackoverflow.com/a/7168986/2588539
-     *
      * @param string $haystack The whole string
      * @param string $needle The beginning to check
-     *
      * @return bool
      */
     protected function _startsWith($haystack, $needle)

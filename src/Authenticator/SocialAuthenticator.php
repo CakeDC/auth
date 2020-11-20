@@ -72,7 +72,6 @@ class SocialAuthenticator extends AbstractAuthenticator
      * Identify user with credential data
      *
      * @param array $rawData social user raw data
-     *
      * @return \Authentication\Authenticator\Result
      */
     protected function identify($rawData)

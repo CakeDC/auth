@@ -52,7 +52,6 @@ interface ServiceInterface
      * Set the provider name
      *
      * @param string $name set name
-     *
      * @return self
      */
     public function setProviderName(string $name);

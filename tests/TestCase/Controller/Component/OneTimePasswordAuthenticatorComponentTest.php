@@ -81,7 +81,6 @@ class OneTimePasswordAuthenticatorComponentTest extends TestCase
 
     /**
      * Test initialize
-     *
      */
     public function testInitialize()
     {
@@ -91,6 +90,7 @@ class OneTimePasswordAuthenticatorComponentTest extends TestCase
 
     /**
      * test base64 qr-code returned from component
+     *
      * @return void
      */
     public function testGetQRCodeImageAsDataUri()
@@ -103,6 +103,7 @@ class OneTimePasswordAuthenticatorComponentTest extends TestCase
 
     /**
      * Making sure we return secret
+     *
      * @return void
      */
     public function testCreateSecret()
@@ -114,6 +115,7 @@ class OneTimePasswordAuthenticatorComponentTest extends TestCase
 
     /**
      * Testing code verification in the component
+     *
      * @return void
      */
     public function testVerifyCode()

@@ -24,6 +24,7 @@ use CakeDC\Auth\Rbac\Rbac;
 
 /**
  * Class RbacMiddlewareTest
+ *
  * @package TestCase\Middleware
  */
 class RbacMiddlewareTest extends TestCase

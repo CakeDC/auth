@@ -76,7 +76,6 @@ class OAuth2Service extends OAuthServiceAbstract
      * Get a user in social provider
      *
      * @param \Psr\Http\Message\ServerRequestInterface $request Request object.
-     *
      * @throws \Cake\Http\Exception\BadRequestException when oauth2 state is invalid
      * @return array
      */

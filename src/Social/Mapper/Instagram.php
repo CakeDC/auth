@@ -17,7 +17,6 @@ use Cake\Utility\Hash;
 
 /**
  * Instagram Mapper
- *
  */
 class Instagram extends AbstractMapper
 {
@@ -40,7 +39,6 @@ class Instagram extends AbstractMapper
      * Get link property value
      *
      * @param mixed $rawData raw data
-     *
      * @return string
      */
     protected function _link($rawData)

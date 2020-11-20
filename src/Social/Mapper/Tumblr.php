@@ -15,7 +15,6 @@ namespace CakeDC\Auth\Social\Mapper;
 
 /**
  * Tumblr Mapper
- *
  */
 class Tumblr extends AbstractMapper
 {
@@ -41,7 +40,6 @@ class Tumblr extends AbstractMapper
      * Get id property value
      *
      * @param mixed $rawData raw data
-     *
      * @return string
      */
     protected function _id($rawData)

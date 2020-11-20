@@ -59,7 +59,7 @@ class Owner extends AbstractRule
     ];
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
     public function allowed($user, $role, ServerRequestInterface $request)
     {

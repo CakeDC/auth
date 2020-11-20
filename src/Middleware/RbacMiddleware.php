@@ -80,7 +80,6 @@ use Psr\Http\Server\RequestHandlerInterface;
  * $rbac = new RbacMiddleware();
  * $middlewareQueue->add($rbac);
  *
- *
  * @package Middleware
  */
 class RbacMiddleware implements MiddlewareInterface
@@ -163,7 +162,6 @@ class RbacMiddleware implements MiddlewareInterface
      * Handles a not authorized request
      *
      * @param \Psr\Http\Message\ServerRequestInterface $request request
-     *
      * @return \Psr\Http\Message\ResponseInterface
      */
     protected function notAuthorized(ServerRequestInterface $request): ResponseInterface

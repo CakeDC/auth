@@ -18,7 +18,6 @@ use Cake\Utility\Inflector;
 
 /**
  * AbstractMapper
- *
  */
 abstract class AbstractMapper
 {
@@ -84,7 +83,6 @@ abstract class AbstractMapper
      * If email is present the user is validated
      *
      * @param mixed $rawData raw data
-     *
      * @return bool
      */
     protected function _validated($rawData)

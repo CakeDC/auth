@@ -31,6 +31,7 @@ class OneTimePasswordAuthenticatorComponent extends Component
 
     /**
      * initialize method
+     *
      * @param array $config The config data
      * @return void
      */
@@ -52,6 +53,7 @@ class OneTimePasswordAuthenticatorComponent extends Component
 
     /**
      * createSecret
+     *
      * @return string base32 shared secret stored in users table
      */
     public function createSecret()
@@ -62,6 +64,7 @@ class OneTimePasswordAuthenticatorComponent extends Component
     /**
      * verifyCode
      * Verifying tfa code with shared secret
+     *
      * @param string $secret of the user
      * @param string $code from verification form
      * @return bool
@@ -73,6 +76,7 @@ class OneTimePasswordAuthenticatorComponent extends Component
 
     /**
      * getQRCodeImageAsDataUri
+     *
      * @param string $issuer issuer
      * @param string $secret secret
      * @return string base64 string containing QR code for shared secret

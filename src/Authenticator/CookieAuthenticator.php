@@ -31,7 +31,7 @@ class CookieAuthenticator extends BaseAuthenticator implements PersistenceInterf
     public const SESSION_DATA_KEY = 'CookieAuth';
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function persistIdentity(ServerRequestInterface $request, ResponseInterface $response, $identity): array
     {

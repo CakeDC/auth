@@ -20,7 +20,6 @@ class MapUser
      *
      * @param \CakeDC\Auth\Social\Service\ServiceInterface $service social service
      * @param array $data user social data
-     *
      * @return mixed
      */
     public function __invoke($service, $data)
@@ -40,13 +39,12 @@ class MapUser
      * Build the mapper object
      *
      * @param string $className of mapper
-     *
      * @return \Closure
      */
     protected function buildMapper(string $className)
     {
         if (!class_exists($className)) {
-            throw new \InvalidArgumentException(__("Provider mapper class {0} does not exist", $className));
+            throw new \InvalidArgumentException(__('Provider mapper class {0} does not exist', $className));
         }
 
         return new $className();

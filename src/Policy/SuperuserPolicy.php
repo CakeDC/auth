@@ -50,7 +50,6 @@ class SuperuserPolicy implements PolicyInterface
      *
      * @param \Authorization\IdentityInterface|null $identity user identity
      * @param \Psr\Http\Message\ServerRequestInterface $resource server request
-     *
      * @return bool
      */
     public function canAccess(?IdentityInterface $identity, ServerRequestInterface $resource): bool

@@ -17,7 +17,6 @@ use Cake\Utility\Hash;
 
 /**
  * Twitter Mapper
- *
  */
 class Twitter extends AbstractMapper
 {
@@ -47,7 +46,6 @@ class Twitter extends AbstractMapper
      * Get link property value
      *
      * @param mixed $rawData raw data
-     *
      * @return string
      */
     protected function _link($rawData)
@@ -59,7 +57,6 @@ class Twitter extends AbstractMapper
      * Get avatar url
      *
      * @param mixed $rawData raw data
-     *
      * @return string
      */
     protected function _avatar($rawData)

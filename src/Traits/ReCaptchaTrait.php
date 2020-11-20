@@ -19,7 +19,6 @@ use Psr\Http\Message\ServerRequestInterface;
 
 /**
  * Help reCaptacha usage
- *
  */
 trait ReCaptchaTrait
 {
@@ -27,7 +26,6 @@ trait ReCaptchaTrait
      * Validates reCaptcha response with specific request
      *
      * @param \Psr\Http\Message\ServerRequestInterface $request The request that contains login information.
-     *
      * @return bool
      */
     public function validateReCaptchaFromRequest(ServerRequestInterface $request)
