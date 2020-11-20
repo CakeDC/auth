@@ -168,7 +168,9 @@ class Rbac implements RbacInterface
             'action' => $params['action'] ?? null,
             'role' => $role,
         ];
-
+        if (!$user && ($permission['bypassAuth'] ?? false) !== true) {
+            return null;
+        }
         foreach ($permission as $key => $value) {
             $inverse = is_string($key) && $this->_startsWith($key, '*');
             if ($inverse) {

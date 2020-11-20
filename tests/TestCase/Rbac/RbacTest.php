@@ -17,6 +17,7 @@ use Cake\Http\ServerRequest;
 use Cake\TestSuite\TestCase;
 use CakeDC\Auth\Rbac\Rbac;
 use CakeDC\Auth\Rbac\Rules\Owner;
+use CakeDC\Auth\Test\App\Auth\Rule\SampleRule;
 use Psr\Log\LogLevel;
 use ReflectionClass;
 use RuntimeException;
@@ -1125,6 +1126,51 @@ class RbacTest extends TestCase
                     'id' => 1,
                     'username' => 'luke',
                     'role' => 'test',
+                ],
+                //request
+                [
+                    'plugin' => 'Tests',
+                    'controller' => 'Tests',
+                    'action' => 'test',
+                ],
+                //expected
+                false,
+            ],
+            'custom-rule-any-role' => [
+                //permissions
+                [[
+                    'plugin' => 'Tests',
+                    'controller' => 'Tests',
+                    'action' => 'test',
+                    'role' => 'admin',
+                    'allowed' => new SampleRule(),
+                ]],
+                //user
+                [
+                    'id' => 1,
+                    'username' => 'luke',
+                    'role' => 'admin',
+                ],
+                //request
+                [
+                    'plugin' => 'Tests',
+                    'controller' => 'Tests',
+                    'action' => 'test',
+                ],
+                //expected
+                true,
+            ],
+            'custom-rule-no-role' => [
+                //permissions
+                [[
+                    'plugin' => 'Tests',
+                    'controller' => 'Tests',
+                    'action' => 'test',
+                    'role' => 'admin',
+                    'allowed' => new SampleRule(),
+                ]],
+                //user
+                [
                 ],
                 //request
                 [
