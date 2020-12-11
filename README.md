@@ -25,7 +25,7 @@ Versions and branches
 
 | CakePHP | CakeDC Auth Plugin | Tag   | Notes |
 | :-------------: | :------------------------: | :--:  | :---- |
-| 4.0             | [6.0](https://github.com/cakedc/auth/tree/6.next)                      | 6.0.0 | stable |
+| ^4.0             | [6.0](https://github.com/cakedc/auth/tree/6.next)                      | 6.0.2 | stable |
 | ^3.7    <4.0.0  | [5.0](https://github.com/cakedc/auth/tree/5.next)                      | 5.0.0 | stable |
 
 
