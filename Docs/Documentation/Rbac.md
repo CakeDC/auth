@@ -119,3 +119,11 @@ This logic can be anything: database, external auth, etc.
 
 Also, if you are using DB, you can choose to extend `\CakeDC\Auth\Rbac\Rules\AbstractRule` since it provides convenience methods for reading from DB
 
+## RuleRegistry
+
+If you have a large application with many endpoints you'll possibly reuse the same rule in many of them.
+Instead of using `new` to create a new rule for every permission defined you can use the RuleRegistry class
+
+```php
+'allowed' => RuleRegistry::get(Owner::class), //will reuse the same Owner instance across your application 
+```
