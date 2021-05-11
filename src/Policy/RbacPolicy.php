@@ -35,6 +35,13 @@ class RbacPolicy implements PolicyInterface
     ];
 
     /**
+     * Cached instance of the rbac, we don't need to build more than 1 per request
+     *
+     * @var RbacInterface
+     */
+    protected $createdRbac;
+
+    /**
      * RbacPolicy constructor.
      *
      * @param array $config Policy configurations
@@ -61,7 +68,8 @@ class RbacPolicy implements PolicyInterface
     }
 
     /**
-     * Get the rbac object from source or create a new one
+     * Get the rbac object from source or create a new one, only 1 Rbac instance will be
+     * created per request
      *
      * @param \Psr\Http\Message\ServerRequestInterface $resource server request
      * @return \CakeDC\Auth\Rbac\RbacInterface
@@ -72,9 +80,15 @@ class RbacPolicy implements PolicyInterface
         if ($rbac !== null) {
             return $rbac;
         }
+
         $adapter = $this->getConfig('adapter');
         if (is_array($adapter)) {
-            return $this->createRbac($adapter);
+            if ($this->createdRbac) {
+                return $this->createdRbac;
+            }
+            $this->createdRbac = $this->createRbac($adapter);
+
+            return $this->createdRbac;
         }
 
         return $adapter;
