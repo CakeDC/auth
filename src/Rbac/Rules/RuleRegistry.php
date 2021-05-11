@@ -11,8 +11,6 @@
 
 namespace CakeDC\Auth\Rbac\Rules;
 
-use CakeDC\Auth\Rbac\Rules\Rule;
-
 /**
  * Static rule registry to allow reusing rule instances in Rbac permissions
  */
@@ -20,6 +18,7 @@ class RuleRegistry
 {
     /**
      * Rule instances array
+     *
      * @var array
      */
     protected static $rules = [];
@@ -29,7 +28,7 @@ class RuleRegistry
      *
      * @param string $class
      * @param array|null $config
-     * @return Rule
+     * @return \CakeDC\Auth\Rbac\Rules\Rule
      */
     public static function get(string $class, ?array $config = []): Rule
     {
