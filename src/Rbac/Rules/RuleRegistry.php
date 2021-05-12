@@ -26,8 +26,8 @@ class RuleRegistry
     /**
      * Get a new Rule instance by class, construct a new instance if not found
      *
-     * @param string $class
-     * @param array|null $config
+     * @param string $class Rule class name
+     * @param array|null $config options
      * @return \CakeDC\Auth\Rbac\Rules\Rule
      */
     public static function get(string $class, ?array $config = []): Rule
