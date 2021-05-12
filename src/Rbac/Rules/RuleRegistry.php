@@ -35,11 +35,22 @@ class RuleRegistry
         if (!class_exists($class)) {
             throw new \BadMethodCallException(sprintf('Unknown rule class %s', $class));
         }
-        if (!isset(self::$rules[$class])) {
+        $key = $class . md5(\json_encode($config));
+        if (!isset(static::$rules[$key])) {
             $ruleInstance = new $class($config);
-            static::$rules[$class] = $ruleInstance;
+            static::$rules[$key] = $ruleInstance;
         }
 
-        return static::$rules[$class];
+        return static::$rules[$key];
+    }
+
+    /**
+     * Return all the rules as array
+     *
+     * @return array
+     */
+    public static function toArray(): array
+    {
+        return static::$rules;
     }
 }

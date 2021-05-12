@@ -29,11 +29,13 @@ class RuleRegistryTest extends TestCase
     public function testGet()
     {
         $ownerRule = RuleRegistry::get(Owner::class, ['key' => 'value']);
-        $ownerRule2 = RuleRegistry::get(Owner::class, ['key' => 'ignored']);
+        $ownerSameRule = RuleRegistry::get(Owner::class, ['key' => 'value']);
+        $ownerRule2 = RuleRegistry::get(Owner::class, ['key' => 'another']);
 
-        $this->assertSame($ownerRule, $ownerRule2);
+        $this->assertSame($ownerRule, $ownerSameRule);
         $this->assertSame('value', $ownerRule->getConfig('key'));
-        // the second instance is never created, configuration key is never used
-        $this->assertSame('value', $ownerRule2->getConfig('key'));
+        $this->assertNotSame($ownerRule, $ownerRule2);
+        $this->assertSame('another', $ownerRule2->getConfig('key'));
+        $this->assertCount(2, RuleRegistry::toArray());
     }
 }
