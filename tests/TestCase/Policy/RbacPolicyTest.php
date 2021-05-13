@@ -148,6 +148,28 @@ class RbacPolicyTest extends TestCase
     /**
      * Test getRbac method
      */
+    public function testGetRbacCreateSingleton()
+    {
+        $request = ServerRequestFactory::fromGlobals();
+        $policy = $this->getMockBuilder(RbacPolicy::class)
+            ->setConstructorArgs([[
+                'adapter' => [
+                    'autoload_config' => 'my_permissions',
+                    'role_field' => 'group',
+                ],
+            ]])
+            ->onlyMethods(['createRbac'])
+            ->getMock();
+        $policy->expects($this->once())
+            ->method('createRbac');
+        $rbac1 = $policy->getRbac($request);
+        $rbac2 = $policy->getRbac($request);
+        $this->assertSame($rbac1, $rbac2);
+    }
+
+    /**
+     * Test getRbac method
+     */
     public function testGetRbacConfigArrayWithoutClassName()
     {
         $request = ServerRequestFactory::fromGlobals();
