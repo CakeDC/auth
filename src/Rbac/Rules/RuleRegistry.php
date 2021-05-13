@@ -55,4 +55,12 @@ class RuleRegistry
     {
         return static::$rules;
     }
+
+    /**
+     * Clear the registry
+     */
+    public static function clear(): void
+    {
+        static::$rules = [];
+    }
 }

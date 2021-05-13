@@ -28,6 +28,7 @@ class RuleRegistryTest extends TestCase
      */
     public function testGet()
     {
+        RuleRegistry::clear();
         $ownerRule = RuleRegistry::get(Owner::class, ['key' => 'value']);
         $ownerSameRule = RuleRegistry::get(Owner::class, ['key' => 'value']);
         $ownerRule2 = RuleRegistry::get(Owner::class, ['key' => 'another']);
@@ -37,5 +38,20 @@ class RuleRegistryTest extends TestCase
         $this->assertNotSame($ownerRule, $ownerRule2);
         $this->assertSame('another', $ownerRule2->getConfig('key'));
         $this->assertCount(2, RuleRegistry::toArray());
+    }
+
+    /**
+     * @return void
+     */
+    public function testClear()
+    {
+        RuleRegistry::clear();
+        $this->assertEmpty(RuleRegistry::toArray());
+
+        RuleRegistry::get(Owner::class, ['key' => 'value']);
+        $this->assertCount(1, RuleRegistry::toArray());
+
+        RuleRegistry::clear();
+        $this->assertEmpty(RuleRegistry::toArray());
     }
 }
