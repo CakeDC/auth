@@ -1,9 +1,26 @@
-Changelog
-=========
+# Changelog
+All notable changes to this project will be documented in this file.
 
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [Unreleased]
+
+## [6.1.0] - 2021-05-14
+### Added
+- f6b4e6a new RuleRegistry to reuse rule instances +performance
+- e77d818 cache rbac instance +performance
+### Changed
+- Branches and documentation layout to match https://www.cakedc.com/plugin-standard
+### Removed
+- 23e8f8b remove deprecations from 4.x
+
+# Previous releases
 Releases
 --------
-
+* 4.0.2
+  * Renamed BaseTraitTest to BaseTestTrait with alias from previous name for backwards compatibility
+  * Deprecated BaseTraitTest you should use BaseTestTrait
 * 4.0.1
   * Add BaseTraitTest for permissions testing
 * 4.0.0
