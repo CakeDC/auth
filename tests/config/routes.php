@@ -1,5 +1,6 @@
 <?php
-use \Cake\Routing\Router;
+
+use Cake\Routing\Router;
 
 Router::defaultRouteClass(\Cake\Routing\Route\DashedRoute::class);
 
@@ -13,7 +14,7 @@ Router::scope('/', function (\Cake\Routing\RouteBuilder $routes) {
     $routes->connect('/test-named', [
         'plugin' => 'CakeDC/Users',
         'controller' => 'Users',
-        'action' => 'myTest'
+        'action' => 'myTest',
     ], [
         '_name' => 'testNamed',
     ]);

@@ -45,7 +45,6 @@ class ConfigProvider extends AbstractProvider
 
                 foreach ($autoload as $configItem) {
                     $permissions = array_merge($permissions, $this->_loadPermissions($configItem));
-
                 }
 
                 return $permissions;
