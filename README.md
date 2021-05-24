@@ -1,7 +1,7 @@
 CakeDC Auth Plugin
 ===================
 
-<p align="center">
+<p>
     <a href="LICENSE" target="_blank">
         <img alt="Software License" src="https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square">
     </a>
