@@ -1,13 +1,9 @@
-name: CI
 # CI workflow adapted from https://github.com/cakephp/cakephp/blob/master/.github/workflows/ci.yml
+name: CI
 
 on:
   push:
-    branches:
-      - '*'
   pull_request:
-    branches:
-      - '*'
 
 jobs:
   testsuite:
