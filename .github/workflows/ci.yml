@@ -11,7 +11,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php-version: ['7.3', '7.4', '8.0']
+        php-version: ['7.3', '7.4']
         db-type: [sqlite, mysql, pgsql]
         prefer-lowest: ['']
 
@@ -104,8 +104,8 @@ jobs:
           path: ${{ steps.composer-cache.outputs.dir }}
           key: ${{ runner.os }}-composer-${{ steps.key-date.outputs.date }}-${{ hashFiles('composer.json') }}-${{ matrix.prefer-lowest }}
 
-      #      - name: composer install
-      #        run: composer stan-setup
+      - name: composer install
+        run: composer stan-setup
 
       - name: Run PHP CodeSniffer
         run: vendor/bin/phpcs --report=checkstyle src/ tests/ | cs2pr
