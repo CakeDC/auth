@@ -1,10 +1,21 @@
 CakeDC Auth Plugin
 ===================
 
-[![Bake Status](https://secure.travis-ci.org/CakeDC/auth.png?branch=master)](http://travis-ci.org/CakeDC/auth)
-[![Downloads](https://poser.pugx.org/CakeDC/auth/d/total.png)](https://packagist.org/packages/CakeDC/auth)
-[![Latest Version](https://poser.pugx.org/CakeDC/auth/v/stable.png)](https://packagist.org/packages/CakeDC/auth)
-[![License](https://poser.pugx.org/CakeDC/auth/license.svg)](https://packagist.org/packages/CakeDC/auth)
+<p align="center">
+    <a href="LICENSE" target="_blank">
+        <img alt="Software License" src="https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square">
+    </a>
+    <img alt="Build Status" src="https://github.com/cakedc/auth/actions/workflows/ci.yml/badge.svg">    
+    <a href="https://codecov.io/gh/cakedc/auth" target="_blank">
+        <img alt="Coverage Status" src="https://img.shields.io/codecov/c/github/cakedc/auth?style=flat-square">
+    </a>
+    <a href="https://packagist.org/packages/cakedc/auth" target="_blank">
+        <img alt="Total Downloads" src="https://img.shields.io/packagist/dt/cakedc/auth.svg?style=flat-square">
+    </a>
+    <a href="https://packagist.org/packages/cakedc/auth" target="_blank">
+        <img alt="Latest Stable Version" src="https://img.shields.io/packagist/v/cakedc/auth.svg?style=flat-square&label=stable">
+    </a>
+</p>
 
 CakeDC Auth Objects is a refactor of the existing Auth objects present in the CakeDC Users Plugin, 
 to let anyone else use them in their projects.
