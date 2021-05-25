@@ -108,15 +108,15 @@ jobs:
         run: composer stan-setup
 
       - name: Run PHP CodeSniffer
-        run: vendor/bin/phpcs --report=checkstyle src/ tests/ | cs2pr
+        run: composer cs-check
         continue-on-error: true
 
       - name: Run psalm
         if: success() || failure()
-        run: vendor/bin/psalm.phar --output-format=github
+        run: composer psalm
         continue-on-error: true
 
       - name: Run phpstan
         if: success() || failure()
-        run: vendor/bin/phpstan.phar analyse --error-format=github
+        run: composer stan
         continue-on-error: true
