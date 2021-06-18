@@ -39,12 +39,12 @@
         "luchianenco/oauth2-amazon": "^1.1",
         "google/recaptcha": "@stable",
         "robthree/twofactorauth": "^1.6",
-        "satooshi/php-coveralls": "^2.0",
         "league/oauth1-client": "^1.7",
         "cakephp/authorization": "^2.0",
         "cakephp/cakephp-codesniffer": "^4.0",
         "cakephp/authentication": "^2.0",
-        "yubico/u2flib-server": "^1.0"
+        "yubico/u2flib-server": "^1.0",
+        "php-coveralls/php-coveralls": "^2.4"
     },
     "suggest": {
     },
