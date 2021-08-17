@@ -62,7 +62,7 @@ class IsAuthorizedTraitTest extends TestCase
      */
     public function testIsAuthorizedEmpty()
     {
-        $Trait = $this->getMockBuilder('\CakeDC\Auth\Traits\IsAuthorizedTrait')
+        $Trait = $this->getMockBuilder(\CakeDC\Auth\Traits\IsAuthorizedTrait::class)
             ->setMethods(['getRequest'])
             ->getMockForTrait();
         $Trait->expects($this->never())
@@ -119,7 +119,7 @@ class IsAuthorizedTraitTest extends TestCase
         $request = $request->withAttribute('authorization', $service);
         $request = $request->withAttribute('identity', new IdentityDecorator($service, $identity));
 
-        $Trait = $this->getMockBuilder('\CakeDC\Auth\Traits\IsAuthorizedTrait')
+        $Trait = $this->getMockBuilder(\CakeDC\Auth\Traits\IsAuthorizedTrait::class)
             ->setMethods(['getRequest'])
             ->getMockForTrait();
         $Trait->expects($this->any())
@@ -148,7 +148,7 @@ class IsAuthorizedTraitTest extends TestCase
             ->method('checkPermissions');
         $request = $request->withAttribute('rbac', $rbac);
 
-        $Trait = $this->getMockBuilder('\CakeDC\Auth\Traits\IsAuthorizedTrait')
+        $Trait = $this->getMockBuilder(\CakeDC\Auth\Traits\IsAuthorizedTrait::class)
             ->setMethods(['getRequest'])
             ->getMockForTrait();
         $Trait->expects($this->any())

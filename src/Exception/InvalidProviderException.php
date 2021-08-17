@@ -13,9 +13,9 @@ declare(strict_types=1);
 
 namespace CakeDC\Auth\Exception;
 
-use Cake\Core\Exception\Exception;
+use Cake\Core\Exception\CakeException;
 
-class InvalidProviderException extends Exception
+class InvalidProviderException extends CakeException
 {
     protected $_messageTemplate = 'Invalid provider or missing class (%s)';
     protected $code = 500;

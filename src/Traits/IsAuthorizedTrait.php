@@ -77,11 +77,10 @@ trait IsAuthorizedTrait
         ]);
         $params = Router::parseRequest($targetRequest);
         $targetRequest = $targetRequest->withAttribute('params', $params);
-        $targetRequest = $targetRequest->withAttribute(
+
+        return $targetRequest->withAttribute(
             'rbac',
             $this->getRequest()->getAttribute('rbac')
         );
-
-        return $targetRequest;
     }
 }

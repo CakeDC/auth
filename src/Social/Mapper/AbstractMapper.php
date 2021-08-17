@@ -110,7 +110,7 @@ abstract class AbstractMapper
             $result[$field] = $value;
         });
         $token = $rawData['token'] ?? null;
-        if (empty($token) || !(is_array($token) || $token instanceof \League\OAuth2\Client\Token\AccessToken)) {
+        if (empty($token) || !is_array($token) && !$token instanceof \League\OAuth2\Client\Token\AccessToken) {
             return false;
         }
 

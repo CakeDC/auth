@@ -24,6 +24,8 @@ use RuntimeException;
 
 class RbacTest extends TestCase
 {
+    public $simpleRbacAuthorize;
+    public $registry;
     /**
      * @var Rbac
      */
@@ -167,7 +169,7 @@ class RbacTest extends TestCase
      */
     public function testAuthorize($permissions, $user, $requestParams, $expected)
     {
-        $this->rbac = new Rbac(compact('permissions'));
+        $this->rbac = new Rbac(['permissions' => $permissions]);
         $request = $this->_requestFromArray($requestParams);
 
         $result = $this->rbac->checkPermissions($user, $request);

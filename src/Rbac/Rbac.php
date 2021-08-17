@@ -44,7 +44,7 @@ class Rbac implements RbacInterface
         // default role, used in new users registered and also as role matcher when no role is available
         'default_role' => 'user',
         // Class used to provide the RBAC rules, by default from a config file, must extend AbstractProvider
-        'permissions_provider_class' => '\CakeDC\Auth\Rbac\Permissions\ConfigProvider',
+        'permissions_provider_class' => \CakeDC\Auth\Rbac\Permissions\ConfigProvider::class,
         // Used to set permissions array from configuration, ignoring the permissionsProvider
         'permissions' => null,
         // 'log' will match the value of 'debug' if not set on configuration
@@ -226,17 +226,10 @@ class Rbac implements RbacInterface
     protected function _matchOrAsterisk($possibleValues, $value, $allowEmpty = false)
     {
         $possibleArray = (array)$possibleValues;
-
-        if (
-            $possibleValues === '*' ||
-            $value === $possibleValues ||
-            in_array($value, $possibleArray) ||
-            in_array(Inflector::camelize((string)$value, '-'), $possibleArray)
-        ) {
-            return true;
-        }
-
-        return false;
+        return $possibleValues === '*' ||
+        $value === $possibleValues ||
+        in_array($value, $possibleArray) ||
+        in_array(Inflector::camelize((string)$value, '-'), $possibleArray);
     }
 
     /**

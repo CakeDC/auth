@@ -37,7 +37,7 @@ class OneTimePasswordAuthenticationCheckerFactoryTest extends TestCase
      */
     public function testGetCheckerInvalidInterface()
     {
-        Configure::write('OneTimePasswordAuthenticator.checker', 'stdClass');
+        Configure::write('OneTimePasswordAuthenticator.checker', \stdClass::class);
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage("Invalid config for 'OneTimePasswordAuthenticator.checker', 'stdClass' does not implement 'CakeDC\Auth\Authentication\OneTimePasswordAuthenticationCheckerInterface'");
         (new OneTimePasswordAuthenticationCheckerFactory())->build();

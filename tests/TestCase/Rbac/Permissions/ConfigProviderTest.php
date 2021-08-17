@@ -24,6 +24,11 @@ use CakeDC\Auth\Rbac\Permissions\ConfigProvider;
 class ConfigProviderTest extends TestCase
 {
     /**
+     * @var \CakeDC\Auth\Rbac\Permissions\ConfigProvider|mixed
+     */
+    public $configProvider;
+
+    /**
      * Sets up the fixture, for example, opens a network connection.
      * This method is called before a test is executed.
      */

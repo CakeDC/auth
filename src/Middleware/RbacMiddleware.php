@@ -190,10 +190,9 @@ class RbacMiddleware implements MiddlewareInterface
     protected function unauthorizedRedirect()
     {
         $url = $this->getConfig('unauthorizedRedirect');
-        $redirectResponse = (new Response())
+
+        return (new Response())
             ->withAddedHeader('Location', Router::url($url, true))
             ->withStatus(302);
-
-        return $redirectResponse;
     }
 }

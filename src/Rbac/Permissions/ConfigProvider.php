@@ -66,6 +66,7 @@ class ConfigProvider extends AbstractProvider
      */
     protected function _loadPermissions($key)
     {
+        $permissions = null;
         try {
             Configure::load($key, 'default');
             $permissions = Configure::read('CakeDC/Auth.permissions');

@@ -86,9 +86,9 @@ class ProviderConfigTest extends TestCase
             ],
             'providers' => [
                 'facebook' => [
-                    'service' => 'CakeDC\Auth\Social\Service\OAuth2Service',
-                    'className' => 'League\OAuth2\Client\Provider\Facebook',
-                    'mapper' => 'CakeDC\Auth\Social\Mapper\Facebook',
+                    'service' => \CakeDC\Auth\Social\Service\OAuth2Service::class,
+                    'className' => \League\OAuth2\Client\Provider\Facebook::class,
+                    'mapper' => \CakeDC\Auth\Social\Mapper\Facebook::class,
                     'options' => 'invalid options',
                 ],
             ],
@@ -131,9 +131,9 @@ class ProviderConfigTest extends TestCase
             ],
         ]);
         $expected = [
-            'service' => 'CakeDC\Auth\Social\Service\OAuth2Service',
-            'className' => 'League\OAuth2\Client\Provider\Facebook',
-            'mapper' => 'CakeDC\Auth\Social\Mapper\Facebook',
+            'service' => \CakeDC\Auth\Social\Service\OAuth2Service::class,
+            'className' => \League\OAuth2\Client\Provider\Facebook::class,
+            'mapper' => \CakeDC\Auth\Social\Mapper\Facebook::class,
             'authParams' => ['scope' => ['public_profile', 'email', 'user_birthday', 'user_gender', 'user_link']],
             'options' => [
                 'customOption' => 'hello',
@@ -174,9 +174,9 @@ class ProviderConfigTest extends TestCase
 
         $Config = new ProviderConfig();
         $expected = [
-            'service' => 'CakeDC\Auth\Social\Service\OAuth2Service',
-            'className' => 'League\OAuth2\Client\Provider\Facebook',
-            'mapper' => 'CakeDC\Auth\Social\Mapper\Facebook',
+            'service' => \CakeDC\Auth\Social\Service\OAuth2Service::class,
+            'className' => \League\OAuth2\Client\Provider\Facebook::class,
+            'mapper' => \CakeDC\Auth\Social\Mapper\Facebook::class,
             'authParams' => ['scope' => ['public_profile', 'email', 'user_birthday', 'user_gender', 'user_link']],
             'options' => [
                 'graphApiVersion' => 'v2.8',
@@ -201,9 +201,9 @@ class ProviderConfigTest extends TestCase
         $this->assertEquals($expected, $actual);
 
         $expected = [
-            'service' => 'CakeDC\Auth\Social\Service\OAuth1Service',
-            'className' => 'League\OAuth1\Client\Server\Twitter',
-            'mapper' => 'CakeDC\Auth\Social\Mapper\Twitter',
+            'service' => \CakeDC\Auth\Social\Service\OAuth1Service::class,
+            'className' => \League\OAuth1\Client\Server\Twitter::class,
+            'mapper' => \CakeDC\Auth\Social\Mapper\Twitter::class,
             'authParams' => [],
             'options' => [
                 'redirectUri' => 'http://localhost/auth/twitter',
@@ -226,9 +226,9 @@ class ProviderConfigTest extends TestCase
         $this->assertEquals($expected, $actual);
 
         $expected = [
-            'service' => 'CakeDC\Auth\Social\Service\OAuth2Service',
-            'className' => 'Luchianenco\OAuth2\Client\Provider\Amazon',
-            'mapper' => 'CakeDC\Auth\Social\Mapper\Amazon',
+            'service' => \CakeDC\Auth\Social\Service\OAuth2Service::class,
+            'className' => \Luchianenco\OAuth2\Client\Provider\Amazon::class,
+            'mapper' => \CakeDC\Auth\Social\Mapper\Amazon::class,
             'authParams' => [],
             'options' => [
                 'redirectUri' => 'http://localhost/auth/amazon',

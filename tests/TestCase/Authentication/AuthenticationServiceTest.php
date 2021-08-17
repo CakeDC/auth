@@ -56,7 +56,7 @@ class AuthenticationServiceTest extends TestCase
         ]);
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage('No authenticators loaded. You need to load at least one authenticator.');
-        $service->authenticate($request, $response);
+        $service->authenticate($request);
     }
 
     /**

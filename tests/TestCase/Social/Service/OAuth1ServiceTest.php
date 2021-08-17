@@ -53,7 +53,7 @@ class OAuth1ServiceTest extends TestCase
     {
         parent::setUp();
 
-        $this->Provider = $this->getMockBuilder('\League\OAuth1\Client\Server\Twitter')->setConstructorArgs([
+        $this->Provider = $this->getMockBuilder(\League\OAuth1\Client\Server\Twitter::class)->setConstructorArgs([
             [
                 'redirectUri' => '/auth/twitter',
                 'linkSocialUri' => '/link-social/twitter',
@@ -66,9 +66,9 @@ class OAuth1ServiceTest extends TestCase
         ])->getMock();
 
         $config = [
-            'service' => 'CakeDC\Auth\Social\Service\OAuth1Service',
+            'service' => \CakeDC\Auth\Social\Service\OAuth1Service::class,
             'className' => $this->Provider,
-            'mapper' => 'CakeDC\Auth\Social\Mapper\Twitter',
+            'mapper' => \CakeDC\Auth\Social\Mapper\Twitter::class,
             'options' => [],
             'collaborators' => [],
             'signature' => null,
@@ -106,8 +106,8 @@ class OAuth1ServiceTest extends TestCase
     public function testConstruct()
     {
         $service = new OAuth1Service([
-            'className' => 'League\OAuth1\Client\Server\Twitter',
-            'mapper' => 'CakeDC\Auth\Social\Mapper\Twitter',
+            'className' => \League\OAuth1\Client\Server\Twitter::class,
+            'mapper' => \CakeDC\Auth\Social\Mapper\Twitter::class,
             'options' => [
                 'redirectUri' => '/auth/twitter',
                 'linkSocialUri' => '/link-social/twitter',

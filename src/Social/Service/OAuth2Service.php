@@ -90,9 +90,9 @@ class OAuth2Service extends OAuthServiceAbstract
 
         $code = $request->getQuery('code');
         /** @var \League\OAuth2\Client\Token\AccessToken $token */
-        $token = $this->provider->getAccessToken('authorization_code', compact('code'));
+        $token = $this->provider->getAccessToken('authorization_code', ['code' => $code]);
 
-        return compact('token') + $this->provider->getResourceOwner($token)->toArray();
+        return ['token' => $token] + $this->provider->getResourceOwner($token)->toArray();
     }
 
     /**

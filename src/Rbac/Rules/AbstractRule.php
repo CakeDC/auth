@@ -81,7 +81,9 @@ abstract class AbstractRule implements Rule
         $controller = $params['controller'] ?? null;
         $modelClass = ($plugin ? $plugin . '.' : '') . $controller;
 
-        $this->modelFactory('Table', [$this->getTableLocator(), 'get']);
+        $this->modelFactory('Table', function (string $alias, array $options) : \Cake\ORM\Table {
+            return $this->getTableLocator()->get($alias, $options);
+        });
         if (empty($modelClass)) {
             throw new OutOfBoundsException('Missing Table alias, we could not extract a default table from the request');
         }

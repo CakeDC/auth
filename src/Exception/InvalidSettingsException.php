@@ -13,9 +13,9 @@ declare(strict_types=1);
 
 namespace CakeDC\Auth\Exception;
 
-use Cake\Core\Exception\Exception;
+use Cake\Core\Exception\CakeException;
 
-class InvalidSettingsException extends Exception
+class InvalidSettingsException extends CakeException
 {
     protected $_messageTemplate = 'Invalid settings for key (%s)';
     protected $code = 500;

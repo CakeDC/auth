@@ -98,7 +98,7 @@ class SocialIdentifierTest extends TestCase
         $user['provider'] = 'facebook';
 
         $result = $identifier->identify(['socialAuthUser' => $user]);
-        $this->assertInstanceOf('Cake\ORM\Entity', $result);
+        $this->assertInstanceOf(\Cake\ORM\Entity::class, $result);
         $this->assertEquals($result->id, '00000000-0000-0000-0000-000000000001');
         $this->assertEquals('user-1@test.com', $result->email);
         $this->assertEquals('user-1', $result->username);

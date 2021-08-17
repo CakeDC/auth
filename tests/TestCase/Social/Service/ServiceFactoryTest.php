@@ -50,9 +50,9 @@ class ServiceFactoryTest extends TestCase
     public function testCreateFromRequest()
     {
         $config = [
-            'service' => 'CakeDC\Auth\Social\Service\OAuth2Service',
-            'className' => 'League\OAuth2\Client\Provider\Facebook',
-            'mapper' => 'CakeDC\Auth\Social\Mapper\Facebook',
+            'service' => \CakeDC\Auth\Social\Service\OAuth2Service::class,
+            'className' => \League\OAuth2\Client\Provider\Facebook::class,
+            'mapper' => \CakeDC\Auth\Social\Mapper\Facebook::class,
             'authParams' => ['scope' => ['public_profile', 'email', 'user_birthday', 'user_gender', 'user_link']],
             'options' => [
                 'state' => '__TEST_STATE__',
@@ -92,9 +92,9 @@ class ServiceFactoryTest extends TestCase
         $this->assertEquals('facebook', $service->getProviderName());
 
         $expected = [
-            'service' => 'CakeDC\Auth\Social\Service\OAuth2Service',
-            'className' => 'League\OAuth2\Client\Provider\Facebook',
-            'mapper' => 'CakeDC\Auth\Social\Mapper\Facebook',
+            'service' => \CakeDC\Auth\Social\Service\OAuth2Service::class,
+            'className' => \League\OAuth2\Client\Provider\Facebook::class,
+            'mapper' => \CakeDC\Auth\Social\Mapper\Facebook::class,
             'authParams' => ['scope' => ['public_profile', 'email', 'user_birthday', 'user_gender', 'user_link']],
             'options' => [
                 'state' => '__TEST_STATE__',
@@ -125,9 +125,9 @@ class ServiceFactoryTest extends TestCase
     public function testCreateFromRequestCustomRedirectUriField()
     {
         $config = [
-            'service' => 'CakeDC\Auth\Social\Service\OAuth2Service',
-            'className' => 'League\OAuth2\Client\Provider\Facebook',
-            'mapper' => 'CakeDC\Auth\Social\Mapper\Facebook',
+            'service' => \CakeDC\Auth\Social\Service\OAuth2Service::class,
+            'className' => \League\OAuth2\Client\Provider\Facebook::class,
+            'mapper' => \CakeDC\Auth\Social\Mapper\Facebook::class,
             'authParams' => ['scope' => ['public_profile', 'email', 'user_birthday', 'user_gender', 'user_link']],
             'options' => [
                 'state' => '__TEST_STATE__',
@@ -168,9 +168,9 @@ class ServiceFactoryTest extends TestCase
         $this->assertEquals('facebook', $service->getProviderName());
 
         $expected = [
-            'service' => 'CakeDC\Auth\Social\Service\OAuth2Service',
-            'className' => 'League\OAuth2\Client\Provider\Facebook',
-            'mapper' => 'CakeDC\Auth\Social\Mapper\Facebook',
+            'service' => \CakeDC\Auth\Social\Service\OAuth2Service::class,
+            'className' => \League\OAuth2\Client\Provider\Facebook::class,
+            'mapper' => \CakeDC\Auth\Social\Mapper\Facebook::class,
             'authParams' => ['scope' => ['public_profile', 'email', 'user_birthday', 'user_gender', 'user_link']],
             'options' => [
                 'state' => '__TEST_STATE__',
@@ -201,9 +201,9 @@ class ServiceFactoryTest extends TestCase
     public function testCreateFromRequestOAuth1()
     {
         $config = [
-            'service' => 'CakeDC\Auth\Social\Service\OAuth1Service',
-            'className' => 'League\OAuth1\Client\Server\Twitter',
-            'mapper' => 'CakeDC\Auth\Social\Mapper\Twitter',
+            'service' => \CakeDC\Auth\Social\Service\OAuth1Service::class,
+            'className' => \League\OAuth1\Client\Server\Twitter::class,
+            'mapper' => \CakeDC\Auth\Social\Mapper\Twitter::class,
             'authParams' => ['scope' => ['public_profile', 'email', 'user_birthday', 'user_gender', 'user_link']],
             'options' => [
                 'redirectUri' => '/auth/twitter',

@@ -39,7 +39,7 @@ class TestApplication extends \Cake\Http\BaseApplication
     {
         parent::bootstrap();
         $this->addPlugin('CakeDC/Auth', [
-            'path' => dirname(dirname(__FILE__)) . DS,
+            'path' => dirname(__FILE__, 2) . DS,
             'routes' => true,
             'bootstrap' => true,
         ]);

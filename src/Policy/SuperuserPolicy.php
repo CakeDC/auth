@@ -54,7 +54,7 @@ class SuperuserPolicy implements PolicyInterface
      */
     public function canAccess(?IdentityInterface $identity, ServerRequestInterface $resource): bool
     {
-        $user = $identity ? $identity->getOriginalData() : [];
+        $user = $identity !== null ? $identity->getOriginalData() : [];
         $superuserField = $this->getConfig('superuser_field');
 
         $isSuperUser = $user[$superuserField] ?? false;

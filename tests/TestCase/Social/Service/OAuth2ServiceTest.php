@@ -52,7 +52,7 @@ class OAuth2ServiceTest extends TestCase
     {
         parent::setUp();
 
-        $this->Provider = $this->getMockBuilder('\League\OAuth2\Client\Provider\Facebook')->setConstructorArgs([
+        $this->Provider = $this->getMockBuilder(\League\OAuth2\Client\Provider\Facebook::class)->setConstructorArgs([
             [
                 'graphApiVersion' => 'v2.8',
                 'redirectUri' => '/auth/facebook',
@@ -67,9 +67,9 @@ class OAuth2ServiceTest extends TestCase
         ])->getMock();
 
         $config = [
-            'service' => 'CakeDC\Auth\Social\Service\OAuth2Service',
+            'service' => \CakeDC\Auth\Social\Service\OAuth2Service::class,
             'className' => $this->Provider,
-            'mapper' => 'CakeDC\Auth\Social\Mapper\Facebook',
+            'mapper' => \CakeDC\Auth\Social\Mapper\Facebook::class,
             'authParams' => ['scope' => ['public_profile', 'email', 'user_birthday', 'user_gender', 'user_link']],
             'options' => [
                 'state' => '__TEST_STATE__',
@@ -110,8 +110,8 @@ class OAuth2ServiceTest extends TestCase
     public function testConstruct()
     {
         $service = new OAuth2Service([
-            'className' => 'League\OAuth2\Client\Provider\Facebook',
-            'mapper' => 'CakeDC\Auth\Social\Mapper\Facebook',
+            'className' => \League\OAuth2\Client\Provider\Facebook::class,
+            'mapper' => \CakeDC\Auth\Social\Mapper\Facebook::class,
             'authParams' => ['scope' => ['public_profile', 'email', 'user_birthday', 'user_gender', 'user_link']],
             'options' => [
                 'customOption' => 'hello',

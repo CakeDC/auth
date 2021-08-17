@@ -12,7 +12,7 @@ declare(strict_types=1);
  */
 namespace CakeDC\Auth\Rbac\Rules;
 
-use Cake\Core\Exception\Exception;
+use Cake\Core\Exception\CakeException;
 use Cake\Utility\Hash;
 use OutOfBoundsException;
 use Psr\Http\Message\ServerRequestInterface;
@@ -81,14 +81,14 @@ class Owner extends AbstractRule
                 );
                 throw new OutOfBoundsException($msg);
             }
-        } catch (Exception $ex) {
+        } catch (\Cake\Core\Exception\CakeException $ex) {
             $msg = sprintf(
                 'Missing column %s in table %s while checking ownership permissions for user %s',
                 $this->getConfig('ownerForeignKey'),
                 $table->getAlias(),
                 $userId
             );
-            throw new OutOfBoundsException($msg);
+            throw new OutOfBoundsException($msg, $ex->getCode(), $ex);
         }
         $idColumn = $this->getConfig('id');
         if (empty($idColumn)) {

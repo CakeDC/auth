@@ -37,7 +37,7 @@ class U2fAuthenticationCheckerFactoryTest extends TestCase
      */
     public function testGetCheckerInvalidInterface()
     {
-        Configure::write('U2f.checker', 'stdClass');
+        Configure::write('U2f.checker', \stdClass::class);
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage("Invalid config for 'U2f.checker', 'stdClass' does not implement 'CakeDC\Auth\Authentication\U2fAuthenticationCheckerInterface'");
         (new U2fAuthenticationCheckerFactory())->build();

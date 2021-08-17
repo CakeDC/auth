@@ -26,6 +26,15 @@ use RuntimeException;
  */
 class OwnerTest extends TestCase
 {
+    /**
+     * @var \CakeDC\Auth\Rbac\Rules\Owner|mixed
+     */
+    public $Owner;
+    /**
+     * @var \Cake\Http\ServerRequest|mixed
+     */
+    public $request;
+
     public $fixtures = [
         'plugin.CakeDC/Auth.Posts',
         'plugin.CakeDC/Auth.Users',

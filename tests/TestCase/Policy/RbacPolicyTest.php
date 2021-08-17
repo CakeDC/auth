@@ -137,7 +137,7 @@ class RbacPolicyTest extends TestCase
             'autoload_config' => 'my_permissions',
             'role_field' => 'group',
             'default_role' => 'user',
-            'permissions_provider_class' => '\CakeDC\Auth\Rbac\Permissions\ConfigProvider',
+            'permissions_provider_class' => \CakeDC\Auth\Rbac\Permissions\ConfigProvider::class,
             'permissions' => null,
             'log' => true,
         ];

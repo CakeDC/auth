@@ -56,7 +56,7 @@ class SocialAuthenticatorTest extends TestCase
     {
         parent::setUp();
 
-        $this->Provider = $this->getMockBuilder('\League\OAuth2\Client\Provider\Facebook')->setConstructorArgs([
+        $this->Provider = $this->getMockBuilder(\League\OAuth2\Client\Provider\Facebook::class)->setConstructorArgs([
             [
                 'graphApiVersion' => 'v2.8',
                 'redirectUri' => '/auth/facebook',
@@ -71,9 +71,9 @@ class SocialAuthenticatorTest extends TestCase
         ])->getMock();
 
         $config = [
-            'service' => 'CakeDC\Auth\Social\Service\OAuth2Service',
+            'service' => \CakeDC\Auth\Social\Service\OAuth2Service::class,
             'className' => $this->Provider,
-            'mapper' => 'CakeDC\Auth\Social\Mapper\Facebook',
+            'mapper' => \CakeDC\Auth\Social\Mapper\Facebook::class,
             'options' => [
                 'state' => '__TEST_STATE__',
                 'graphApiVersion' => 'v2.8',
