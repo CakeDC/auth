@@ -73,7 +73,7 @@ You could use a callback in your 'allowed' to process complex authentication, li
 Example *ownership* callback, to allow users to edit their own Posts:
 
 ```php
-    'allowed' => function (array $user, $role, \Cake\Network\Request $request) {
+    'allowed' => function (array $user, $role, \Cake\Http\ServerRequest $request) {
         $postId = \Cake\Utility\Hash::get($request->params, 'pass.0');
         $post = \Cake\ORM\TableRegistry::get('Posts')->get($postId);
         $userId = $user['id'];
