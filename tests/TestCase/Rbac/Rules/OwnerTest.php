@@ -30,6 +30,7 @@ class OwnerTest extends TestCase
      * @var \CakeDC\Auth\Rbac\Rules\Owner|mixed
      */
     public $Owner;
+
     /**
      * @var \Cake\Http\ServerRequest|mixed
      */
@@ -47,6 +48,7 @@ class OwnerTest extends TestCase
      */
     public function setUp(): void
     {
+        parent::setUp();
         $this->Owner = new Owner();
         $this->request = new ServerRequest();
     }
@@ -58,6 +60,7 @@ class OwnerTest extends TestCase
     public function tearDown(): void
     {
         unset($this->Owner);
+        parent::tearDown();
     }
 
     /**
@@ -74,6 +77,7 @@ class OwnerTest extends TestCase
         $user = [
             'id' => '00000000-0000-0000-0000-000000000001',
         ];
+
         $this->assertTrue($this->Owner->allowed($user, 'user', $this->request));
     }
 

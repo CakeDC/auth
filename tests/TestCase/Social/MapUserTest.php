@@ -27,6 +27,7 @@ class MapUserTest extends TestCase
      * @var \\League\OAuth2\Client\Provider\Facebook&\PHPUnit\Framework\MockObject\MockObject|mixed
      */
     public $Provider;
+
     /**
      * Setup the test case, backup the static object values so they can be restored.
      * Specifically backs up the contents of Configure and paths in App if they have

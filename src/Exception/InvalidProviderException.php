@@ -18,6 +18,10 @@ use Cake\Core\Exception\CakeException;
 class InvalidProviderException extends CakeException
 {
     protected $_messageTemplate = 'Invalid provider or missing class (%s)';
+	
+	/**
+	 * @var int
+	 */
     protected $code = 500;
 
     /**

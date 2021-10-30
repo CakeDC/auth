@@ -226,6 +226,7 @@ class Rbac implements RbacInterface
     protected function _matchOrAsterisk($possibleValues, $value, $allowEmpty = false)
     {
         $possibleArray = (array)$possibleValues;
+
         return $possibleValues === '*' ||
         $value === $possibleValues ||
         in_array($value, $possibleArray) ||

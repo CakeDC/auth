@@ -214,11 +214,11 @@ class OAuth2ServiceTest extends TestCase
      */
     public function testGetAuthorizationUrl()
     {
-        $this->Provider->expects($this->at(0))
+        $this->Provider->expects($this->once())
             ->method('getState')
             ->will($this->returnValue('_NEW_STATE_'));
 
-        $this->Provider->expects($this->at(1))
+        $this->Provider->expects($this->once())
             ->method('getAuthorizationUrl')
             ->with($this->equalTo([
                 'scope' => ['public_profile', 'email', 'user_birthday', 'user_gender', 'user_link'],
@@ -291,7 +291,7 @@ class OAuth2ServiceTest extends TestCase
         $this->Provider->expects($this->never())
             ->method('getState');
 
-        $this->Provider->expects($this->at(0))
+        $this->Provider->expects($this->once())
             ->method('getAccessToken')
             ->with(
                 $this->equalTo('authorization_code'),
@@ -299,7 +299,7 @@ class OAuth2ServiceTest extends TestCase
             )
             ->will($this->returnValue($Token));
 
-        $this->Provider->expects($this->at(1))
+        $this->Provider->expects($this->once())
             ->method('getResourceOwner')
             ->with(
                 $this->equalTo($Token)

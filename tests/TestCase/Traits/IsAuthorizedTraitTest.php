@@ -82,7 +82,8 @@ class IsAuthorizedTraitTest extends TestCase
      */
     public function testIsAuthorizedWithMock($url, $authorize, $invalidUrl = false)
     {
-        Router::connect('/my-test', [
+        $builder = Router::createRouteBuilder('/');
+        $builder->connect('/my-test', [
             'plugin' => 'CakeDC/Users',
             'controller' => 'Users',
             'action' => 'myTest',
@@ -137,7 +138,8 @@ class IsAuthorizedTraitTest extends TestCase
      */
     public function testIsAuthorizedWithoutService()
     {
-        Router::connect('/my-test', [
+        $builder = Router::createRouteBuilder('/');
+        $builder->connect('/my-test', [
             'plugin' => 'CakeDC/Users',
             'controller' => 'Users',
             'action' => 'myTest',

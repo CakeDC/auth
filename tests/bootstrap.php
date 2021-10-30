@@ -112,3 +112,10 @@ Cake\Core\Configure::write('OAuth.path', [
 $app = new \CakeDC\Auth\Test\TestApplication(__DIR__ . DS . 'config');
 $app->bootstrap();
 $app->pluginBootstrap();
+
+use Cake\TestSuite\Fixture\SchemaLoader;
+
+if (env('FIXTURE_SCHEMA_METADATA')) {
+    $loader = new SchemaLoader();
+    $loader->loadInternalFile(env('FIXTURE_SCHEMA_METADATA'));
+}

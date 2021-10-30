@@ -14,7 +14,8 @@ use Cake\Routing\Router;
 Configure::load('CakeDC/Auth.auth');
 $oauthPath = Configure::read('OAuth.path');
 if (is_array($oauthPath)) {
-    Router::scope('/auth', function ($routes) use ($oauthPath) {
+    $builder = Router::createRouteBuilder('/');
+    $builder->scope('/auth', function ($routes) use ($oauthPath) {
         $routes->connect(
             '/:provider',
             $oauthPath,
