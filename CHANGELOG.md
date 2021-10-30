@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [7.0.0] - 2021-10-30
+- upgrade to cakephp 4.3.0 
+- upgrade to phpunit 9.5
+
 ## [6.1.0] - 2021-05-14
 ### Added
 - f6b4e6a new RuleRegistry to reuse rule instances +performance
