@@ -16,6 +16,7 @@ use ArrayObject;
 use Authentication\Identifier\IdentifierCollection;
 use Cake\Http\Response;
 use Cake\TestSuite\TestCase;
+use Cake\Utility\Security;
 use CakeDC\Auth\Authenticator\CookieAuthenticator;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
@@ -71,6 +72,7 @@ class CookieAuthenticatorTest extends TestCase
             'username' => 'johndoe',
             'password' => '$2a$10$u05j8FjsvLBNdfhBhc21LOuVMpzpabVXQ9OpC2wO3pSO0q6t7HHMO',
         ]);
+        Security::setSalt('22f40226f5b51926aeb29995ebf0108eae3435e2');
         $result = $authenticator->persistIdentity($request, $response, $identity);
         $this->assertIsArray($result);
         $this->assertArrayHasKey('request', $result);
