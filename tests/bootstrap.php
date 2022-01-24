@@ -101,6 +101,8 @@ Cake\Core\Configure::write('Session', [
     'defaults' => 'php',
 ]);
 
+\Cake\Utility\Security::setSalt('yoyz186elmi66ab9pz4imbb3tgy9vnsgsfgwe2r8tyxbbfdygu9e09tlxyg8p7dq');
+
 //init router
 \Cake\Routing\Router::reload();
 Cake\Core\Configure::write('OAuth.path', [
