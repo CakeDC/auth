@@ -39,6 +39,9 @@ class TwoFactorMiddleware implements MiddlewareInterface
             case AuthenticationService::NEED_U2F_VERIFY:
                 $url = Configure::read('U2f.startAction');
                 break;
+            case AuthenticationService::NEED_WEBAUTHN_2FA_VERIFY:
+                $url = Configure::read('Webauthn2fa.startAction');
+                break;
             default:
                 return $handler->handle($request);
         }

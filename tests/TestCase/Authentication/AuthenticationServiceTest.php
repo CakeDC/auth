@@ -263,6 +263,57 @@ class AuthenticationServiceTest extends TestCase
         $actual = $service->getFailures();
         $this->assertEquals($expected, $actual);
     }
+    /**
+     * testAuthenticate
+     *
+     * @return void
+     */
+    public function testAuthenticateShouldDoWebauthn2faEnabled()
+    {
+        Configure::write('Webauthn2fa.enabled', true);
+        $Table = TableRegistry::getTableLocator()->get('CakeDC/Auth.Users');
+        $Table->setEntityClass(\CakeDC\Auth\Test\App\Model\Entity\User::class);
+        $entity = $Table->get('00000000-0000-0000-0000-000000000001');
+        $entity->password = 'password';
+        $this->assertTrue((bool)$Table->save($entity));
+        $request = ServerRequestFactory::fromGlobals(
+            ['REQUEST_URI' => '/testpath'],
+            [],
+            ['username' => 'user-1', 'password' => 'password']
+        );
+        $response = new Response();
+
+        $service = new AuthenticationService([
+            'identifiers' => [
+                'Authentication.Password' => [],
+            ],
+            'authenticators' => [
+                'Authentication.Session' => [
+                    'skipTwoFactorVerify' => true,
+                ],
+                'CakeDC/Auth.Form' => [
+                    'skipTwoFactorVerify' => false,
+                ],
+            ],
+        ]);
+
+        $result = $service->authenticate($request);
+        $this->assertInstanceOf(Result::class, $result);
+        $this->assertFalse($result->isValid());
+        $this->assertEquals(AuthenticationService::NEED_WEBAUTHN_2FA_VERIFY, $result->getStatus());
+        $this->assertNull($request->getAttribute('session')->read('Auth.username'));
+        $this->assertEquals(
+            'user-1',
+            $request->getAttribute('session')->read('Webauthn2fa.User.username')
+        );
+        $sessionFailure = new Failure(
+            $service->authenticators()->get('Session'),
+            new Result(null, Result::FAILURE_IDENTITY_NOT_FOUND)
+        );
+        $expected = [$sessionFailure];
+        $actual = $service->getFailures();
+        $this->assertEquals($expected, $actual);
+    }
 
     /**
      * testAuthenticate
