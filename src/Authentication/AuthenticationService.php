@@ -30,6 +30,10 @@ class AuthenticationService extends BaseService
 
     public const NEED_U2F_VERIFY = 'NEED_U2F_VERIFY';
 
+    public const CODE2F_SESSION_KEY = 'Code2f.User';
+
+    public const NEED_CODE2F_VERIFY = 'NEED_CODE2F_VERIFY';
+
     public const NEED_WEBAUTHN_2FA_VERIFY = 'NEED_WEBAUTHN2FA_VERIFY';
 
     public const WEBAUTHN_2FA_SESSION_KEY = 'Webauthn2fa.User';
@@ -42,7 +46,7 @@ class AuthenticationService extends BaseService
     protected $failures = [];
 
     /**
-     * Proceed to google verify action after a valid result result
+     * Proceed to google verify action after a valid result
      *
      * @param \Psr\Http\Message\ServerRequestInterface $request The request.
      * @param \Authentication\Authenticator\ResultInterface $result The original result
@@ -61,7 +65,7 @@ class AuthenticationService extends BaseService
         return $this->_result = $result;
     }
     /**
-     * Proceed to webauthn2fa flow after a valid result result
+     * Proceed to webauthn2fa flow after a valid result
      *
      * @param \Psr\Http\Message\ServerRequestInterface $request response to manipulate
      * @param \Authentication\Authenticator\ResultInterface $result valid result
@@ -81,7 +85,7 @@ class AuthenticationService extends BaseService
     }
 
     /**
-     * Proceed to U2f flow after a valid result result
+     * Proceed to U2f flow after a valid result
      *
      * @param \Psr\Http\Message\ServerRequestInterface $request response to manipulate
      * @param \Authentication\Authenticator\ResultInterface $result valid result
@@ -95,6 +99,26 @@ class AuthenticationService extends BaseService
         $session = $request->getAttribute('session');
         $session->write(self::U2F_SESSION_KEY, $result->getData());
         $result = new Result(null, self::NEED_U2F_VERIFY);
+        $this->_successfulAuthenticator = null;
+
+        return $this->_result = $result;
+    }
+
+    /**
+     * Proceed to Code2f flow after a valid result
+     *
+     * @param \Psr\Http\Message\ServerRequestInterface $request response to manipulate
+     * @param \Authentication\Authenticator\ResultInterface $result valid result
+     * @return \Authentication\Authenticator\ResultInterface with result, request and response keys
+     */
+    protected function proceedToCode2f(ServerRequestInterface $request, ResultInterface $result)
+    {
+        /**
+         * @var \Cake\Http\Session $session
+         */
+        $session = $request->getAttribute('session');
+        $session->write(self::CODE2F_SESSION_KEY, $result->getData());
+        $result = new Result(null, self::NEED_CODE2F_VERIFY);
         $this->_successfulAuthenticator = null;
 
         return $this->_result = $result;
@@ -131,6 +155,16 @@ class AuthenticationService extends BaseService
     }
 
     /**
+     * Get the configured one-time password authentication checker
+     *
+     * @return \CakeDC\Auth\Authentication\OneTimePasswordAuthenticationCheckerInterface
+     */
+    protected function getCode2fAuthenticationChecker()
+    {
+        return (new Code2fAuthenticationCheckerFactory())->build();
+    }
+
+    /**
      * {@inheritDoc}
      *
      * @throws \RuntimeException Throws a runtime exception when no authenticators are loaded.
@@ -162,6 +196,11 @@ class AuthenticationService extends BaseService
                 $otpCheck = $this->getOneTimePasswordAuthenticationChecker();
                 if ($skipTwoFactorVerify !== true && $otpCheck->isRequired($userData)) {
                     return $this->proceedToGoogleVerify($request, $result);
+                }
+
+                $code2fCheck = $this->getCode2fAuthenticationChecker();
+                if ($skipTwoFactorVerify !== true && $code2fCheck->isRequired($userData, $request)) {
+                    return $this->proceedToCode2f($request, $result);
                 }
 
                 $this->_successfulAuthenticator = $authenticator;

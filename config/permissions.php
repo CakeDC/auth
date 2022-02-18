@@ -70,7 +70,10 @@ $permissions = [
             'requestResetPassword',
             // UserValidationTrait used in PasswordManagementTrait
             'resendTokenValidation',
-            'linkSocial'
+            'linkSocial',
+            'code2f',
+            'code2fRegister',
+            'code2fAuthenticate'
         ],
         'bypassAuth' => true,
     ],
