@@ -13,6 +13,9 @@ declare(strict_types=1);
 namespace CakeDC\Auth\Authentication;
 
 use Cake\Core\Configure;
+use Cake\ORM\TableRegistry;
+use Cake\Utility\Security;
+use CakeDC\Users\Model\Entity\OtpCode;
 use Psr\Http\Message\ServerRequestInterface;
 
 /**
@@ -20,7 +23,7 @@ use Psr\Http\Message\ServerRequestInterface;
  *
  * @package CakeDC\Auth\Auth
  */
-class FingerprintCode2fAuthenticationChecker implements Code2fAuthenticationCheckerInterface
+class Code2fFingerprintAuthenticationChecker implements Code2fAuthenticationCheckerInterface
 {
     /**
      * Check if two factor authentication is enabled
@@ -43,6 +46,16 @@ class FingerprintCode2fAuthenticationChecker implements Code2fAuthenticationChec
      */
     public function isRequired(?array $user = null, ServerRequestInterface $request)
     {
-        return !empty($user) && $this->isEnabled();
+        /** @var OtpCode $latestOtpCode */
+        $latestOtpCode = TableRegistry::getTableLocator()->get('CakeDC/Users.OtpCodes')->find()
+            ->where(['user_id' => $user['id'], 'validated IS NOT' => null])->orderDesc('validated')->first();
+        $fingerprint = Security::hash($request->clientIp() . $request->getHeaderLine('User-Agent'));
+        $request->getSession()->write('Code2f.fingerprint', $fingerprint);
+        return !empty($user) &&
+            (
+                empty($latestOtpCode) ||
+                $latestOtpCode->fingerprint !== $fingerprint
+            ) &&
+            $this->isEnabled();
     }
 }
