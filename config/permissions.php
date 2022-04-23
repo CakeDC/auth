@@ -120,6 +120,13 @@ $permissions = [
         'controller' => 'Pages',
         'action' => 'display',
     ],
+    [
+        'role' => '*',
+        'plugin' => 'DebugKit',
+        'controller' => '*',
+        'action' => '*',
+        'bypassAuth' => true,
+    ],
 ];
 
 $preload = \Cake\Core\Configure::read('CakeDC/Auth.preloadPermissions', []);
