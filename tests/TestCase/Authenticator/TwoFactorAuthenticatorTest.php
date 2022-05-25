@@ -27,7 +27,7 @@ class TwoFactorAuthenticatorTest extends TestCase
      */
     public function testAuthenticateFailedNoData()
     {
-        $uri = new \Zend\Diactoros\Uri('/testpath');
+        $uri = new \Laminas\Diactoros\Uri('/testpath');
         $uri->base = null;
         $request = new \Cake\Http\ServerRequest();
         $request = $request->withUri($uri);
@@ -51,7 +51,7 @@ class TwoFactorAuthenticatorTest extends TestCase
      */
     public function testAuthenticateFailedInvalidUrl()
     {
-        $uri = new \Zend\Diactoros\Uri('/testpath');
+        $uri = new \Laminas\Diactoros\Uri('/testpath');
         $uri->base = null;
         $request = new \Cake\Http\ServerRequest();
         $request = $request->withUri($uri);
@@ -82,7 +82,7 @@ class TwoFactorAuthenticatorTest extends TestCase
      */
     public function testAuthenticate()
     {
-        $uri = new \Zend\Diactoros\Uri('/testpath');
+        $uri = new \Laminas\Diactoros\Uri('/testpath');
         $uri->base = null;
         $request = new \Cake\Http\ServerRequest();
         $request = $request->withUri($uri);

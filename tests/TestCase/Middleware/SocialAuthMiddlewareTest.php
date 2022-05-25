@@ -20,9 +20,9 @@ use Cake\Http\ServerRequestFactory;
 use Cake\TestSuite\TestCase;
 use CakeDC\Auth\Middleware\SocialAuthMiddleware;
 use CakeDC\Auth\Social\Service\OAuth2Service;
+use Laminas\Diactoros\Uri;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Zend\Diactoros\Uri;
 
 class SocialAuthMiddlewareTest extends TestCase
 {

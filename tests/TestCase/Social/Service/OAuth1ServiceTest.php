@@ -20,10 +20,10 @@ use Cake\Http\Session;
 use Cake\TestSuite\TestCase;
 use CakeDC\Auth\Social\Service\OAuth1Service;
 use CakeDC\Auth\Social\Service\ServiceInterface;
+use Laminas\Diactoros\Uri;
 use League\OAuth1\Client\Credentials\TemporaryCredentials;
 use League\OAuth1\Client\Credentials\TokenCredentials;
 use League\OAuth1\Client\Server\User;
-use Zend\Diactoros\Uri;
 
 class OAuth1ServiceTest extends TestCase
 {
