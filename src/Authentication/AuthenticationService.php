@@ -60,6 +60,7 @@ class AuthenticationService extends BaseService
 
         return $this->_result = $result;
     }
+
     /**
      * Proceed to webauthn2fa flow after a valid result result
      *

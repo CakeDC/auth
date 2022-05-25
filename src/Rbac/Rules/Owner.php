@@ -12,7 +12,6 @@ declare(strict_types=1);
  */
 namespace CakeDC\Auth\Rbac\Rules;
 
-use Cake\Core\Exception\CakeException;
 use Cake\Utility\Hash;
 use OutOfBoundsException;
 use Psr\Http\Message\ServerRequestInterface;
