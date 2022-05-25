@@ -16,7 +16,7 @@ namespace CakeDC\Auth\Traits;
 use Authorization\AuthorizationServiceInterface;
 use Cake\Http\ServerRequest;
 use Cake\Routing\Router;
-use Zend\Diactoros\Uri;
+use Laminas\Diactoros\Uri;
 
 trait IsAuthorizedTrait
 {
