@@ -21,8 +21,8 @@ use Cake\Http\Session;
 use Cake\TestSuite\TestCase;
 use CakeDC\Auth\Social\Service\OAuth2Service;
 use CakeDC\Auth\Social\Service\ServiceInterface;
+use Laminas\Diactoros\Uri;
 use League\OAuth2\Client\Provider\FacebookUser;
-use Zend\Diactoros\Uri;
 
 class OAuth2ServiceTest extends TestCase
 {

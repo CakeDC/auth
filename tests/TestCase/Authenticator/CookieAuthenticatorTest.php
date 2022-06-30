@@ -56,7 +56,7 @@ class CookieAuthenticatorTest extends TestCase
         $identifiers = new IdentifierCollection([
             'Authentication.Password',
         ]);
-        $uri = new \Zend\Diactoros\Uri('/login');
+        $uri = new \Laminas\Diactoros\Uri('/login');
         $uri->base = null;
         $request = new \Cake\Http\ServerRequest();
         $request = $request->withUri($uri);
