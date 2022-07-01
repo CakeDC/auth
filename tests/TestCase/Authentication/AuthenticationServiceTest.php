@@ -263,6 +263,7 @@ class AuthenticationServiceTest extends TestCase
         $actual = $service->getFailures();
         $this->assertEquals($expected, $actual);
     }
+
     /**
      * testAuthenticate
      *

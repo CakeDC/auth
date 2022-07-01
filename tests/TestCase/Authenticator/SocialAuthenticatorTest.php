@@ -20,8 +20,8 @@ use Cake\ORM\Entity;
 use Cake\TestSuite\TestCase;
 use CakeDC\Auth\Authenticator\SocialAuthenticator;
 use CakeDC\Auth\Social\Service\ServiceFactory;
+use Laminas\Diactoros\Uri;
 use League\OAuth2\Client\Provider\FacebookUser;
-use Zend\Diactoros\Uri;
 
 /**
  * Test Case for SocialAuthenticator class
