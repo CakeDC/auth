@@ -21,11 +21,8 @@ class Microsoft extends AbstractMapper
      * @var array
      */
     protected $_mapFields = [
-        'avatar' => 'pictureUrl',
-        'first_name' => 'firstName',
-        'last_name' => 'lastName',
-        'email' => 'emailAddress',
-        'bio' => 'headline',
-        'link' => 'publicProfileUrl',
+        'full_name' => 'name',
+        'username' => 'unique_name',
+        'email' => 'upn',
     ];
 }
