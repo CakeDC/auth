@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace CakeDC\Auth\Social\Mapper;
 
-class Microsoft extends AbstractMapper
+class Azure extends AbstractMapper
 {
     /**
      * Map for provider fields
@@ -21,8 +21,20 @@ class Microsoft extends AbstractMapper
      * @var array
      */
     protected $_mapFields = [
+        'id' => 'sub',
         'full_name' => 'name',
         'username' => 'unique_name',
         'email' => 'upn',
     ];
+
+    /**
+     * Get link property value
+     *
+     * @param mixed $rawData raw data
+     * @return string
+     */
+    protected function _link($rawData)
+    {
+        return '#';
+    }
 }
