@@ -55,7 +55,7 @@ At your Application::middleware add the authorization and request authorization 
 As usual create or update the Application::getAuthorizationService method:
    
 ```
-    public function getAuthorizationService(ServerRequestInterface $request)
+    public function getAuthorizationService(ServerRequestInterface $request): AuthorizationServiceInterface
     {
         $map = new MapResolver();
             $map->map(
