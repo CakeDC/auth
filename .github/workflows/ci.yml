@@ -16,13 +16,11 @@ jobs:
       matrix:
         php-version: ['8.1']
         db-type: [sqlite, pgsql]
-        prefer-lowest: ['']
         include:
           - php-version: '8.1'
             db-type: 'mariadb'
           - php-version: '8.1'
             db-type: 'mysql'
-            prefer-lowest: 'prefer-lowest'
 
     steps:
       - name: Setup MySQL latest
@@ -61,15 +59,11 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
-          key: ${{ runner.os }}-composer-${{ steps.key-date.outputs.date }}-${{ hashFiles('composer.json') }}-${{ matrix.prefer-lowest }}
+          key: ${{ runner.os }}-composer-${{ steps.key-date.outputs.date }}-${{ hashFiles('composer.json') }}
 
       - name: Composer install
-        run: |
-          if ${{ matrix.prefer-lowest == 'prefer-lowest' }}; then
-            composer update --prefer-lowest --prefer-stable
-          else
-            composer update
-          fi
+        run: composer update
+
 
       - name: Setup problem matchers for PHPUnit
         if: matrix.php-version == '8.1' && matrix.db-type == 'mysql'
@@ -124,7 +118,7 @@ jobs:
         uses: actions/cache@v1
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
-          key: ${{ runner.os }}-composer-${{ steps.key-date.outputs.date }}-${{ hashFiles('composer.json') }}-${{ matrix.prefer-lowest }}
+          key: ${{ runner.os }}-composer-${{ steps.key-date.outputs.date }}-${{ hashFiles('composer.json') }}
 
       - name: composer install
         run: composer stan-setup
