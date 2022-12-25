@@ -29,10 +29,7 @@ use CakeDC\Auth\Rbac\Rbac;
  */
 class RbacMiddlewareTest extends TestCase
 {
-    /**
-     * @var RbacMiddleware
-     */
-    protected $rbacMiddleware;
+    protected RbacMiddleware $rbacMiddleware;
 
     /**
      * Sets up the fixture, for example, opens a network connection.

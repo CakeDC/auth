@@ -18,24 +18,8 @@ use CakeDC\Auth\Exception\InvalidProviderException;
 
 class InvalidProviderExceptionTest extends TestCase
 {
-    protected $_messageTemplate = 'Invalid provider or missing class (%s)';
-    protected $code = 500;
-
-    /**
-     * Setup
-     */
-    public function setUp(): void
-    {
-        parent::setUp();
-    }
-
-    /**
-     * Tear Down
-     */
-    public function tearDown(): void
-    {
-        parent::tearDown();
-    }
+    protected string $_messageTemplate = 'Invalid provider or missing class (%s)';
+    protected int $code = 500;
 
     /**
      * Test construct

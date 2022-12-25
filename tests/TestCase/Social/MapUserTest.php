@@ -23,13 +23,11 @@ use InvalidArgumentException;
 use League\OAuth2\Client\Provider\Facebook;
 use League\OAuth2\Client\Provider\FacebookUser;
 use League\OAuth2\Client\Token\AccessToken;
+use PHPUnit\Framework\MockObject\MockObject;
 
 class MapUserTest extends TestCase
 {
-    /**
-     * @var \League\OAuth2\Client\Provider\Facebook&\PHPUnit\Framework\MockObject\MockObject|mixed
-     */
-    public $Provider;
+    public MockObject|Facebook $Provider;
 
     /**
      * Setup the test case, backup the static object values so they can be restored.

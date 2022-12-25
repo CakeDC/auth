@@ -31,10 +31,7 @@ use CakeDC\Auth\Middleware\TwoFactorMiddleware;
  */
 class TwoFactorMiddlewareTest extends TestCase
 {
-    /**
-     * @var TwoFactorMiddleware
-     */
-    protected $TwoFactorMiddleware;
+    protected TwoFactorMiddleware $TwoFactorMiddleware;
 
     /**
      * Sets up the fixture, for example, opens a network connection.

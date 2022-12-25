@@ -18,24 +18,8 @@ use CakeDC\Auth\Exception\InvalidSettingsException;
 
 class InvalidSettingsExceptionTest extends TestCase
 {
-    protected $_messageTemplate = 'Invalid settings for key (%s)';
-    protected $code = 500;
-
-    /**
-     * Setup
-     */
-    public function setUp(): void
-    {
-        parent::setUp();
-    }
-
-    /**
-     * Tear Down
-     */
-    public function tearDown(): void
-    {
-        parent::tearDown();
-    }
+    protected string $_messageTemplate = 'Invalid settings for key (%s)';
+    protected int $code = 500;
 
     /**
      * Test construct

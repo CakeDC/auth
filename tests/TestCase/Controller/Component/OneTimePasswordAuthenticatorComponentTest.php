@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace CakeDC\Users\Test\TestCase\Controller\Component;
 
+use Cake\Controller\ComponentRegistry;
 use Cake\Controller\Controller;
 use Cake\Core\Configure;
 use Cake\Http\ServerRequest;
@@ -20,30 +21,15 @@ use Cake\Routing\Router;
 use Cake\TestSuite\TestCase;
 use Cake\Utility\Security;
 use CakeDC\Auth\Controller\Component\OneTimePasswordAuthenticatorComponent;
+use PHPUnit\Framework\MockObject\MockObject;
 
 class OneTimePasswordAuthenticatorComponentTest extends TestCase
 {
-    /**
-     * @var mixed
-     */
-    public $backupUsersConfig;
+    public mixed $backupUsersConfig;
 
-    /**
-     * @var \Cake\Http\ServerRequest&\PHPUnit\Framework\MockObject\MockObject|mixed
-     */
-    public $request;
-
-    /**
-     * @var \Cake\Controller\Controller|mixed
-     */
-    public $Controller;
-
-    /**
-     * @var \Cake\Controller\ComponentRegistry|mixed
-     */
-    public $Registry;
-
-    public $OneTimePasswordAuthenticator;
+    public MockObject|ServerRequest $request;
+    public Controller $Controller;
+    public ComponentRegistry $Registry;
 
     public array $fixtures = [
         'plugin.CakeDC/Auth.Users',
@@ -95,7 +81,7 @@ class OneTimePasswordAuthenticatorComponentTest extends TestCase
         parent::tearDown();
 
         $_SESSION = [];
-        unset($this->Controller, $this->OneTimePasswordAuthenticator);
+        unset($this->Controller);
         Configure::write('Users', $this->backupUsersConfig);
         Configure::write('OneTimePasswordAuthenticator.login', false);
     }

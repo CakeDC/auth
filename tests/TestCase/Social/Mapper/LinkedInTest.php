@@ -19,16 +19,6 @@ use League\OAuth2\Client\Token\AccessToken;
 
 class LinkedInTest extends TestCase
 {
-    public function setUp(): void
-    {
-        parent::setUp();
-    }
-
-    public function tearDown(): void
-    {
-        parent::tearDown();
-    }
-
     public function testMap()
     {
         $token = new AccessToken([

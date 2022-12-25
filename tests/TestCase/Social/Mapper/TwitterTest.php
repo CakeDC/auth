@@ -18,16 +18,6 @@ use CakeDC\Auth\Social\Mapper\Twitter;
 
 class TwitterTest extends TestCase
 {
-    public function setUp(): void
-    {
-        parent::setUp();
-    }
-
-    public function tearDown(): void
-    {
-        parent::tearDown();
-    }
-
     public function testMap()
     {
         $rawData = [

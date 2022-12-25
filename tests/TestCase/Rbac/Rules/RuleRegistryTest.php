@@ -17,10 +17,6 @@ use Cake\TestSuite\TestCase;
 use CakeDC\Auth\Rbac\Rules\Owner;
 use CakeDC\Auth\Rbac\Rules\RuleRegistry;
 
-/**
- * @property Owner Owner
- * @property ServerRequest request
- */
 class RuleRegistryTest extends TestCase
 {
     /**

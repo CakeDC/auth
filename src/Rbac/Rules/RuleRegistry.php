@@ -14,7 +14,6 @@ declare(strict_types=1);
 namespace CakeDC\Auth\Rbac\Rules;
 
 use BadMethodCallException;
-use function json_encode;
 
 /**
  * Static rule registry to allow reusing rule instances in Rbac permissions

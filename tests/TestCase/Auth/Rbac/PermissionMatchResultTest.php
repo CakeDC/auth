@@ -18,10 +18,7 @@ use CakeDC\Auth\Rbac\PermissionMatchResult;
 
 class PermissionMatchResultTest extends TestCase
 {
-    /**
-     * @var PermissionMatchResult
-     */
-    protected $permissionMatchResult;
+    protected PermissionMatchResult $permissionMatchResult;
 
     /**
      * Sets up the fixture, for example, opens a network connection.

@@ -20,15 +20,10 @@ use CakeDC\Auth\Rbac\Rules\Owner;
 use OutOfBoundsException;
 use RuntimeException;
 
-/**
- * @property Owner Owner
- * @property ServerRequest request
- */
 class OwnerTest extends TestCase
 {
-    public Owner $Owner;
-
-    public ServerRequest $request;
+    protected Owner $Owner;
+    protected ServerRequest $request;
 
     public array $fixtures = [
         'plugin.CakeDC/Auth.Posts',

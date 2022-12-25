@@ -18,15 +18,10 @@ use CakeDC\Auth\Rbac\Permissions\ConfigProvider;
 
 /**
  * ConfigProviderTest
- *
- * @property ConfigProvider configProvider
  */
 class ConfigProviderTest extends TestCase
 {
-    /**
-     * @var \CakeDC\Auth\Rbac\Permissions\ConfigProvider|mixed
-     */
-    public $configProvider;
+    protected ConfigProvider $configProvider;
 
     /**
      * Sets up the fixture, for example, opens a network connection.
