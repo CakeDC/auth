@@ -131,11 +131,11 @@ class OAuth1ServiceTest extends TestCase
         $Credentials->setIdentifier('404405646989097789546879');
         $Credentials->setSecret('secretpasword');
 
-        $this->Provider->expects($this->atLeastOnce())
+        $this->Provider->expects($this->once())
             ->method('getTemporaryCredentials')
             ->will($this->returnValue($Credentials));
 
-        $this->Provider->expects($this->atLeastOnce())
+        $this->Provider->expects($this->once())
             ->method('getAuthorizationUrl')
             ->with(
                 $this->equalTo($Credentials)
@@ -311,7 +311,7 @@ class OAuth1ServiceTest extends TestCase
         $this->Provider->expects($this->never())
             ->method('getTemporaryCredentials');
 
-        $this->Provider->expects($this->atLeastOnce())
+        $this->Provider->expects($this->once())
             ->method('getTokenCredentials')
             ->with(
                 $this->equalTo($Credentials),
@@ -320,7 +320,7 @@ class OAuth1ServiceTest extends TestCase
             )
             ->will($this->returnValue($TokenCredentials));
 
-        $this->Provider->expects($this->atLeastOnce())
+        $this->Provider->expects($this->once())
             ->method('getUserDetails')
             ->with(
                 $this->equalTo($TokenCredentials)
