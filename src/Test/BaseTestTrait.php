@@ -15,7 +15,7 @@ trait BaseTestTrait
      * @param string $id User id to login.
      * @return void
      */
-    public function loginAsUserId($id)
+    public function loginAsUserId(string $id): void
     {
         $data = TableRegistry::getTableLocator()
             ->get(Configure::read('Users.table', 'Users'))->get($id)->toArray();
@@ -28,7 +28,7 @@ trait BaseTestTrait
      * @param string $username Username to login.
      * @return void
      */
-    public function loginAsUserName($username)
+    public function loginAsUserName(string $username): void
     {
         $data = TableRegistry::getTableLocator()
             ->get(Configure::read('Users.table', 'Users'))->findByUsername($username)->first()->toArray();
@@ -38,7 +38,7 @@ trait BaseTestTrait
     /**
      * @return bool
      */
-    protected function _isVerboseOrDebug()
+    protected function _isVerboseOrDebug(): bool
     {
         return !empty(array_intersect(['--debug', '--verbose', '-v'], $_SERVER['argv']));
     }
@@ -54,7 +54,7 @@ trait BaseTestTrait
      * @param string $responseContains Text the response should contains.
      * @throws \PHPUnit\Exception
      */
-    protected function _testPermissions($url, $username, $method, $ajax, $responseCode, $responseContains)
+    protected function _testPermissions(string $url, string $username, string $method, string $ajax, string $responseCode, string $responseContains): void
     {
         if ($this->_isVerboseOrDebug()) {
             (new ConsoleIo())->info(__(
@@ -98,7 +98,7 @@ trait BaseTestTrait
      * @return array
      * @dataProvider provider
      */
-    public function testPermissions($csv)
+    public function testPermissions(string $csv): array
     {
         $this->assertTrue(file_exists(TESTS . 'Provider' . DS . $csv));
         $rows = array_map('str_getcsv', file(TESTS . 'Provider' . DS . $csv));

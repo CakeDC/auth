@@ -15,6 +15,7 @@ namespace CakeDC\Users\Test\TestCase\Controller\Component;
 
 use Cake\Controller\Controller;
 use Cake\Core\Configure;
+use Cake\Http\ServerRequest;
 use Cake\Routing\Router;
 use Cake\TestSuite\TestCase;
 use Cake\Utility\Security;
@@ -33,11 +34,6 @@ class OneTimePasswordAuthenticatorComponentTest extends TestCase
     public $request;
 
     /**
-     * @var \Cake\Http\Response&\PHPUnit\Framework\MockObject\MockObject|mixed
-     */
-    public $response;
-
-    /**
      * @var \Cake\Controller\Controller|mixed
      */
     public $Controller;
@@ -49,7 +45,7 @@ class OneTimePasswordAuthenticatorComponentTest extends TestCase
 
     public $OneTimePasswordAuthenticator;
 
-    public $fixtures = [
+    public array $fixtures = [
         'plugin.CakeDC/Auth.Users',
     ];
 
@@ -64,13 +60,12 @@ class OneTimePasswordAuthenticatorComponentTest extends TestCase
         $this->backupUsersConfig = Configure::read('Users');
 
         Router::reload();
-        $builder = Router::createRouteBuilder('/');
-        $builder->connect('/route/*', [
+        Router::createRouteBuilder('/')->connect('/route/*', [
             'plugin' => 'CakeDC/Users',
             'controller' => 'Users',
             'action' => 'requestResetPassword',
         ]);
-        $builder->connect('/notAllowed/*', [
+        Router::createRouteBuilder('/')->connect('/notAllowed/*', [
             'plugin' => 'CakeDC/Users',
             'controller' => 'Users',
             'action' => 'edit',
@@ -80,14 +75,11 @@ class OneTimePasswordAuthenticatorComponentTest extends TestCase
         Configure::write('App.namespace', 'Users');
         Configure::write('OneTimePasswordAuthenticator.login', true);
 
-        $this->request = $this->getMockBuilder(\Cake\Http\ServerRequest::class)
+        $this->request = $this->getMockBuilder(ServerRequest::class)
                 ->setMethods(['is', 'method'])
                 ->getMock();
         $this->request->expects($this->any())->method('is')->will($this->returnValue(true));
-        $this->response = $this->getMockBuilder(\Cake\Http\Response::class)
-                ->setMethods(['stop'])
-                ->getMock();
-        $this->Controller = new Controller($this->request, $this->response);
+        $this->Controller = new Controller($this->request);
         $this->Registry = $this->Controller->components();
         $this->Controller->OneTimePasswordAuthenticator = new OneTimePasswordAuthenticatorComponent($this->Registry);
     }
@@ -113,7 +105,7 @@ class OneTimePasswordAuthenticatorComponentTest extends TestCase
     public function testInitialize()
     {
         $this->Controller->OneTimePasswordAuthenticator = new OneTimePasswordAuthenticatorComponent($this->Registry);
-        $this->assertInstanceOf(\CakeDC\Auth\Controller\Component\OneTimePasswordAuthenticatorComponent::class, $this->Controller->OneTimePasswordAuthenticator);
+        $this->assertInstanceOf(OneTimePasswordAuthenticatorComponent::class, $this->Controller->OneTimePasswordAuthenticator);
     }
 
     /**

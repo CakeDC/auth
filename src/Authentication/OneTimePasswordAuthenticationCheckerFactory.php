@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace CakeDC\Auth\Authentication;
 
 use Cake\Core\Configure;
+use InvalidArgumentException;
 
 /**
  * Factory for two authentication checker
@@ -26,7 +27,7 @@ class OneTimePasswordAuthenticationCheckerFactory
      *
      * @return \CakeDC\Auth\Authentication\OneTimePasswordAuthenticationCheckerInterface
      */
-    public function build()
+    public function build(): OneTimePasswordAuthenticationCheckerInterface
     {
         $className = Configure::read('OneTimePasswordAuthenticator.checker');
         $interfaces = class_implements($className);
@@ -35,6 +36,6 @@ class OneTimePasswordAuthenticationCheckerFactory
         if (in_array($required, $interfaces)) {
             return new $className();
         }
-        throw new \InvalidArgumentException("Invalid config for 'OneTimePasswordAuthenticator.checker', '$className' does not implement '$required'");
+        throw new InvalidArgumentException("Invalid config for 'OneTimePasswordAuthenticator.checker', '$className' does not implement '$required'");
     }
 }

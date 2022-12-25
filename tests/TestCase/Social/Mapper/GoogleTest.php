@@ -15,6 +15,7 @@ namespace CakeDC\Auth\Test\TestCase\Social\Mapper;
 
 use Cake\TestSuite\TestCase;
 use CakeDC\Auth\Social\Mapper\Google;
+use League\OAuth2\Client\Token\AccessToken;
 
 class GoogleTest extends TestCase
 {
@@ -30,7 +31,7 @@ class GoogleTest extends TestCase
 
     public function testMap()
     {
-        $token = new \League\OAuth2\Client\Token\AccessToken([
+        $token = new AccessToken([
             'access_token' => 'test-token',
             'expires' => 1490988496,
         ]);

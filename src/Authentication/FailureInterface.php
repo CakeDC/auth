@@ -12,6 +12,9 @@ declare(strict_types=1);
  */
 namespace CakeDC\Auth\Authentication;
 
+use Authentication\Authenticator\AuthenticatorInterface;
+use Authentication\Authenticator\ResultInterface;
+
 interface FailureInterface
 {
     /**
@@ -19,12 +22,12 @@ interface FailureInterface
      *
      * @return \Authentication\Authenticator\AuthenticatorInterface
      */
-    public function getAuthenticator();
+    public function getAuthenticator(): AuthenticatorInterface;
 
     /**
      * Returns failed result.
      *
      * @return \Authentication\Authenticator\ResultInterface
      */
-    public function getResult();
+    public function getResult(): ResultInterface;
 }

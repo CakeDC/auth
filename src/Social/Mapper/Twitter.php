@@ -30,7 +30,7 @@ class Twitter extends AbstractMapper
      *
      * @var array
      */
-    protected $_mapFields = [
+    protected array $_mapFields = [
         'id' => 'uid',
         'username' => 'nickname',
         'full_name' => 'name',
@@ -48,7 +48,7 @@ class Twitter extends AbstractMapper
      * @param mixed $rawData raw data
      * @return string
      */
-    protected function _link($rawData)
+    protected function _link(mixed $rawData): string
     {
         return self::TWITTER_BASE_URL . Hash::get($rawData, $this->_mapFields['username']);
     }
@@ -59,7 +59,7 @@ class Twitter extends AbstractMapper
      * @param mixed $rawData raw data
      * @return string
      */
-    protected function _avatar($rawData)
+    protected function _avatar(mixed $rawData): string
     {
         return str_replace('normal', 'bigger', Hash::get($rawData, $this->_mapFields['avatar']));
     }

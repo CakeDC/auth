@@ -110,9 +110,7 @@ class TwoFactorMiddlewareTest extends TestCase
             'controller' => 'Users',
             'action' => 'verify',
         ]);
-        Router::reload();
-        $builder = Router::createRouteBuilder('/');
-        $builder->connect('/verify', [
+        Router::createRouteBuilder('/')->connect('/verify', [
             'controller' => 'Users',
             'action' => 'verify',
         ]);

@@ -24,14 +24,14 @@ abstract class OAuthServiceAbstract implements ServiceInterface
      *
      * @var array
      */
-    protected $_defaultConfig = [];
+    protected array $_defaultConfig = [];
 
     /**
      * The provider name.
      *
      * @var string
      */
-    protected $providerName = '';
+    protected string $providerName = '';
 
     /**
      * Get the social provider name
@@ -49,7 +49,7 @@ abstract class OAuthServiceAbstract implements ServiceInterface
      * @param string $providerName social provider
      * @return self
      */
-    public function setProviderName(string $providerName)
+    public function setProviderName(string $providerName): self
     {
         $this->providerName = $providerName;
 

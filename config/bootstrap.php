@@ -9,17 +9,5 @@
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 use Cake\Core\Configure;
-use Cake\Routing\Router;
 
 Configure::load('CakeDC/Auth.auth');
-$oauthPath = Configure::read('OAuth.path');
-if (is_array($oauthPath)) {
-    $builder = Router::createRouteBuilder('/');
-    $builder->scope('/auth', function ($routes) use ($oauthPath) {
-        $routes->connect(
-            '/:provider',
-            $oauthPath,
-            ['provider' => implode('|', array_keys(Configure::read('OAuth.providers')))]
-        );
-    });
-}

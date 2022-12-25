@@ -15,16 +15,19 @@ namespace CakeDC\Auth\Test\TestCase\Social;
 
 use Cake\Core\Configure;
 use Cake\TestSuite\TestCase;
+use CakeDC\Auth\Social\Mapper\Facebook as FacebookMapper;
 use CakeDC\Auth\Social\MapUser;
 use CakeDC\Auth\Social\Service\OAuth2Service;
 use CakeDC\Auth\Social\Service\ServiceFactory;
+use InvalidArgumentException;
 use League\OAuth2\Client\Provider\Facebook;
 use League\OAuth2\Client\Provider\FacebookUser;
+use League\OAuth2\Client\Token\AccessToken;
 
 class MapUserTest extends TestCase
 {
     /**
-     * @var \\League\OAuth2\Client\Provider\Facebook&\PHPUnit\Framework\MockObject\MockObject|mixed
+     * @var \League\OAuth2\Client\Provider\Facebook&\PHPUnit\Framework\MockObject\MockObject|mixed
      */
     public $Provider;
 
@@ -39,7 +42,7 @@ class MapUserTest extends TestCase
     {
         parent::setUp();
 
-        $this->Provider = $this->getMockBuilder(\League\OAuth2\Client\Provider\Facebook::class)->setConstructorArgs([
+        $this->Provider = $this->getMockBuilder(Facebook::class)->setConstructorArgs([
             [
                 'graphApiVersion' => 'v2.8',
                 'redirectUri' => '/auth/facebook',
@@ -54,9 +57,9 @@ class MapUserTest extends TestCase
         ])->getMock();
 
         $config = [
-            'service' => \CakeDC\Auth\Social\Service\OAuth2Service::class,
+            'service' => OAuth2Service::class,
             'className' => $this->Provider,
-            'mapper' => \CakeDC\Auth\Social\Mapper\Facebook::class,
+            'mapper' => FacebookMapper::class,
             'options' => [
                 'state' => '__TEST_STATE__',
                 'graphApiVersion' => 'v2.8',
@@ -86,7 +89,7 @@ class MapUserTest extends TestCase
     {
         $service = (new ServiceFactory())->createFromProvider('facebook');
 
-        $Token = new \League\OAuth2\Client\Token\AccessToken([
+        $Token = new AccessToken([
             'access_token' => 'test-token',
             'expires' => 1490988496,
         ]);
@@ -180,7 +183,7 @@ class MapUserTest extends TestCase
         ]);
 
         $mapper = new MapUser();
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Provider mapper class CakeDC\Auth\Social\Mapper\NotExisting does not exist');
         $mapper($service, $user);
     }

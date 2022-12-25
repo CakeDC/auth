@@ -99,9 +99,7 @@ class RbacMiddlewareTest extends TestCase
     {
         $request = new ServerRequest();
         $rbacMiddleware = $this->rbacMiddleware;
-        Router::reload();
-        $builder = Router::createRouteBuilder('/');
-        $builder->connect('/login', [
+        Router::createRouteBuilder('/')->connect('/login', [
             'controller' => 'Users',
             'action' => 'login',
         ]);

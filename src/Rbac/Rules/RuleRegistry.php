@@ -13,6 +13,9 @@ declare(strict_types=1);
 
 namespace CakeDC\Auth\Rbac\Rules;
 
+use BadMethodCallException;
+use function json_encode;
+
 /**
  * Static rule registry to allow reusing rule instances in Rbac permissions
  */
@@ -23,7 +26,7 @@ class RuleRegistry
      *
      * @var array
      */
-    protected static $rules = [];
+    protected static array $rules = [];
 
     /**
      * Get a new Rule instance by class, construct a new instance if not found
@@ -35,9 +38,9 @@ class RuleRegistry
     public static function get(string $class, ?array $config = []): Rule
     {
         if (!class_exists($class)) {
-            throw new \BadMethodCallException(sprintf('Unknown rule class %s', $class));
+            throw new BadMethodCallException(sprintf('Unknown rule class %s', $class));
         }
-        $key = $class . md5(\json_encode($config));
+        $key = $class . md5(json_encode($config));
         if (!isset(static::$rules[$key])) {
             $ruleInstance = new $class($config);
             static::$rules[$key] = $ruleInstance;

@@ -17,16 +17,17 @@ use Cake\Core\Configure;
 use Cake\Http\Exception\NotFoundException;
 use Cake\Http\ServerRequestFactory;
 use Cake\TestSuite\TestCase;
+use CakeDC\Auth\Social\Mapper\Facebook as FacebookMapper;
+use CakeDC\Auth\Social\Mapper\Twitter as TwitterMapper;
 use CakeDC\Auth\Social\Service\OAuth1Service;
 use CakeDC\Auth\Social\Service\OAuth2Service;
 use CakeDC\Auth\Social\Service\ServiceFactory;
+use League\OAuth1\Client\Server\Twitter;
+use League\OAuth2\Client\Provider\Facebook;
 
 class ServiceFactoryTest extends TestCase
 {
-    /**
-     * @var ServiceFactory
-     */
-    public $Factory;
+    public ServiceFactory $Factory;
 
     /**
      * Setup the test case, backup the static object values so they can be restored.
@@ -50,9 +51,9 @@ class ServiceFactoryTest extends TestCase
     public function testCreateFromRequest()
     {
         $config = [
-            'service' => \CakeDC\Auth\Social\Service\OAuth2Service::class,
-            'className' => \League\OAuth2\Client\Provider\Facebook::class,
-            'mapper' => \CakeDC\Auth\Social\Mapper\Facebook::class,
+            'service' => OAuth2Service::class,
+            'className' => Facebook::class,
+            'mapper' => FacebookMapper::class,
             'authParams' => ['scope' => ['public_profile', 'email', 'user_birthday', 'user_gender', 'user_link']],
             'options' => [
                 'state' => '__TEST_STATE__',
@@ -92,9 +93,9 @@ class ServiceFactoryTest extends TestCase
         $this->assertEquals('facebook', $service->getProviderName());
 
         $expected = [
-            'service' => \CakeDC\Auth\Social\Service\OAuth2Service::class,
-            'className' => \League\OAuth2\Client\Provider\Facebook::class,
-            'mapper' => \CakeDC\Auth\Social\Mapper\Facebook::class,
+            'service' => OAuth2Service::class,
+            'className' => Facebook::class,
+            'mapper' => FacebookMapper::class,
             'authParams' => ['scope' => ['public_profile', 'email', 'user_birthday', 'user_gender', 'user_link']],
             'options' => [
                 'state' => '__TEST_STATE__',
@@ -125,9 +126,9 @@ class ServiceFactoryTest extends TestCase
     public function testCreateFromRequestCustomRedirectUriField()
     {
         $config = [
-            'service' => \CakeDC\Auth\Social\Service\OAuth2Service::class,
-            'className' => \League\OAuth2\Client\Provider\Facebook::class,
-            'mapper' => \CakeDC\Auth\Social\Mapper\Facebook::class,
+            'service' => OAuth2Service::class,
+            'className' => Facebook::class,
+            'mapper' => FacebookMapper::class,
             'authParams' => ['scope' => ['public_profile', 'email', 'user_birthday', 'user_gender', 'user_link']],
             'options' => [
                 'state' => '__TEST_STATE__',
@@ -168,9 +169,9 @@ class ServiceFactoryTest extends TestCase
         $this->assertEquals('facebook', $service->getProviderName());
 
         $expected = [
-            'service' => \CakeDC\Auth\Social\Service\OAuth2Service::class,
-            'className' => \League\OAuth2\Client\Provider\Facebook::class,
-            'mapper' => \CakeDC\Auth\Social\Mapper\Facebook::class,
+            'service' => OAuth2Service::class,
+            'className' => Facebook::class,
+            'mapper' => FacebookMapper::class,
             'authParams' => ['scope' => ['public_profile', 'email', 'user_birthday', 'user_gender', 'user_link']],
             'options' => [
                 'state' => '__TEST_STATE__',
@@ -201,9 +202,9 @@ class ServiceFactoryTest extends TestCase
     public function testCreateFromRequestOAuth1()
     {
         $config = [
-            'service' => \CakeDC\Auth\Social\Service\OAuth1Service::class,
-            'className' => \League\OAuth1\Client\Server\Twitter::class,
-            'mapper' => \CakeDC\Auth\Social\Mapper\Twitter::class,
+            'service' => OAuth1Service::class,
+            'className' => Twitter::class,
+            'mapper' => TwitterMapper::class,
             'authParams' => ['scope' => ['public_profile', 'email', 'user_birthday', 'user_gender', 'user_link']],
             'options' => [
                 'redirectUri' => '/auth/twitter',

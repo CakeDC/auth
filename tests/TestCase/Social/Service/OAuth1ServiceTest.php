@@ -18,29 +18,21 @@ use Cake\Http\ServerRequest;
 use Cake\Http\ServerRequestFactory;
 use Cake\Http\Session;
 use Cake\TestSuite\TestCase;
+use CakeDC\Auth\Social\Mapper\Twitter as TwitterMapper;
 use CakeDC\Auth\Social\Service\OAuth1Service;
 use CakeDC\Auth\Social\Service\ServiceInterface;
 use Laminas\Diactoros\Uri;
 use League\OAuth1\Client\Credentials\TemporaryCredentials;
 use League\OAuth1\Client\Credentials\TokenCredentials;
+use League\OAuth1\Client\Server\Server;
+use League\OAuth1\Client\Server\Twitter;
 use League\OAuth1\Client\Server\User;
 
 class OAuth1ServiceTest extends TestCase
 {
-    /**
-     * @var \CakeDC\Auth\Social\Service\OAuth1Service
-     */
-    public $Service;
-
-    /**
-     * @var \League\OAuth1\Client\Server\Server
-     */
-    public $Provider;
-
-    /**
-     * @var \Cake\Http\ServerRequest
-     */
-    public $Request;
+    public OAuth1Service $Service;
+    public Server $Provider;
+    public ServerRequest $Request;
 
     /**
      * Setup the test case, backup the static object values so they can be restored.
@@ -53,7 +45,7 @@ class OAuth1ServiceTest extends TestCase
     {
         parent::setUp();
 
-        $this->Provider = $this->getMockBuilder(\League\OAuth1\Client\Server\Twitter::class)->setConstructorArgs([
+        $this->Provider = $this->getMockBuilder(Twitter::class)->setConstructorArgs([
             [
                 'redirectUri' => '/auth/twitter',
                 'linkSocialUri' => '/link-social/twitter',
@@ -66,9 +58,9 @@ class OAuth1ServiceTest extends TestCase
         ])->getMock();
 
         $config = [
-            'service' => \CakeDC\Auth\Social\Service\OAuth1Service::class,
+            'service' => OAuth1Service::class,
             'className' => $this->Provider,
-            'mapper' => \CakeDC\Auth\Social\Mapper\Twitter::class,
+            'mapper' => TwitterMapper::class,
             'options' => [],
             'collaborators' => [],
             'signature' => null,
@@ -106,8 +98,8 @@ class OAuth1ServiceTest extends TestCase
     public function testConstruct()
     {
         $service = new OAuth1Service([
-            'className' => \League\OAuth1\Client\Server\Twitter::class,
-            'mapper' => \CakeDC\Auth\Social\Mapper\Twitter::class,
+            'className' => Twitter::class,
+            'mapper' => TwitterMapper::class,
             'options' => [
                 'redirectUri' => '/auth/twitter',
                 'linkSocialUri' => '/link-social/twitter',
@@ -139,11 +131,11 @@ class OAuth1ServiceTest extends TestCase
         $Credentials->setIdentifier('404405646989097789546879');
         $Credentials->setSecret('secretpasword');
 
-        $this->Provider->expects($this->once())
+        $this->Provider->expects($this->atLeastOnce())
             ->method('getTemporaryCredentials')
             ->will($this->returnValue($Credentials));
 
-        $this->Provider->expects($this->once())
+        $this->Provider->expects($this->atLeastOnce())
             ->method('getAuthorizationUrl')
             ->with(
                 $this->equalTo($Credentials)
@@ -319,7 +311,7 @@ class OAuth1ServiceTest extends TestCase
         $this->Provider->expects($this->never())
             ->method('getTemporaryCredentials');
 
-        $this->Provider->expects($this->once())
+        $this->Provider->expects($this->atLeastOnce())
             ->method('getTokenCredentials')
             ->with(
                 $this->equalTo($Credentials),
@@ -328,7 +320,7 @@ class OAuth1ServiceTest extends TestCase
             )
             ->will($this->returnValue($TokenCredentials));
 
-        $this->Provider->expects($this->once())
+        $this->Provider->expects($this->atLeastOnce())
             ->method('getUserDetails')
             ->with(
                 $this->equalTo($TokenCredentials)

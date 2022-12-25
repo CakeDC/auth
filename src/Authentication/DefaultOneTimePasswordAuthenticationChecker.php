@@ -24,14 +24,14 @@ class DefaultOneTimePasswordAuthenticationChecker implements OneTimePasswordAuth
     /**
      * @var string
      */
-    protected $enabledKey = 'OneTimePasswordAuthenticator.login';
+    protected string $enabledKey = 'OneTimePasswordAuthenticator.login';
 
     /**
      * DefaultTwoFactorAuthenticationChecker constructor.
      *
      * @param string $enableKey configuration key to check if enabled
      */
-    public function __construct($enableKey = null)
+    public function __construct(?string $enableKey = null)
     {
         if ($enableKey !== null) {
             $this->enabledKey = $enableKey;
@@ -43,7 +43,7 @@ class DefaultOneTimePasswordAuthenticationChecker implements OneTimePasswordAuth
      *
      * @return bool
      */
-    public function isEnabled()
+    public function isEnabled(): bool
     {
         return Configure::read($this->enabledKey) !== false;
     }
@@ -51,10 +51,10 @@ class DefaultOneTimePasswordAuthenticationChecker implements OneTimePasswordAuth
     /**
      * Check if two factor authentication is required for a user
      *
-     * @param array $user user data
+     * @param array<mixed>|null $user user data
      * @return bool
      */
-    public function isRequired(?array $user = null)
+    public function isRequired(?array $user = null): bool
     {
         return !empty($user) && $this->isEnabled();
     }

@@ -13,9 +13,11 @@ declare(strict_types=1);
 
 namespace CakeDC\Auth\Traits;
 
+use BadMethodCallException;
 use Cake\Core\Configure;
 use Cake\Http\ServerRequest;
 use Psr\Http\Message\ServerRequestInterface;
+use ReCaptcha\ReCaptcha;
 
 /**
  * Help reCaptacha usage
@@ -28,10 +30,10 @@ trait ReCaptchaTrait
      * @param \Psr\Http\Message\ServerRequestInterface $request The request that contains login information.
      * @return bool
      */
-    public function validateReCaptchaFromRequest(ServerRequestInterface $request)
+    public function validateReCaptchaFromRequest(ServerRequestInterface $request): bool
     {
         if (!$request instanceof ServerRequest) {
-            throw new \BadMethodCallException('Request must be an instance of ServerRequest');
+            throw new BadMethodCallException('Request must be an instance of ServerRequest');
         }
         $data = $request->getParsedBody();
         $captcha = $data['g-recaptcha-response'] ?? null;
@@ -49,7 +51,7 @@ trait ReCaptchaTrait
      * @param string $clientIp client ip
      * @return bool
      */
-    public function validateReCaptcha($recaptchaResponse, $clientIp)
+    public function validateReCaptcha(string $recaptchaResponse, string $clientIp): bool
     {
         $recaptcha = $this->_getReCaptchaInstance();
         if (!empty($recaptcha)) {
@@ -66,11 +68,11 @@ trait ReCaptchaTrait
      *
      * @return \ReCaptcha\ReCaptcha|null
      */
-    protected function _getReCaptchaInstance()
+    protected function _getReCaptchaInstance(): ?ReCaptcha
     {
         $reCaptchaSecret = Configure::read('Users.reCaptcha.secret');
         if (!empty($reCaptchaSecret)) {
-            return new \ReCaptcha\ReCaptcha($reCaptchaSecret);
+            return new ReCaptcha($reCaptchaSecret);
         }
 
         return null;

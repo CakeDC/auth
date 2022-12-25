@@ -19,14 +19,14 @@ use Cake\Core\Configure;
  *
  * @package CakeDC\Auth\Auth
  */
-class DefaultWebauthn2fAuthenticationChecker implements Webauthn2fAuthenticationCheckerInterface
+class DefaultWebauthn2FAuthenticationChecker implements Webauthn2fAuthenticationCheckerInterface
 {
     /**
      * Check if two factor authentication is enabled
      *
      * @return bool
      */
-    public function isEnabled()
+    public function isEnabled(): bool
     {
         return Configure::read('Webauthn2fa.enabled') !== false;
     }
@@ -34,10 +34,10 @@ class DefaultWebauthn2fAuthenticationChecker implements Webauthn2fAuthentication
     /**
      * Check if two factor authentication is required for a user
      *
-     * @param array $user user data
+     * @param array<mixed>|null $user user data
      * @return bool
      */
-    public function isRequired(?array $user = null)
+    public function isRequired(?array $user = null): bool
     {
         return !empty($user) && $this->isEnabled();
     }

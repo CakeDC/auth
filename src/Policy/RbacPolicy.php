@@ -17,6 +17,7 @@ use Authorization\IdentityInterface;
 use Cake\Core\InstanceConfigTrait;
 use CakeDC\Auth\Rbac\Rbac;
 use CakeDC\Auth\Rbac\RbacInterface;
+use InvalidArgumentException;
 use Psr\Http\Message\ServerRequestInterface;
 
 class RbacPolicy implements PolicyInterface
@@ -28,7 +29,7 @@ class RbacPolicy implements PolicyInterface
      *
      * @var array
      */
-    protected $_defaultConfig = [
+    protected array $_defaultConfig = [
         'adapter' => [
             'className' => Rbac::class,
         ],
@@ -39,7 +40,7 @@ class RbacPolicy implements PolicyInterface
      *
      * @var \CakeDC\Auth\Rbac\RbacInterface|null
      */
-    protected $createdRbac;
+    protected RbacInterface $createdRbac;
 
     /**
      * RbacPolicy constructor.
@@ -74,7 +75,7 @@ class RbacPolicy implements PolicyInterface
      * @param \Psr\Http\Message\ServerRequestInterface $resource server request
      * @return \CakeDC\Auth\Rbac\RbacInterface
      */
-    public function getRbac($resource): RbacInterface
+    public function getRbac(ServerRequestInterface $resource): RbacInterface
     {
         $rbac = $resource->getAttribute('rbac');
         if ($rbac !== null) {
@@ -83,7 +84,7 @@ class RbacPolicy implements PolicyInterface
 
         $adapter = $this->getConfig('adapter');
         if (is_array($adapter)) {
-            if ($this->createdRbac) {
+            if (isset($this->createdRbac)) {
                 return $this->createdRbac;
             }
             $this->createdRbac = $this->createRbac($adapter);
@@ -101,7 +102,7 @@ class RbacPolicy implements PolicyInterface
      * @throws \InvalidArgumentException When 'key' className is missing in $config
      * @return \CakeDC\Auth\Rbac\RbacInterface
      */
-    protected function createRbac($config): RbacInterface
+    protected function createRbac(array $config): RbacInterface
     {
         if (isset($config['className'])) {
             $className = $config['className'];
@@ -113,6 +114,6 @@ class RbacPolicy implements PolicyInterface
             }
         }
 
-        throw new \InvalidArgumentException('Config "adapter" should be an object or an array with key className');
+        throw new InvalidArgumentException('Config "adapter" should be an object or an array with key className');
     }
 }

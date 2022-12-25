@@ -22,7 +22,9 @@ use Cake\Log\LogTrait;
 use CakeDC\Auth\Identifier\SocialIdentifier;
 use CakeDC\Auth\Social\MapUser;
 use CakeDC\Auth\Social\Service\ServiceInterface;
+use Exception;
 use Psr\Http\Message\ServerRequestInterface;
+use UnexpectedValueException;
 
 /**
  * Social authenticator
@@ -44,7 +46,7 @@ class SocialAuthenticator extends AbstractAuthenticator
      *
      * @var array
      */
-    protected $_defaultConfig = [];
+    protected array $_defaultConfig = [];
 
     /**
      * Authenticates the identity contained in a request.
@@ -74,7 +76,7 @@ class SocialAuthenticator extends AbstractAuthenticator
      * @param array $rawData social user raw data
      * @return \Authentication\Authenticator\Result
      */
-    protected function identify($rawData)
+    protected function identify(array $rawData): Result
     {
         $user = $this->getIdentifier()->identify([SocialIdentifier::CREDENTIAL_KEY => $rawData]);
         if (!empty($user)) {
@@ -92,7 +94,7 @@ class SocialAuthenticator extends AbstractAuthenticator
      * @throws \Exception
      * @return array|null
      */
-    private function getRawData(ServerRequestInterface $request, ServiceInterface $service)
+    private function getRawData(ServerRequestInterface $request, ServiceInterface $service): ?array
     {
         $rawData = null;
         try {
@@ -100,8 +102,8 @@ class SocialAuthenticator extends AbstractAuthenticator
             $mapper = new MapUser();
 
             return $mapper($service, $rawData);
-        } catch (\Exception $exception) {
-            $list = [BadRequestException::class, \UnexpectedValueException::class];
+        } catch (Exception $exception) {
+            $list = [BadRequestException::class, UnexpectedValueException::class];
             $this->throwIfNotInlist($exception, $list);
             $message = sprintf(
                 "Error getting an access token / retrieving the authorized user's profile data. Error message: %s %s",
@@ -122,7 +124,7 @@ class SocialAuthenticator extends AbstractAuthenticator
      * @throws \Exception
      * @return void
      */
-    private function throwIfNotInlist(\Exception $exception, array $list)
+    private function throwIfNotInlist(Exception $exception, array $list): void
     {
         $className = get_class($exception);
         if (!in_array($className, $list)) {

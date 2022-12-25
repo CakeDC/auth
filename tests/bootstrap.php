@@ -1,6 +1,11 @@
 <?php
 declare(strict_types=1);
 
+use Cake\Datasource\ConnectionManager;
+use Cake\Routing\Router;
+use Cake\TestSuite\Fixture\SchemaLoader;
+use CakeDC\Auth\Test\TestApplication;
+
 /**
  * Copyright 2010 - 2019, Cake Development Corporation (https://www.cakedc.com)
  *
@@ -37,17 +42,21 @@ if (!defined('DS')) {
 }
 define('ROOT', $root);
 define('APP_DIR', 'App');
+
+define('TMP', ROOT . DS . 'tmp' . DS);
+define('LOGS', TMP . 'logs' . DS);
+define('CACHE', TMP . 'cache' . DS);
+define('SESSIONS', TMP . 'sessions' . DS);
+
+define('CAKE_CORE_INCLUDE_PATH', ROOT . '/vendor/cakephp/cakephp');
+define('CORE_PATH', CAKE_CORE_INCLUDE_PATH . DS);
+define('CAKE', CORE_PATH . 'src' . DS);
+
 define('WEBROOT_DIR', 'webroot');
 define('APP', ROOT . '/tests/App/');
 define('CONFIG', ROOT . '/tests/config/');
 define('WWW_ROOT', ROOT . DS . WEBROOT_DIR . DS);
 define('TESTS', ROOT . DS . 'tests' . DS);
-define('TMP', ROOT . DS . 'tmp' . DS);
-define('LOGS', TMP . 'logs' . DS);
-define('CACHE', TMP . 'cache' . DS);
-define('CAKE_CORE_INCLUDE_PATH', ROOT . '/vendor/cakephp/cakephp');
-define('CORE_PATH', CAKE_CORE_INCLUDE_PATH . DS);
-define('CAKE', CORE_PATH . 'src' . DS);
 
 require ROOT . '/vendor/cakephp/cakephp/src/basics.php';
 require ROOT . '/vendor/autoload.php';
@@ -71,10 +80,9 @@ Cake\Core\Configure::write('App.encoding', 'UTF-8');
 
 ini_set('intl.default_locale', 'en_US');
 
-$TMP = new \Cake\Filesystem\Folder(TMP);
-$TMP->create(TMP . 'cache/models', 0777);
-$TMP->create(TMP . 'cache/persistent', 0777);
-$TMP->create(TMP . 'cache/views', 0777);
+@mkdir(TMP . 'cache/models');
+@mkdir(TMP . 'cache/persistent');
+@mkdir(TMP . 'cache/views');
 
 $cache = [
     'default' => [
@@ -103,19 +111,23 @@ Cake\Core\Configure::write('Session', [
 
 \Cake\Utility\Security::setSalt('yoyz186elmi66ab9pz4imbb3tgy9vnsgsfgwe2r8tyxbbfdygu9e09tlxyg8p7dq');
 
+if (!getenv('DB_URL')) {
+    putenv('DB_URL=sqlite:///:memory:');
+}
+
+ConnectionManager::setConfig('test', ['url' => getenv('DB_URL')]);
+
 //init router
-\Cake\Routing\Router::reload();
+Router::reload();
 Cake\Core\Configure::write('OAuth.path', [
     'plugin' => 'CakeDC/Users',
     'controller' => 'Users',
     'action' => 'socialLogin',
     'prefix' => null,
 ]);
-$app = new \CakeDC\Auth\Test\TestApplication(__DIR__ . DS . 'config');
+$app = new TestApplication(__DIR__ . DS . 'config');
 $app->bootstrap();
 $app->pluginBootstrap();
-
-use Cake\TestSuite\Fixture\SchemaLoader;
 
 if (env('FIXTURE_SCHEMA_METADATA')) {
     $loader = new SchemaLoader();

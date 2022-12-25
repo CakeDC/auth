@@ -17,6 +17,7 @@ use Authentication\AuthenticationService as BaseService;
 use Authentication\Authenticator\Result;
 use Authentication\Authenticator\ResultInterface;
 use Authentication\Authenticator\StatelessInterface;
+use Cake\Datasource\EntityInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use RuntimeException;
 
@@ -37,9 +38,9 @@ class AuthenticationService extends BaseService
     /**
      * All failures authenticators
      *
-     * @var \CakeDC\Auth\Authentication\Failure[]
+     * @var array<\CakeDC\Auth\Authentication\Failure>
      */
-    protected $failures = [];
+    protected array $failures = [];
 
     /**
      * Proceed to google verify action after a valid result result
@@ -48,7 +49,7 @@ class AuthenticationService extends BaseService
      * @param \Authentication\Authenticator\ResultInterface $result The original result
      * @return \Authentication\Authenticator\ResultInterface The result object.
      */
-    protected function proceedToGoogleVerify(ServerRequestInterface $request, ResultInterface $result)
+    protected function proceedToGoogleVerify(ServerRequestInterface $request, ResultInterface $result): ResultInterface
     {
         /**
          * @var \Cake\Http\Session $session
@@ -68,7 +69,7 @@ class AuthenticationService extends BaseService
      * @param \Authentication\Authenticator\ResultInterface $result valid result
      * @return \Authentication\Authenticator\ResultInterface with result, request and response keys
      */
-    protected function proceedToWebauthn2fa(ServerRequestInterface $request, ResultInterface $result)
+    protected function proceedToWebauthn2fa(ServerRequestInterface $request, ResultInterface $result): ResultInterface
     {
         /**
          * @var \Cake\Http\Session $session
@@ -88,7 +89,7 @@ class AuthenticationService extends BaseService
      * @param \Authentication\Authenticator\ResultInterface $result valid result
      * @return \Authentication\Authenticator\ResultInterface with result, request and response keys
      */
-    protected function proceedToU2f(ServerRequestInterface $request, ResultInterface $result)
+    protected function proceedToU2f(ServerRequestInterface $request, ResultInterface $result): ResultInterface
     {
         /**
          * @var \Cake\Http\Session $session
@@ -106,7 +107,7 @@ class AuthenticationService extends BaseService
      *
      * @return \CakeDC\Auth\Authentication\OneTimePasswordAuthenticationCheckerInterface
      */
-    protected function getOneTimePasswordAuthenticationChecker()
+    protected function getOneTimePasswordAuthenticationChecker(): OneTimePasswordAuthenticationCheckerInterface
     {
         return (new OneTimePasswordAuthenticationCheckerFactory())->build();
     }
@@ -114,9 +115,9 @@ class AuthenticationService extends BaseService
     /**
      * Get the configured u2f authentication checker
      *
-     * @return \CakeDC\Auth\Authentication\Webauthn2FAuthenticationCheckerInterface
+     * @return \CakeDC\Auth\Authentication\Webauthn2fAuthenticationCheckerInterface
      */
-    protected function getWebauthn2fAuthenticationChecker()
+    protected function getWebauthn2fAuthenticationChecker(): Webauthn2fAuthenticationCheckerInterface
     {
         return (new Webauthn2fAuthenticationCheckerFactory())->build();
     }
@@ -124,9 +125,9 @@ class AuthenticationService extends BaseService
     /**
      * Get the configured u2f authentication checker
      *
-     * @return \CakeDC\Auth\Authentication\Webauthn2FAuthenticationCheckerInterface
+     * @return \CakeDC\Auth\Authentication\U2fAuthenticationCheckerInterface
      */
-    protected function getU2fAuthenticationChecker()
+    protected function getU2fAuthenticationChecker(): U2fAuthenticationCheckerInterface
     {
         return (new U2fAuthenticationCheckerFactory())->build();
     }
@@ -145,11 +146,15 @@ class AuthenticationService extends BaseService
         }
 
         $result = null;
+        /** @var \Authentication\Authenticator\AbstractAuthenticator $authenticator */
         foreach ($this->authenticators() as $authenticator) {
             $result = $authenticator->authenticate($request);
             if ($result->isValid()) {
                 $skipTwoFactorVerify = $authenticator->getConfig('skipTwoFactorVerify');
-                $userData = $result->getData()->toArray();
+                $userData = $result->getData();
+                if ($userData instanceof EntityInterface) {
+                    $userData = $userData->toArray();
+                }
                 $webauthn2faChecker = $this->getWebauthn2fAuthenticationChecker();
                 if ($skipTwoFactorVerify !== true && $webauthn2faChecker->isRequired($userData)) {
                     return $this->proceedToWebauthn2fa($request, $result);
@@ -186,9 +191,9 @@ class AuthenticationService extends BaseService
     /**
      * Get list the list of failures processed
      *
-     * @return \CakeDC\Auth\Authentication\Failure[]
+     * @return array<\CakeDC\Auth\Authentication\Failure>
      */
-    public function getFailures()
+    public function getFailures(): array
     {
         return $this->failures;
     }

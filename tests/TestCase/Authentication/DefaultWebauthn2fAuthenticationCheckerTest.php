@@ -14,7 +14,7 @@ namespace CakeDC\Users\Test\TestCase\Authentication;
 
 use Cake\Core\Configure;
 use Cake\TestSuite\TestCase;
-use CakeDC\Auth\Authentication\DefaultWebauthn2fAuthenticationChecker;
+use CakeDC\Auth\Authentication\DefaultWebauthn2FAuthenticationChecker;
 
 /**
  * Test case for DefaultWebauthn2fAuthenticationChecker class
@@ -31,15 +31,15 @@ class DefaultWebauthn2fAuthenticationCheckerTest extends TestCase
     public function testIsEnabled()
     {
         Configure::write('Webauthn2fa.enabled', false);
-        $Checker = new DefaultWebauthn2fAuthenticationChecker();
+        $Checker = new DefaultWebauthn2FAuthenticationChecker();
         $this->assertFalse($Checker->isEnabled());
 
         Configure::write('Webauthn2fa.enabled', true);
-        $Checker = new DefaultWebauthn2fAuthenticationChecker();
+        $Checker = new DefaultWebauthn2FAuthenticationChecker();
         $this->assertTrue($Checker->isEnabled());
 
         Configure::delete('Webauthn2fa.enabled');
-        $Checker = new DefaultWebauthn2fAuthenticationChecker();
+        $Checker = new DefaultWebauthn2FAuthenticationChecker();
         $this->assertTrue($Checker->isEnabled());
     }
 
@@ -51,18 +51,18 @@ class DefaultWebauthn2fAuthenticationCheckerTest extends TestCase
     public function testIsRequired()
     {
         Configure::write('Webauthn2fa.enabled', false);
-        $Checker = new DefaultWebauthn2fAuthenticationChecker();
+        $Checker = new DefaultWebauthn2FAuthenticationChecker();
         $this->assertFalse($Checker->isRequired(['id' => 10]));
 
         Configure::write('Webauthn2fa.enabled', true);
-        $Checker = new DefaultWebauthn2fAuthenticationChecker();
+        $Checker = new DefaultWebauthn2FAuthenticationChecker();
         $this->assertTrue($Checker->isRequired(['id' => 10]));
 
         Configure::delete('Webauthn2fa.enabled');
-        $Checker = new DefaultWebauthn2fAuthenticationChecker();
+        $Checker = new DefaultWebauthn2FAuthenticationChecker();
         $this->assertTrue($Checker->isRequired(['id' => 10]));
 
-        $Checker = new DefaultWebauthn2fAuthenticationChecker();
+        $Checker = new DefaultWebauthn2FAuthenticationChecker();
         $this->assertFalse($Checker->isRequired([]));
     }
 }

@@ -26,7 +26,7 @@ class DefaultU2fAuthenticationChecker implements U2fAuthenticationCheckerInterfa
      *
      * @return bool
      */
-    public function isEnabled()
+    public function isEnabled(): bool
     {
         return Configure::read('U2f.enabled') !== false;
     }
@@ -34,10 +34,10 @@ class DefaultU2fAuthenticationChecker implements U2fAuthenticationCheckerInterfa
     /**
      * Check if two factor authentication is required for a user
      *
-     * @param array $user user data
+     * @param array<mixed>|null $user user data
      * @return bool
      */
-    public function isRequired(?array $user = null)
+    public function isRequired(?array $user = null): bool
     {
         return !empty($user) && $this->isEnabled();
     }
