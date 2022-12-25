@@ -12,6 +12,7 @@ declare(strict_types=1);
  */
 namespace CakeDC\Auth\Rbac\Rules;
 
+use ArrayAccess;
 use Psr\Http\Message\ServerRequestInterface;
 
 interface Rule
@@ -19,10 +20,10 @@ interface Rule
     /**
      * Check the current entity is owned by the logged in user
      *
-     * @param array|\ArrayAccess $user Auth array with the logged in data
+     * @param \ArrayAccess|array $user Auth array with the logged in data
      * @param string $role role of the user
      * @param \Psr\Http\Message\ServerRequestInterface $request current request, used to get a default table if not provided
      * @return bool
      */
-    public function allowed($user, $role, ServerRequestInterface $request);
+    public function allowed(array|ArrayAccess $user, string $role, ServerRequestInterface $request): bool;
 }

@@ -15,9 +15,11 @@ namespace CakeDC\Auth\Test\TestCase\Authenticator;
 use ArrayObject;
 use Authentication\Identifier\IdentifierCollection;
 use Cake\Http\Response;
+use Cake\Http\ServerRequest;
 use Cake\TestSuite\TestCase;
 use Cake\Utility\Security;
 use CakeDC\Auth\Authenticator\CookieAuthenticator;
+use Laminas\Diactoros\Uri;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
@@ -56,9 +58,9 @@ class CookieAuthenticatorTest extends TestCase
         $identifiers = new IdentifierCollection([
             'Authentication.Password',
         ]);
-        $uri = new \Laminas\Diactoros\Uri('/login');
+        $uri = new Uri('/login');
         $uri->base = null;
-        $request = new \Cake\Http\ServerRequest();
+        $request = new ServerRequest();
         $request = $request->withUri($uri);
 
         $request = $request->withParsedBody($post);

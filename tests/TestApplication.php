@@ -12,6 +12,7 @@ declare(strict_types=1);
  */
 namespace CakeDC\Auth\Test;
 
+use Cake\Http\BaseApplication;
 use Cake\Http\MiddlewareQueue;
 
 /**
@@ -19,7 +20,7 @@ use Cake\Http\MiddlewareQueue;
  *
  * @package CakeDC\Auth\Test
  */
-class TestApplication extends \Cake\Http\BaseApplication
+class TestApplication extends BaseApplication
 {
     /**
      * Setup the middleware queue

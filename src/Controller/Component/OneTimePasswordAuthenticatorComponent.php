@@ -27,7 +27,7 @@ class OneTimePasswordAuthenticatorComponent extends Component
     /**
      * @var \RobThree\Auth\TwoFactorAuth $tfa
      */
-    public $tfa;
+    public TwoFactorAuth $tfa;
 
     /**
      * initialize method
@@ -56,7 +56,7 @@ class OneTimePasswordAuthenticatorComponent extends Component
      *
      * @return string base32 shared secret stored in users table
      */
-    public function createSecret()
+    public function createSecret(): string
     {
         return $this->tfa->createSecret();
     }
@@ -69,7 +69,7 @@ class OneTimePasswordAuthenticatorComponent extends Component
      * @param string $code from verification form
      * @return bool
      */
-    public function verifyCode($secret, $code)
+    public function verifyCode(string $secret, string $code): bool
     {
         return $this->tfa->verifyCode($secret, $code);
     }
@@ -81,7 +81,7 @@ class OneTimePasswordAuthenticatorComponent extends Component
      * @param string $secret secret
      * @return string base64 string containing QR code for shared secret
      */
-    public function getQRCodeImageAsDataUri($issuer, $secret)
+    public function getQRCodeImageAsDataUri(string $issuer, string $secret): string
     {
         return $this->tfa->getQRCodeImageAsDataUri($issuer, $secret);
     }

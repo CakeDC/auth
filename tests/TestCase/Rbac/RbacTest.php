@@ -18,6 +18,7 @@ use Cake\TestSuite\TestCase;
 use CakeDC\Auth\Rbac\Rbac;
 use CakeDC\Auth\Rbac\Rules\Owner;
 use CakeDC\Auth\Test\App\Auth\Rule\SampleRule;
+use Exception;
 use Psr\Log\LogLevel;
 use ReflectionClass;
 use RuntimeException;
@@ -39,7 +40,6 @@ class RbacTest extends TestCase
      */
     public function setUp(): void
     {
-        $request = new ServerRequest();
         $this->defaultPermissions = [
             //all bypass
             [
@@ -106,7 +106,7 @@ class RbacTest extends TestCase
                 'action' => 'display',
             ],
         ];
-        $this->rbac = new Rbac(null, $this->defaultPermissions);
+        $this->rbac = new Rbac($this->defaultPermissions);
     }
 
     /**
@@ -194,7 +194,7 @@ class RbacTest extends TestCase
                         'controller' => 'Tests',
                         'action' => 'three', // Discard here
                         function () {
-                            throw new \Exception();
+                            throw new Exception();
                         },
                     ],
                     [
@@ -233,7 +233,7 @@ class RbacTest extends TestCase
                     [
                         // This permission isn't evaluated
                         function () {
-                            throw new \Exception();
+                            throw new Exception();
                         },
                         'plugin' => ['Tests'],
                         'role' => ['test'],
@@ -340,7 +340,7 @@ class RbacTest extends TestCase
                     [
                         'allowed' => false,
                         function () {
-                            throw new \Exception();
+                            throw new Exception();
                         },
                         'controller' => 'Tests',
                         'action' => 'one',

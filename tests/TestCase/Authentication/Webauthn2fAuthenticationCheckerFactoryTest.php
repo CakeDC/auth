@@ -14,8 +14,10 @@ namespace CakeDC\Auth\Test\TestCase\Authentication;
 
 use Cake\Core\Configure;
 use Cake\TestSuite\TestCase;
-use CakeDC\Auth\Authentication\DefaultWebauthn2fAuthenticationChecker;
+use CakeDC\Auth\Authentication\DefaultWebauthn2FAuthenticationChecker;
 use CakeDC\Auth\Authentication\Webauthn2fAuthenticationCheckerFactory;
+use InvalidArgumentException;
+use stdClass;
 
 class Webauthn2fAuthenticationCheckerFactoryTest extends TestCase
 {
@@ -27,7 +29,7 @@ class Webauthn2fAuthenticationCheckerFactoryTest extends TestCase
     public function testGetChecker()
     {
         $result = (new Webauthn2fAuthenticationCheckerFactory())->build();
-        $this->assertInstanceOf(DefaultWebauthn2fAuthenticationChecker::class, $result);
+        $this->assertInstanceOf(DefaultWebauthn2FAuthenticationChecker::class, $result);
     }
 
     /**
@@ -37,9 +39,9 @@ class Webauthn2fAuthenticationCheckerFactoryTest extends TestCase
      */
     public function testGetCheckerInvalidInterface()
     {
-        Configure::write('Webauthn2fa.checker', \stdClass::class);
-        $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage("Invalid config for 'Webauthn2fa.checker', 'stdClass' does not implement 'CakeDC\Auth\Authentication\Webauthn2FAuthenticationCheckerInterface'");
+        Configure::write('Webauthn2fa.checker', stdClass::class);
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage("Invalid config for 'Webauthn2fa.checker', 'stdClass' does not implement 'CakeDC\Auth\Authentication\Webauthn2fAuthenticationCheckerInterface'");
         (new Webauthn2fAuthenticationCheckerFactory())->build();
     }
 }

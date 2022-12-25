@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace CakeDC\Auth\Test\App\Auth\Rule;
 
+use ArrayAccess;
 use CakeDC\Auth\Rbac\Rules\AbstractRule;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -21,7 +22,7 @@ class SampleRule extends AbstractRule
     /**
      * @inheritDoc
      */
-    public function allowed($user, $role, ServerRequestInterface $request)
+    public function allowed(array|ArrayAccess $user, string $role, ServerRequestInterface $request): bool
     {
         return true;
     }

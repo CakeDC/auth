@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace CakeDC\Auth\Authentication;
 
 use Cake\Core\Configure;
+use InvalidArgumentException;
 
 /**
  * Factory for two authentication checker
@@ -24,17 +25,17 @@ class Webauthn2fAuthenticationCheckerFactory
     /**
      * Get the two factor authentication checker
      *
-     * @return \CakeDC\Auth\Authentication\Webauthn2FAuthenticationCheckerInterface
+     * @return \CakeDC\Auth\Authentication\Webauthn2fAuthenticationCheckerInterface
      */
-    public function build()
+    public function build(): Webauthn2fAuthenticationCheckerInterface
     {
         $className = Configure::read('Webauthn2fa.checker');
         $interfaces = class_implements($className);
-        $required = Webauthn2FAuthenticationCheckerInterface::class;
+        $required = Webauthn2fAuthenticationCheckerInterface::class;
 
         if (in_array($required, $interfaces)) {
             return new $className();
         }
-        throw new \InvalidArgumentException("Invalid config for 'Webauthn2fa.checker', '$className' does not implement '$required'");
+        throw new InvalidArgumentException("Invalid config for 'Webauthn2fa.checker', '$className' does not implement '$required'");
     }
 }

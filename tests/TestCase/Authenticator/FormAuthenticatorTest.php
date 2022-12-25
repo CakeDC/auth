@@ -12,6 +12,7 @@ declare(strict_types=1);
  */
 namespace CakeDC\Auth\Test\TestCase\Authenticator;
 
+use Authentication\Authenticator\FormAuthenticator as CakeFormAuthenticator;
 use Authentication\Authenticator\Result;
 use Authentication\Identifier\IdentifierCollection;
 use Authentication\Identifier\IdentifierInterface;
@@ -34,7 +35,7 @@ class FormAuthenticatorTest extends TestCase
             'Authentication.Password',
         ]);
 
-        $BaseAuthenticator = $this->getMockBuilder(\Authentication\Authenticator\FormAuthenticator::class)
+        $BaseAuthenticator = $this->getMockBuilder(CakeFormAuthenticator::class)
             ->setConstructorArgs([$identifiers])
             ->setMethods(['authenticate'])
             ->getMock();
@@ -98,7 +99,7 @@ class FormAuthenticatorTest extends TestCase
             'Authentication.Password',
         ]);
 
-        $BaseAuthenticator = $this->getMockBuilder(\Authentication\Authenticator\FormAuthenticator::class)
+        $BaseAuthenticator = $this->getMockBuilder(CakeFormAuthenticator::class)
             ->setConstructorArgs([$identifiers])
             ->setMethods(['authenticate'])
             ->getMock();
@@ -171,7 +172,7 @@ class FormAuthenticatorTest extends TestCase
             'Authentication.Password',
         ]);
 
-        $BaseAuthenticator = $this->getMockBuilder(\Authentication\Authenticator\FormAuthenticator::class)
+        $BaseAuthenticator = $this->getMockBuilder(CakeFormAuthenticator::class)
             ->setConstructorArgs([$identifiers])
             ->setMethods(['authenticate'])
             ->getMock();
@@ -238,7 +239,7 @@ class FormAuthenticatorTest extends TestCase
             'Authentication.Password',
         ]);
 
-        $BaseAuthenticator = $this->getMockBuilder(\Authentication\Authenticator\FormAuthenticator::class)
+        $BaseAuthenticator = $this->getMockBuilder(CakeFormAuthenticator::class)
             ->setConstructorArgs([$identifiers])
             ->setMethods(['authenticate'])
             ->getMock();
@@ -320,7 +321,7 @@ class FormAuthenticatorTest extends TestCase
             ]
         );
         $actual = $Authenticator->getBaseAuthenticator();
-        $this->assertInstanceOf(\Authentication\Authenticator\FormAuthenticator::class, $actual);
+        $this->assertInstanceOf(CakeFormAuthenticator::class, $actual);
         $this->assertNotInstanceOf(FormAuthenticator::class, $actual);
         $expected = [
             'fields' => [
@@ -352,11 +353,11 @@ class FormAuthenticatorTest extends TestCase
                     IdentifierInterface::CREDENTIAL_PASSWORD => 'password',
                 ],
                 'keyCheckEnabledRecaptcha' => 'Users.reCaptcha.login',
-                'baseClassName' => \Authentication\Authenticator\FormAuthenticator::class,
+                'baseClassName' => CakeFormAuthenticator::class,
             ]
         );
         $actual = $Authenticator->getBaseAuthenticator();
-        $this->assertInstanceOf(\Authentication\Authenticator\FormAuthenticator::class, $actual);
+        $this->assertInstanceOf(CakeFormAuthenticator::class, $actual);
         $this->assertNotInstanceOf(FormAuthenticator::class, $actual);
         $expected = [
             'fields' => [

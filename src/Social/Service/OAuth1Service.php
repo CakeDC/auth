@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace CakeDC\Auth\Social\Service;
 
+use BadMethodCallException;
 use Cake\Http\ServerRequest;
 use League\OAuth1\Client\Server\Server;
 use Psr\Http\Message\ServerRequestInterface;
@@ -22,7 +23,7 @@ class OAuth1Service extends OAuthServiceAbstract
     /**
      * @var \League\OAuth1\Client\Server\Server
      */
-    protected $provider;
+    protected Server $provider;
 
     /**
      * OAuth2Service constructor.
@@ -57,7 +58,7 @@ class OAuth1Service extends OAuthServiceAbstract
     public function isGetUserStep(ServerRequestInterface $request): bool
     {
         if (!$request instanceof ServerRequest) {
-            throw new \BadMethodCallException('Request must be an instance of ServerRequest');
+            throw new BadMethodCallException('Request must be an instance of ServerRequest');
         }
         $oauthToken = $request->getQuery('oauth_token');
         $oauthVerifier = $request->getQuery('oauth_verifier');
@@ -71,10 +72,10 @@ class OAuth1Service extends OAuthServiceAbstract
      * @param \Psr\Http\Message\ServerRequestInterface $request Request object.
      * @return string
      */
-    public function getAuthorizationUrl(ServerRequestInterface $request)
+    public function getAuthorizationUrl(ServerRequestInterface $request): string
     {
         if (!$request instanceof ServerRequest) {
-            throw new \BadMethodCallException('Request must be an instance of ServerRequest');
+            throw new BadMethodCallException('Request must be an instance of ServerRequest');
         }
         $temporaryCredentials = $this->provider->getTemporaryCredentials();
         $request->getSession()->write('temporary_credentials', $temporaryCredentials);
@@ -91,7 +92,7 @@ class OAuth1Service extends OAuthServiceAbstract
     public function getUser(ServerRequestInterface $request): array
     {
         if (!$request instanceof ServerRequest) {
-            throw new \BadMethodCallException('Request must be an instance of ServerRequest');
+            throw new BadMethodCallException('Request must be an instance of ServerRequest');
         }
         $oauthToken = $request->getQuery('oauth_token');
         $oauthVerifier = $request->getQuery('oauth_verifier');
@@ -117,7 +118,7 @@ class OAuth1Service extends OAuthServiceAbstract
      * @param array $config for provider.
      * @return void
      */
-    protected function setProvider($config)
+    protected function setProvider(array $config): void
     {
         if (is_object($config['className']) && $config['className'] instanceof Server) {
             $this->provider = $config['className'];

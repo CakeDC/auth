@@ -31,7 +31,7 @@ interface ServiceInterface
      * @param \Psr\Http\Message\ServerRequestInterface $request Request object.
      * @return string
      */
-    public function getAuthorizationUrl(ServerRequestInterface $request);
+    public function getAuthorizationUrl(ServerRequestInterface $request): string;
 
     /**
      * Get a user in social provider
@@ -54,7 +54,7 @@ interface ServiceInterface
      * @param string $name set name
      * @return self
      */
-    public function setProviderName(string $name);
+    public function setProviderName(string $name): self;
 
     /**
      * Get current config
@@ -63,5 +63,5 @@ interface ServiceInterface
      * @param mixed $default The return value when the key does not exist.
      * @return mixed Config value being read.
      */
-    public function getConfig(?string $key = null, $default = null);
+    public function getConfig(?string $key = null, mixed $default = null): mixed;
 }

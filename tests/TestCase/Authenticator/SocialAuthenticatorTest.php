@@ -15,13 +15,20 @@ namespace CakeDC\Auth\Test\TestCase\Authenticator;
 use Authentication\Authenticator\Result;
 use Authentication\Identifier\IdentifierCollection;
 use Cake\Core\Configure;
+use Cake\Http\ServerRequest;
 use Cake\Http\ServerRequestFactory;
 use Cake\ORM\Entity;
 use Cake\TestSuite\TestCase;
 use CakeDC\Auth\Authenticator\SocialAuthenticator;
+use CakeDC\Auth\Social\Mapper\Facebook as FacebookMapper;
+use CakeDC\Auth\Social\Service\OAuth2Service;
 use CakeDC\Auth\Social\Service\ServiceFactory;
+use InvalidArgumentException;
 use Laminas\Diactoros\Uri;
+use League\OAuth2\Client\Provider\Facebook;
 use League\OAuth2\Client\Provider\FacebookUser;
+use League\OAuth2\Client\Token\AccessToken;
+use UnexpectedValueException;
 
 /**
  * Test Case for SocialAuthenticator class
@@ -30,20 +37,13 @@ use League\OAuth2\Client\Provider\FacebookUser;
  */
 class SocialAuthenticatorTest extends TestCase
 {
-    public $fixtures = [
+    public array $fixtures = [
         'plugin.CakeDC/Auth.Users',
         'plugin.CakeDC/Auth.SocialAccounts',
     ];
 
-    /**
-     * @var \League\OAuth2\Client\Provider\Facebook
-     */
-    public $Provider;
-
-    /**
-     * @var \Cake\Http\ServerRequest
-     */
-    public $Request;
+    public Facebook $Provider;
+    public ServerRequest $Request;
 
     /**
      * Setup the test case, backup the static object values so they can be restored.
@@ -56,7 +56,7 @@ class SocialAuthenticatorTest extends TestCase
     {
         parent::setUp();
 
-        $this->Provider = $this->getMockBuilder(\League\OAuth2\Client\Provider\Facebook::class)->setConstructorArgs([
+        $this->Provider = $this->getMockBuilder(Facebook::class)->setConstructorArgs([
             [
                 'graphApiVersion' => 'v2.8',
                 'redirectUri' => '/auth/facebook',
@@ -71,9 +71,9 @@ class SocialAuthenticatorTest extends TestCase
         ])->getMock();
 
         $config = [
-            'service' => \CakeDC\Auth\Social\Service\OAuth2Service::class,
+            'service' => OAuth2Service::class,
             'className' => $this->Provider,
-            'mapper' => \CakeDC\Auth\Social\Mapper\Facebook::class,
+            'mapper' => FacebookMapper::class,
             'options' => [
                 'state' => '__TEST_STATE__',
                 'graphApiVersion' => 'v2.8',
@@ -151,7 +151,7 @@ class SocialAuthenticatorTest extends TestCase
         ]);
         $this->Request->getSession()->write('oauth2state', '__TEST_STATE__');
 
-        $Token = new \League\OAuth2\Client\Token\AccessToken([
+        $Token = new AccessToken([
             'access_token' => 'test-token',
             'expires' => 1490988496,
         ]);
@@ -247,7 +247,7 @@ class SocialAuthenticatorTest extends TestCase
         ]);
         $this->Request->getSession()->write('oauth2state', '__TEST_STATE__');
 
-        $Token = new \League\OAuth2\Client\Token\AccessToken([
+        $Token = new AccessToken([
             'access_token' => 'test-token',
             'expires' => 1490988496,
         ]);
@@ -271,7 +271,7 @@ class SocialAuthenticatorTest extends TestCase
             ->with(
                 $this->equalTo($Token)
             )
-            ->will($this->throwException(new \UnexpectedValueException('User not found')));
+            ->will($this->throwException(new UnexpectedValueException('User not found')));
 
         $service = (new ServiceFactory())->createFromProvider('facebook');
         $this->Request = $this->Request->withAttribute('socialService', $service);
@@ -307,7 +307,7 @@ class SocialAuthenticatorTest extends TestCase
         ]);
         $this->Request->getSession()->write('oauth2state', '__TEST_STATE__');
 
-        $Token = new \League\OAuth2\Client\Token\AccessToken([
+        $Token = new AccessToken([
             'access_token' => 'test-token',
             'expires' => 1490988496,
         ]);
@@ -332,7 +332,7 @@ class SocialAuthenticatorTest extends TestCase
                 $this->equalTo($Token)
             )
             ->will($this->throwException(
-                new \InvalidArgumentException('Invalid argument at getResourceOwner')
+                new InvalidArgumentException('Invalid argument at getResourceOwner')
             ));
 
         $service = (new ServiceFactory())->createFromProvider('facebook');
@@ -341,7 +341,7 @@ class SocialAuthenticatorTest extends TestCase
             'CakeDC/Auth.Social',
         ]);
         $Authenticator = new SocialAuthenticator($identifiers);
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Invalid argument at getResourceOwner');
         $Authenticator->authenticate($this->Request);
     }
@@ -367,7 +367,7 @@ class SocialAuthenticatorTest extends TestCase
         ]);
         $this->Request->getSession()->write('oauth2state', '__TEST_STATE__');
 
-        $Token = new \League\OAuth2\Client\Token\AccessToken([
+        $Token = new AccessToken([
             'access_token' => 'test-token',
             'expires' => 1490988496,
         ]);

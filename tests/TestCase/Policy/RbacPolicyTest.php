@@ -19,7 +19,9 @@ use Cake\Http\ServerRequestFactory;
 use Cake\ORM\Entity;
 use Cake\TestSuite\TestCase;
 use CakeDC\Auth\Policy\RbacPolicy;
+use CakeDC\Auth\Rbac\Permissions\ConfigProvider;
 use CakeDC\Auth\Rbac\Rbac;
+use InvalidArgumentException;
 
 class RbacPolicyTest extends TestCase
 {
@@ -137,7 +139,7 @@ class RbacPolicyTest extends TestCase
             'autoload_config' => 'my_permissions',
             'role_field' => 'group',
             'default_role' => 'user',
-            'permissions_provider_class' => \CakeDC\Auth\Rbac\Permissions\ConfigProvider::class,
+            'permissions_provider_class' => ConfigProvider::class,
             'permissions' => null,
             'log' => true,
         ];
@@ -175,7 +177,7 @@ class RbacPolicyTest extends TestCase
         $request = ServerRequestFactory::fromGlobals();
         $policy = new RbacPolicy([]);
         $policy->setConfig('adapter', [], false);
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Config "adapter" should be an object or an array with key className');
         $policy->getRbac($request);
     }

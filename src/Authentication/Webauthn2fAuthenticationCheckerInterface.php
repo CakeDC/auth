@@ -12,14 +12,14 @@ declare(strict_types=1);
  */
 namespace CakeDC\Auth\Authentication;
 
-interface Webauthn2FAuthenticationCheckerInterface
+interface Webauthn2fAuthenticationCheckerInterface
 {
     /**
      * Check if two factor authentication is enabled
      *
      * @return bool
      */
-    public function isEnabled();
+    public function isEnabled(): bool;
 
     /**
      * Check if two factor authentication is required for a user
@@ -27,5 +27,5 @@ interface Webauthn2FAuthenticationCheckerInterface
      * @param array<mixed>|null $user user data
      * @return bool
      */
-    public function isRequired(?array $user = null);
+    public function isRequired(?array $user = null): bool;
 }

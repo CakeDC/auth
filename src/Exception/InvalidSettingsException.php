@@ -17,7 +17,11 @@ use Cake\Core\Exception\CakeException;
 
 class InvalidSettingsException extends CakeException
 {
-    protected $_messageTemplate = 'Invalid settings for key (%s)';
+    protected string $_messageTemplate = 'Invalid settings for key (%s)';
+
+    /**
+     * @var int
+     */
     protected $code = 500;
 
     /**
@@ -27,7 +31,7 @@ class InvalidSettingsException extends CakeException
      * @param int $code code
      * @param null $previous previous
      */
-    public function __construct($message, $code = 500, $previous = null)
+    public function __construct(array|string $message, int $code = 500, $previous = null)
     {
         parent::__construct($message, $code, $previous);
     }

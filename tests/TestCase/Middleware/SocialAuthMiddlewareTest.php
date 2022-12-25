@@ -16,30 +16,26 @@ namespace CakeDC\Auth\Test\TestCase\Middleware;
 use Cake\Core\Configure;
 use Cake\Http\Response;
 use Cake\Http\Runner;
+use Cake\Http\ServerRequest;
 use Cake\Http\ServerRequestFactory;
 use Cake\TestSuite\TestCase;
 use CakeDC\Auth\Middleware\SocialAuthMiddleware;
+use CakeDC\Auth\Social\Mapper\Facebook as FacebookMapper;
 use CakeDC\Auth\Social\Service\OAuth2Service;
 use Laminas\Diactoros\Uri;
+use League\OAuth2\Client\Provider\Facebook;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 class SocialAuthMiddlewareTest extends TestCase
 {
-    public $fixtures = [
+    public array $fixtures = [
         'plugin.CakeDC/Auth.Users',
         'plugin.CakeDC/Auth.SocialAccounts',
     ];
 
-    /**
-     * @var \League\OAuth2\Client\Provider\Facebook
-     */
-    public $Provider;
-
-    /**
-     * @var \Cake\Http\ServerRequest
-     */
-    public $Request;
+    public Facebook $Provider;
+    public ServerRequest $Request;
 
     /**
      * Setup the test case, backup the static object values so they can be restored.
@@ -52,7 +48,7 @@ class SocialAuthMiddlewareTest extends TestCase
     {
         parent::setUp();
 
-        $this->Provider = $this->getMockBuilder(\League\OAuth2\Client\Provider\Facebook::class)->setConstructorArgs([
+        $this->Provider = $this->getMockBuilder(Facebook::class)->setConstructorArgs([
             [
                 'graphApiVersion' => 'v2.8',
                 'redirectUri' => '/auth/facebook',
@@ -67,9 +63,9 @@ class SocialAuthMiddlewareTest extends TestCase
         ])->getMock();
 
         $config = [
-            'service' => \CakeDC\Auth\Social\Service\OAuth2Service::class,
+            'service' => OAuth2Service::class,
             'className' => $this->Provider,
-            'mapper' => \CakeDC\Auth\Social\Mapper\Facebook::class,
+            'mapper' => FacebookMapper::class,
             'options' => [
                 'state' => '__TEST_STATE__',
                 'graphApiVersion' => 'v2.8',
@@ -115,6 +111,7 @@ class SocialAuthMiddlewareTest extends TestCase
     {
         $uri = new Uri('/auth/facebook');
         $this->Request = $this->Request->withUri($uri);
+        $this->Request = $this->Request->withAttribute('base', '');
 
         $this->Request = $this->Request->withAttribute('params', [
             'plugin' => 'CakeDC/Auth',
@@ -162,6 +159,7 @@ class SocialAuthMiddlewareTest extends TestCase
     {
         $uri = new Uri('/auth/facebook');
         $this->Request = $this->Request->withUri($uri);
+        $this->Request = $this->Request->withAttribute('base', '');
         $this->Request = $this->Request->withQueryParams([
             'code' => 'ZPO9972j3092304230',
             'state' => '__TEST_STATE__',

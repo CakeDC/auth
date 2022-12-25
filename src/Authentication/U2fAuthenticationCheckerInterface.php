@@ -19,7 +19,7 @@ interface U2fAuthenticationCheckerInterface
      *
      * @return bool
      */
-    public function isEnabled();
+    public function isEnabled(): bool;
 
     /**
      * Check if two factor authentication is required for a user
@@ -27,5 +27,5 @@ interface U2fAuthenticationCheckerInterface
      * @param array<mixed>|null $user user data
      * @return bool
      */
-    public function isRequired(?array $user = null);
+    public function isRequired(?array $user = null): bool;
 }

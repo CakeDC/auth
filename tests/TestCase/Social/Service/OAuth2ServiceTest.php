@@ -19,27 +19,19 @@ use Cake\Http\ServerRequest;
 use Cake\Http\ServerRequestFactory;
 use Cake\Http\Session;
 use Cake\TestSuite\TestCase;
+use CakeDC\Auth\Social\Mapper\Facebook as FacebookMapper;
 use CakeDC\Auth\Social\Service\OAuth2Service;
 use CakeDC\Auth\Social\Service\ServiceInterface;
 use Laminas\Diactoros\Uri;
+use League\OAuth2\Client\Provider\Facebook;
 use League\OAuth2\Client\Provider\FacebookUser;
+use League\OAuth2\Client\Token\AccessToken;
 
 class OAuth2ServiceTest extends TestCase
 {
-    /**
-     * @var \CakeDC\Auth\Social\Service\OAuth2Service
-     */
-    public $Service;
-
-    /**
-     * @var \League\OAuth2\Client\Provider\Facebook
-     */
-    public $Provider;
-
-    /**
-     * @var \Cake\Http\ServerRequest
-     */
-    public $Request;
+    public OAuth2Service $Service;
+    public Facebook $Provider;
+    public ServerRequest $Request;
 
     /**
      * Setup the test case, backup the static object values so they can be restored.
@@ -52,7 +44,7 @@ class OAuth2ServiceTest extends TestCase
     {
         parent::setUp();
 
-        $this->Provider = $this->getMockBuilder(\League\OAuth2\Client\Provider\Facebook::class)->setConstructorArgs([
+        $this->Provider = $this->getMockBuilder(Facebook::class)->setConstructorArgs([
             [
                 'graphApiVersion' => 'v2.8',
                 'redirectUri' => '/auth/facebook',
@@ -67,9 +59,9 @@ class OAuth2ServiceTest extends TestCase
         ])->getMock();
 
         $config = [
-            'service' => \CakeDC\Auth\Social\Service\OAuth2Service::class,
+            'service' => OAuth2Service::class,
             'className' => $this->Provider,
-            'mapper' => \CakeDC\Auth\Social\Mapper\Facebook::class,
+            'mapper' => FacebookMapper::class,
             'authParams' => ['scope' => ['public_profile', 'email', 'user_birthday', 'user_gender', 'user_link']],
             'options' => [
                 'state' => '__TEST_STATE__',
@@ -110,8 +102,8 @@ class OAuth2ServiceTest extends TestCase
     public function testConstruct()
     {
         $service = new OAuth2Service([
-            'className' => \League\OAuth2\Client\Provider\Facebook::class,
-            'mapper' => \CakeDC\Auth\Social\Mapper\Facebook::class,
+            'className' => Facebook::class,
+            'mapper' => FacebookMapper::class,
             'authParams' => ['scope' => ['public_profile', 'email', 'user_birthday', 'user_gender', 'user_link']],
             'options' => [
                 'customOption' => 'hello',
@@ -214,11 +206,11 @@ class OAuth2ServiceTest extends TestCase
      */
     public function testGetAuthorizationUrl()
     {
-        $this->Provider->expects($this->at(0))
+        $this->Provider->expects($this->atLeastOnce())
             ->method('getState')
             ->will($this->returnValue('_NEW_STATE_'));
 
-        $this->Provider->expects($this->at(1))
+        $this->Provider->expects($this->atLeastOnce())
             ->method('getAuthorizationUrl')
             ->with($this->equalTo([
                 'scope' => ['public_profile', 'email', 'user_birthday', 'user_gender', 'user_link'],
@@ -247,7 +239,7 @@ class OAuth2ServiceTest extends TestCase
         ]);
         $this->Request->getSession()->write('oauth2state', '__TEST_STATE__');
 
-        $Token = new \League\OAuth2\Client\Token\AccessToken([
+        $Token = new AccessToken([
             'access_token' => 'test-token',
             'expires' => 1490988496,
         ]);
@@ -291,7 +283,7 @@ class OAuth2ServiceTest extends TestCase
         $this->Provider->expects($this->never())
             ->method('getState');
 
-        $this->Provider->expects($this->at(0))
+        $this->Provider->expects($this->atLeastOnce())
             ->method('getAccessToken')
             ->with(
                 $this->equalTo('authorization_code'),
@@ -299,7 +291,7 @@ class OAuth2ServiceTest extends TestCase
             )
             ->will($this->returnValue($Token));
 
-        $this->Provider->expects($this->at(1))
+        $this->Provider->expects($this->atLeastOnce())
             ->method('getResourceOwner')
             ->with(
                 $this->equalTo($Token)

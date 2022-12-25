@@ -33,13 +33,24 @@
     </filter>
 
     <!-- Setup a listener for fixtures -->
-    <listeners>
-        <listener
-        class="\Cake\TestSuite\Fixture\FixtureInjector"
-        file="./vendor/cakephp/cakephp/src/TestSuite/Fixture/FixtureInjector.php">
-            <arguments>
-                <object class="\Cake\TestSuite\Fixture\FixtureManager" />
-            </arguments>
-        </listener>
-    </listeners>
+    <extensions>
+        <extension class="Cake\TestSuite\Fixture\PHPUnitExtension"/>
+    </extensions>
+
+    <php>
+        <ini name="memory_limit" value="-1"/>
+
+        <!-- SQLite
+        <env name="DB_URL" value="sqlite:///:memory:"/>
+        -->
+        <!-- Postgres
+        <env name="DB_URL" value="postgres://localhost/cake_test?timezone=UTC"/>
+        -->
+        <!-- MySQL
+        <env name="DB_URL" value="mysql://localhost/cake_test?timezone=UTC"/>
+        -->
+        <!-- SQL Server
+        <env name="DB_URL" value="sqlserver://localhost/cake_test?timezone=UTC"/>
+        -->
+    </php>
 </phpunit>

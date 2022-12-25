@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace CakeDC\Auth\Social\Service;
 
+use BadMethodCallException;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\ServerRequest;
 use League\OAuth2\Client\Provider\AbstractProvider;
@@ -23,7 +24,7 @@ class OAuth2Service extends OAuthServiceAbstract
     /**
      * @var \League\OAuth2\Client\Provider\AbstractProvider
      */
-    protected $provider;
+    protected AbstractProvider $provider;
 
     /**
      * OAuth2Service constructor.
@@ -46,7 +47,7 @@ class OAuth2Service extends OAuthServiceAbstract
     public function isGetUserStep(ServerRequestInterface $request): bool
     {
         if (!$request instanceof ServerRequest) {
-            throw new \BadMethodCallException('Request must be an instance of ServerRequest');
+            throw new BadMethodCallException('Request must be an instance of ServerRequest');
         }
 
         return !empty($request->getQuery('code'));
@@ -58,10 +59,10 @@ class OAuth2Service extends OAuthServiceAbstract
      * @param \Psr\Http\Message\ServerRequestInterface $request Request object.
      * @return string
      */
-    public function getAuthorizationUrl(ServerRequestInterface $request)
+    public function getAuthorizationUrl(ServerRequestInterface $request): string
     {
         if (!$request instanceof ServerRequest) {
-            throw new \BadMethodCallException('Request must be an instance of ServerRequest');
+            throw new BadMethodCallException('Request must be an instance of ServerRequest');
         }
         if ($this->getConfig('options.state')) {
             $request->getSession()->write('oauth2state', $this->provider->getState());
@@ -82,7 +83,7 @@ class OAuth2Service extends OAuthServiceAbstract
     public function getUser(ServerRequestInterface $request): array
     {
         if (!$request instanceof ServerRequest) {
-            throw new \BadMethodCallException('Request must be an instance of ServerRequest');
+            throw new BadMethodCallException('Request must be an instance of ServerRequest');
         }
         if (!$this->validate($request)) {
             throw new BadRequestException('Invalid OAuth2 state');
@@ -101,7 +102,7 @@ class OAuth2Service extends OAuthServiceAbstract
      * @param \Cake\Http\ServerRequest $request Request object.
      * @return bool
      */
-    protected function validate(ServerRequest $request)
+    protected function validate(ServerRequest $request): bool
     {
         if (!array_key_exists('code', $request->getQueryParams())) {
             return false;
@@ -130,7 +131,7 @@ class OAuth2Service extends OAuthServiceAbstract
      * @param array $config for provider.
      * @return void
      */
-    protected function setProvider($config)
+    protected function setProvider(array $config): void
     {
         if (is_object($config['className']) && $config['className'] instanceof AbstractProvider) {
             $this->provider = $config['className'];
