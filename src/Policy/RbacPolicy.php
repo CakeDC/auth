@@ -37,10 +37,8 @@ class RbacPolicy implements PolicyInterface
 
     /**
      * Cached instance of the rbac, we don't need to build more than 1 per request
-     *
-     * @var \CakeDC\Auth\Rbac\RbacInterface|null
      */
-    protected RbacInterface $createdRbac;
+    protected ?RbacInterface $createdRbac;
 
     /**
      * RbacPolicy constructor.

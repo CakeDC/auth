@@ -4,6 +4,7 @@ declare(strict_types=1);
 use Cake\Datasource\ConnectionManager;
 use Cake\Routing\Router;
 use Cake\TestSuite\Fixture\SchemaLoader;
+use Cake\Utility\Security;
 use CakeDC\Auth\Test\TestApplication;
 
 /**
@@ -109,7 +110,7 @@ Cake\Core\Configure::write('Session', [
     'defaults' => 'php',
 ]);
 
-\Cake\Utility\Security::setSalt('yoyz186elmi66ab9pz4imbb3tgy9vnsgsfgwe2r8tyxbbfdygu9e09tlxyg8p7dq');
+Security::setSalt('yoyz186elmi66ab9pz4imbb3tgy9vnsgsfgwe2r8tyxbbfdygu9e09tlxyg8p7dq');
 
 if (!getenv('DB_URL')) {
     putenv('DB_URL=sqlite:///:memory:');

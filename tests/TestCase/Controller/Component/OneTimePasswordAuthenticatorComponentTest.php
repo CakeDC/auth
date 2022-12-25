@@ -60,12 +60,13 @@ class OneTimePasswordAuthenticatorComponentTest extends TestCase
         $this->backupUsersConfig = Configure::read('Users');
 
         Router::reload();
-        Router::createRouteBuilder('/')->connect('/route/*', [
+        $builder = Router::createRouteBuilder('/');
+        $builder->connect('/route/*', [
             'plugin' => 'CakeDC/Users',
             'controller' => 'Users',
             'action' => 'requestResetPassword',
         ]);
-        Router::createRouteBuilder('/')->connect('/notAllowed/*', [
+        $builder->connect('/notAllowed/*', [
             'plugin' => 'CakeDC/Users',
             'controller' => 'Users',
             'action' => 'edit',

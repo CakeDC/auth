@@ -20,6 +20,7 @@ class InvalidProviderException extends CakeException
     protected string $_messageTemplate = 'Invalid provider or missing class (%s)';
 
     /**
+     * @phpcsSuppress SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingNativeTypeHint
      * @var int
      */
     protected $code = 500;
