@@ -80,6 +80,7 @@ class Rbac implements RbacInterface
             if (!is_subclass_of($permissionsProviderClass, AbstractProvider::class)) {
                 throw new RuntimeException(sprintf('Class "%s" must extend AbstractProvider', $permissionsProviderClass));
             }
+            /** @psalm-suppress UnsafeInstantiation */
             $permissionsProvider = new $permissionsProviderClass([
                 'autoload_config' => $this->getConfig('autoload_config'),
             ]);
@@ -182,19 +183,19 @@ class Rbac implements RbacInterface
             if (!is_string($value) && is_callable($value)) {
                 $return = (bool)call_user_func($value, $user, $role, $request);
             } elseif ($value instanceof Rule) {
-                $return = (bool)$value->allowed($user, $role, $request);
+                $return = $value->allowed($user, $role, $request);
             } elseif ($key === 'bypassAuth' && $value === true) {
                 $return = true;
             } elseif ($key === 'allowed') {
-                $return = !empty($user) && (bool)$value;
+                $return = !empty($user) && $value;
             } elseif (array_key_exists($key, $reserved)) {
                 $return = $this->_matchOrAsterisk($value, $reserved[$key], true);
             } else {
-                if (!$this->_startsWith((string)$key, 'user.')) {
+                if (!$this->_startsWith($key, 'user.')) {
                     $key = 'user.' . $key;
                 }
 
-                $return = $this->_matchOrAsterisk($value, Hash::get($userArr, (string)$key));
+                $return = $this->_matchOrAsterisk($value, Hash::get($userArr, $key));
             }
 
             if ($inverse) {

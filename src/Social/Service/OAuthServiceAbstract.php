@@ -46,12 +46,12 @@ abstract class OAuthServiceAbstract implements ServiceInterface
     /**
      * Set the social provider name
      *
-     * @param string $providerName social provider
+     * @param string $name social provider
      * @return self
      */
-    public function setProviderName(string $providerName): self
+    public function setProviderName(string $name): self
     {
-        $this->providerName = $providerName;
+        $this->providerName = $name;
 
         return $this;
     }

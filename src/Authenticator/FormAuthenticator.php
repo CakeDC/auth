@@ -34,7 +34,7 @@ class FormAuthenticator implements AuthenticatorInterface
      */
     public const FAILURE_INVALID_RECAPTCHA = 'FAILURE_INVALID_RECAPTCHA';
 
-    protected AuthenticatorInterface $baseAuthenticator;
+    protected ?AuthenticatorInterface $baseAuthenticator = null;
 
     /**
      * Identifier or identifiers collection.

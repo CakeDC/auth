@@ -108,7 +108,7 @@ class SocialAuthenticator extends AbstractAuthenticator
             $message = sprintf(
                 "Error getting an access token / retrieving the authorized user's profile data. Error message: %s %s",
                 $exception->getMessage(),
-                $exception
+                $exception::class
             );
             $this->log($message);
 

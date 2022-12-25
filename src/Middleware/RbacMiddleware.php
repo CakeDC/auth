@@ -171,7 +171,7 @@ class RbacMiddleware implements MiddlewareInterface
         if ($behavior === self::UNAUTHORIZED_BEHAVIOR_THROW) {
             throw new ForbiddenException();
         }
-        $accept = (array)$request->getHeader('Accept');
+        $accept = $request->getHeader('Accept');
         if (
             $behavior === self::UNAUTHORIZED_BEHAVIOR_AUTO &&
             in_array('application/json', $accept, true)

@@ -73,11 +73,12 @@ class Owner extends AbstractRule
             return false;
         }
 
+        $ownerForeignKey = $this->getConfig('ownerForeignKey');
         try {
-            if (!$table->hasField($this->getConfig('ownerForeignKey'))) {
+            if (!$table->hasField($ownerForeignKey)) {
                 $msg = sprintf(
                     'Missing column %s in table %s while checking ownership permissions for user %s',
-                    $this->getConfig('ownerForeignKey'),
+                    $ownerForeignKey,
                     $table->getAlias(),
                     $userId
                 );
@@ -86,7 +87,7 @@ class Owner extends AbstractRule
         } catch (CakeException $ex) {
             $msg = sprintf(
                 'Missing column %s in table %s while checking ownership permissions for user %s',
-                $this->getConfig('ownerForeignKey'),
+                $ownerForeignKey,
                 $table->getAlias(),
                 $userId
             );
@@ -96,9 +97,10 @@ class Owner extends AbstractRule
         if (empty($idColumn)) {
             $idColumn = $table->getPrimaryKey();
         }
+        /** @psalm-suppress InvalidArrayOffset */
         $conditions = array_merge([
             $idColumn => $id,
-            $this->getConfig('ownerForeignKey') => $userId,
+            $ownerForeignKey => $userId,
         ], $this->getConfig('conditions'));
 
         return $table->exists($conditions);

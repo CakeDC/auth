@@ -16,6 +16,7 @@ namespace CakeDC\Auth\Social\Service;
 use BadMethodCallException;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\ServerRequest;
+use CakeDC\Auth\Exception\InvalidProviderException;
 use League\OAuth2\Client\Provider\AbstractProvider;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -137,8 +138,11 @@ class OAuth2Service extends OAuthServiceAbstract
             $this->provider = $config['className'];
         } else {
             $class = $config['className'];
-
-            $this->provider = new $class($config['options'], $config['collaborators']);
+            $provider = new $class($config['options'], $config['collaborators']);
+            if (!is_subclass_of($provider, AbstractProvider::class)) {
+                throw new InvalidProviderException([$class]);
+            }
+            $this->provider = $provider;
         }
     }
 }

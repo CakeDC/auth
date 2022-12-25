@@ -183,6 +183,10 @@ class AuthenticationService extends BaseService
             }
         }
 
+        if ($result === null) {
+            $result = new Result(null, ResultInterface::FAILURE_OTHER);
+        }
+
         $this->_successfulAuthenticator = null;
 
         return $this->_result = $result;

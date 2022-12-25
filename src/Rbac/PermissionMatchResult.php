@@ -48,7 +48,7 @@ class PermissionMatchResult
      */
     public function setAllowed(bool $allowed): PermissionMatchResult
     {
-        $this->_allowed = (bool)$allowed;
+        $this->_allowed = $allowed;
 
         return $this;
     }
@@ -66,7 +66,7 @@ class PermissionMatchResult
      */
     public function setReason(string $reason): PermissionMatchResult
     {
-        $this->_reason = (string)$reason;
+        $this->_reason = $reason;
 
         return $this;
     }
