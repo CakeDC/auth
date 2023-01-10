@@ -21,6 +21,8 @@ use Cake\TestSuite\TestCase;
 use CakeDC\Auth\Authentication\AuthenticationService;
 use CakeDC\Auth\Authentication\Failure;
 use CakeDC\Auth\Authenticator\FormAuthenticator;
+use CakeDC\Auth\Test\App\Model\Entity\User;
+use RuntimeException;
 
 class AuthenticationServiceTest extends TestCase
 {
@@ -29,7 +31,7 @@ class AuthenticationServiceTest extends TestCase
      *
      * @var array
      */
-    public $fixtures = [
+    public array $fixtures = [
         'plugin.CakeDC/Auth.Users',
         'plugin.CakeDC/Auth.SocialAccounts',
     ];
@@ -54,7 +56,7 @@ class AuthenticationServiceTest extends TestCase
             ],
             'authenticators' => [],
         ]);
-        $this->expectException(\RuntimeException::class);
+        $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage('No authenticators loaded. You need to load at least one authenticator.');
         $service->authenticate($request);
     }
@@ -67,7 +69,7 @@ class AuthenticationServiceTest extends TestCase
     public function testAuthenticateFail()
     {
         $Table = TableRegistry::getTableLocator()->get('CakeDC/Auth.Users');
-        $Table->setEntityClass(\CakeDC\Auth\Test\App\Model\Entity\User::class);
+        $Table->setEntityClass(User::class);
         $entity = $Table->get('00000000-0000-0000-0000-000000000001');
         $entity->password = 'password';
         $this->assertTrue((bool)$Table->save($entity));
@@ -120,7 +122,7 @@ class AuthenticationServiceTest extends TestCase
         Configure::write('OneTimePasswordAuthenticator.login', false);
         Configure::write('U2f.enabled', false);
         $Table = TableRegistry::getTableLocator()->get('CakeDC/Auth.Users');
-        $Table->setEntityClass(\CakeDC\Auth\Test\App\Model\Entity\User::class);
+        $Table->setEntityClass(User::class);
         $entity = $Table->get('00000000-0000-0000-0000-000000000001');
         $entity->password = 'password';
         $this->assertTrue((bool)$Table->save($entity));
@@ -169,7 +171,7 @@ class AuthenticationServiceTest extends TestCase
         Configure::write('OneTimePasswordAuthenticator.login', true);
         Configure::write('U2f.enabled', false);
         $Table = TableRegistry::getTableLocator()->get('CakeDC/Auth.Users');
-        $Table->setEntityClass(\CakeDC\Auth\Test\App\Model\Entity\User::class);
+        $Table->setEntityClass(User::class);
         $entity = $Table->get('00000000-0000-0000-0000-000000000001');
         $entity->password = 'password';
         $this->assertTrue((bool)$Table->save($entity));
@@ -221,7 +223,7 @@ class AuthenticationServiceTest extends TestCase
         Configure::write('U2f.enabled', false);
         Configure::write('OneTimePasswordAuthenticator.login', false);
         $Table = TableRegistry::getTableLocator()->get('CakeDC/Auth.Users');
-        $Table->setEntityClass(\CakeDC\Auth\Test\App\Model\Entity\User::class);
+        $Table->setEntityClass(User::class);
         $entity = $Table->get('00000000-0000-0000-0000-000000000001');
         $entity->password = 'password';
         $this->assertTrue((bool)$Table->save($entity));
@@ -273,7 +275,7 @@ class AuthenticationServiceTest extends TestCase
     {
         Configure::write('Webauthn2fa.enabled', true);
         $Table = TableRegistry::getTableLocator()->get('CakeDC/Auth.Users');
-        $Table->setEntityClass(\CakeDC\Auth\Test\App\Model\Entity\User::class);
+        $Table->setEntityClass(User::class);
         $entity = $Table->get('00000000-0000-0000-0000-000000000001');
         $entity->password = 'password';
         $this->assertTrue((bool)$Table->save($entity));
@@ -325,7 +327,7 @@ class AuthenticationServiceTest extends TestCase
     {
         Configure::write('U2f.enabled', true);
         $Table = TableRegistry::getTableLocator()->get('CakeDC/Auth.Users');
-        $Table->setEntityClass(\CakeDC\Auth\Test\App\Model\Entity\User::class);
+        $Table->setEntityClass(User::class);
         $entity = $Table->get('00000000-0000-0000-0000-000000000001');
         $entity->password = 'password';
         $this->assertTrue((bool)$Table->save($entity));
@@ -377,7 +379,7 @@ class AuthenticationServiceTest extends TestCase
     {
         Configure::write('U2f.enabled', false);
         $Table = TableRegistry::getTableLocator()->get('CakeDC/Auth.Users');
-        $Table->setEntityClass(\CakeDC\Auth\Test\App\Model\Entity\User::class);
+        $Table->setEntityClass(User::class);
         $entity = $Table->get('00000000-0000-0000-0000-000000000001');
         $entity->password = 'password';
         $this->assertTrue((bool)$Table->save($entity));

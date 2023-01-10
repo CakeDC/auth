@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace CakeDC\Auth\Rbac\Permissions;
 
 use Cake\Core\Configure;
+use Exception;
 use Psr\Log\LogLevel;
 
 /**
@@ -26,7 +27,7 @@ class ConfigProvider extends AbstractProvider
     /**
      * @var array default configuration
      */
-    protected $_defaultConfig = [
+    protected array $_defaultConfig = [
         'autoload_config' => 'permissions',
     ];
 
@@ -35,7 +36,7 @@ class ConfigProvider extends AbstractProvider
      *
      * @return array Array of permissions
      */
-    public function getPermissions()
+    public function getPermissions(): array
     {
         $autoload = $this->getConfig('autoload_config');
 
@@ -64,7 +65,7 @@ class ConfigProvider extends AbstractProvider
      * @param string $key name of the configuration file to read permissions from
      * @return array permissions
      */
-    protected function _loadPermissions($key)
+    protected function _loadPermissions(string $key): array
     {
         $permissions = null;
         try {
@@ -74,7 +75,7 @@ class ConfigProvider extends AbstractProvider
             if (!$permissions && $legacyPermissions) {
                 $permissions = $legacyPermissions;
             }
-        } catch (\Exception $ex) {
+        } catch (Exception $ex) {
             $msg = sprintf('Missing configuration file: "config/%s.php". Using default permissions', $key);
             $this->log($msg, LogLevel::WARNING);
         }

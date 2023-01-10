@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace CakeDC\Auth\Authentication;
 
 use Cake\Core\Configure;
+use InvalidArgumentException;
 
 /**
  * Factory for two authentication checker
@@ -26,7 +27,7 @@ class U2fAuthenticationCheckerFactory
      *
      * @return \CakeDC\Auth\Authentication\U2fAuthenticationCheckerInterface
      */
-    public function build()
+    public function build(): U2fAuthenticationCheckerInterface
     {
         $className = Configure::read('U2f.checker');
         $interfaces = class_implements($className);
@@ -35,6 +36,6 @@ class U2fAuthenticationCheckerFactory
         if (in_array($required, $interfaces)) {
             return new $className();
         }
-        throw new \InvalidArgumentException("Invalid config for 'U2f.checker', '$className' does not implement '$required'");
+        throw new InvalidArgumentException("Invalid config for 'U2f.checker', '$className' does not implement '$required'");
     }
 }

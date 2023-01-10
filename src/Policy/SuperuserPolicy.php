@@ -30,7 +30,7 @@ class SuperuserPolicy implements PolicyInterface
      *
      * @var array
      */
-    protected $_defaultConfig = [
+    protected array $_defaultConfig = [
         //superuser field in the Users table
         'superuser_field' => 'is_superuser',
     ];

@@ -95,7 +95,7 @@ class RbacMiddleware implements MiddlewareInterface
      *
      * @var array
      */
-    protected $_defaultConfig = [
+    protected array $_defaultConfig = [
         /*
          * Manage what to do if the request is not authorized,
          * throw - throw a ForbiddenException
@@ -116,7 +116,7 @@ class RbacMiddleware implements MiddlewareInterface
     /**
      * @var \CakeDC\Auth\Rbac\Rbac
      */
-    protected $rbac;
+    protected Rbac $rbac;
 
     /**
      * RbacMiddleware constructor
@@ -187,7 +187,7 @@ class RbacMiddleware implements MiddlewareInterface
      *
      * @return \Psr\Http\Message\ResponseInterface
      */
-    protected function unauthorizedRedirect()
+    protected function unauthorizedRedirect(): ResponseInterface
     {
         $url = $this->getConfig('unauthorizedRedirect');
 

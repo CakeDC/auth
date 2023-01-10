@@ -24,12 +24,12 @@ class PermissionMatchResult
     /**
      * @var bool
      */
-    protected $_allowed;
+    protected bool $_allowed;
 
     /**
      * @var string
      */
-    protected $_reason;
+    protected string $_reason;
 
     /**
      * PermissionMatchResult constructor.
@@ -37,7 +37,7 @@ class PermissionMatchResult
      * @param bool $allowed rule was matched, allowed value
      * @param string $reason reason to either allow or deny
      */
-    public function __construct($allowed = false, $reason = '')
+    public function __construct(bool $allowed = false, string $reason = '')
     {
         $this->_allowed = $allowed;
         $this->_reason = $reason;
@@ -45,11 +45,10 @@ class PermissionMatchResult
 
     /**
      * @param bool $allowed allowed value
-     * @return \CakeDC\Auth\Rbac\PermissionMatchResult
      */
-    public function setAllowed($allowed)
+    public function setAllowed(bool $allowed): PermissionMatchResult
     {
-        $this->_allowed = (bool)$allowed;
+        $this->_allowed = $allowed;
 
         return $this;
     }
@@ -57,18 +56,17 @@ class PermissionMatchResult
     /**
      * @return bool
      */
-    public function isAllowed()
+    public function isAllowed(): bool
     {
         return $this->_allowed;
     }
 
     /**
      * @param string $reason reason
-     * @return \CakeDC\Auth\Rbac\PermissionMatchResult
      */
-    public function setReason($reason)
+    public function setReason(string $reason): PermissionMatchResult
     {
-        $this->_reason = (string)$reason;
+        $this->_reason = $reason;
 
         return $this;
     }
@@ -76,7 +74,7 @@ class PermissionMatchResult
     /**
      * @return string
      */
-    public function getReason()
+    public function getReason(): string
     {
         return $this->_reason;
     }

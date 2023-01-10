@@ -15,6 +15,7 @@ namespace CakeDC\Auth\Social\Mapper;
 
 use Cake\Utility\Hash;
 use Cake\Utility\Inflector;
+use League\OAuth2\Client\Token\AccessToken;
 
 /**
  * AbstractMapper
@@ -26,21 +27,21 @@ abstract class AbstractMapper
      *
      * @var array
      */
-    protected $_rawData = [];
+    protected array $_rawData = [];
 
     /**
      * Map for provider fields
      *
      * @var array
      */
-    protected $_mapFields = [];
+    protected array $_mapFields = [];
 
     /**
      * Default Map for provider fields
      *
      * @var array
      */
-    protected $_defaultMapFields = [
+    protected array $_defaultMapFields = [
         'id' => 'id',
         'username' => 'username',
         'full_name' => 'name',
@@ -60,7 +61,7 @@ abstract class AbstractMapper
      *
      * @param mixed $mapFields map fields
      */
-    public function __construct($mapFields = null)
+    public function __construct(mixed $mapFields = null)
     {
         if (!is_null($mapFields)) {
             $this->_mapFields = $mapFields;
@@ -74,7 +75,7 @@ abstract class AbstractMapper
      * @param mixed $rawData raw data
      * @return mixed
      */
-    public function __invoke($rawData)
+    public function __invoke(mixed $rawData): mixed
     {
         return $this->_map($rawData);
     }
@@ -85,7 +86,7 @@ abstract class AbstractMapper
      * @param mixed $rawData raw data
      * @return bool
      */
-    protected function _validated($rawData)
+    protected function _validated(mixed $rawData): bool
     {
         $email = Hash::get($rawData, $this->_mapFields['email']);
 
@@ -98,7 +99,7 @@ abstract class AbstractMapper
      * @param mixed $rawData raw data
      * @return mixed
      */
-    protected function _map($rawData)
+    protected function _map(mixed $rawData): mixed
     {
         $result = [];
         collection($this->_mapFields)->each(function (string $mappedField, string $field) use (&$result, $rawData): void {
@@ -110,7 +111,7 @@ abstract class AbstractMapper
             $result[$field] = $value;
         });
         $token = $rawData['token'] ?? null;
-        if (empty($token) || !is_array($token) && !$token instanceof \League\OAuth2\Client\Token\AccessToken) {
+        if (empty($token) || !is_array($token) && !$token instanceof AccessToken) {
             return false;
         }
 

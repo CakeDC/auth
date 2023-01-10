@@ -28,7 +28,7 @@ class CollectionPolicy
      *
      * @var array
      */
-    protected $policies;
+    protected array $policies;
 
     /**
      * CollectionPolicy constructor.

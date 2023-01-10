@@ -20,12 +20,12 @@ class Failure implements FailureInterface
     /**
      * @var \Authentication\Authenticator\AuthenticatorInterface
      */
-    protected $authenticator;
+    protected AuthenticatorInterface $authenticator;
 
     /**
      * @var \Authentication\Authenticator\ResultInterface
      */
-    protected $result;
+    protected ResultInterface $result;
 
     /**
      * Constructor.
@@ -44,7 +44,7 @@ class Failure implements FailureInterface
      *
      * @return \Authentication\Authenticator\AuthenticatorInterface
      */
-    public function getAuthenticator()
+    public function getAuthenticator(): AuthenticatorInterface
     {
         return $this->authenticator;
     }
@@ -54,7 +54,7 @@ class Failure implements FailureInterface
      *
      * @return \Authentication\Authenticator\ResultInterface
      */
-    public function getResult()
+    public function getResult(): ResultInterface
     {
         return $this->result;
     }

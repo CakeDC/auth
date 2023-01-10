@@ -17,17 +17,18 @@ use Authorization\AuthorizationServiceInterface;
 use Cake\Http\ServerRequest;
 use Cake\Routing\Router;
 use Laminas\Diactoros\Uri;
+use RuntimeException;
 
 trait IsAuthorizedTrait
 {
     /**
      * Returns true if the target url is authorized for the logged in user
      *
-     * @param string|array|null $url url that the user is making request.
+     * @param array|string|null $url url that the user is making request.
      * @param string $action Authorization action.
      * @return bool
      */
-    public function isAuthorized($url = null, $action = 'access')
+    public function isAuthorized(string|array|null $url = null, string $action = 'access'): bool
     {
         if (empty($url)) {
             return false;
@@ -47,7 +48,7 @@ trait IsAuthorizedTrait
      * @param string $action Authorization action.
      * @return bool
      */
-    protected function _checkCanAccess($url, $action)
+    protected function _checkCanAccess(string $url, string $action): bool
     {
         /**
          * @var \Cake\Http\ServerRequest $request
@@ -55,7 +56,7 @@ trait IsAuthorizedTrait
         $request = $this->getRequest();
         $service = $request->getAttribute('authorization');
         if (!$service instanceof AuthorizationServiceInterface) {
-            throw new \RuntimeException(__('Could not find the authorization service in the request.'));
+            throw new RuntimeException(__('Could not find the authorization service in the request.'));
         }
         $identity = $request->getAttribute('identity');
         $targetRequest = $this->_createUrlRequestToCheck($url);
@@ -69,7 +70,7 @@ trait IsAuthorizedTrait
      * @param string $url The target url.
      * @return \Cake\Http\ServerRequest
      */
-    protected function _createUrlRequestToCheck($url)
+    protected function _createUrlRequestToCheck(string $url): ServerRequest
     {
         $uri = new Uri($url);
         $targetRequest = new ServerRequest([

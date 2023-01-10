@@ -14,7 +14,9 @@ declare(strict_types=1);
 namespace CakeDC\Auth\Rbac\Permissions;
 
 use Cake\Core\InstanceConfigTrait;
+use Cake\Http\ServerRequest;
 use Cake\Log\LogTrait;
+use Cake\Utility\Hash;
 
 /**
  * Class AbstractProvider, handles getting permission from different sources,
@@ -30,14 +32,14 @@ abstract class AbstractProvider
      *
      * @var array
      */
-    protected $defaultPermissions;
+    protected array $defaultPermissions;
 
     /**
      * AbstractProvider constructor.
      *
      * @param array $config config
      */
-    public function __construct($config = [])
+    public function __construct(array $config = [])
     {
         $this->setConfig($config);
         $this->defaultPermissions = [
@@ -97,8 +99,8 @@ abstract class AbstractProvider
                 'plugin' => 'CakeDC/Users',
                 'controller' => 'Users',
                 'action' => 'resetOneTimePasswordAuthenticator',
-                'allowed' => function (array $user, string $role, \Cake\Http\ServerRequest $request): bool {
-                    $userId = \Cake\Utility\Hash::get($request->getAttribute('params'), 'pass.0');
+                'allowed' => function (array $user, string $role, ServerRequest $request): bool {
+                    $userId = Hash::get($request->getAttribute('params'), 'pass.0');
                     if (!empty($userId) && !empty($user)) {
                         return $userId === $user['id'];
                     }
@@ -128,12 +130,12 @@ abstract class AbstractProvider
      *
      * @return array Array of permissions
      */
-    abstract public function getPermissions();
+    abstract public function getPermissions(): array;
 
     /**
      * @return array
      */
-    public function getDefaultPermissions()
+    public function getDefaultPermissions(): array
     {
         return $this->defaultPermissions;
     }
@@ -142,7 +144,7 @@ abstract class AbstractProvider
      * @param array $defaultPermissions default permissions
      * @return void
      */
-    public function setDefaultPermissions($defaultPermissions)
+    public function setDefaultPermissions(array $defaultPermissions): void
     {
         $this->defaultPermissions = $defaultPermissions;
     }

@@ -112,7 +112,7 @@ return [
         'enabled' => false,
         'appName' => null,//App must set a valid name here
         'id' => null,//default value is the current domain
-        'checker' => \CakeDC\Auth\Authentication\DefaultWebauthn2fAuthenticationChecker::class,
+        'checker' => \CakeDC\Auth\Authentication\DefaultWebauthn2FAuthenticationChecker::class,
         'startAction' => [
             'plugin' => 'CakeDC/Users',
             'controller' => 'Users',

@@ -26,6 +26,8 @@ use CakeDC\Auth\Policy\CollectionPolicy;
 use CakeDC\Auth\Policy\RbacPolicy;
 use CakeDC\Auth\Policy\SuperuserPolicy;
 use CakeDC\Auth\Rbac\Rbac;
+use CakeDC\Auth\Traits\IsAuthorizedTrait;
+use RuntimeException;
 
 /**
  * Class IsAuthorizedTraitTest
@@ -62,7 +64,7 @@ class IsAuthorizedTraitTest extends TestCase
      */
     public function testIsAuthorizedEmpty()
     {
-        $Trait = $this->getMockBuilder(\CakeDC\Auth\Traits\IsAuthorizedTrait::class)
+        $Trait = $this->getMockBuilder(IsAuthorizedTrait::class)
             ->setMethods(['getRequest'])
             ->getMockForTrait();
         $Trait->expects($this->never())
@@ -120,7 +122,7 @@ class IsAuthorizedTraitTest extends TestCase
         $request = $request->withAttribute('authorization', $service);
         $request = $request->withAttribute('identity', new IdentityDecorator($service, $identity));
 
-        $Trait = $this->getMockBuilder(\CakeDC\Auth\Traits\IsAuthorizedTrait::class)
+        $Trait = $this->getMockBuilder(IsAuthorizedTrait::class)
             ->setMethods(['getRequest'])
             ->getMockForTrait();
         $Trait->expects($this->any())
@@ -150,14 +152,14 @@ class IsAuthorizedTraitTest extends TestCase
             ->method('checkPermissions');
         $request = $request->withAttribute('rbac', $rbac);
 
-        $Trait = $this->getMockBuilder(\CakeDC\Auth\Traits\IsAuthorizedTrait::class)
+        $Trait = $this->getMockBuilder(IsAuthorizedTrait::class)
             ->setMethods(['getRequest'])
             ->getMockForTrait();
         $Trait->expects($this->any())
             ->method('getRequest')
             ->will($this->returnValue($request));
 
-        $this->expectException(\RuntimeException::class);
+        $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage('Could not find the authorization service in the request.');
         $Trait->isAuthorized([
             'plugin' => 'CakeDC/Users',

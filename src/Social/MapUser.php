@@ -13,16 +13,19 @@ declare(strict_types=1);
 
 namespace CakeDC\Auth\Social;
 
+use CakeDC\Auth\Social\Service\ServiceInterface;
+use InvalidArgumentException;
+
 class MapUser
 {
     /**
      * Map social user user data
      *
      * @param \CakeDC\Auth\Social\Service\ServiceInterface $service social service
-     * @param array $data user social data
+     * @param mixed $data user social data
      * @return mixed
      */
-    public function __invoke($service, $data)
+    public function __invoke(ServiceInterface $service, mixed $data): mixed
     {
         $mapper = $service->getConfig('mapper');
         if (is_string($mapper)) {
@@ -39,12 +42,12 @@ class MapUser
      * Build the mapper object
      *
      * @param string $className of mapper
-     * @return \Closure
+     * @return object
      */
-    protected function buildMapper(string $className)
+    protected function buildMapper(string $className): object
     {
         if (!class_exists($className)) {
-            throw new \InvalidArgumentException(__('Provider mapper class {0} does not exist', $className));
+            throw new InvalidArgumentException(__('Provider mapper class {0} does not exist', $className));
         }
 
         return new $className();

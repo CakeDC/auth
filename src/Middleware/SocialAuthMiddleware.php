@@ -35,7 +35,7 @@ class SocialAuthMiddleware implements MiddlewareInterface
      *
      * @var array
      */
-    protected $_defaultConfig = [
+    protected array $_defaultConfig = [
         'loginUrl' => false,
         'urlChecker' => 'Authentication.Default',
     ];
@@ -75,7 +75,7 @@ class SocialAuthMiddleware implements MiddlewareInterface
      * @param \Psr\Http\Message\ServerRequestInterface $request The request.
      * @return bool
      */
-    protected function checkUrl(ServerRequestInterface $request)
+    protected function checkUrl(ServerRequestInterface $request): bool
     {
         return $this->_getUrlChecker()->check($request, $this->getConfig('loginUrl'));
     }
