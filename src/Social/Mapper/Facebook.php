@@ -28,7 +28,7 @@ class Facebook extends AbstractMapper
      *
      * @var array
      */
-    protected $_mapFields = [
+    protected array $_mapFields = [
         'full_name' => 'name',
     ];
 
@@ -38,7 +38,7 @@ class Facebook extends AbstractMapper
      * @param mixed $rawData raw data
      * @return string
      */
-    protected function _avatar($rawData)
+    protected function _avatar(mixed $rawData): string
     {
         return self::FB_GRAPH_BASE_URL . ($rawData['id'] ?? '') . '/picture?type=large';
     }
@@ -49,7 +49,7 @@ class Facebook extends AbstractMapper
      * @param mixed $rawData raw data
      * @return string
      */
-    protected function _link($rawData)
+    protected function _link(mixed $rawData): string
     {
         return $rawData['link'] ?? null ?: '#';
     }

@@ -17,11 +17,12 @@ use Cake\Core\Exception\CakeException;
 
 class InvalidProviderException extends CakeException
 {
-    protected $_messageTemplate = 'Invalid provider or missing class (%s)';
-	
-	/**
-	 * @var int
-	 */
+    protected string $_messageTemplate = 'Invalid provider or missing class (%s)';
+
+    /**
+     * @phpcsSuppress SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingNativeTypeHint
+     * @var int
+     */
     protected $code = 500;
 
     /**
@@ -31,7 +32,7 @@ class InvalidProviderException extends CakeException
      * @param int $code code
      * @param null $previous previous
      */
-    public function __construct($message, $code = 500, $previous = null)
+    public function __construct(array|string $message, int $code = 500, $previous = null)
     {
         parent::__construct($message, $code, $previous);
     }

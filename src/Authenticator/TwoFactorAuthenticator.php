@@ -38,7 +38,7 @@ class TwoFactorAuthenticator extends AbstractAuthenticator
      *
      * @var array
      */
-    protected $_defaultConfig = [
+    protected array $_defaultConfig = [
         'loginUrl' => null,
         'urlChecker' => 'Authentication.Default',
     ];
@@ -49,7 +49,7 @@ class TwoFactorAuthenticator extends AbstractAuthenticator
      * @param \Psr\Http\Message\ServerRequestInterface $request The request that contains login information.
      * @return \Authentication\Authenticator\ResultInterface
      */
-    protected function _buildLoginUrlErrorResult($request)
+    protected function _buildLoginUrlErrorResult(ServerRequestInterface $request): ResultInterface
     {
         $errors = [
             sprintf(
@@ -80,7 +80,7 @@ class TwoFactorAuthenticator extends AbstractAuthenticator
          */
         $session = $request->getAttribute('session');
 
-        /** @var array|\ArrayAccess $data */
+        /** @var \ArrayAccess|array $data */
         $data = $session->read(self::USER_SESSION_KEY);
 
         if (!empty($data)) {

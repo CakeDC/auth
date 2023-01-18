@@ -14,9 +14,11 @@ namespace CakeDC\Auth\Test\TestCase\Authenticator;
 
 use Authentication\Authenticator\Result;
 use Authentication\Identifier\IdentifierCollection;
+use Cake\Http\ServerRequest;
 use Cake\ORM\Entity;
 use Cake\TestSuite\TestCase;
 use CakeDC\Auth\Authenticator\TwoFactorAuthenticator;
+use Laminas\Diactoros\Uri;
 
 class TwoFactorAuthenticatorTest extends TestCase
 {
@@ -27,9 +29,9 @@ class TwoFactorAuthenticatorTest extends TestCase
      */
     public function testAuthenticateFailedNoData()
     {
-        $uri = new \Laminas\Diactoros\Uri('/testpath');
+        $uri = new Uri('/testpath');
         $uri->base = null;
-        $request = new \Cake\Http\ServerRequest();
+        $request = new ServerRequest();
         $request = $request->withUri($uri);
         $identifiers = new IdentifierCollection([
             'Authentication.Password',
@@ -51,9 +53,9 @@ class TwoFactorAuthenticatorTest extends TestCase
      */
     public function testAuthenticateFailedInvalidUrl()
     {
-        $uri = new \Laminas\Diactoros\Uri('/testpath');
+        $uri = new Uri('/testpath');
         $uri->base = null;
-        $request = new \Cake\Http\ServerRequest();
+        $request = new ServerRequest();
         $request = $request->withUri($uri);
         $request->getSession()->write(
             TwoFactorAuthenticator::USER_SESSION_KEY,
@@ -82,9 +84,9 @@ class TwoFactorAuthenticatorTest extends TestCase
      */
     public function testAuthenticate()
     {
-        $uri = new \Laminas\Diactoros\Uri('/testpath');
+        $uri = new Uri('/testpath');
         $uri->base = null;
-        $request = new \Cake\Http\ServerRequest();
+        $request = new ServerRequest();
         $request = $request->withUri($uri);
         $request->getSession()->write(
             TwoFactorAuthenticator::USER_SESSION_KEY,

@@ -12,8 +12,8 @@ declare(strict_types=1);
  */
 namespace CakeDC\Auth\Rbac\Rules;
 
+use ArrayAccess;
 use Cake\Core\InstanceConfigTrait;
-use Cake\Datasource\ModelAwareTrait;
 use Cake\ORM\Locator\LocatorAwareTrait;
 use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;
@@ -30,19 +30,18 @@ abstract class AbstractRule implements Rule
 {
     use InstanceConfigTrait;
     use LocatorAwareTrait;
-    use ModelAwareTrait;
 
     /**
      * @var array default config
      */
-    protected $_defaultConfig = [];
+    protected array $_defaultConfig = [];
 
     /**
      * AbstractRule constructor.
      *
      * @param array $config Rule config
      */
-    public function __construct($config = [])
+    public function __construct(array $config = [])
     {
         $this->setConfig($config);
     }
@@ -54,7 +53,7 @@ abstract class AbstractRule implements Rule
      * @param mixed $table table
      * @return \Cake\ORM\Table
      */
-    protected function _getTable(ServerRequestInterface $request, $table = null)
+    protected function _getTable(ServerRequestInterface $request, mixed $table = null): Table
     {
         if (empty($table)) {
             return $this->_getTableFromRequest($request);
@@ -73,7 +72,7 @@ abstract class AbstractRule implements Rule
      * @return \Cake\ORM\Table
      * @throws \OutOfBoundsException if table alias can't be extracted from request
      */
-    protected function _getTableFromRequest(ServerRequestInterface $request)
+    protected function _getTableFromRequest(ServerRequestInterface $request): Table
     {
         $params = $request->getAttribute('params');
 
@@ -81,24 +80,21 @@ abstract class AbstractRule implements Rule
         $controller = $params['controller'] ?? null;
         $modelClass = ($plugin ? $plugin . '.' : '') . $controller;
 
-        $this->modelFactory('Table', function (string $alias, array $options): \Cake\ORM\Table {
-            return $this->getTableLocator()->get($alias, $options);
-        });
         if (empty($modelClass)) {
             throw new OutOfBoundsException('Missing Table alias, we could not extract a default table from the request');
         }
 
-        return $this->loadModel($modelClass);
+        return $this->fetchTable($modelClass);
     }
 
     /**
      * Check the current entity is owned by the logged in user
      *
-     * @param array|\ArrayAccess $user Auth array with the logged in data
+     * @param \ArrayAccess|array $user Auth array with the logged in data
      * @param string $role role of the user
      * @param \Psr\Http\Message\ServerRequestInterface $request current request, used to get a default table if not provided
      * @return bool
      * @throws \OutOfBoundsException if table is not found or it doesn't have the expected fields
      */
-    abstract public function allowed($user, $role, ServerRequestInterface $request);
+    abstract public function allowed(array|ArrayAccess $user, string $role, ServerRequestInterface $request): bool;
 }

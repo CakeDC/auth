@@ -23,14 +23,14 @@ class ProviderConfig
     /**
      * @var array
      */
-    protected $providers;
+    protected array $providers;
 
     /**
      * ProviderConfig constructor.
      *
      * @param array $config additional data
      */
-    public function __construct($config = [])
+    public function __construct(array $config = [])
     {
         $oauthConfig = Configure::read('OAuth');
 
@@ -52,7 +52,7 @@ class ProviderConfig
      * @return array
      * @throws \Exception
      */
-    public function normalizeConfig(array $config)
+    public function normalizeConfig(array $config): array
     {
         if (!empty($config['providers'])) {
             array_walk($config['providers'], [$this, '_normalizeConfig'], $config);
@@ -69,7 +69,7 @@ class ProviderConfig
      * @param array $parent Parent configuration.
      * @return void
      */
-    protected function _normalizeConfig(&$config, $alias, $parent)
+    protected function _normalizeConfig(array &$config, string $alias, array $parent): void
     {
         unset($parent['providers']);
 
@@ -107,7 +107,7 @@ class ProviderConfig
      * @throws \CakeDC\Auth\Exception\InvalidProviderException
      * @throws \CakeDC\Auth\Exception\InvalidSettingsException
      */
-    protected function _validateConfig(&$value, $key)
+    protected function _validateConfig(mixed &$value, string $key): void
     {
         if (in_array($key, ['className', 'service', 'mapper'], true) && !is_object($value) && !class_exists($value)) {
             throw new InvalidProviderException([$value]);
@@ -122,7 +122,7 @@ class ProviderConfig
      * @param array $options array of options by provider
      * @return bool
      */
-    protected function _isProviderEnabled($options)
+    protected function _isProviderEnabled(array $options): bool
     {
         return !empty($options['options']['redirectUri']) && !empty($options['options']['clientId']) &&
             !empty($options['options']['clientSecret']);
@@ -134,7 +134,7 @@ class ProviderConfig
      * @param string $alias for provider
      * @return array
      */
-    public function getConfig($alias)
+    public function getConfig(string $alias): array
     {
         return Hash::get($this->providers, $alias, []);
     }

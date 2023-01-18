@@ -19,10 +19,13 @@ use Cake\Http\ServerRequest;
 use Cake\Http\ServerRequestFactory;
 use Cake\Http\Session;
 use Cake\TestSuite\TestCase;
+use CakeDC\Auth\Social\Mapper\Facebook as FacebookMapper;
 use CakeDC\Auth\Social\Service\OAuth2Service;
 use CakeDC\Auth\Social\Service\ServiceInterface;
 use Laminas\Diactoros\Uri;
+use League\OAuth2\Client\Provider\Facebook;
 use League\OAuth2\Client\Provider\FacebookUser;
+use League\OAuth2\Client\Token\AccessToken;
 
 class OAuth2ServiceTest extends TestCase
 {
@@ -52,7 +55,7 @@ class OAuth2ServiceTest extends TestCase
     {
         parent::setUp();
 
-        $this->Provider = $this->getMockBuilder(\League\OAuth2\Client\Provider\Facebook::class)->setConstructorArgs([
+        $this->Provider = $this->getMockBuilder(Facebook::class)->setConstructorArgs([
             [
                 'graphApiVersion' => 'v2.8',
                 'redirectUri' => '/auth/facebook',
@@ -67,9 +70,9 @@ class OAuth2ServiceTest extends TestCase
         ])->getMock();
 
         $config = [
-            'service' => \CakeDC\Auth\Social\Service\OAuth2Service::class,
+            'service' => OAuth2Service::class,
             'className' => $this->Provider,
-            'mapper' => \CakeDC\Auth\Social\Mapper\Facebook::class,
+            'mapper' => FacebookMapper::class,
             'authParams' => ['scope' => ['public_profile', 'email', 'user_birthday', 'user_gender', 'user_link']],
             'options' => [
                 'state' => '__TEST_STATE__',
@@ -110,8 +113,8 @@ class OAuth2ServiceTest extends TestCase
     public function testConstruct()
     {
         $service = new OAuth2Service([
-            'className' => \League\OAuth2\Client\Provider\Facebook::class,
-            'mapper' => \CakeDC\Auth\Social\Mapper\Facebook::class,
+            'className' => Facebook::class,
+            'mapper' => FacebookMapper::class,
             'authParams' => ['scope' => ['public_profile', 'email', 'user_birthday', 'user_gender', 'user_link']],
             'options' => [
                 'customOption' => 'hello',
@@ -247,7 +250,7 @@ class OAuth2ServiceTest extends TestCase
         ]);
         $this->Request->getSession()->write('oauth2state', '__TEST_STATE__');
 
-        $Token = new \League\OAuth2\Client\Token\AccessToken([
+        $Token = new AccessToken([
             'access_token' => 'test-token',
             'expires' => 1490988496,
         ]);

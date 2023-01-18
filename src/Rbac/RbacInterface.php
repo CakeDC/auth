@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace CakeDC\Auth\Rbac;
 
+use ArrayAccess;
 use Psr\Http\Message\ServerRequestInterface;
 
 /**
@@ -25,21 +26,21 @@ interface RbacInterface
     /**
      * @return array
      */
-    public function getPermissions();
+    public function getPermissions(): array;
 
     /**
      * @param array $permissions permissions
      * @return void
      */
-    public function setPermissions($permissions);
+    public function setPermissions(array $permissions): void;
 
     /**
      * Match against permissions, return if matched
      * Permissions are processed based on the 'permissions' config values
      *
-     * @param array|\ArrayAccess $user current user array
+     * @param \ArrayAccess|array $user current user array
      * @param \Psr\Http\Message\ServerRequestInterface $request request
      * @return bool true if there is a match in permissions
      */
-    public function checkPermissions($user, ServerRequestInterface $request);
+    public function checkPermissions(array|ArrayAccess $user, ServerRequestInterface $request): bool;
 }

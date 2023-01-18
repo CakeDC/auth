@@ -12,9 +12,12 @@ declare(strict_types=1);
  */
 namespace CakeDC\Auth\Rbac\Rules;
 
+use ArrayAccess;
+use Cake\Core\Exception\CakeException;
 use Cake\Utility\Hash;
 use OutOfBoundsException;
 use Psr\Http\Message\ServerRequestInterface;
+use RuntimeException;
 
 /**
  * Owner rule class, used to match ownership permissions
@@ -25,7 +28,7 @@ class Owner extends AbstractRule
     public const TYPE_TABLE_KEY_QUERY = 'query';
     public const TYPE_TABLE_KEY_DATA = 'data';
 
-    protected $_defaultConfig = [
+    protected array $_defaultConfig = [
         //field in the owned table matching the user_id
         'ownerForeignKey' => 'user_id',
         /*
@@ -60,7 +63,7 @@ class Owner extends AbstractRule
     /**
      * @inheritDoc
      */
-    public function allowed($user, $role, ServerRequestInterface $request)
+    public function allowed(array|ArrayAccess $user, string $role, ServerRequestInterface $request): bool
     {
         $table = $this->_getTable($request, $this->getConfig('table'));
         //retrieve entity id from request
@@ -80,7 +83,7 @@ class Owner extends AbstractRule
                 );
                 throw new OutOfBoundsException($msg);
             }
-        } catch (\Cake\Core\Exception\CakeException $ex) {
+        } catch (CakeException $ex) {
             $msg = sprintf(
                 'Missing column %s in table %s while checking ownership permissions for user %s',
                 $this->getConfig('ownerForeignKey'),
@@ -108,7 +111,7 @@ class Owner extends AbstractRule
      * @return string
      * @throws \RuntimeException when invalid table key is used
      */
-    protected function getTableId(ServerRequestInterface $request)
+    protected function getTableId(ServerRequestInterface $request): string
     {
         $tableKeyType = $this->getConfig('tableKeyType');
         switch ($tableKeyType) {
@@ -122,7 +125,7 @@ class Owner extends AbstractRule
                 $requestKeyTypeData = $request->getParsedBody() ?: [];
                 break;
             default:
-                throw new \RuntimeException(sprintf('TypeTableKey "%s" is invalid, please use "params", "data" or "query"', $tableKeyType));
+                throw new RuntimeException(sprintf('TypeTableKey "%s" is invalid, please use "params", "data" or "query"', $tableKeyType));
         }
 
         return Hash::get($requestKeyTypeData, $this->getConfig('tableIdParamsKey'));

@@ -12,13 +12,15 @@ declare(strict_types=1);
  */
 namespace CakeDC\Auth\Test\TestCase\Identifier;
 
+use Cake\ORM\Entity;
 use Cake\TestSuite\TestCase;
 use CakeDC\Auth\Identifier\SocialIdentifier;
 use CakeDC\Auth\Social\Mapper\Facebook;
+use League\OAuth2\Client\Token\AccessToken;
 
 class SocialIdentifierTest extends TestCase
 {
-    public $fixtures = [
+    public array $fixtures = [
         'plugin.CakeDC/Auth.Users',
         'plugin.CakeDC/Auth.SocialAccounts',
     ];
@@ -54,7 +56,7 @@ class SocialIdentifierTest extends TestCase
             'resolver' => 'Authentication.ORM',
         ]);
 
-        $Token = new \League\OAuth2\Client\Token\AccessToken([
+        $Token = new AccessToken([
             'access_token' => 'test-token',
             'expires' => 1490988496,
         ]);
@@ -98,7 +100,7 @@ class SocialIdentifierTest extends TestCase
         $user['provider'] = 'facebook';
 
         $result = $identifier->identify(['socialAuthUser' => $user]);
-        $this->assertInstanceOf(\Cake\ORM\Entity::class, $result);
+        $this->assertInstanceOf(Entity::class, $result);
         $this->assertEquals($result->id, '00000000-0000-0000-0000-000000000001');
         $this->assertEquals('user-1@test.com', $result->email);
         $this->assertEquals('user-1', $result->username);
@@ -111,7 +113,7 @@ class SocialIdentifierTest extends TestCase
      */
     public function testIdentifyErrorSocialLogin()
     {
-        $Token = new \League\OAuth2\Client\Token\AccessToken([
+        $Token = new AccessToken([
             'access_token' => 'test-token',
             'expires' => 1490988496,
         ]);
@@ -157,7 +159,7 @@ class SocialIdentifierTest extends TestCase
      */
     public function testIdentifyNoEmail()
     {
-        $Token = new \League\OAuth2\Client\Token\AccessToken([
+        $Token = new AccessToken([
             'access_token' => 'test-token',
             'expires' => 1490988496,
         ]);

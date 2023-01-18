@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace CakeDC\Auth\Identifier;
 
+use ArrayAccess;
 use Authentication\Identifier\AbstractIdentifier;
 use Authentication\Identifier\Resolver\ResolverAwareTrait;
 
@@ -22,7 +23,7 @@ class SocialIdentifier extends AbstractIdentifier
 
     public const CREDENTIAL_KEY = 'socialAuthUser';
 
-    protected $_defaultConfig = [
+    protected array $_defaultConfig = [
         'resolver' => 'Authentication.Orm',
     ];
 
@@ -32,7 +33,7 @@ class SocialIdentifier extends AbstractIdentifier
      * @param array $credentials Authentication credentials
      * @return \ArrayAccess|array|null
      */
-    public function identify(array $credentials)
+    public function identify(array $credentials): ArrayAccess|array|null
     {
         if (!isset($credentials[self::CREDENTIAL_KEY]['email'])) {
             return null;

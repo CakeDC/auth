@@ -24,7 +24,7 @@ class ServiceFactory
      *
      * @var string
      */
-    protected $redirectUriField = 'redirectUri';
+    protected string $redirectUriField = 'redirectUri';
 
     /**
      * Set the redirect uri field name
@@ -32,7 +32,7 @@ class ServiceFactory
      * @param string $redirectUriField field used for redirect uri
      * @return self
      */
-    public function setRedirectUriField(string $redirectUriField)
+    public function setRedirectUriField(string $redirectUriField): self
     {
         $this->redirectUriField = $redirectUriField;
 
@@ -45,7 +45,7 @@ class ServiceFactory
      * @param string $provider provider alias
      * @return \CakeDC\Auth\Social\Service\ServiceInterface
      */
-    public function createFromProvider($provider): ServiceInterface
+    public function createFromProvider(string $provider): ServiceInterface
     {
         $config = (new ProviderConfig())->getConfig($provider);
 
@@ -70,7 +70,7 @@ class ServiceFactory
      * @param \Psr\Http\Message\ServerRequestInterface $request The request.
      * @return \CakeDC\Auth\Social\Service\ServiceInterface
      */
-    public function createFromRequest(ServerRequestInterface $request)
+    public function createFromRequest(ServerRequestInterface $request): ServiceInterface
     {
         $params = $request->getAttribute('params');
         $provider = $params['provider'] ?? null;

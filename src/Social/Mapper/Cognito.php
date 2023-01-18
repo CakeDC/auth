@@ -25,7 +25,7 @@ class Cognito extends AbstractMapper
      *
      * @var array
      */
-    protected $_mapFields = [
+    protected array $_mapFields = [
         'id' => 'sub',
         'zoneinfo' => 'zoneinfo',
         'link' => 'website',
@@ -41,7 +41,7 @@ class Cognito extends AbstractMapper
      * @param mixed $rawData raw data
      * @return string
      */
-    protected function _link($rawData)
+    protected function _link(mixed $rawData): string
     {
         return Hash::get($rawData, $this->_mapFields['link'], '#');
     }
@@ -52,7 +52,7 @@ class Cognito extends AbstractMapper
      * @param mixed $rawData raw data
      * @return mixed
      */
-    protected function _firstName($rawData)
+    protected function _firstName(mixed $rawData): mixed
     {
         return $this->getNameValue($rawData, 'first_name', 0);
     }
@@ -63,7 +63,7 @@ class Cognito extends AbstractMapper
      * @param mixed $rawData raw data
      * @return mixed
      */
-    protected function _lastName($rawData)
+    protected function _lastName(mixed $rawData): mixed
     {
         return $this->getNameValue($rawData, 'last_name', 1);
     }
@@ -76,7 +76,7 @@ class Cognito extends AbstractMapper
      * @param int $keyInName key of string part in name field after exploder(' ', $value)
      * @return string|null
      */
-    private function getNameValue($rawData, $field, $keyInName)
+    private function getNameValue(mixed $rawData, string $field, int $keyInName): ?string
     {
         $value = Hash::get($rawData, $this->_mapFields[$field]);
         if ($value === null) {

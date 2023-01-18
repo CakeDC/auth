@@ -21,6 +21,7 @@ use Authentication\Identifier\IdentifierInterface;
 use Cake\Core\Configure;
 use Cake\Core\InstanceConfigTrait;
 use CakeDC\Auth\Traits\ReCaptchaTrait;
+use InvalidArgumentException;
 use Psr\Http\Message\ServerRequestInterface;
 
 class FormAuthenticator implements AuthenticatorInterface
@@ -33,24 +34,19 @@ class FormAuthenticator implements AuthenticatorInterface
      */
     public const FAILURE_INVALID_RECAPTCHA = 'FAILURE_INVALID_RECAPTCHA';
 
-    /**
-     * @var \Authentication\Authenticator\AuthenticatorInterface
-     */
-    protected $baseAuthenticator;
+    protected ?AuthenticatorInterface $baseAuthenticator = null;
 
     /**
      * Identifier or identifiers collection.
-     *
-     * @var \Authentication\Identifier\IdentifierInterface
      */
-    protected $identifier;
+    protected IdentifierInterface $identifier;
 
     /**
      * Settings for base authenticator
      *
      * @var array
      */
-    protected $_defaultConfig = [
+    protected array $_defaultConfig = [
         'keyCheckEnabledRecaptcha' => 'Users.reCaptcha.login',
     ];
 
@@ -71,9 +67,9 @@ class FormAuthenticator implements AuthenticatorInterface
      *
      * @return \Authentication\Authenticator\AuthenticatorInterface
      */
-    public function getBaseAuthenticator()
+    public function getBaseAuthenticator(): AuthenticatorInterface
     {
-        if ($this->baseAuthenticator === null) {
+        if (!isset($this->baseAuthenticator)) {
             $this->baseAuthenticator = $this->createBaseAuthenticator($this->identifier, $this->getConfig());
         }
 
@@ -87,7 +83,7 @@ class FormAuthenticator implements AuthenticatorInterface
      * @param array $config Configuration settings.
      * @return \Authentication\Authenticator\AuthenticatorInterface
      */
-    protected function createBaseAuthenticator(IdentifierInterface $identifier, array $config = [])
+    protected function createBaseAuthenticator(IdentifierInterface $identifier, array $config = []): AuthenticatorInterface
     {
         unset($config['keyCheckEnabledRecaptcha']);
         if (!isset($config['baseClassName'])) {
@@ -97,7 +93,7 @@ class FormAuthenticator implements AuthenticatorInterface
         $className = $config['baseClassName'];
         unset($config['baseClassName']);
         if (!class_exists($className)) {
-            throw new \InvalidArgumentException(__('Base class for FormAuthenticator {0} does not exist', $className));
+            throw new InvalidArgumentException(__('Base class for FormAuthenticator {0} does not exist', $className));
         }
 
         return new $className($identifier, $config);
@@ -134,7 +130,7 @@ class FormAuthenticator implements AuthenticatorInterface
      * @param array $arguments used in base authenticator method
      * @return mixed
      */
-    public function __call($name, $arguments)
+    public function __call(string $name, array $arguments): mixed
     {
         return $this->getBaseAuthenticator()->$name(...$arguments);
     }
