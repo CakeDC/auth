@@ -65,7 +65,7 @@ class RbacPolicy implements PolicyInterface
 
         $user = $identity !== null ? $identity->getOriginalData() : [];
 
-        return (bool)$rbac->checkPermissions($user, $resource);
+        return $rbac->checkPermissions($user, $resource);
     }
 
     /**

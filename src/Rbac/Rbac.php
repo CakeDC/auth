@@ -182,7 +182,7 @@ class Rbac implements RbacInterface
             if (!is_string($value) && is_callable($value)) {
                 $return = (bool)call_user_func($value, $user, $role, $request);
             } elseif ($value instanceof Rule) {
-                $return = (bool)$value->allowed($user, $role, $request);
+                $return = $value->allowed($user, $role, $request);
             } elseif ($key === 'bypassAuth' && $value === true) {
                 $return = true;
             } elseif ($key === 'allowed') {
