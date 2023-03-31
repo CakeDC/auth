@@ -27,10 +27,6 @@ class AuthenticationService extends BaseService
 
     public const TWO_FACTOR_VERIFY_SESSION_KEY = 'temporarySession';
 
-    public const U2F_SESSION_KEY = 'U2f.User';
-
-    public const NEED_U2F_VERIFY = 'NEED_U2F_VERIFY';
-
     public const NEED_WEBAUTHN_2FA_VERIFY = 'NEED_WEBAUTHN2FA_VERIFY';
 
     public const WEBAUTHN_2FA_SESSION_KEY = 'Webauthn2fa.User';
