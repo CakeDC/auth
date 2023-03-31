@@ -40,7 +40,6 @@ class RbacTest extends TestCase
      */
     public function setUp(): void
     {
-        $request = new ServerRequest();
         $this->defaultPermissions = [
             //all bypass
             [
@@ -723,7 +722,7 @@ class RbacTest extends TestCase
                     'controller' => ['Tests'],
                     'action' => ['one', 'two'],
                     'allowed' => function ($user, $role, $request) {
-                        return $user['id'] === 1 && $role = 'test' && $request->getParam('plugin') == 'Tests';
+                        return $user['id'] === 1 && $role == 'test' && $request->getParam('plugin') == 'Tests';
                     },
                 ]],
                 //user

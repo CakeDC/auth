@@ -27,10 +27,6 @@ class AuthenticationService extends BaseService
 
     public const TWO_FACTOR_VERIFY_SESSION_KEY = 'temporarySession';
 
-    public const U2F_SESSION_KEY = 'U2f.User';
-
-    public const NEED_U2F_VERIFY = 'NEED_U2F_VERIFY';
-
     public const NEED_WEBAUTHN_2FA_VERIFY = 'NEED_WEBAUTHN2FA_VERIFY';
 
     public const WEBAUTHN_2FA_SESSION_KEY = 'Webauthn2fa.User';
@@ -83,26 +79,6 @@ class AuthenticationService extends BaseService
     }
 
     /**
-     * Proceed to U2f flow after a valid result result
-     *
-     * @param \Psr\Http\Message\ServerRequestInterface $request response to manipulate
-     * @param \Authentication\Authenticator\ResultInterface $result valid result
-     * @return \Authentication\Authenticator\ResultInterface with result, request and response keys
-     */
-    protected function proceedToU2f(ServerRequestInterface $request, ResultInterface $result): ResultInterface
-    {
-        /**
-         * @var \Cake\Http\Session $session
-         */
-        $session = $request->getAttribute('session');
-        $session->write(self::U2F_SESSION_KEY, $result->getData());
-        $result = new Result(null, self::NEED_U2F_VERIFY);
-        $this->_successfulAuthenticator = null;
-
-        return $this->_result = $result;
-    }
-
-    /**
      * Get the configured one-time password authentication checker
      *
      * @return \CakeDC\Auth\Authentication\OneTimePasswordAuthenticationCheckerInterface
@@ -113,23 +89,13 @@ class AuthenticationService extends BaseService
     }
 
     /**
-     * Get the configured u2f authentication checker
+     * Get the configured Webauthn authentication checker
      *
      * @return \CakeDC\Auth\Authentication\Webauthn2fAuthenticationCheckerInterface
      */
     protected function getWebauthn2fAuthenticationChecker(): Webauthn2fAuthenticationCheckerInterface
     {
         return (new Webauthn2fAuthenticationCheckerFactory())->build();
-    }
-
-    /**
-     * Get the configured u2f authentication checker
-     *
-     * @return \CakeDC\Auth\Authentication\U2fAuthenticationCheckerInterface
-     */
-    protected function getU2fAuthenticationChecker(): U2fAuthenticationCheckerInterface
-    {
-        return (new U2fAuthenticationCheckerFactory())->build();
     }
 
     /**
@@ -158,11 +124,6 @@ class AuthenticationService extends BaseService
                 $webauthn2faChecker = $this->getWebauthn2fAuthenticationChecker();
                 if ($skipTwoFactorVerify !== true && $webauthn2faChecker->isRequired($userData)) {
                     return $this->proceedToWebauthn2fa($request, $result);
-                }
-
-                $u2fCheck = $this->getU2fAuthenticationChecker();
-                if ($skipTwoFactorVerify !== true && $u2fCheck->isRequired($userData)) {
-                    return $this->proceedToU2f($request, $result);
                 }
 
                 $otpCheck = $this->getOneTimePasswordAuthenticationChecker();
