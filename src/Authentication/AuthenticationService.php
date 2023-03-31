@@ -89,7 +89,7 @@ class AuthenticationService extends BaseService
     }
 
     /**
-     * Get the configured u2f authentication checker
+     * Get the configured Webauthn authentication checker
      *
      * @return \CakeDC\Auth\Authentication\Webauthn2fAuthenticationCheckerInterface
      */

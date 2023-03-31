@@ -98,16 +98,6 @@ return [
         // Random Number Generator provider (more on this later)
         'rngprovider' => null
     ],
-    'U2f' => [
-        'enabled' => false,
-        'checker' => \CakeDC\Auth\Authentication\DefaultU2fAuthenticationChecker::class,
-        'startAction' => [
-            'plugin' => 'CakeDC/Users',
-            'controller' => 'Users',
-            'action' => 'u2f',
-            'prefix' => false,
-        ]
-    ],
     'Webauthn2fa' => [
         'enabled' => false,
         'appName' => null,//App must set a valid name here
