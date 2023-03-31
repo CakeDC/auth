@@ -14,7 +14,6 @@ namespace CakeDC\Auth\Test\TestCase\Authentication;
 
 use Authentication\Authenticator\Result;
 use Cake\Core\Configure;
-use Cake\Http\Client\Response;
 use Cake\Http\ServerRequestFactory;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
@@ -48,7 +47,6 @@ class AuthenticationServiceTest extends TestCase
             [],
             ['username' => 'user-not-found', 'password' => 'password']
         );
-        $response = new Response();
 
         $service = new AuthenticationService([
             'identifiers' => [
@@ -78,7 +76,6 @@ class AuthenticationServiceTest extends TestCase
             [],
             ['username' => 'user-not-found', 'password' => 'password']
         );
-        $response = new Response();
 
         $service = new AuthenticationService([
             'identifiers' => [
@@ -284,7 +281,6 @@ class AuthenticationServiceTest extends TestCase
             [],
             ['username' => 'user-1', 'password' => 'password']
         );
-        $response = new Response();
 
         $service = new AuthenticationService([
             'identifiers' => [
