@@ -59,7 +59,7 @@ define('CONFIG', ROOT . '/tests/config/');
 define('WWW_ROOT', ROOT . DS . WEBROOT_DIR . DS);
 define('TESTS', ROOT . DS . 'tests' . DS);
 
-require ROOT . '/vendor/cakephp/cakephp/src/basics.php';
+require ROOT . '/vendor/cakephp/cakephp/src/functions.php';
 require ROOT . '/vendor/autoload.php';
 
 Cake\Core\Configure::write('App', [
