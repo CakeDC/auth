@@ -61,7 +61,7 @@ class RbacMiddlewareTest extends TestCase
         $request = new ServerRequest();
         $rbacMiddleware = $this->rbacMiddleware;
         $handler = $this->getMockBuilder(Runner::class)
-            ->setMethods(['handle'])
+            ->onlyMethods(['handle'])
             ->getMock();
         $handler->expects($this->never())
             ->method('handle');
@@ -81,7 +81,7 @@ class RbacMiddlewareTest extends TestCase
         $request = new ServerRequest();
         $request = $request->withHeader('Accept', 'application/json');
         $handler = $this->getMockBuilder(Runner::class)
-            ->setMethods(['handle'])
+            ->onlyMethods(['handle'])
             ->getMock();
         $handler->expects($this->never())
             ->method('handle');
@@ -107,7 +107,7 @@ class RbacMiddlewareTest extends TestCase
         ]);
 
         $handler = $this->getMockBuilder(Runner::class)
-            ->setMethods(['handle'])
+            ->onlyMethods(['handle'])
             ->getMock();
         $handler->expects($this->never())
             ->method('handle');
@@ -133,14 +133,14 @@ class RbacMiddlewareTest extends TestCase
         $response = new Response();
         $response = $response->withStringBody(__METHOD__ . time());
         $handler = $this->getMockBuilder(Runner::class)
-            ->setMethods(['handle'])
+            ->onlyMethods(['handle'])
             ->getMock();
         $handler->expects($this->once())
             ->method('handle')
             ->willReturn($response);
 
         $rbac = $this->getMockBuilder(Rbac::class)
-            ->setMethods(['checkPermissions'])
+            ->onlyMethods(['checkPermissions'])
             ->getMock();
         $rbac->expects($this->once())
             ->method('checkPermissions')

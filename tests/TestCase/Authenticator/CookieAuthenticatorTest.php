@@ -24,7 +24,7 @@ use Psr\Http\Message\ResponseInterface;
 
 class CookieAuthenticatorTest extends TestCase
 {
-    public function dataProviderPersistIdentity()
+    public static function dataProviderPersistIdentity()
     {
         return [
             [true, 'remember_me', ['remember_me' => 1], []],

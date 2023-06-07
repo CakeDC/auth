@@ -72,7 +72,7 @@ class SocialAuthenticatorTest extends TestCase
                 'clientSecret' => 'secretpassword',
             ],
             [],
-        ])->setMethods([
+        ])->onlyMethods([
             'getAccessToken', 'getState', 'getAuthorizationUrl', 'getResourceOwner',
         ])->getMock();
 

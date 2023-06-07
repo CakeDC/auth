@@ -63,7 +63,7 @@ class OAuth1ServiceTest extends TestCase
                 'identifier' => '20003030300303',
                 'secret' => 'weakpassword',
             ],
-        ])->setMethods([
+        ])->onlyMethods([
             'getTemporaryCredentials', 'getAuthorizationUrl', 'getTokenCredentials', 'getUserDetails',
         ])->getMock();
 

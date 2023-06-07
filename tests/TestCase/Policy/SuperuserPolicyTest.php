@@ -27,7 +27,7 @@ class SuperuserPolicyTest extends TestCase
      *
      * @return array
      */
-    public function dataProviderCanAccess()
+    public static function dataProviderCanAccess()
     {
         return [
             [['is_superuser' => true], true],

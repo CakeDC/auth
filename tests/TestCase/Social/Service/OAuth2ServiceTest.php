@@ -65,7 +65,7 @@ class OAuth2ServiceTest extends TestCase
                 'clientSecret' => 'secretpassword',
             ],
             [],
-        ])->setMethods([
+        ])->onlyMethods([
             'getAccessToken', 'getState', 'getAuthorizationUrl', 'getResourceOwner',
         ])->getMock();
 

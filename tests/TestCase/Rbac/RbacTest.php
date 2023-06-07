@@ -179,7 +179,7 @@ class RbacTest extends TestCase
     public function providerAuthorize()
     {
         $trueRuleMock = $this->getMockBuilder(Owner::class)
-            ->setMethods(['allowed'])
+            ->onlyMethods(['allowed'])
             ->getMock();
         $trueRuleMock->expects($this->any())
             ->method('allowed')
@@ -1196,7 +1196,7 @@ class RbacTest extends TestCase
     public function testBadPermission($permissions, $user, $requestParams, $expectedMsg)
     {
         $rbac = $this->getMockBuilder(Rbac::class)
-            ->setMethods(['log'])
+            ->onlyMethods(['log'])
             ->disableOriginalConstructor()
             ->getMock();
         $rbac
@@ -1211,7 +1211,7 @@ class RbacTest extends TestCase
         $rbac->checkPermissions($user, $request);
     }
 
-    public function badPermissionProvider()
+    public static function badPermissionProvider()
     {
         return [
             'no-controller' => [

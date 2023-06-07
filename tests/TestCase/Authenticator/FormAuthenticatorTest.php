@@ -37,7 +37,7 @@ class FormAuthenticatorTest extends TestCase
 
         $BaseAuthenticator = $this->getMockBuilder(CakeFormAuthenticator::class)
             ->setConstructorArgs([$identifiers])
-            ->setMethods(['authenticate'])
+            ->onlyMethods(['authenticate'])
             ->getMock();
         $request = ServerRequestFactory::fromGlobals(
             ['REQUEST_URI' => '/testpath'],
@@ -63,7 +63,7 @@ class FormAuthenticatorTest extends TestCase
                 ],
                 'keyCheckEnabledRecaptcha' => 'Users.reCaptcha.login',
             ],
-        ])->setMethods(['createBaseAuthenticator', 'validateReCaptcha'])->getMock();
+        ])->onlyMethods(['createBaseAuthenticator', 'validateReCaptcha'])->getMock();
 
         Configure::write('Users.reCaptcha.login', true);
         $Authenticator->expects($this->once())
@@ -101,7 +101,7 @@ class FormAuthenticatorTest extends TestCase
 
         $BaseAuthenticator = $this->getMockBuilder(CakeFormAuthenticator::class)
             ->setConstructorArgs([$identifiers])
-            ->setMethods(['authenticate'])
+            ->onlyMethods(['authenticate'])
             ->getMock();
         $request = ServerRequestFactory::fromGlobals(
             ['REQUEST_URI' => '/testpath'],
@@ -131,7 +131,7 @@ class FormAuthenticatorTest extends TestCase
                 ],
                 'keyCheckEnabledRecaptcha' => 'Users.reCaptcha.login',
             ],
-        ])->setMethods(['createBaseAuthenticator', 'validateReCaptcha'])->getMock();
+        ])->onlyMethods(['createBaseAuthenticator', 'validateReCaptcha'])->getMock();
 
         Configure::write('Users.reCaptcha.login', true);
         $Authenticator->expects($this->once())
@@ -174,7 +174,7 @@ class FormAuthenticatorTest extends TestCase
 
         $BaseAuthenticator = $this->getMockBuilder(CakeFormAuthenticator::class)
             ->setConstructorArgs([$identifiers])
-            ->setMethods(['authenticate'])
+            ->onlyMethods(['authenticate'])
             ->getMock();
         $request = ServerRequestFactory::fromGlobals(
             ['REQUEST_URI' => '/testpath'],
@@ -203,7 +203,7 @@ class FormAuthenticatorTest extends TestCase
                     IdentifierInterface::CREDENTIAL_PASSWORD => 'password',
                 ],
             ],
-        ])->setMethods(['createBaseAuthenticator', 'validateReCaptcha'])->getMock();
+        ])->onlyMethods(['createBaseAuthenticator', 'validateReCaptcha'])->getMock();
 
         Configure::write('Users.reCaptcha.login', false);
         $Authenticator->expects($this->once())
@@ -241,7 +241,7 @@ class FormAuthenticatorTest extends TestCase
 
         $BaseAuthenticator = $this->getMockBuilder(CakeFormAuthenticator::class)
             ->setConstructorArgs([$identifiers])
-            ->setMethods(['authenticate'])
+            ->onlyMethods(['authenticate'])
             ->getMock();
         $request = ServerRequestFactory::fromGlobals(
             ['REQUEST_URI' => '/testpath'],
@@ -270,7 +270,7 @@ class FormAuthenticatorTest extends TestCase
                     IdentifierInterface::CREDENTIAL_PASSWORD => 'password',
                 ],
             ],
-        ])->setMethods(['createBaseAuthenticator', 'validateReCaptcha'])->getMock();
+        ])->onlyMethods(['createBaseAuthenticator', 'validateReCaptcha'])->getMock();
 
         Configure::write('Users.reCaptcha.login', true);
         $Authenticator->expects($this->once())

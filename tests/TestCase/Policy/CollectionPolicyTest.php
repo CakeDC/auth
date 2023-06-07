@@ -37,7 +37,7 @@ class CollectionPolicyTest extends TestCase
     {
         $rbacPolicy = function ($success) {
             $Mock = $this->getMockBuilder(RbacPolicy::class)
-                ->setMethods(['canAccess'])
+                ->onlyMethods(['canAccess'])
                 ->getMock();
 
             $Mock->expects($this->once())
@@ -48,7 +48,7 @@ class CollectionPolicyTest extends TestCase
         };
         $rbacPolicyNever = function () {
             $Mock = $this->getMockBuilder(RbacPolicy::class)
-                ->setMethods(['canAccess'])
+                ->onlyMethods(['canAccess'])
                 ->getMock();
 
             $Mock->expects($this->never())

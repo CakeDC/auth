@@ -38,7 +38,7 @@ class RbacPolicyTest extends TestCase
         $identity = new IdentityDecorator($service, $user);
         $request = ServerRequestFactory::fromGlobals();
         $request = $request->withAttribute('identity', $identity);
-        $rbac = $this->getMockBuilder(Rbac::class)->setMethods(['checkPermissions'])->getMock();
+        $rbac = $this->getMockBuilder(Rbac::class)->onlyMethods(['checkPermissions'])->getMock();
         $request = $request->withAttribute('rbac', $rbac);
         $rbac->expects($this->once())
             ->method('checkPermissions')
@@ -65,7 +65,7 @@ class RbacPolicyTest extends TestCase
 
         $request = ServerRequestFactory::fromGlobals();
         $request = $request->withAttribute('identity', $identity);
-        $rbac = $this->getMockBuilder(Rbac::class)->setMethods(['checkPermissions'])->getMock();
+        $rbac = $this->getMockBuilder(Rbac::class)->onlyMethods(['checkPermissions'])->getMock();
         $request = $request->withAttribute('rbac', $rbac);
         $rbac->expects($this->once())
             ->method('checkPermissions')
@@ -85,7 +85,7 @@ class RbacPolicyTest extends TestCase
     public function testGetRbac()
     {
         $request = ServerRequestFactory::fromGlobals();
-        $rbac = $this->getMockBuilder(Rbac::class)->setMethods(['checkPermissions'])->getMock();
+        $rbac = $this->getMockBuilder(Rbac::class)->onlyMethods(['checkPermissions'])->getMock();
         $request = $request->withAttribute('rbac', $rbac);
         $policy = new RbacPolicy();
         $actual = $policy->getRbac($request);
@@ -98,7 +98,7 @@ class RbacPolicyTest extends TestCase
     public function testGetRbacIgnoreConfigObject()
     {
         $request = ServerRequestFactory::fromGlobals();
-        $rbac = $this->getMockBuilder(Rbac::class)->setMethods(['checkPermissions'])->getMock();
+        $rbac = $this->getMockBuilder(Rbac::class)->onlyMethods(['checkPermissions'])->getMock();
         $request = $request->withAttribute('rbac', $rbac);
         $policy = new RbacPolicy([
             'adapter' => new Rbac(['role' => 'my_role']),
@@ -113,7 +113,7 @@ class RbacPolicyTest extends TestCase
     public function testGetRbacUseObject()
     {
         $request = ServerRequestFactory::fromGlobals();
-        $rbac = $this->getMockBuilder(Rbac::class)->setMethods(['checkPermissions'])->getMock();
+        $rbac = $this->getMockBuilder(Rbac::class)->onlyMethods(['checkPermissions'])->getMock();
         $policy = new RbacPolicy([
             'adapter' => $rbac,
         ]);

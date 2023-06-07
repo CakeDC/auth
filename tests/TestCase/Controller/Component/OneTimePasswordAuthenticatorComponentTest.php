@@ -63,7 +63,8 @@ class OneTimePasswordAuthenticatorComponentTest extends TestCase
         Configure::write('OneTimePasswordAuthenticator.login', true);
 
         $this->request = $this->getMockBuilder(ServerRequest::class)
-                ->setMethods(['is', 'method'])
+                ->onlyMethods(['is'])
+                ->addMethods(['method'])
                 ->getMock();
         $this->request->expects($this->any())->method('is')->will($this->returnValue(true));
         $this->Controller = new Controller($this->request);

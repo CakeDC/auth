@@ -8,23 +8,12 @@
   ~ @copyright Copyright 2010 - 2018, Cake Development Corporation (https://www.cakedc.com)
   ~ @license MIT License (http://www.opensource.org/licenses/mit-license.php)
   -->
-<phpunit 
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    colors="true"
-    processIsolation="false"
-    stopOnFailure="false"
-    bootstrap="./tests/bootstrap.php"
-  >
-  <coverage processUncoveredFiles="true">
-    <include>
-      <directory suffix=".php">./src</directory>
-    </include>
-  </coverage>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" colors="true" processIsolation="false" stopOnFailure="false" bootstrap="./tests/bootstrap.php" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.3/phpunit.xsd">
+  <coverage/>
   <php>
     <ini name="memory_limit" value="-1"/>
     <ini name="apc.enable_cli" value="1"/>
-	  <env name="FIXTURE_SCHEMA_METADATA" value="./tests/schema.php"/>
-
+    <env name="FIXTURE_SCHEMA_METADATA" value="./tests/schema.php"/>
     <!-- SQLite
     <env name="DB_URL" value="sqlite:///:memory:"/>
     -->
@@ -46,6 +35,11 @@
   </testsuites>
   <!-- Setup a listener for fixtures -->
   <extensions>
-    <extension class="\Cake\TestSuite\Fixture\PHPUnitExtension" />
+    <bootstrap class="Cake\TestSuite\Fixture\Extension\PHPUnitExtension"/>
   </extensions>
+  <source>
+    <include>
+      <directory suffix=".php">./src</directory>
+    </include>
+  </source>
 </phpunit>

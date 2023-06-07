@@ -41,7 +41,7 @@ class IsAuthorizedTraitTest extends TestCase
      *
      * @return array
      */
-    public function dataProviderIsAuthorized()
+    public static function dataProviderIsAuthorized()
     {
         $url = [
             'plugin' => 'CakeDC/Users',
@@ -65,7 +65,7 @@ class IsAuthorizedTraitTest extends TestCase
     public function testIsAuthorizedEmpty()
     {
         $Trait = $this->getMockBuilder(IsAuthorizedTrait::class)
-            ->setMethods(['getRequest'])
+            ->addMethods(['getRequest'])
             ->getMockForTrait();
         $Trait->expects($this->never())
             ->method('getRequest');
@@ -96,7 +96,7 @@ class IsAuthorizedTraitTest extends TestCase
         ]);
         $identity = new Identity($user);
         $request = new ServerRequest();
-        $rbac = $this->getMockBuilder(Rbac::class)->setMethods(['checkPermissions'])->getMock();
+        $rbac = $this->getMockBuilder(Rbac::class)->onlyMethods(['checkPermissions'])->getMock();
         $rbac->expects($this->once())
             ->method('checkPermissions')
             ->with(
@@ -123,7 +123,7 @@ class IsAuthorizedTraitTest extends TestCase
         $request = $request->withAttribute('identity', new IdentityDecorator($service, $identity));
 
         $Trait = $this->getMockBuilder(IsAuthorizedTrait::class)
-            ->setMethods(['getRequest'])
+            ->addMethods(['getRequest'])
             ->getMockForTrait();
         $Trait->expects($this->any())
             ->method('getRequest')
@@ -147,13 +147,13 @@ class IsAuthorizedTraitTest extends TestCase
             'action' => 'myTest',
         ]);
         $request = new ServerRequest();
-        $rbac = $this->getMockBuilder(Rbac::class)->setMethods(['checkPermissions'])->getMock();
+        $rbac = $this->getMockBuilder(Rbac::class)->onlyMethods(['checkPermissions'])->getMock();
         $rbac->expects($this->never())
             ->method('checkPermissions');
         $request = $request->withAttribute('rbac', $rbac);
 
         $Trait = $this->getMockBuilder(IsAuthorizedTrait::class)
-            ->setMethods(['getRequest'])
+            ->addMethods(['getRequest'])
             ->getMockForTrait();
         $Trait->expects($this->any())
             ->method('getRequest')

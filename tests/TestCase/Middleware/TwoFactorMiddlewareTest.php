@@ -63,7 +63,7 @@ class TwoFactorMiddlewareTest extends TestCase
         $response = new Response();
         $response = $response->withStringBody(__METHOD__ . time());
         $handler = $this->getMockBuilder(Runner::class)
-            ->setMethods(['handle'])
+            ->onlyMethods(['handle'])
             ->getMock();
         $handler->expects($this->once())
             ->method('handle')
@@ -79,7 +79,7 @@ class TwoFactorMiddlewareTest extends TestCase
                     'CakeDC/Auth.Form',
                 ],
             ],
-        ])->setMethods(['getResult'])->getMock();
+        ])->onlyMethods(['getResult'])->getMock();
         $result = new Result(['id' => 10, 'username' => 'johndoe'], Result::SUCCESS);
         $service->expects($this->any())
             ->method('getResult')
@@ -102,7 +102,7 @@ class TwoFactorMiddlewareTest extends TestCase
             ['username' => 'user-1', 'password' => 'password', 'remember_me' => 1]
         );
         $handler = $this->getMockBuilder(Runner::class)
-            ->setMethods(['handle'])
+            ->onlyMethods(['handle'])
             ->getMock();
         $handler->expects($this->never())
             ->method('handle');
@@ -126,7 +126,7 @@ class TwoFactorMiddlewareTest extends TestCase
                     'CakeDC/Auth.Form',
                 ],
             ],
-        ])->setMethods(['getResult'])->getMock();
+        ])->onlyMethods(['getResult'])->getMock();
         $result = new Result(null, AuthenticationService::NEED_TWO_FACTOR_VERIFY);
         $service->expects($this->any())
             ->method('getResult')
