@@ -13,6 +13,9 @@ declare(strict_types=1);
 
 namespace CakeDC\Auth\Social\Mapper;
 
+/**
+ * @deprecated LinkedIn OAuth 2.0 is not working anymore since they switched to OpenID-Connect
+ */
 class LinkedIn extends AbstractMapper
 {
     /**

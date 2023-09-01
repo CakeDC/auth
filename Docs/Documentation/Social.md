@@ -12,10 +12,10 @@ We have mappers to allow you a quick start with these providers:
 - Facebook
 - Google
 - Instagram
-- LinkedIn
 - Pinterest
 - Tumblr 
 - Twitter
+- LinkedIn (deprecated, it's not working with the OAuth 2.0 provider. They switched to OpenID-Connect.)
 
 You must define 'options.redirectUri', 'options.clientId' and
 'options.clientSecret' for any provider you want to enable. eg,
