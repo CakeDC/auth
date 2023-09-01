@@ -35,6 +35,9 @@ return [
                 'callbackLinkSocialUri' => Router::fullBaseUrl() . '/callback-link-social/twitter',
             ]
         ],
+        /**
+         * linkedIn Provider is not working for OAuth 2.0, they switched to OpenID-Connect.
+         */
         'linkedIn' => [
             'service' => 'CakeDC\Auth\Social\Service\OAuth2Service',
             'className' => 'League\OAuth2\Client\Provider\LinkedIn',
