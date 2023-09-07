@@ -10,6 +10,7 @@
  */
 
 use Cake\Routing\Router;
+
 return [
     'OAuth.path' => ['plugin' => 'CakeDC/Users', 'controller' => 'Users', 'action' => 'socialLogin', 'prefix' => null],
     'OAuth.providers' => [
@@ -33,7 +34,7 @@ return [
                 'redirectUri' => Router::fullBaseUrl() . '/auth/twitter',
                 'linkSocialUri' => Router::fullBaseUrl() . '/link-social/twitter',
                 'callbackLinkSocialUri' => Router::fullBaseUrl() . '/callback-link-social/twitter',
-            ]
+            ],
         ],
         // Deprecated, LinkedIn switched to OpenID-Connect and OAuth2 is no longer working properly
         'linkedIn' => [
@@ -65,7 +66,7 @@ return [
                 'redirectUri' => Router::fullBaseUrl() . '/auth/instagram',
                 'linkSocialUri' => Router::fullBaseUrl() . '/link-social/instagram',
                 'callbackLinkSocialUri' => Router::fullBaseUrl() . '/callback-link-social/instagram',
-            ]
+            ],
         ],
         'google' => [
             'service' => 'CakeDC\Auth\Social\Service\OAuth2Service',
