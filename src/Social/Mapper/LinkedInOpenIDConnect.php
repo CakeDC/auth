@@ -13,8 +13,6 @@ declare(strict_types=1);
 
 namespace CakeDC\Auth\Social\Mapper;
 
-use CakeDC\Auth\Social\Mapper\AbstractMapper;
-
 class LinkedInOpenIDConnect extends AbstractMapper
 {
     /**
@@ -31,7 +29,8 @@ class LinkedInOpenIDConnect extends AbstractMapper
         'id' => 'sub',
     ];
 
-    protected function _link(): string {
+    protected function _link(): string
+    {
         // no way to retrieve the public url from the users profile
 
         return 'https://www.linkedin.com';
