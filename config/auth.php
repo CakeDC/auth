@@ -35,6 +35,7 @@ return [
                 'callbackLinkSocialUri' => Router::fullBaseUrl() . '/callback-link-social/twitter',
             ]
         ],
+        // Deprecated, LinkedIn switched to OpenID-Connect and OAuth2 is no longer working properly
         'linkedIn' => [
             'service' => 'CakeDC\Auth\Social\Service\OAuth2Service',
             'className' => 'League\OAuth2\Client\Provider\LinkedIn',
@@ -44,6 +45,17 @@ return [
                 'linkSocialUri' => Router::fullBaseUrl() . '/link-social/linkedIn',
                 'callbackLinkSocialUri' => Router::fullBaseUrl() . '/callback-link-social/linkedIn',
             ]
+        ],
+        'linkedInOpenIDConnect' => [
+            'service' => 'CakeDC\Auth\Social\Service\OpenIDConnectService',
+            'className' => 'League\OAuth2\Client\Provider\LinkedIn',
+            'mapper' => 'CakeDC\Auth\Social\Mapper\LinkedInOpenIDConnect',
+            'options' => [
+                'redirectUri' => Router::fullBaseUrl() . '/auth/linkedInOpenIDConnect',
+                'linkSocialUri' => Router::fullBaseUrl() . '/link-social/linkedInOpenIDConnect',
+                'callbackLinkSocialUri' => Router::fullBaseUrl() . '/callback-link-social/linkedInOpenIDConnect',
+                'defaultScopes' => ['email', 'openid', 'profile'],
+            ],
         ],
         'instagram' => [
             'service' => 'CakeDC\Auth\Social\Service\OAuth2Service',
