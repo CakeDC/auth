@@ -6,7 +6,6 @@ namespace CakeDC\Auth\Social\Service;
 use Cake\Http\Client;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\ServerRequest;
-use CakeDC\Auth\Social\Service\OAuth2Service;
 use Firebase\JWT\JWK;
 use Firebase\JWT\JWT;
 use Psr\Http\Message\ServerRequestInterface;
