@@ -7,11 +7,11 @@ on:
 
 jobs:
   testsuite:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-22.04
     strategy:
       fail-fast: false
       matrix:
-        php-version: ['7.3', '7.4', '8.0']
+        php-version: ['7.3', '7.4', '8.0', '8.1', '8.2']
         db-type: [sqlite, mysql, pgsql]
         prefer-lowest: ['']
 
@@ -24,7 +24,7 @@ jobs:
         if: matrix.db-type == 'pgsql'
         run: docker run --rm --name=postgres -e POSTGRES_PASSWORD=postgres -e POSTGRES_DB=cakephp -p 5432:5432 -d postgres
 
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
@@ -43,7 +43,7 @@ jobs:
         run: echo "::set-output name=date::$(date +'%Y-%m')"
 
       - name: Cache composer dependencies
-        uses: actions/cache@v1
+        uses: actions/cache@v3
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
           key: ${{ runner.os }}-composer-${{ steps.key-date.outputs.date }}-${{ hashFiles('composer.json') }}-${{ matrix.prefer-lowest }}
@@ -57,7 +57,7 @@ jobs:
           fi
 
       - name: Setup problem matchers for PHPUnit
-        if: matrix.php-version == '7.4' && matrix.db-type == 'mysql'
+        if: matrix.php-version == '8.1' && matrix.db-type == 'mysql'
         run: echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
 
       - name: Run PHPUnit
@@ -65,27 +65,27 @@ jobs:
           if [[ ${{ matrix.db-type }} == 'sqlite' ]]; then export DB_URL='sqlite:///:memory:'; fi
           if [[ ${{ matrix.db-type }} == 'mysql' ]]; then export DB_URL='mysql://root:root@127.0.0.1/cakephp'; fi
           if [[ ${{ matrix.db-type }} == 'pgsql' ]]; then export DB_URL='postgres://postgres:postgres@127.0.0.1/postgres'; fi
-          if [[ ${{ matrix.php-version }} == '7.4' ]]; then
-            export CODECOVERAGE=1 && vendor/bin/phpunit --verbose --coverage-clover=coverage.xml
+          if [[ ${{ matrix.php-version }} == '8.1' ]]; then
+            export CODECOVERAGE=1 && vendor/bin/phpunit --stderr --verbose --coverage-clover=coverage.xml
           else
-            vendor/bin/phpunit
+            vendor/bin/phpunit --stderr
           fi
 
       - name: Submit code coverage
-        if: matrix.php-version == '7.4'
-        uses: codecov/codecov-action@v1
+        if: matrix.php-version == '8.1'
+        uses: codecov/codecov-action@v3
 
   cs-stan:
     name: Coding Standard & Static Analysis
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-22.04
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '7.4'
+          php-version: '8.1'
           extensions: mbstring, intl, apcu, memcached, redis
           tools: cs2pr
           coverage: none
@@ -99,7 +99,7 @@ jobs:
         run: echo "::set-output name=date::$(date +'%Y-%m')"
 
       - name: Cache composer dependencies
-        uses: actions/cache@v1
+        uses: actions/cache@v3
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
           key: ${{ runner.os }}-composer-${{ steps.key-date.outputs.date }}-${{ hashFiles('composer.json') }}-${{ matrix.prefer-lowest }}
