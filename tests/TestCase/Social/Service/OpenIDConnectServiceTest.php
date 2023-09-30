@@ -34,7 +34,7 @@ use League\OAuth2\Client\Provider\LinkedInResourceOwner;
 class OpenIDConnectServiceTest extends TestCase
 {
     /**
-     * @var \CakeDC\Auth\Social\Service\OAuth2Service
+     * @var \CakeDC\Auth\Social\Service\OpenIDConnectService
      */
     public $Service;
 
@@ -49,6 +49,11 @@ class OpenIDConnectServiceTest extends TestCase
     public $Request;
 
     /**
+     * @var \Cake\Http\Client
+     */
+    public $Client;
+
+    /**
      * Setup the test case, backup the static object values so they can be restored.
      * Specifically backs up the contents of Configure and paths in App if they have
      * not already been backed up.
@@ -58,6 +63,12 @@ class OpenIDConnectServiceTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
+
+        $this->Client = $this->getMockBuilder(
+            \Cake\Http\Client::class
+        )->onlyMethods([
+            'get',
+        ])->getMock();
 
         $this->Provider = $this->getMockBuilder(
             \League\OAuth2\Client\Provider\LinkedIn::class
@@ -97,7 +108,12 @@ class OpenIDConnectServiceTest extends TestCase
             $config,
         ])->onlyMethods([
             'getIdTokenKeys',
+            'getHttpClient',
         ])->getMock();
+
+        $this->Service->expects($this->any())
+            ->method('getHttpClient')
+            ->will($this->returnValue($this->Client));
 
         //new OpenIDConnectService($config);
         $this->Request = ServerRequestFactory::fromGlobals();
@@ -276,5 +292,24 @@ class OpenIDConnectServiceTest extends TestCase
         ];
 
         $this->assertEquals($expected, $actual);
+    }
+
+    /**
+     * Test discover
+     *
+     * @return void
+     */
+    public function testDiscover()
+    {
+        $arrayTest = ['test' => 'test'];
+        $response = new \Cake\Http\Client\Response([], json_encode($arrayTest));
+
+        $this->Client->expects($this->once())
+            ->method('get')
+            ->will($this->returnValue($response));
+
+        $actual = $this->Service->discover();
+
+        $this->assertEquals($arrayTest, $actual);
     }
 }
