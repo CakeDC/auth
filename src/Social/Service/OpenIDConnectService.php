@@ -63,7 +63,7 @@ class OpenIDConnectService extends OAuth2Service
                 $this->getConfig('openid.baseUrl')
             );
         }
-        $client = new Client();
+        $client = $this->getHttpClient();
         $jwksData = $client->get($jwksUri)->getJson();
         if (!$jwksData) {
             throw new BadRequestException(
@@ -77,8 +77,13 @@ class OpenIDConnectService extends OAuth2Service
     public function discover(): array
     {
         $openidUrl = $this->getConfig('openid.url');
-        $client = new Client();
+        $client = $this->getHttpClient();
 
         return $client->get($openidUrl)->getJson();
+    }
+
+    protected function getHttpClient(): Client
+    {
+        return new Client();
     }
 }
