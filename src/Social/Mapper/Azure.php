@@ -20,7 +20,7 @@ class Azure extends AbstractMapper
      *
      * @var array
      */
-    protected $_mapFields = [
+    protected array $_mapFields = [
         'id' => 'sub',
         'full_name' => 'name',
         'username' => 'unique_name',
