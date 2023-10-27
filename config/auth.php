@@ -76,6 +76,16 @@ return [
                 'callbackLinkSocialUri' => Router::fullBaseUrl() . '/callback-link-social/amazon',
             ]
         ],
+        'azure' => [
+            'service' => 'CakeDC\Auth\Social\Service\OAuth2Service',
+            'className' => 'TheNetworg\OAuth2\Client\Provider\Azure',
+            'mapper' => 'CakeDC\Auth\Social\Mapper\Azure',
+            'options' => [
+                'redirectUri' => Router::fullBaseUrl() . '/auth/azure',
+                'linkSocialUri' => Router::fullBaseUrl() . '/link-social/azure',
+                'callbackLinkSocialUri' => Router::fullBaseUrl() . '/callback-link-social/azure',
+            ]
+        ],
     ],
     'OneTimePasswordAuthenticator' => [
         'checker' => \CakeDC\Auth\Authentication\DefaultOneTimePasswordAuthenticationChecker::class,
