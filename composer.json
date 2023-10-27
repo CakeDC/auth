@@ -25,7 +25,6 @@
         "issues": "https://github.com/CakeDC/auth/issues",
         "source": "https://github.com/CakeDC/auth"
     },
-    "minimum-stability": "dev",
     "require": {
         "php": ">=8.1.0",
         "cakephp/cakephp": "^5.0"
