@@ -105,6 +105,13 @@ class RbacTest extends TestCase
                 'controller' => 'Pages',
                 'action' => 'display',
             ],
+            [
+                'role' => '*',
+                'plugin' => 'DebugKit',
+                'controller' => '*',
+                'action' => '*',
+                'bypassAuth' => true,
+            ],
         ];
         $this->rbac = new Rbac($this->defaultPermissions);
     }
