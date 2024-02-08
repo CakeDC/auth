@@ -17,8 +17,8 @@ use Authentication\Authenticator\ResultInterface;
 use Cake\Core\Configure;
 use CakeDC\Auth\Authentication\TwoFactorProcessorInterface;
 use CakeDC\Auth\Authentication\U2fAuthenticationCheckerFactory;
+use CakeDC\Auth\Plugin;
 use Psr\Http\Message\ServerRequestInterface;
-
 /**
  * U2FProcessor class
  */
