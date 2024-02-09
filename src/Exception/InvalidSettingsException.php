@@ -19,9 +19,9 @@ class InvalidSettingsException extends CakeException
 {
     protected $_messageTemplate = 'Invalid settings for key (%s)';
 
-	/**
-	 * @var int
-	 */
+    /**
+     * @var int
+     */
     protected $code = 500;
 
     /**

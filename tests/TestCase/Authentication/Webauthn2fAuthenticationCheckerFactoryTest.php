@@ -39,7 +39,7 @@ class Webauthn2fAuthenticationCheckerFactoryTest extends TestCase
     {
         Configure::write('Webauthn2fa.checker', \stdClass::class);
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage("Invalid config for 'Webauthn2fa.checker', 'stdClass' does not implement 'CakeDC\Auth\Authentication\Webauthn2FAuthenticationCheckerInterface'");
+        $this->expectExceptionMessage("Invalid config for 'Webauthn2fa.checker', 'stdClass' does not implement 'CakeDC\Auth\Authentication\Webauthn2fAuthenticationCheckerInterface'");
         (new Webauthn2fAuthenticationCheckerFactory())->build();
     }
 }
