@@ -87,6 +87,10 @@ return [
             ]
         ],
     ],
+	'TwoFactorProcessors' => [
+        \CakeDC\Auth\Authentication\TwoFactorProcessor\OneTimePasswordProcessor::class,
+        \CakeDC\Auth\Authentication\TwoFactorProcessor\Webauthn2faProcessor::class,
+	],
     'OneTimePasswordAuthenticator' => [
         'checker' => \CakeDC\Auth\Authentication\DefaultOneTimePasswordAuthenticationChecker::class,
         'verifyAction' => [

@@ -19,6 +19,8 @@ use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 use CakeDC\Auth\Authentication\AuthenticationService;
 use CakeDC\Auth\Authentication\Failure;
+use CakeDC\Auth\Authentication\TwoFactorProcessor\OneTimePasswordProcessor;
+use CakeDC\Auth\Authentication\TwoFactorProcessor\Webauthn2faProcessor;
 use CakeDC\Auth\Authenticator\FormAuthenticator;
 use CakeDC\Auth\Test\App\Model\Entity\User;
 use RuntimeException;
@@ -49,6 +51,7 @@ class AuthenticationServiceTest extends TestCase
         );
 
         $service = new AuthenticationService([
+            'processors' => [],
             'identifiers' => [
                 'Authentication.Password',
             ],
@@ -78,6 +81,7 @@ class AuthenticationServiceTest extends TestCase
         );
 
         $service = new AuthenticationService([
+            'processors' => [],
             'identifiers' => [
                 'Authentication.Password',
             ],
@@ -130,6 +134,10 @@ class AuthenticationServiceTest extends TestCase
         );
 
         $service = new AuthenticationService([
+            'processors' => [
+                new OneTimePasswordProcessor(),
+                new Webauthn2faProcessor(),
+            ],
             'identifiers' => [
                 'Authentication.Password',
             ],
@@ -179,6 +187,10 @@ class AuthenticationServiceTest extends TestCase
         );
 
         $service = new AuthenticationService([
+            'processors' => [
+                new OneTimePasswordProcessor(),
+                new Webauthn2faProcessor(),
+            ],
             'identifiers' => [
                 'Authentication.Password' => [],
             ],
@@ -231,6 +243,10 @@ class AuthenticationServiceTest extends TestCase
         );
 
         $service = new AuthenticationService([
+            'processors' => [
+                new OneTimePasswordProcessor(),
+                new Webauthn2faProcessor(),
+            ],
             'identifiers' => [
                 'Authentication.Password' => [],
             ],
@@ -283,6 +299,10 @@ class AuthenticationServiceTest extends TestCase
         );
 
         $service = new AuthenticationService([
+            'processors' => [
+                new OneTimePasswordProcessor(),
+                new Webauthn2faProcessor(),
+            ],
             'identifiers' => [
                 'Authentication.Password' => [],
             ],

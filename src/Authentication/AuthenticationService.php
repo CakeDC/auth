@@ -14,7 +14,6 @@ declare(strict_types=1);
 namespace CakeDC\Auth\Authentication;
 
 use Authentication\AuthenticationService as BaseService;
-use Authentication\Authenticator\Result;
 use Authentication\Authenticator\ResultInterface;
 use Authentication\Authenticator\StatelessInterface;
 use Cake\Datasource\EntityInterface;
@@ -39,63 +38,19 @@ class AuthenticationService extends BaseService
     protected array $failures = [];
 
     /**
-     * Proceed to google verify action after a valid result result
+     * Proceed to 2fa processor after a valid result result
      *
+     * @param \CakeDC\Auth\Authentication\TwoFactorProcessorInterface $processor The processor.
      * @param \Psr\Http\Message\ServerRequestInterface $request The request.
      * @param \Authentication\Authenticator\ResultInterface $result The original result
      * @return \Authentication\Authenticator\ResultInterface The result object.
      */
-    protected function proceedToGoogleVerify(ServerRequestInterface $request, ResultInterface $result): ResultInterface
+    protected function proceed2FA(TwoFactorProcessorInterface $processor, ServerRequestInterface $request, ResultInterface $result): ResultInterface
     {
-        /**
-         * @var \Cake\Http\Session $session
-         */
-        $session = $request->getAttribute('session');
-        $session->write(self::TWO_FACTOR_VERIFY_SESSION_KEY, $result->getData());
-        $result = new Result(null, self::NEED_TWO_FACTOR_VERIFY);
+        $result = $processor->proceed($request, $result);
         $this->_successfulAuthenticator = null;
 
         return $this->_result = $result;
-    }
-
-    /**
-     * Proceed to webauthn2fa flow after a valid result result
-     *
-     * @param \Psr\Http\Message\ServerRequestInterface $request response to manipulate
-     * @param \Authentication\Authenticator\ResultInterface $result valid result
-     * @return \Authentication\Authenticator\ResultInterface with result, request and response keys
-     */
-    protected function proceedToWebauthn2fa(ServerRequestInterface $request, ResultInterface $result): ResultInterface
-    {
-        /**
-         * @var \Cake\Http\Session $session
-         */
-        $session = $request->getAttribute('session');
-        $session->write(self::WEBAUTHN_2FA_SESSION_KEY, $result->getData());
-        $result = new Result(null, self::NEED_WEBAUTHN_2FA_VERIFY);
-        $this->_successfulAuthenticator = null;
-
-        return $this->_result = $result;
-    }
-
-    /**
-     * Get the configured one-time password authentication checker
-     *
-     * @return \CakeDC\Auth\Authentication\OneTimePasswordAuthenticationCheckerInterface
-     */
-    protected function getOneTimePasswordAuthenticationChecker(): OneTimePasswordAuthenticationCheckerInterface
-    {
-        return (new OneTimePasswordAuthenticationCheckerFactory())->build();
-    }
-
-    /**
-     * Get the configured Webauthn authentication checker
-     *
-     * @return \CakeDC\Auth\Authentication\Webauthn2fAuthenticationCheckerInterface
-     */
-    protected function getWebauthn2fAuthenticationChecker(): Webauthn2fAuthenticationCheckerInterface
-    {
-        return (new Webauthn2fAuthenticationCheckerFactory())->build();
     }
 
     /**
@@ -112,7 +67,7 @@ class AuthenticationService extends BaseService
         }
 
         $result = null;
-        /** @var \Authentication\Authenticator\AbstractAuthenticator $authenticator */
+        $processors = $this->getConfig('processors');
         foreach ($this->authenticators() as $authenticator) {
             $result = $authenticator->authenticate($request);
             if ($result->isValid()) {
@@ -121,16 +76,11 @@ class AuthenticationService extends BaseService
                 if ($userData instanceof EntityInterface) {
                     $userData = $userData->toArray();
                 }
-                $webauthn2faChecker = $this->getWebauthn2fAuthenticationChecker();
-                if ($skipTwoFactorVerify !== true && $webauthn2faChecker->isRequired($userData)) {
-                    return $this->proceedToWebauthn2fa($request, $result);
+                foreach ($processors as $processor) {
+                    if ($skipTwoFactorVerify !== true && $processor->isRequired($userData)) {
+                        return $this->proceed2FA($processor, $request, $result);
+                    }
                 }
-
-                $otpCheck = $this->getOneTimePasswordAuthenticationChecker();
-                if ($skipTwoFactorVerify !== true && $otpCheck->isRequired($userData)) {
-                    return $this->proceedToGoogleVerify($request, $result);
-                }
-
                 $this->_successfulAuthenticator = $authenticator;
                 $this->_result = $result;
 

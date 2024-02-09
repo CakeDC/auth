@@ -11,7 +11,10 @@ declare(strict_types=1);
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
+use Cake\Cache\Cache;
+use Cake\Core\Configure;
 use Cake\Datasource\ConnectionManager;
+use Cake\Error\ErrorTrap;
 use Cake\Routing\Router;
 use Cake\TestSuite\Fixture\SchemaLoader;
 use Cake\Utility\Security;
@@ -62,7 +65,7 @@ define('TESTS', ROOT . DS . 'tests' . DS);
 require ROOT . '/vendor/cakephp/cakephp/src/functions.php';
 require ROOT . '/vendor/autoload.php';
 
-Cake\Core\Configure::write('App', [
+Configure::write('App', [
     'namespace' => 'Users\Test\App',
     'encoding' => 'UTF-8',
     'base' => false,
@@ -76,8 +79,8 @@ Cake\Core\Configure::write('App', [
     'cssBaseUrl' => 'css/',
 ]);
 
-Cake\Core\Configure::write('debug', true);
-Cake\Core\Configure::write('App.encoding', 'UTF-8');
+Configure::write('debug', true);
+Configure::write('App.encoding', 'UTF-8');
 
 ini_set('intl.default_locale', 'en_US');
 
@@ -105,8 +108,8 @@ $cache = [
     ],
 ];
 
-Cake\Cache\Cache::setConfig($cache);
-Cake\Core\Configure::write('Session', [
+Cache::setConfig($cache);
+Configure::write('Session', [
     'defaults' => 'php',
 ]);
 
@@ -120,7 +123,7 @@ ConnectionManager::setConfig('test', ['url' => getenv('DB_URL')]);
 
 //init router
 Router::reload();
-Cake\Core\Configure::write('OAuth.path', [
+Configure::write('OAuth.path', [
     'plugin' => 'CakeDC/Users',
     'controller' => 'Users',
     'action' => 'socialLogin',
@@ -142,5 +145,4 @@ $error = [
     'trace' => true,
     'ignoredDeprecationPaths' => [],
 ];
-(new Cake\Error\ErrorTrap($error))->register();
-
+(new ErrorTrap($error))->register();

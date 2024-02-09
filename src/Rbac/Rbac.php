@@ -231,9 +231,9 @@ class Rbac implements RbacInterface
         $possibleArray = (array)$possibleValues;
 
         return $possibleValues === '*' ||
-        $value === $possibleValues ||
-        in_array($value, $possibleArray) ||
-        in_array(Inflector::camelize((string)$value, '-'), $possibleArray);
+            $value === $possibleValues ||
+            in_array($value, $possibleArray) ||
+            in_array(Inflector::camelize((string)$value, '-'), $possibleArray);
     }
 
     /**

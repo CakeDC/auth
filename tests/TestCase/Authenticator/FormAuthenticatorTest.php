@@ -16,7 +16,6 @@ use Authentication\Authenticator\FormAuthenticator as CakeFormAuthenticator;
 use Authentication\Authenticator\Result;
 use Authentication\Identifier\AbstractIdentifier;
 use Authentication\Identifier\IdentifierCollection;
-use Authentication\Identifier\IdentifierInterface;
 use Cake\Core\Configure;
 use Cake\Http\ServerRequestFactory;
 use Cake\TestSuite\TestCase;

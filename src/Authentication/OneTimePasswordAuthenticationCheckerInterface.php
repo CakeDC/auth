@@ -24,7 +24,7 @@ interface OneTimePasswordAuthenticationCheckerInterface
     /**
      * Check if two factor authentication is required for a user
      *
-     * @param array $user user data
+     * @param array<mixed>|null $user user data
      * @return bool
      */
     public function isRequired(?array $user = null): bool;

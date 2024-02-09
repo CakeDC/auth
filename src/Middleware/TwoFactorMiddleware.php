@@ -13,10 +13,9 @@ declare(strict_types=1);
 
 namespace CakeDC\Auth\Middleware;
 
-use Cake\Core\Configure;
 use Cake\Http\Response;
 use Cake\Routing\Router;
-use CakeDC\Auth\Authentication\AuthenticationService;
+use CakeDC\Auth\Authentication\TwoFactorProcessorLoader;
 use CakeDC\Auth\Authenticator\CookieAuthenticator;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -32,16 +31,18 @@ class TwoFactorMiddleware implements MiddlewareInterface
     {
         $service = $request->getAttribute('authentication');
         $status = $service->getResult() ? $service->getResult()->getStatus() : null;
-        switch ($status) {
-            case AuthenticationService::NEED_TWO_FACTOR_VERIFY:
-                $url = Configure::read('OneTimePasswordAuthenticator.verifyAction');
+        $processors = TwoFactorProcessorLoader::processors();
+        $url = null;
+        foreach ($processors as $processor) {
+            $url = $processor->getUrlByType($status);
+            if ($url !== null) {
                 break;
-            case AuthenticationService::NEED_WEBAUTHN_2FA_VERIFY:
-                $url = Configure::read('Webauthn2fa.startAction');
-                break;
-            default:
-                return $handler->handle($request);
+            }
         }
+        if ($url === null) {
+            return $handler->handle($request);
+        }
+
         /**
          * @var \Cake\Http\Session $session
          */
