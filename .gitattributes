@@ -1,4 +1,6 @@
 # Remove files for archives generated using `git archive`
-.travis.yml export-ignore
 .gitattributes export-ignore
+.github export-ignore
 phpunit.xml.dist export-ignore
+Docs export-ignore
+tests export-ignore
