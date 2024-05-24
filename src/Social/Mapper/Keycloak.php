@@ -29,16 +29,22 @@ class Keycloak extends AbstractMapper
         'username' => 'preferred_username',
         'id' => 'sub',
         'link' => 'website',
-        'roles' => 'Cakedc'
+        'roles' => 'realm_access'
     ];
     protected $_rolesMatch = 'CakeDc-';
 
 
     function _roles($data){   # Client Scopes > roles > Mappers > realm roles -> Add to userinfo  := Enable
-        $roles = array_filter(@$data[$this->_mapFields['roles']]['cakedc'], 
+        if (is_null($data[$this->_mapFields['roles']])){
+            throw new \Exception("No roles in UserInfo token. Set realm roles 'Add to userinfo' field to ON in Client scopes or check the roles field in _mapFields");  
+        }
+        $roles = array_filter($data[$this->_mapFields['roles']]['roles'], 
             function ($var) { return (strpos($var, $this->_rolesMatch) !== false); });
-        
-        $role= str_ireplace($this->_rolesMatch, '',array_pop($roles));
+            
+        if (empty($roles)){
+            throw new \Exception("No CakeDc-* role mapped in keycloak");  
+        }
+        $role= str_ireplace($this->_rolesMatch, '',array_pop($roles));    
         #
         # Set the cakedc default user role from keycloak roles
         #
