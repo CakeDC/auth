@@ -31,10 +31,11 @@ class Keycloak extends AbstractMapper
         'link' => 'website',
         'roles' => 'realm_access'
     ];
-    protected $_rolesMatch = 'CakeDc-';
+    protected string $_rolesMatch = 'CakeDc-';
 
 
-    function _roles($data){   # Client Scopes > roles > Mappers > realm roles -> Add to userinfo  := Enable
+    function _roles(array: $data) :string
+    {   # Client Scopes > roles > Mappers > realm roles -> Add to userinfo  := Enable
         if (is_null($data[$this->_mapFields['roles']])){
             throw new \Exception("No roles in UserInfo token. Set realm roles 'Add to userinfo' field to ON in Client scopes or check the roles field in _mapFields");  
         }
