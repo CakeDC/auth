@@ -24,6 +24,7 @@ use Cake\Utility\Inflector;
 use CakeDC\Auth\Rbac\Permissions\AbstractProvider;
 use CakeDC\Auth\Rbac\Permissions\ConfigProvider;
 use CakeDC\Auth\Rbac\Rules\Rule;
+use CakeDC\Auth\Rbac\Rules\RuleRegistry;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LogLevel;
 use RuntimeException;
@@ -221,6 +222,11 @@ class Rbac implements RbacInterface
                 $return = (bool)call_user_func($value, $user, $role, $request);
             } elseif ($value instanceof Rule) {
                 $return = $value->allowed($user, $role, $request);
+            } elseif (is_array($value) && array_key_exists('className', $value)) {
+                $rule = RuleRegistry::get($value['className'], $value['options'] ?? []);
+                if ($rule instanceof Rule) {
+                    $return = (bool)$rule->allowed($user, $role, $request);
+                }
             } elseif ($key === 'bypassAuth' && $value === true) {
                 $return = true;
             } elseif ($key === 'allowed') {

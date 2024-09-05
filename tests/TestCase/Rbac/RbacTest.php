@@ -98,7 +98,10 @@ class RbacTest extends TestCase
                 'plugin' => 'CakeDC/Users',
                 'controller' => 'Users',
                 'action' => 'resetOneTimePasswordAuthenticator',
-                'allowed' => true,
+                'allowed' => [
+                    'className' => \CakeDC\Auth\Rbac\Rules\OTPRule::class,
+                    'option' => []
+                ],
             ],
             //all roles allowed to Pages/display
             [
@@ -133,8 +136,6 @@ class RbacTest extends TestCase
     {
         $this->rbac = new Rbac();
         $result = $this->rbac->getPermissions();
-        $this->assertTrue(is_callable($result[4]['allowed']));
-        $result[4]['allowed'] = true;
         $this->assertSame($this->defaultPermissions, $result);
     }
 
