@@ -94,6 +94,13 @@ $cache = [
         'serialize' => 'File',
         'duration' => '+10 seconds',
     ],
+    '_cakedc_auth_' => [
+        'className' => 'File',
+        'prefix' => 'users_app_cakedc_auth_',
+        'path' => CACHE . 'cakedc_auth/',
+        'serialize' => 'File',
+        'duration' => '+10 seconds',
+    ],
 ];
 
 Cake\Cache\Cache::setConfig($cache);

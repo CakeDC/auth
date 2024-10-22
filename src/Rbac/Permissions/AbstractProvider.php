@@ -97,14 +97,10 @@ abstract class AbstractProvider
                 'plugin' => 'CakeDC/Users',
                 'controller' => 'Users',
                 'action' => 'resetOneTimePasswordAuthenticator',
-                'allowed' => function (array $user, string $role, \Cake\Http\ServerRequest $request): bool {
-                    $userId = \Cake\Utility\Hash::get($request->getAttribute('params'), 'pass.0');
-                    if (!empty($userId) && !empty($user)) {
-                        return $userId === $user['id'];
-                    }
-
-                    return false;
-                },
+                'allowed' => [
+                    'className' => \CakeDC\Auth\Rbac\Rules\OTPRule::class,
+                    'option' => []
+                ],
             ],
             //all roles allowed to Pages/display
             [
