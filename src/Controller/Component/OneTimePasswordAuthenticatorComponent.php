@@ -51,12 +51,13 @@ class OneTimePasswordAuthenticatorComponent extends Component
                 );
             } catch (\Throwable $t) {
                 throw new \RuntimeException(
-                    __d(
+                    message:__d(
                         'cake_d_c/users',
                         'An error has occurred configuring OneTimePasswordAuthenticator. ' .
                         'Please ensure you have installed robthree/twofactorauth and endroid/qr-code ' .
-                        '(or your preferred QR provider).'
-                    )
+                        '(or your preferred QR provider): {0}', $t->getMessage()
+                    ),
+                    previous: $t
                 );
             }
         }
