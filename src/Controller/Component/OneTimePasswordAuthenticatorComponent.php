@@ -41,12 +41,12 @@ class OneTimePasswordAuthenticatorComponent extends Component
 
         if (Configure::read('OneTimePasswordAuthenticator.login')) {
             $this->tfa = new TwoFactorAuth(
-                Configure::read('OneTimePasswordAuthenticator.issuer'),
-                Configure::read('OneTimePasswordAuthenticator.digits'),
-                Configure::read('OneTimePasswordAuthenticator.period'),
-                Configure::read('OneTimePasswordAuthenticator.algorithm'),
-                Configure::read('OneTimePasswordAuthenticator.qrcodeprovider'),
-                Configure::read('OneTimePasswordAuthenticator.rngprovider')
+                qrcodeprovider: Configure::read('OneTimePasswordAuthenticator.qrcodeprovider'),
+                issuer: Configure::read('OneTimePasswordAuthenticator.issuer'),
+                digits: Configure::read('OneTimePasswordAuthenticator.digits'),
+                period: Configure::read('OneTimePasswordAuthenticator.period'),
+                algorithm: Configure::read('OneTimePasswordAuthenticator.algorithm'),
+                rngprovider: Configure::read('OneTimePasswordAuthenticator.rngprovider')
             );
         }
     }

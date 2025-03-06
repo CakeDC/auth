@@ -8,6 +8,14 @@ Configuration
 
 Processors defined as Configure storage with key `TwoFactorProcessors`
 
+By default `\RobThree\Auth\Providers\Qr\EndroidQrCodeProvider` is used.
+
+You can disable it by adding this to any config file:
+
+`OneTimePasswordAuthenticator.qrcodeprovider` => `YOUR QR CODE PROVIDER`
+
+To get a list of available providers please visit [RobThree/TwoFactorAuth](https://robthree.github.io/TwoFactorAuth/qr-codes.html) documentation.
+
 
 Processors
 -------------

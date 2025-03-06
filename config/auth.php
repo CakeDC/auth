@@ -108,7 +108,7 @@ return [
         // The algorithm used
         'algorithm' => \RobThree\Auth\Algorithm::Sha1,
         // QR-code provider (more on this later)
-        'qrcodeprovider' => null,
+        'qrcodeprovider' => new \RobThree\Auth\Providers\Qr\EndroidQrCodeProvider(),
         // Random Number Generator provider (more on this later)
         'rngprovider' => null
     ],
