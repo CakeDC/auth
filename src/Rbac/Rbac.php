@@ -167,7 +167,11 @@ class Rbac implements RbacInterface
             'action' => $params['action'] ?? null,
             'role' => $role,
         ];
-        if (!$user && ($permission['bypassAuth'] ?? false) !== true) {
+        $bypass = $permission['bypassAuth'] ?? false;
+        if (is_callable($bypass)) {
+            $bypass = $bypass($user, $role, $request);
+        }
+        if (!$user && $bypass !== true) {
             return null;
         }
         foreach ($permission as $key => $value) {
