@@ -121,19 +121,20 @@ class Rbac implements RbacInterface
         foreach ($this->permissions as $permission) {
             $matchResult = $this->_matchPermission($permission, $user, $role, $request);
             if ($matchResult !== null) {
-                if ($this->getConfig('log')) {
-                    $this->log($matchResult->getReason(), LogLevel::DEBUG);
-                }
+                $this->logResult($matchResult);
 
                 return $matchResult;
             }
         }
-
-        return new PermissionMatchResult(
+        $resource = $this->parseSource($request, $role);
+        $result = new PermissionMatchResult(
             false,
-            'No permission matching',
-            $this->parseSource($request, $role)
+            sprintf('No permission matching resource: %s', json_encode($resource)),
+            $resource
         );
+        $this->logResult($result);
+
+        return $result;
     }
 
     /**
@@ -265,5 +266,16 @@ class Rbac implements RbacInterface
             'action' => $params['action'] ?? null,
             'role' => $role,
         ];
+    }
+
+    /**
+     * @param \CakeDC\Auth\Rbac\PermissionMatchResult $matchResult
+     * @return void
+     */
+    protected function logResult(PermissionMatchResult $matchResult): void
+    {
+        if ($this->getConfig('log')) {
+            $this->log($matchResult->getLogReason(), LogLevel::DEBUG);
+        }
     }
 }

@@ -48,18 +48,18 @@ class PermissionMatchResultTest extends TestCase
     {
         $permissionMatchResult = new PermissionMatchResult();
         $this->assertFalse($permissionMatchResult->isAllowed());
-        $this->assertSame('', $permissionMatchResult->getReason());
+        $this->assertSame('', $permissionMatchResult->getLogReason());
 
         $permissionMatchResult = new PermissionMatchResult(true, 'bazinga');
         $this->assertTrue($permissionMatchResult->isAllowed());
-        $this->assertSame('bazinga', $permissionMatchResult->getReason());
+        $this->assertSame('bazinga', $permissionMatchResult->getLogReason());
     }
 
     public function testSetGet()
     {
         $this->assertTrue($this->permissionMatchResult->setAllowed(true)->isAllowed());
         $this->assertFalse($this->permissionMatchResult->setAllowed(false)->isAllowed());
-        $this->assertNotSame('bazinga', $this->permissionMatchResult->setReason('another-reason')->getReason());
-        $this->assertSame('bazinga', $this->permissionMatchResult->setReason('bazinga')->getReason());
+        $this->assertNotSame('bazinga', $this->permissionMatchResult->setLogReason('another-reason')->getLogReason());
+        $this->assertSame('bazinga', $this->permissionMatchResult->setLogReason('bazinga')->getLogReason());
     }
 }

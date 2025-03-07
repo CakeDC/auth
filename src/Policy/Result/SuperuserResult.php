@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace CakeDC\Auth\Policy\Result;
 
 use Authorization\Policy\ResultInterface;
-use Psr\Http\Message\ServerRequestInterface;
 
 class SuperuserResult implements ResultInterface
 {

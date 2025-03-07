@@ -25,13 +25,13 @@ class PermissionMatchResult
      * PermissionMatchResult constructor.
      *
      * @param bool $allowed rule was matched, allowed value
-     * @param string $reason reason to either allow or deny
+     * @param string $logReason reason to either allow or deny
      * @param array|null $resource The resource url to check if allowed
      * @param array|null $permission The matching permission
      */
     public function __construct(
         protected bool $allowed = false,
-        protected string $reason = '',
+        protected string $logReason = '',
         protected ?array $resource = null,
         protected ?array $permission = null
     ) {
@@ -59,11 +59,11 @@ class PermissionMatchResult
     }
 
     /**
-     * @param string $reason reason
+     * @param string $logReason reason
      */
-    public function setReason(string $reason): PermissionMatchResult
+    public function setLogReason(string $logReason): PermissionMatchResult
     {
-        $this->reason = $reason;
+        $this->logReason = $logReason;
 
         return $this;
     }
@@ -71,9 +71,9 @@ class PermissionMatchResult
     /**
      * @return string
      */
-    public function getReason(): string
+    public function getLogReason(): string
     {
-        return $this->reason;
+        return $this->logReason;
     }
 
     /**
