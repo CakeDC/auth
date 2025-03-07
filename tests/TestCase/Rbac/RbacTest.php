@@ -19,6 +19,7 @@ use CakeDC\Auth\Rbac\Rbac;
 use CakeDC\Auth\Rbac\Rules\Owner;
 use CakeDC\Auth\Test\App\Auth\Rule\SampleRule;
 use Exception;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Psr\Log\LogLevel;
 use ReflectionClass;
 use RuntimeException;
@@ -183,12 +184,13 @@ class RbacTest extends TestCase
         $this->assertSame($expected, $result);
     }
 
-    public function providerAuthorize()
+    public static function providerAuthorize()
     {
-        $trueRuleMock = $this->getMockBuilder(Owner::class)
+        $testCase = new static(RbacTest::class);
+        $trueRuleMock = $testCase->getMockBuilder(Owner::class)
             ->onlyMethods(['allowed'])
             ->getMock();
-        $trueRuleMock->expects($this->any())
+        $trueRuleMock->expects($testCase->any())
             ->method('allowed')
             ->willReturn(true);
 

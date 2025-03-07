@@ -59,7 +59,6 @@ class CookieAuthenticatorTest extends TestCase
             'Authentication.Password',
         ]);
         $uri = new Uri('/login');
-        $uri->base = null;
         $request = new ServerRequest();
         $request = $request->withUri($uri);
 
