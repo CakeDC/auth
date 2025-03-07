@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace CakeDC\Auth\Policy;
 
 use Authorization\IdentityInterface;
-use Authorization\Policy\Result;
 use Authorization\Policy\ResultInterface;
 use Cake\Core\InstanceConfigTrait;
 use CakeDC\Auth\Policy\Result\SuperuserResult;

@@ -2,12 +2,12 @@
 declare(strict_types=1);
 
 namespace CakeDC\Auth\Policy\Result;
+
 use Authorization\Policy\ResultInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 class SuperuserResult implements ResultInterface
 {
-
     /**
      * @param bool $status
      * @param \Psr\Http\Message\ServerRequestInterface $resource

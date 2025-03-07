@@ -128,9 +128,10 @@ class Rbac implements RbacInterface
                 return $matchResult;
             }
         }
+
         return new PermissionMatchResult(
             false,
-            'No permission matching' ,
+            'No permission matching',
             $this->parseSource($request, $role)
         );
     }

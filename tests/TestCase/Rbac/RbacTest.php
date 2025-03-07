@@ -19,7 +19,6 @@ use CakeDC\Auth\Rbac\Rbac;
 use CakeDC\Auth\Rbac\Rules\Owner;
 use CakeDC\Auth\Test\App\Auth\Rule\SampleRule;
 use Exception;
-use PHPUnit\Framework\Attributes\DataProvider;
 use Psr\Log\LogLevel;
 use ReflectionClass;
 use RuntimeException;

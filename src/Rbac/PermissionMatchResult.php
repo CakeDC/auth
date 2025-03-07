@@ -34,8 +34,7 @@ class PermissionMatchResult
         protected string $reason = '',
         protected ?array $resource = null,
         protected ?array $permission = null
-    )
-    {
+    ) {
     }
 
     /**

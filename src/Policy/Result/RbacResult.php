@@ -2,19 +2,18 @@
 declare(strict_types=1);
 
 namespace CakeDC\Auth\Policy\Result;
+
 use Authorization\Policy\ResultInterface;
 use CakeDC\Auth\Rbac\PermissionMatchResult;
 
 class RbacResult implements ResultInterface
 {
-
     /**
      * @param \CakeDC\Auth\Rbac\PermissionMatchResult $permissionMatchResult
      */
     public function __construct(
         protected PermissionMatchResult $permissionMatchResult
-    )
-    {
+    ) {
     }
 
     /**
