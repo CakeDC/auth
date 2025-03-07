@@ -20,7 +20,7 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: Setup MySQL latest
+      - name: Setup MySQL Latest
         if: matrix.db-type == 'mysql'
         run: |
           sudo service mysql start
