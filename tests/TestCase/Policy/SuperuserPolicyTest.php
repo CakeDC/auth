@@ -18,6 +18,7 @@ use Authorization\IdentityDecorator;
 use Cake\Http\ServerRequestFactory;
 use Cake\ORM\Entity;
 use Cake\TestSuite\TestCase;
+use CakeDC\Auth\Policy\Result\SuperuserResult;
 use CakeDC\Auth\Policy\SuperuserPolicy;
 
 class SuperuserPolicyTest extends TestCase
@@ -62,6 +63,7 @@ class SuperuserPolicyTest extends TestCase
 
         $policy = new SuperuserPolicy($config);
         $actual = $policy->canAccess($request->getAttribute('identity'), $request);
-        $this->assertSame($expected, $actual);
+        $this->assertInstanceOf(SuperuserResult::class, $actual);
+        $this->assertSame($expected, $actual->getStatus());
     }
 }

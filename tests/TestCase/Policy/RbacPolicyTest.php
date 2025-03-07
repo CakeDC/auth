@@ -19,6 +19,7 @@ use Cake\Http\ServerRequestFactory;
 use Cake\ORM\Entity;
 use Cake\TestSuite\TestCase;
 use CakeDC\Auth\Policy\RbacPolicy;
+use CakeDC\Auth\Policy\Result\RbacResult;
 use CakeDC\Auth\Rbac\PermissionMatchResult;
 use CakeDC\Auth\Rbac\Permissions\ConfigProvider;
 use CakeDC\Auth\Rbac\Rbac;
@@ -69,7 +70,9 @@ class RbacPolicyTest extends TestCase
             )
             ->willReturn($result);
         $policy = new RbacPolicy();
-        $this->assertTrue($policy->canAccess($identity, $request));
+        $actual = $policy->canAccess($identity, $request);
+        $this->assertInstanceOf(RbacResult::class, $actual);
+        $this->assertTrue($actual->getStatus());
     }
 
     /**
@@ -109,7 +112,9 @@ class RbacPolicyTest extends TestCase
             ->willReturn($result);
         $request = $request->withAttribute('rbac', $rbac);
         $policy = new RbacPolicy();
-        $this->assertFalse($policy->canAccess($request->getAttribute('identity'), $request));
+        $actual = $policy->canAccess($request->getAttribute('identity'), $request);
+        $this->assertInstanceOf(RbacResult::class, $actual);
+        $this->assertFalse($actual->getStatus());
     }
 
     /**

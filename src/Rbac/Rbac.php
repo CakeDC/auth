@@ -140,12 +140,12 @@ class Rbac implements RbacInterface
      *
      * @param array<string, mixed> $permission The permission configuration
      * @param \ArrayAccess|array $user Current user data
-     * @param string $role Effective user's role
+     * @param mixed $role Effective user's role
      * @param \Psr\Http\Message\ServerRequestInterface $request Current request
      * @return \CakeDC\Auth\Rbac\PermissionMatchResult|null Null if permission is discarded, PermissionMatchResult if a final
      * result is produced
      */
-    protected function _matchPermission(array $permission, array|ArrayAccess $user, string $role, ServerRequestInterface $request): ?PermissionMatchResult
+    protected function _matchPermission(array $permission, array|ArrayAccess $user, mixed $role, ServerRequestInterface $request): ?PermissionMatchResult
     {
         $permission += ['allowed' => true];
         $reserved = $this->parseSource($request, $role);
@@ -249,10 +249,10 @@ class Rbac implements RbacInterface
 
     /**
      * @param \Psr\Http\Message\ServerRequestInterface $request
-     * @param string $role
+     * @param mixed $role
      * @return array
      */
-    protected function parseSource(ServerRequestInterface $request, string $role): array
+    protected function parseSource(ServerRequestInterface $request, mixed $role): array
     {
         $params = $request->getAttribute('params');
 

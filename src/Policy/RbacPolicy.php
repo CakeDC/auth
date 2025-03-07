@@ -14,7 +14,9 @@ declare(strict_types=1);
 namespace CakeDC\Auth\Policy;
 
 use Authorization\IdentityInterface;
+use Authorization\Policy\ResultInterface;
 use Cake\Core\InstanceConfigTrait;
+use CakeDC\Auth\Policy\Result\RbacResult;
 use CakeDC\Auth\Rbac\Rbac;
 use CakeDC\Auth\Rbac\RbacInterface;
 use InvalidArgumentException;
@@ -55,17 +57,17 @@ class RbacPolicy implements PolicyInterface
     /**
      * Check rbac permission
      *
-     * @param \Authorization\IdentityInterface|null $identity user identity
-     * @param \Psr\Http\Message\ServerRequestInterface $resource server request
-     * @return bool
+     * @param \Authorization\IdentityInterface|null $identity
+     * @param \Psr\Http\Message\ServerRequestInterface $resource
+     * @return \Authorization\Policy\ResultInterface
      */
-    public function canAccess(?IdentityInterface $identity, ServerRequestInterface $resource): bool
+    public function canAccess(?IdentityInterface $identity, ServerRequestInterface $resource): ResultInterface
     {
         $rbac = $this->getRbac($resource);
 
         $user = $identity !== null ? $identity->getOriginalData() : [];
 
-        return $rbac->checkPermissions($user, $resource)->isAllowed();
+        return new RbacResult($rbac->checkPermissions($user, $resource));
     }
 
     /**

@@ -14,12 +14,16 @@ namespace CakeDC\Auth\Test\TestCase\Policy;
 
 use Authorization\AuthorizationServiceInterface;
 use Authorization\IdentityDecorator;
+use Authorization\Policy\ResultInterface;
 use Cake\Http\ServerRequestFactory;
 use Cake\ORM\Entity;
 use Cake\TestSuite\TestCase;
 use CakeDC\Auth\Policy\CollectionPolicy;
 use CakeDC\Auth\Policy\RbacPolicy;
+use CakeDC\Auth\Policy\Result\RbacResult;
+use CakeDC\Auth\Policy\Result\SuperuserResult;
 use CakeDC\Auth\Policy\SuperuserPolicy;
+use CakeDC\Auth\Rbac\PermissionMatchResult;
 
 /**
  * Class CollectionPolicyTest
@@ -39,10 +43,30 @@ class CollectionPolicyTest extends TestCase
             $Mock = $this->getMockBuilder(RbacPolicy::class)
                 ->onlyMethods(['canAccess'])
                 ->getMock();
-
+            $matchResult = new PermissionMatchResult(
+                $success,
+                'Some Reason',
+                [
+                    'prefix' => null,
+                    'plugin' => null,
+                    'extension' => null,
+                    'controller' => 'Users',
+                    'action' => 'index',
+                    'role' => 'user',
+                ],
+                [
+                    'role' => 'user',
+                    'prefix' => false,
+                    'plugin' => false,
+                    'controller' => 'Users',
+                    'action' => ['index', 'view'],
+                    'allowed' => $success,
+                ],
+            );
+            $result = new RbacResult($matchResult);
             $Mock->expects($this->once())
                 ->method('canAccess')
-                ->will($this->returnValue($success));
+                ->willReturn($result);
 
             return $Mock;
         };
@@ -89,6 +113,13 @@ class CollectionPolicyTest extends TestCase
         ]);
 
         $actual = $policy->canAccess($identity, $request);
-        $this->assertSame($expected, $actual);
+        $this->assertInstanceOf(ResultInterface::class, $actual);
+        if ($isSuperuser) {
+            $this->assertInstanceOf(SuperuserResult::class, $actual);
+        } else {
+            $this->assertInstanceOf(RbacResult::class, $actual);
+        }
+        $this->assertSame($expected, $actual->getStatus());
+
     }
 }

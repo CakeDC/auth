@@ -14,6 +14,8 @@ declare(strict_types=1);
 namespace CakeDC\Auth\Policy;
 
 use Authorization\IdentityInterface;
+use Authorization\Policy\Result;
+use Authorization\Policy\ResultInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 /**
@@ -43,12 +45,13 @@ class CollectionPolicy
     /**
      * Check permission, stop at first success from $policies or when all fails
      *
-     * @param \Authorization\IdentityInterface|null $identity user identity
-     * @param \Psr\Http\Message\ServerRequestInterface $resource server request
-     * @return bool
+     * @param \Authorization\IdentityInterface|null $identity
+     * @param \Psr\Http\Message\ServerRequestInterface $resource
+     * @return \Authorization\Policy\ResultInterface
      */
-    public function canAccess(?IdentityInterface $identity, ServerRequestInterface $resource): bool
+    public function canAccess(?IdentityInterface $identity, ServerRequestInterface $resource): ResultInterface
     {
+        $result = null;
         foreach ($this->policies as $policy => $config) {
             if (!is_array($config)) {
                 $policy = $config;
@@ -57,12 +60,14 @@ class CollectionPolicy
             if (is_string($policy)) {
                 $policy = new $policy($config);
             }
+            assert($policy instanceof PolicyInterface);
 
-            if ($policy instanceof PolicyInterface && $policy->canAccess($identity, $resource)) {
-                return true;
+            $result = $policy->canAccess($identity, $resource);
+            if ($result->getStatus()) {
+                return $result;
             }
         }
 
-        return false;
+        return $result ?? new Result(false);
     }
 }

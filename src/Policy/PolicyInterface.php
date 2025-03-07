@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace CakeDC\Auth\Policy;
 
 use Authorization\IdentityInterface;
+use Authorization\Policy\ResultInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 interface PolicyInterface
@@ -21,9 +22,9 @@ interface PolicyInterface
     /**
      * Check permission
      *
-     * @param \Authorization\IdentityInterface|null $identity user identity
-     * @param \Psr\Http\Message\ServerRequestInterface $resource server request
-     * @return bool
+     * @param \Authorization\IdentityInterface|null $identity
+     * @param \Psr\Http\Message\ServerRequestInterface $resource
+     * @return \Authorization\Policy\ResultInterface
      */
-    public function canAccess(?IdentityInterface $identity, ServerRequestInterface $resource): bool;
+    public function canAccess(?IdentityInterface $identity, ServerRequestInterface $resource): ResultInterface;
 }
