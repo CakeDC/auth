@@ -128,8 +128,11 @@ class Rbac implements RbacInterface
                 return $matchResult;
             }
         }
-
-        return false;
+        return new PermissionMatchResult(
+            false,
+            'No permission matching' ,
+            $this->parseSource($request, $role)
+        );
     }
 
     /**
@@ -144,6 +147,8 @@ class Rbac implements RbacInterface
      */
     protected function _matchPermission(array $permission, array|ArrayAccess $user, string $role, ServerRequestInterface $request): ?PermissionMatchResult
     {
+        $permission += ['allowed' => true];
+        $reserved = $this->parseSource($request, $role);
         $issetController = isset($permission['controller']) || isset($permission['*controller']);
         $issetAction = isset($permission['action']) || isset($permission['*action']);
         $issetUser = isset($permission['user']) || isset($permission['*user']);
@@ -151,25 +156,14 @@ class Rbac implements RbacInterface
         if (!$issetController || !$issetAction) {
             $reason = "Cannot evaluate permission when 'controller' and/or 'action' keys are absent";
 
-            return new PermissionMatchResult(false, $reason);
+            return new PermissionMatchResult(false, $reason, $reserved, $permission);
         }
         if ($issetUser) {
             $reason = "Permission key 'user' is illegal, cannot evaluate the permission";
 
-            return new PermissionMatchResult(false, $reason);
+            return new PermissionMatchResult(false, $reason, $reserved, $permission);
         }
-
-        $permission += ['allowed' => true];
         $userArr = ['user' => $user];
-        $params = $request->getAttribute('params');
-        $reserved = [
-            'prefix' => $params['prefix'] ?? null,
-            'plugin' => $params['plugin'] ?? null,
-            'extension' => $params['_ext'] ?? null,
-            'controller' => $params['controller'] ?? null,
-            'action' => $params['action'] ?? null,
-            'role' => $role,
-        ];
         $bypass = $permission['bypassAuth'] ?? false;
         if (is_callable($bypass)) {
             $bypass = $bypass($user, $role, $request);
@@ -251,5 +245,24 @@ class Rbac implements RbacInterface
     protected function _startsWith(string $haystack, string $needle): bool
     {
         return substr($haystack, 0, strlen($needle)) === $needle;
+    }
+
+    /**
+     * @param \Psr\Http\Message\ServerRequestInterface $request
+     * @param string $role
+     * @return array
+     */
+    protected function parseSource(ServerRequestInterface $request, string $role): array
+    {
+        $params = $request->getAttribute('params');
+
+        return [
+            'prefix' => $params['prefix'] ?? null,
+            'plugin' => $params['plugin'] ?? null,
+            'extension' => $params['_ext'] ?? null,
+            'controller' => $params['controller'] ?? null,
+            'action' => $params['action'] ?? null,
+            'role' => $role,
+        ];
     }
 }

@@ -20,6 +20,7 @@ use Cake\Http\ServerRequest;
 use Cake\Routing\Router;
 use Cake\TestSuite\TestCase;
 use CakeDC\Auth\Middleware\RbacMiddleware;
+use CakeDC\Auth\Rbac\PermissionMatchResult;
 use CakeDC\Auth\Rbac\Rbac;
 
 /**
@@ -139,13 +140,32 @@ class RbacMiddlewareTest extends TestCase
             ->method('handle')
             ->willReturn($response);
 
+        $result = new PermissionMatchResult(
+            true,
+            'Some Reason',
+            [
+                'prefix' => null,
+                'plugin' => null,
+                'extension' => null,
+                'controller' => 'Users',
+                'action' => 'index',
+                'role' => 'user',
+            ],
+            [
+                'prefix' => false,
+                'plugin' => false,
+                'controller' => 'Users',
+                'action' => ['index', 'view'],
+                'allowed' => true,
+            ],
+        );
         $rbac = $this->getMockBuilder(Rbac::class)
             ->onlyMethods(['checkPermissions'])
             ->getMock();
         $rbac->expects($this->once())
             ->method('checkPermissions')
             ->with($userData['User'], $request)
-            ->willReturn(true);
+            ->willReturn($result);
         $rbacMiddleware = new RbacMiddleware($rbac, [
             'unauthorizedBehavior' => RbacMiddleware::UNAUTHORIZED_BEHAVIOR_THROW,
         ]);

@@ -149,7 +149,7 @@ class RbacMiddleware implements MiddlewareInterface
             $userData = $userData['User'];
         }
 
-        if ($this->rbac->checkPermissions($userData, $request)) {
+        if ($this->rbac->checkPermissions($userData, $request)->isAllowed()) {
             $request = $request->withAttribute('rbac', $this->rbac);
 
             return $handler->handle($request);

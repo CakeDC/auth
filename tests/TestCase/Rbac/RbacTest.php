@@ -180,7 +180,7 @@ class RbacTest extends TestCase
         $this->rbac = new Rbac(['permissions' => $permissions]);
         $request = $this->_requestFromArray($requestParams);
 
-        $result = $this->rbac->checkPermissions($user, $request);
+        $result = $this->rbac->checkPermissions($user, $request)->isAllowed();
         $this->assertSame($expected, $result);
     }
 
