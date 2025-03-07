@@ -110,9 +110,9 @@ class Rbac implements RbacInterface
      *
      * @param \ArrayAccess|array $user current user array
      * @param \Psr\Http\Message\ServerRequestInterface $request request
-     * @return bool true if there is a match in permissions
+     * @return \CakeDC\Auth\Rbac\PermissionMatchResult true if there is a match in permissions
      */
-    public function checkPermissions(array|ArrayAccess $user, ServerRequestInterface $request): bool
+    public function checkPermissions(array|ArrayAccess $user, ServerRequestInterface $request): PermissionMatchResult
     {
         $roleField = $this->getConfig('role_field');
         $defaultRole = $this->getConfig('default_role');
@@ -125,7 +125,7 @@ class Rbac implements RbacInterface
                     $this->log($matchResult->getReason(), LogLevel::DEBUG);
                 }
 
-                return $matchResult->isAllowed();
+                return $matchResult;
             }
         }
 
@@ -208,7 +208,7 @@ class Rbac implements RbacInterface
                     $return
                 );
 
-                return new PermissionMatchResult($return, $reason);
+                return new PermissionMatchResult($return, $reason, $reserved, $permission);
             }
             if (!$return) {
                 break;

@@ -40,7 +40,7 @@ interface RbacInterface
      *
      * @param \ArrayAccess|array $user current user array
      * @param \Psr\Http\Message\ServerRequestInterface $request request
-     * @return bool true if there is a match in permissions
+     * @return \CakeDC\Auth\Rbac\PermissionMatchResult true if there is a match in permissions
      */
-    public function checkPermissions(array|ArrayAccess $user, ServerRequestInterface $request): bool;
+    public function checkPermissions(array|ArrayAccess $user, ServerRequestInterface $request): PermissionMatchResult;
 }
