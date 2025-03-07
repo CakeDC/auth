@@ -120,6 +120,5 @@ class CollectionPolicyTest extends TestCase
             $this->assertInstanceOf(RbacResult::class, $actual);
         }
         $this->assertSame($expected, $actual->getStatus());
-
     }
 }
