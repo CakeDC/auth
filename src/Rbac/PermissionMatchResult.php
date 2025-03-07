@@ -22,25 +22,20 @@ namespace CakeDC\Auth\Rbac;
 class PermissionMatchResult
 {
     /**
-     * @var bool
-     */
-    protected bool $_allowed;
-
-    /**
-     * @var string
-     */
-    protected string $_reason;
-
-    /**
      * PermissionMatchResult constructor.
      *
      * @param bool $allowed rule was matched, allowed value
      * @param string $reason reason to either allow or deny
+     * @param array|null $resource The resource url to check if allowed
+     * @param array|null $permission The matching permission
      */
-    public function __construct(bool $allowed = false, string $reason = '')
+    public function __construct(
+        protected bool $allowed = false,
+        protected string $reason = '',
+        protected ?array $resource = null,
+        protected ?array $permission = null
+    )
     {
-        $this->_allowed = $allowed;
-        $this->_reason = $reason;
     }
 
     /**
@@ -48,7 +43,7 @@ class PermissionMatchResult
      */
     public function setAllowed(bool $allowed): PermissionMatchResult
     {
-        $this->_allowed = $allowed;
+        $this->allowed = $allowed;
 
         return $this;
     }
@@ -58,7 +53,7 @@ class PermissionMatchResult
      */
     public function isAllowed(): bool
     {
-        return $this->_allowed;
+        return $this->allowed;
     }
 
     /**
@@ -66,7 +61,7 @@ class PermissionMatchResult
      */
     public function setReason(string $reason): PermissionMatchResult
     {
-        $this->_reason = $reason;
+        $this->reason = $reason;
 
         return $this;
     }
@@ -76,6 +71,22 @@ class PermissionMatchResult
      */
     public function getReason(): string
     {
-        return $this->_reason;
+        return $this->reason;
+    }
+
+    /**
+     * @return array|null
+     */
+    public function getPermission(): ?array
+    {
+        return $this->permission;
+    }
+
+    /**
+     * @return array|null
+     */
+    public function getResource(): ?array
+    {
+        return $this->resource;
     }
 }
