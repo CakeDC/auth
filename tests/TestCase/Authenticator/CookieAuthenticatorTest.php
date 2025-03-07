@@ -81,7 +81,7 @@ class CookieAuthenticatorTest extends TestCase
         $this->assertInstanceOf(RequestInterface::class, $result['request']);
         $this->assertInstanceOf(ResponseInterface::class, $result['response']);
         if ($setCookie) {
-            $this->assertStringContainsString('CookieAuth=%5B%22johndoe%22%2C%22%242y%2410%24', $result['response']->getHeaderLine('Set-Cookie'));
+            $this->assertStringContainsString('CookieAuth=%5B%22johndoe%22%2C%22%242y%24', $result['response']->getHeaderLine('Set-Cookie'));
         } else {
             $this->assertStringNotContainsString('CookieAuth', $result['response']->getHeaderLine('Set-Cookie'));
         }

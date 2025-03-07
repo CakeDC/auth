@@ -40,14 +40,26 @@ class OneTimePasswordAuthenticatorComponent extends Component
         parent::initialize($config);
 
         if (Configure::read('OneTimePasswordAuthenticator.login')) {
-            $this->tfa = new TwoFactorAuth(
-                Configure::read('OneTimePasswordAuthenticator.issuer'),
-                Configure::read('OneTimePasswordAuthenticator.digits'),
-                Configure::read('OneTimePasswordAuthenticator.period'),
-                Configure::read('OneTimePasswordAuthenticator.algorithm'),
-                Configure::read('OneTimePasswordAuthenticator.qrcodeprovider'),
-                Configure::read('OneTimePasswordAuthenticator.rngprovider')
-            );
+            try {
+                $this->tfa = new TwoFactorAuth(
+                    qrcodeprovider: Configure::read('OneTimePasswordAuthenticator.qrcodeprovider'),
+                    issuer: Configure::read('OneTimePasswordAuthenticator.issuer'),
+                    digits: Configure::read('OneTimePasswordAuthenticator.digits'),
+                    period: Configure::read('OneTimePasswordAuthenticator.period'),
+                    algorithm: Configure::read('OneTimePasswordAuthenticator.algorithm'),
+                    rngprovider: Configure::read('OneTimePasswordAuthenticator.rngprovider')
+                );
+            } catch (\Throwable $t) {
+                throw new \RuntimeException(
+                    message:__d(
+                        'cake_d_c/users',
+                        'An error has occurred configuring OneTimePasswordAuthenticator. ' .
+                        'Please ensure you have installed robthree/twofactorauth and endroid/qr-code ' .
+                        '(or your preferred QR provider): {0}', $t->getMessage()
+                    ),
+                    previous: $t
+                );
+            }
         }
     }
 
