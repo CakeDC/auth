@@ -152,6 +152,7 @@ class RbacMiddlewareTest extends TestCase
                 'role' => 'user',
             ],
             [
+                'role' => 'user',
                 'prefix' => false,
                 'plugin' => false,
                 'controller' => 'Users',

@@ -25,6 +25,7 @@ use Cake\TestSuite\TestCase;
 use CakeDC\Auth\Policy\CollectionPolicy;
 use CakeDC\Auth\Policy\RbacPolicy;
 use CakeDC\Auth\Policy\SuperuserPolicy;
+use CakeDC\Auth\Rbac\PermissionMatchResult;
 use CakeDC\Auth\Rbac\Rbac;
 use CakeDC\Auth\Traits\IsAuthorizedTrait;
 use RuntimeException;
@@ -96,13 +97,33 @@ class IsAuthorizedTraitTest extends TestCase
         ]);
         $identity = new Identity($user);
         $request = new ServerRequest();
+        $result = new PermissionMatchResult(
+            $authorize,
+            'Some Reason',
+            [
+                'prefix' => null,
+                'plugin' => null,
+                'extension' => null,
+                'controller' => 'Users',
+                'action' => 'index',
+                'role' => 'admin',
+            ],
+            [
+                'role' => 'admin',
+                'prefix' => false,
+                'plugin' => false,
+                'controller' => 'Users',
+                'action' => ['index', 'view'],
+                'allowed' => $authorize,
+            ],
+        );
         $rbac = $this->getMockBuilder(Rbac::class)->onlyMethods(['checkPermissions'])->getMock();
         $rbac->expects($this->once())
             ->method('checkPermissions')
             ->with(
                 $this->equalTo($identity->getOriginalData())
             )
-            ->will($this->returnValue($authorize));
+            ->willReturn($result);
         $request = $request->withAttribute('rbac', $rbac);
 
         $map = new MapResolver();

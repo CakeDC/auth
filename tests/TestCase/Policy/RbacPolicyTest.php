@@ -19,6 +19,7 @@ use Cake\Http\ServerRequestFactory;
 use Cake\ORM\Entity;
 use Cake\TestSuite\TestCase;
 use CakeDC\Auth\Policy\RbacPolicy;
+use CakeDC\Auth\Rbac\PermissionMatchResult;
 use CakeDC\Auth\Rbac\Permissions\ConfigProvider;
 use CakeDC\Auth\Rbac\Rbac;
 use InvalidArgumentException;
@@ -40,13 +41,33 @@ class RbacPolicyTest extends TestCase
         $request = $request->withAttribute('identity', $identity);
         $rbac = $this->getMockBuilder(Rbac::class)->onlyMethods(['checkPermissions'])->getMock();
         $request = $request->withAttribute('rbac', $rbac);
+        $result = new PermissionMatchResult(
+            true,
+            'Some Reason',
+            [
+                'prefix' => null,
+                'plugin' => null,
+                'extension' => null,
+                'controller' => 'Users',
+                'action' => 'index',
+                'role' => 'user',
+            ],
+            [
+                'role' => 'user',
+                'prefix' => false,
+                'plugin' => false,
+                'controller' => 'Users',
+                'action' => ['index', 'view'],
+                'allowed' => true,
+            ],
+        );
         $rbac->expects($this->once())
             ->method('checkPermissions')
             ->with(
                 $this->equalTo($identity->getOriginalData()),
                 $this->equalTo($request)
             )
-            ->will($this->returnValue(true));
+            ->willReturn($result);
         $policy = new RbacPolicy();
         $this->assertTrue($policy->canAccess($identity, $request));
     }
@@ -67,13 +88,25 @@ class RbacPolicyTest extends TestCase
         $request = $request->withAttribute('identity', $identity);
         $rbac = $this->getMockBuilder(Rbac::class)->onlyMethods(['checkPermissions'])->getMock();
         $request = $request->withAttribute('rbac', $rbac);
+        $result = new PermissionMatchResult(
+            false,
+            'Some Reason',
+            [
+                'prefix' => null,
+                'plugin' => null,
+                'extension' => null,
+                'controller' => 'Users',
+                'action' => 'index',
+                'role' => 'user',
+            ]
+        );
         $rbac->expects($this->once())
             ->method('checkPermissions')
             ->with(
                 $this->equalTo($identity->getOriginalData()),
                 $this->equalTo($request)
             )
-            ->will($this->returnValue(false));
+            ->willReturn($result);
         $request = $request->withAttribute('rbac', $rbac);
         $policy = new RbacPolicy();
         $this->assertFalse($policy->canAccess($request->getAttribute('identity'), $request));
