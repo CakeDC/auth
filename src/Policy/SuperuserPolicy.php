@@ -48,11 +48,7 @@ class SuperuserPolicy implements PolicyInterface
     }
 
     /**
-     * Check permission
-     *
-     * @param \Authorization\IdentityInterface|null $identity user identity
-     * @param \Psr\Http\Message\ServerRequestInterface $resource server request
-     * @return bool
+     * @inheritDoc
      */
     public function canAccess(?IdentityInterface $identity, ServerRequestInterface $resource): ResultInterface
     {

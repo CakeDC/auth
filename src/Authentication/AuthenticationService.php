@@ -14,11 +14,13 @@ declare(strict_types=1);
 namespace CakeDC\Auth\Authentication;
 
 use Authentication\AuthenticationService as BaseService;
+use Authentication\Authenticator\Result;
 use Authentication\Authenticator\ResultInterface;
 use Authentication\Authenticator\StatelessInterface;
 use Cake\Datasource\EntityInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use RuntimeException;
+use UnexpectedValueException;
 
 class AuthenticationService extends BaseService
 {
@@ -71,6 +73,9 @@ class AuthenticationService extends BaseService
         foreach ($this->authenticators() as $authenticator) {
             $result = $authenticator->authenticate($request);
             if ($result->isValid()) {
+                if (!method_exists($authenticator, 'getConfig')) {
+                    throw new UnexpectedValueException('Authenticators must implement method `getConfig` to check when 2fa is required');
+                }
                 $skipTwoFactorVerify = $authenticator->getConfig('skipTwoFactorVerify');
                 $userData = $result->getData();
                 if ($userData instanceof EntityInterface) {

@@ -10,6 +10,7 @@ use Authentication\Authenticator\ResultInterface;
 use Cake\Core\Configure;
 use Cake\ORM\TableRegistry;
 use Psr\Http\Message\ServerRequestInterface;
+use UnexpectedValueException;
 
 class OneTimeTokenAuthenticator extends AbstractAuthenticator implements AuthenticatorInterface
 {
@@ -29,6 +30,13 @@ class OneTimeTokenAuthenticator extends AbstractAuthenticator implements Authent
         }
 
         $usersTable = TableRegistry::getTableLocator()->get(Configure::read('Users.table'));
+        if (!method_exists($usersTable, 'loginWithToken')) {
+            throw new UnexpectedValueException(sprintf(
+                '%s requires to implement `%s::loginWithToken`',
+                self::class,
+                get_class($usersTable)
+            ));
+        }
 
         $user = $usersTable->loginWithToken($token);
 
