@@ -65,6 +65,8 @@ class SuperuserPolicy implements PolicyInterface
             'extension' => $params['_ext'] ?? null,
             'controller' => $params['controller'] ?? null,
             'action' => $params['action'] ?? null,
+            'query' => $resource->getQueryParams(),
+            'pass' => $resource->getAttribute('params')['pass'] ?? [],
         ];
 
         return new SuperuserResult($isSuperUser === true, $resourceData);

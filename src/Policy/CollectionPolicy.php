@@ -16,6 +16,9 @@ namespace CakeDC\Auth\Policy;
 use Authorization\IdentityInterface;
 use Authorization\Policy\Result;
 use Authorization\Policy\ResultInterface;
+use Cake\Core\Configure;
+use Cake\Event\Event;
+use Cake\Event\EventManager;
 use Psr\Http\Message\ServerRequestInterface;
 
 /**
@@ -64,10 +67,24 @@ class CollectionPolicy
 
             $result = $policy->canAccess($identity, $resource);
             if ($result->getStatus()) {
-                return $result;
+                return $this->afterResult($result);
             }
         }
 
-        return $result ?? new Result(false);
+        return $this->afterResult($result ?? new Result(false));
+    }
+
+    /**
+     * @param \Authorization\Policy\ResultInterface $result
+     * @return \Authorization\Policy\ResultInterface
+     */
+    protected function afterResult(ResultInterface $result): ResultInterface
+    {
+        if (Configure::read('CakeDC/Auth.DebugKit.PermissionPanel.enabled')) {
+            $event = new Event('CakeDC/Auth.DebugKit.Permission.afterResult', $result);
+            EventManager::instance()->dispatch($event);
+        }
+
+        return $result;
     }
 }

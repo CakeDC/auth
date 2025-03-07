@@ -129,8 +129,8 @@ class Rbac implements RbacInterface
         $resource = $this->parseSource($request, $role);
         $result = new PermissionMatchResult(
             false,
-            sprintf('No permission matching resource: %s', json_encode($resource)),
-            $resource
+            'No permission matching resource',
+            $this->addExtraResourceKeys($request, $resource),
         );
         $this->logResult($result);
 
@@ -157,13 +157,15 @@ class Rbac implements RbacInterface
 
         if (!$issetController || !$issetAction) {
             $reason = "Cannot evaluate permission when 'controller' and/or 'action' keys are absent";
+            $resource = $this->addExtraResourceKeys($request, $reserved);
 
-            return new PermissionMatchResult(false, $reason, $reserved, $permission);
+            return new PermissionMatchResult(false, $reason, $resource, $permission);
         }
         if ($issetUser) {
             $reason = "Permission key 'user' is illegal, cannot evaluate the permission";
+            $resource = $this->addExtraResourceKeys($request, $reserved);
 
-            return new PermissionMatchResult(false, $reason, $reserved, $permission);
+            return new PermissionMatchResult(false, $reason, $resource, $permission);
         }
         $userArr = ['user' => $user];
         $bypass = $permission['bypassAuth'] ?? false;
@@ -201,14 +203,9 @@ class Rbac implements RbacInterface
                 $return = !$return;
             }
             if ($key === 'allowed' || $key === 'bypassAuth') {
-                $reason = sprintf(
-                    'For %s --> Rule matched %s with result = %s',
-                    json_encode($reserved),
-                    json_encode($permission),
-                    $return
-                );
+                $resource = $this->addExtraResourceKeys($request, $reserved);
 
-                return new PermissionMatchResult($return, $reason, $reserved, $permission);
+                return new PermissionMatchResult($return, 'Rule matched.', $resource, $permission);
             }
             if (!$return) {
                 break;
@@ -275,7 +272,26 @@ class Rbac implements RbacInterface
     protected function logResult(PermissionMatchResult $matchResult): void
     {
         if ($this->getConfig('log')) {
-            $this->log($matchResult->getLogReason(), LogLevel::DEBUG);
+            $message = $matchResult->getLogReason();
+            $message .= ' Allowed: ' . ($matchResult->isAllowed() ? 'Yes' : 'No');
+            $message .= '; Resource: ' . json_encode($matchResult->getResource());
+            $message .= '; Permission: ' . json_encode($matchResult->getPermission());
+
+            $this->log($message, LogLevel::DEBUG);
         }
+    }
+
+    /**
+     * @param \Psr\Http\Message\ServerRequestInterface $request
+     * @param array $reserved
+     * @return array
+     */
+    protected function addExtraResourceKeys(ServerRequestInterface $request, array $reserved): array
+    {
+        $reserved += [
+            'query' => $request->getQueryParams(),
+            'pass' => $request->getAttribute('params')['pass'] ?? [],
+        ];
+        return $reserved;
     }
 }
