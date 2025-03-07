@@ -15,6 +15,7 @@ namespace CakeDC\Auth\Policy;
 use Authorization\IdentityInterface;
 use Authorization\Policy\ResultInterface;
 use Cake\Core\InstanceConfigTrait;
+use Cake\Http\ServerRequest;
 use CakeDC\Auth\Policy\Result\SuperuserResult;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -56,7 +57,16 @@ class SuperuserPolicy implements PolicyInterface
         $superuserField = $this->getConfig('superuser_field');
 
         $isSuperUser = $user[$superuserField] ?? false;
+        assert($resource instanceof ServerRequest);
+        $params = $resource->getAttribute('params');
+        $resourceData = [
+            'prefix' => $params['prefix'] ?? null,
+            'plugin' => $params['plugin'] ?? null,
+            'extension' => $params['_ext'] ?? null,
+            'controller' => $params['controller'] ?? null,
+            'action' => $params['action'] ?? null,
+        ];
 
-        return new SuperuserResult($isSuperUser === true, $resource);
+        return new SuperuserResult($isSuperUser === true, $resourceData);
     }
 }

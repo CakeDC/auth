@@ -35,6 +35,9 @@ class PermissionMatchResult
         protected ?array $resource = null,
         protected ?array $permission = null
     ) {
+        if ($this->permission) {
+            $this->permission = json_decode(json_encode($this->permission), true);
+        }
     }
 
     /**

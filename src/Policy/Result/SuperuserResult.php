@@ -10,9 +10,9 @@ class SuperuserResult implements ResultInterface
 {
     /**
      * @param bool $status
-     * @param \Psr\Http\Message\ServerRequestInterface $resource
+     * @param array $resource
      */
-    public function __construct(protected bool $status, protected ServerRequestInterface $resource)
+    public function __construct(protected bool $status, protected array $resource)
     {
     }
 
@@ -33,9 +33,9 @@ class SuperuserResult implements ResultInterface
     }
 
     /**
-     * @return \Psr\Http\Message\ServerRequestInterface
+     * @return array
      */
-    public function getResource(): ServerRequestInterface
+    public function getResource(): array
     {
         return $this->resource;
     }
