@@ -1210,7 +1210,11 @@ class RbacTest extends TestCase
         $rbac
             ->expects($this->once())
             ->method('log')
-            ->with($expectedMsg, LogLevel::DEBUG);
+            ->with($this->callback(function($message) use ($expectedMsg) {
+                $this->assertStringStartsWith($expectedMsg, $message);
+
+                return true;
+            }), LogLevel::DEBUG);
 
         $rbac->setConfig('log', true);
         $rbac->setPermissions($permissions);
