@@ -43,7 +43,10 @@
         "cakephp/authorization": "^3.0",
         "cakephp/cakephp-codesniffer": "^5.0",
         "cakephp/authentication": "^3.0",
-        "yubico/u2flib-server": "^1.0"
+        "yubico/u2flib-server": "^1.0",
+        "phpstan/phpstan": "^1.9.0",
+        "psalm/phar": "^5.1.0",
+        "cakephp/debug_kit": "^5.1"
     },
     "suggest": {
     },
