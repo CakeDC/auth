@@ -1210,7 +1210,7 @@ class RbacTest extends TestCase
         $rbac
             ->expects($this->once())
             ->method('log')
-            ->with($this->callback(function($message) use ($expectedMsg) {
+            ->with($this->callback(function ($message) use ($expectedMsg) {
                 $this->assertStringStartsWith($expectedMsg, $message);
 
                 return true;

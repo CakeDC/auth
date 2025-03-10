@@ -292,6 +292,7 @@ class Rbac implements RbacInterface
             'query' => $request->getQueryParams(),
             'pass' => $request->getAttribute('params')['pass'] ?? [],
         ];
+
         return $reserved;
     }
 }
