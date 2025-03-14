@@ -52,9 +52,15 @@ class TwoFactorMiddleware implements MiddlewareInterface
         $session->write(CookieAuthenticator::SESSION_DATA_KEY, [
             'remember_me' => $data['remember_me'] ?? null,
         ]);
-        $url = array_merge($url, [
-            '?' => $request->getQueryParams(),
-        ]);
+        $params = $request->getQueryParams();
+        if (is_array($url)) {
+            $url = array_merge($url, [
+                '?' => $params,
+            ]);
+        } else {
+            $url .= '?' . implode('&', array_map(fn ($k, $v) => "$k=$v", array_keys($params), array_values($params)));
+        }
+
         $url = Router::url($url);
 
         return (new Response())
