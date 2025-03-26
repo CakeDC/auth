@@ -69,7 +69,8 @@ class OneTimePasswordAuthenticatorComponentTest extends TestCase
         $this->request->expects($this->any())->method('is')->will($this->returnValue(true));
         $this->Controller = new Controller($this->request);
         $this->Registry = $this->Controller->components();
-        $this->Controller->OneTimePasswordAuthenticator = new OneTimePasswordAuthenticatorComponent($this->Registry);
+        $this->Controller->components()->set('OneTimePasswordAuthenticator', new OneTimePasswordAuthenticatorComponent($this->Registry));
+        //$this->Controller->OneTimePasswordAuthenticator = new OneTimePasswordAuthenticatorComponent($this->Registry);
     }
 
     /**
@@ -92,7 +93,8 @@ class OneTimePasswordAuthenticatorComponentTest extends TestCase
      */
     public function testInitialize()
     {
-        $this->Controller->OneTimePasswordAuthenticator = new OneTimePasswordAuthenticatorComponent($this->Registry);
+        //$this->Controller->OneTimePasswordAuthenticator = new OneTimePasswordAuthenticatorComponent($this->Registry);
+        $this->Controller->components()->set('OneTimePasswordAuthenticator', new OneTimePasswordAuthenticatorComponent($this->Registry));
         $this->assertInstanceOf(OneTimePasswordAuthenticatorComponent::class, $this->Controller->OneTimePasswordAuthenticator);
     }
 

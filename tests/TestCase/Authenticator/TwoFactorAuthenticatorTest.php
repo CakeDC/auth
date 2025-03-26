@@ -30,7 +30,6 @@ class TwoFactorAuthenticatorTest extends TestCase
     public function testAuthenticateFailedNoData()
     {
         $uri = new Uri('/testpath');
-        $uri->base = null;
         $request = new ServerRequest();
         $request = $request->withUri($uri);
         $identifiers = new IdentifierCollection([
@@ -54,7 +53,6 @@ class TwoFactorAuthenticatorTest extends TestCase
     public function testAuthenticateFailedInvalidUrl()
     {
         $uri = new Uri('/testpath');
-        $uri->base = null;
         $request = new ServerRequest();
         $request = $request->withUri($uri);
         $request->getSession()->write(
@@ -85,7 +83,6 @@ class TwoFactorAuthenticatorTest extends TestCase
     public function testAuthenticate()
     {
         $uri = new Uri('/testpath');
-        $uri->base = null;
         $request = new ServerRequest();
         $request = $request->withUri($uri);
         $request->getSession()->write(
