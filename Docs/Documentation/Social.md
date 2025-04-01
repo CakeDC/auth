@@ -99,6 +99,14 @@ Working with Keycloak
 
 Keycloak is an open source identity and access management solution that can be integrated with this plugin. Here's how to set it up:
 
+### Installation
+
+First, install the required OAuth2 Keycloak provider package (version 5.1 or newer):
+
+```bash
+composer require stevenmaguire/oauth2-keycloak
+```
+
 ### Configuration
 
 Add the Keycloak provider configuration to your `config/users.php` file:
