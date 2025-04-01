@@ -16,7 +16,7 @@ namespace CakeDC\Auth\Social;
 use CakeDC\Auth\Social\Service\ServiceInterface;
 use InvalidArgumentException;
 use Cake\Event\EventManager;
-use App\Event\SocialLoginListener;
+use CakeDC\Auth\Event\SocialLoginListener;
 
 
 class MapUser
