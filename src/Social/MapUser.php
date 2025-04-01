@@ -15,9 +15,25 @@ namespace CakeDC\Auth\Social;
 
 use CakeDC\Auth\Social\Service\ServiceInterface;
 use InvalidArgumentException;
+use Cake\Event\EventManager;
+use App\Event\SocialLoginListener;
+
 
 class MapUser
 {
+    /**
+     * Constructor
+     * 
+     * Initializes the MapUser class and registers the SocialLoginListener
+     * to handle social login events.
+     */
+    public function __construct()
+    {
+        
+        $listener = new SocialLoginListener();
+        EventManager::instance()->on($listener);
+        
+    }
     /**
      * Map social user user data
      *
