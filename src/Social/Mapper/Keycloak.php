@@ -31,26 +31,56 @@ class Keycloak extends AbstractMapper
         'link' => 'website',
         'roles' => 'realm_access'
     ];
-    protected string $_rolesMatch = 'CakeDc-';
-
-
-    function _roles(array $data) :string
-    {   # Client Scopes > roles > Mappers > realm roles -> Add to userinfo  := Enable
-        if (is_null($data[$this->_mapFields['roles']])){
-            throw new \Exception("No roles in UserInfo token. Set realm roles 'Add to userinfo' field to ON in Client scopes or check the roles field in _mapFields");  
+    
+    /**
+     * Map Keycloak roles to CakeDC roles
+     *
+     * @var array
+     */
+    protected array $_rolesMap = [
+        'CakeDc-Admin' => 'admin',
+        'CakeDc-User' => 'user',
+        'CakeDc-Worker' => 'user'
+    ];
+    
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $configRoleMap = Configure::read('OAuth.providers.keycloak.rolesMap');
+        if (!empty($configRoleMap) && is_array($configRoleMap)) {
+            $this->_rolesMap = $configRoleMap;
         }
-        $roles = array_filter($data[$this->_mapFields['roles']]['roles'], 
-            function ($var) { return (strpos($var, $this->_rolesMatch) !== false); });
+    }
+
+    function _roles(array $data): string
+    {   // Client Scopes > roles > Mappers > realm roles -> Add to userinfo  := Enable
+        if (is_null($data[$this->_mapFields['roles']])) {
+            throw new \Exception("No roles in UserInfo token. Set realm roles 'Add to userinfo' field to ON in Client scopes or check the roles field in _mapFields");
+        }
+        
+        $keycloakRoles = $data[$this->_mapFields['roles']]['roles'];
+        
+        // Ignore case when comparing roles
+        $mappedRoles = [];
+        foreach ($keycloakRoles as $keycloakRole) {
+            foreach (array_keys($this->_rolesMap) as $mapKey) {
+                if (strcasecmp($keycloakRole, $mapKey) === 0) {
+                    $mappedRoles[] = $mapKey;
+                    break;
+                }
+            }
+        }
             
-        if (empty($roles)){
-            throw new \Exception("No CakeDc-* role mapped in keycloak");  
+        if (empty($mappedRoles)) {
+            throw new \Exception("No mappable role found in Keycloak. Available roles in map: " . implode(', ', array_keys($this->_rolesMap)) . ' / '. implode(', ', ($keycloakRoles)));
         }
-        $role= str_ireplace($this->_rolesMatch, '',array_pop($roles));    
-        #
-        # Set the cakedc default user role from keycloak roles
-        #
-        Configure::write('Users.Registration.defaultRole',$role);
-        Configure::write('Users.Registration.KeycloakRole',$role);
+        
+        $keycloakRole = array_pop($mappedRoles);
+        $role = $this->_rolesMap[$keycloakRole];
+        // Set the cakedc default user role from keycloak roles
+        Configure::write('Users.Registration.defaultRole', $role);
         return $role;   
     }
 }
