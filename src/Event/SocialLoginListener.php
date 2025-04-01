@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace CakeDC\Users\Event;
+namespace CakeDC\Auth\Event;
 
 use Cake\Event\EventInterface;
 use Cake\Event\EventListenerInterface;
@@ -31,7 +31,6 @@ class SocialLoginListener implements EventListenerInterface
     {
         $data = $event->getData('data');
         $userEntity = $event->getData('userEntity');
-        debug($data);
         if (isset($data['provider']) && $data['provider'] === 'keycloak' && isset($data['roles'])) {
             $userEntity->set('role', $data['roles']);
             return $userEntity;
