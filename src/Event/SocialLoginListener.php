@@ -5,7 +5,6 @@ namespace CakeDC\Auth\Event;
 
 use Cake\Event\EventInterface;
 use Cake\Event\EventListenerInterface;
-use CakeDC\Users\Plugin;
 
 class SocialLoginListener implements EventListenerInterface
 {
@@ -17,7 +16,12 @@ class SocialLoginListener implements EventListenerInterface
     public function implementedEvents(): array
     {
         return [
-            Plugin::EVENT_SOCIAL_LOGIN_EXISTING_ACCOUNT => 'changeRole',
+            /**
+             * Event name directly used from CakeDC/Users plugin
+             * Original source: CakeDC\Users\Plugin::EVENT_SOCIAL_LOGIN_EXISTING_ACCOUNT
+             * If the constant is changed in the CakeDC/Users plugin, this string must be updated accordingly
+             */
+            'CakeDC.Users.Social.afterIdentify' => 'changeRole',
         ];
     }
 
