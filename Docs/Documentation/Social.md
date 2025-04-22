@@ -1,7 +1,7 @@
 Social Layer
 ============
 The social layer provide a easier way to handle social provider authentication
-with provides using OAuth1 or OAuth2. The idea is to provide a base 
+with provides using OAuth1 or OAuth2. The idea is to provide a base
 interface for both OAuth and OAuth2.
 
 ***Make sure to load the bootstap.php file of this plugin!***
@@ -12,9 +12,10 @@ We have mappers to allow you a quick start with these providers:
 - Facebook
 - Google
 - Instagram
-- LinkedIn
+- LinkedIn (Deprecated, they switched to OpenID-Connect)
+- LinkedInOpenIDConnect (New, OIDC based authentication)
 - Pinterest
-- Tumblr 
+- Tumblr
 - Twitter
 
 You must define 'options.redirectUri', 'options.clientId' and
@@ -57,7 +58,7 @@ use CakeDC\Auth\Social\Service\ServiceFactory;
                 ->getAuthorizationUrl($this->request)
         );
     }
-    
+
     /**
      * Callback to get user information from provider
      *
@@ -80,7 +81,7 @@ use CakeDC\Auth\Social\Service\ServiceFactory;
             }
             $data = $server->getUser($this->request);
             $data = (new MapUser())($server, $data);
-           
+
             //your code
         } catch (\Exception $e) {
             $this->log($log);
