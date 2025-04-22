@@ -1,6 +1,7 @@
 Home
 ====
 * [Authentication](Documentation/Authentication.md)
+ * [Two Factor](Documentation/TwoFactor.md)
 * [Authorization](Documentation/Authorization.md)
 * [Social](Documentation/Social.md)
 * [SimpleRbacAuthorize](Documentation/SimpleRbacAuthorize.md) RBAC Authorize based on configuration

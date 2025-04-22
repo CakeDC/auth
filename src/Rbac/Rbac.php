@@ -20,6 +20,7 @@ use Cake\Utility\Hash;
 use Cake\Utility\Inflector;
 use CakeDC\Auth\Rbac\Permissions\AbstractProvider;
 use CakeDC\Auth\Rbac\Rules\Rule;
+use CakeDC\Auth\Rbac\Rules\RuleRegistry;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LogLevel;
 
@@ -167,7 +168,11 @@ class Rbac implements RbacInterface
             'action' => $params['action'] ?? null,
             'role' => $role,
         ];
-        if (!$user && ($permission['bypassAuth'] ?? false) !== true) {
+        $bypass = $permission['bypassAuth'] ?? false;
+        if (is_callable($bypass)) {
+            $bypass = $bypass($user, $role, $request);
+        }
+        if (!$user && $bypass !== true) {
             return null;
         }
         foreach ($permission as $key => $value) {
@@ -180,6 +185,11 @@ class Rbac implements RbacInterface
                 $return = (bool)call_user_func($value, $user, $role, $request);
             } elseif ($value instanceof Rule) {
                 $return = (bool)$value->allowed($user, $role, $request);
+            } elseif (is_array($value) && array_key_exists('className', $value)) {
+                $rule = RuleRegistry::get($value['className'], $value['options'] ?? []);
+                if ($rule instanceof Rule) {
+                    $return = (bool)$rule->allowed($user, $role, $request);
+                }
             } elseif ($key === 'bypassAuth' && $value === true) {
                 $return = true;
             } elseif ($key === 'allowed') {

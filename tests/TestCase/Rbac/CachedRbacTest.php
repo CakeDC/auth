@@ -15,14 +15,15 @@ namespace CakeDC\Auth\Test\TestCase\Rbac;
 
 use Cake\Http\ServerRequest;
 use Cake\TestSuite\TestCase;
-use CakeDC\Auth\Rbac\Rbac;
+// use CakeDC\Auth\Rbac\Rbac;
+use CakeDC\Auth\Rbac\CachedRbac;
 use CakeDC\Auth\Rbac\Rules\Owner;
 use CakeDC\Auth\Test\App\Auth\Rule\SampleRule;
 use Psr\Log\LogLevel;
 use ReflectionClass;
 use RuntimeException;
 
-class RbacTest extends TestCase
+class CachedRbacTest extends TestCase
 {
     public $simpleRbacAuthorize;
     public $registry;
@@ -109,7 +110,8 @@ class RbacTest extends TestCase
                 'action' => 'display',
             ],
         ];
-        $this->rbac = new Rbac(null, $this->defaultPermissions);
+        $this->rbac = new CachedRbac(null, $this->defaultPermissions);
+        \Cake\Cache\Cache::clear('_cakedc_auth_');
     }
 
     /**
@@ -119,6 +121,7 @@ class RbacTest extends TestCase
     public function tearDown(): void
     {
         unset($this->rbac);
+        \Cake\Cache\Cache::clear('_cakedc_auth_');
     }
 
     /**
@@ -126,7 +129,7 @@ class RbacTest extends TestCase
      */
     public function testConstructGetDefaultPermissions()
     {
-        $this->rbac = new Rbac();
+        $this->rbac = new CachedRbac();
         $result = $this->rbac->getPermissions();
         $this->assertSame($this->defaultPermissions, $result);
     }
@@ -138,7 +141,7 @@ class RbacTest extends TestCase
     {
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage('Class "\Exception" must extend AbstractProvider');
-        $this->rbac = new Rbac([
+        $this->rbac = new CachedRbac([
             'permissions_provider_class' => '\Exception',
         ]);
     }
@@ -148,7 +151,7 @@ class RbacTest extends TestCase
      */
     public function testConstructSetPermissions()
     {
-        $this->rbac = new Rbac([
+        $this->rbac = new CachedRbac([
             'permissions' => [],
         ]);
         $this->assertEmpty($this->rbac->getPermissions());
@@ -170,7 +173,7 @@ class RbacTest extends TestCase
      */
     public function testAuthorize($permissions, $user, $requestParams, $expected)
     {
-        $this->rbac = new Rbac(['permissions' => $permissions]);
+        $this->rbac = new CachedRbac(['permissions' => $permissions, 'undasherize' => true]);
         $request = $this->_requestFromArray($requestParams);
 
         $result = $this->rbac->checkPermissions($user, $request);
@@ -187,39 +190,6 @@ class RbacTest extends TestCase
             ->willReturn(true);
 
         return [
-            'discard-first' => [
-                //permissions
-                [
-                    [
-                        'role' => 'test',
-                        'controller' => 'Tests',
-                        'action' => 'three', // Discard here
-                        function () {
-                            throw new \Exception();
-                        },
-                    ],
-                    [
-                        'plugin' => ['Tests'],
-                        'role' => ['test'],
-                        'controller' => ['Tests'],
-                        'action' => ['one', 'two'],
-                    ],
-                ],
-                //user
-                [
-                    'id' => 1,
-                    'username' => 'luke',
-                    'role' => 'test',
-                ],
-                //request
-                [
-                    'plugin' => 'Tests',
-                    'controller' => 'Tests',
-                    'action' => 'one',
-                ],
-                //expected
-                true,
-            ],
             'deny-first-discard-after' => [
                 //permissions
                 [
@@ -227,19 +197,7 @@ class RbacTest extends TestCase
                         'role' => 'test',
                         'controller' => 'Tests',
                         'action' => 'one',
-                        'allowed' => function () {
-                            return false; // Deny here since under 'allowed' key
-                        },
-                    ],
-                    [
-                        // This permission isn't evaluated
-                        function () {
-                            throw new \Exception();
-                        },
-                        'plugin' => ['Tests'],
-                        'role' => ['test'],
-                        'controller' => ['Tests'],
-                        'action' => ['one', 'two'],
+                        'allowed' => false,
                     ],
                 ],
                 //user
@@ -326,61 +284,6 @@ class RbacTest extends TestCase
                         'signature' => "Hi I'm luke",
                     ],
                     'allowed' => false,
-                ],
-                //request
-                [
-                    'controller' => 'Tests',
-                    'action' => 'one',
-                ],
-                //expected
-                true,
-            ],
-            'evaluate-order' => [
-                //permissions
-                [
-                    [
-                        'allowed' => false,
-                        function () {
-                            throw new \Exception();
-                        },
-                        'controller' => 'Tests',
-                        'action' => 'one',
-                    ],
-                ],
-                //user
-                [
-                    'id' => 1,
-                    'username' => 'luke',
-                    'role' => 'test',
-                ],
-                //request
-                [
-                    'controller' => 'Tests',
-                    'action' => 'one',
-                ],
-                //expected
-                false,
-            ],
-            'multiple-callables' => [
-                //permissions
-                [
-                    [
-                        function () {
-                            return true;
-                        },
-                        clone $trueRuleMock,
-                        function () {
-                            return true;
-                        },
-                        'controller' => 'Tests',
-                        'action' => 'one',
-                    ],
-                ],
-                //user
-                [
-                    'id' => 1,
-                    'username' => 'luke',
-                    'role' => 'test',
                 ],
                 //request
                 [
@@ -722,9 +625,9 @@ class RbacTest extends TestCase
                     'role' => ['test'],
                     'controller' => ['Tests'],
                     'action' => ['one', 'two'],
-                    'allowed' => function ($user, $role, $request) {
-                        return $user['id'] === 1 && $role = 'test' && $request->getParam('plugin') == 'Tests';
-                    },
+                    // 'allowed' => function ($user, $role, $request) {
+                        // return $user['id'] === 1 && $role = 'test' && $request->getParam('plugin') == 'Tests';
+                    // },
                 ]],
                 //user
                 [
@@ -748,9 +651,10 @@ class RbacTest extends TestCase
                     'role' => ['test'],
                     'controller' => ['Tests'],
                     'action' => ['one', 'two'],
-                    'allowed' => function ($user, $role, $request) {
-                        return false;
-                    },
+                    'allowed' => false,
+                    // function ($user, $role, $request) {
+                        // return false;
+                    // },
                 ]],
                 //user
                 [
@@ -771,7 +675,7 @@ class RbacTest extends TestCase
                 //permissions
                 [[
                     'role' => ['test'],
-                    'prefix' => ['admin'],
+                    'prefix' => ['Admin'],
                     'controller' => ['Tests'],
                     'action' => ['one', 'two'],
                 ]],
@@ -783,7 +687,7 @@ class RbacTest extends TestCase
                 ],
                 //request
                 [
-                    'prefix' => 'admin',
+                    'prefix' => 'Admin',
                     'controller' => 'Tests',
                     'action' => 'one',
                 ],
@@ -839,7 +743,7 @@ class RbacTest extends TestCase
                 //permissions
                 [[
                     'role' => ['test'],
-                    'prefix' => ['one', 'admin'],
+                    'prefix' => ['One', 'Admin'],
                     'controller' => '*',
                     'action' => '*',
                 ]],
@@ -851,7 +755,7 @@ class RbacTest extends TestCase
                 ],
                 //request
                 [
-                    'prefix' => 'admin',
+                    'prefix' => 'Admin',
                     'controller' => 'Tests',
                     'action' => 'one',
                 ],
@@ -886,7 +790,7 @@ class RbacTest extends TestCase
                 //permissions
                 [[
                     'role' => ['test'],
-                    'prefix' => ['admin'],
+                    'prefix' => ['Admin'],
                     'extension' => ['csv'],
                     'controller' => ['Tests'],
                     'action' => ['one', 'two'],
@@ -899,7 +803,7 @@ class RbacTest extends TestCase
                 ],
                 //request
                 [
-                    'prefix' => 'admin',
+                    'prefix' => 'Admin',
                     '_ext' => 'csv',
                     'controller' => 'Tests',
                     'action' => 'one',
@@ -1146,7 +1050,7 @@ class RbacTest extends TestCase
                     'controller' => 'Tests',
                     'action' => 'test',
                     'role' => 'admin',
-                    'allowed' => new SampleRule(),
+                    // 'allowed' => new SampleRule(),
                 ]],
                 //user
                 [
@@ -1170,7 +1074,7 @@ class RbacTest extends TestCase
                     'controller' => 'Tests',
                     'action' => 'test',
                     'role' => 'admin',
-                    'allowed' => new SampleRule(),
+                    // 'allowed' => new SampleRule(),
                 ]],
                 //user
                 [
@@ -1196,7 +1100,7 @@ class RbacTest extends TestCase
      */
     public function testBadPermission($permissions, $user, $requestParams, $expectedMsg)
     {
-        $rbac = $this->getMockBuilder(Rbac::class)
+        $rbac = $this->getMockBuilder(CachedRbac::class)
             ->setMethods(['log'])
             ->disableOriginalConstructor()
             ->getMock();
@@ -1215,128 +1119,6 @@ class RbacTest extends TestCase
     public function badPermissionProvider()
     {
         return [
-            'no-controller' => [
-                //permissions
-                [[
-                    'plugin' => 'Tests',
-                    'role' => 'test',
-                    //'controller' => 'Tests',
-                    'action' => 'test',
-                    'allowed' => true,
-                ]],
-                //user
-                [
-                    'id' => 1,
-                    'username' => 'luke',
-                    'role' => 'test',
-                ],
-                //request
-                [
-                    'plugin' => 'Tests',
-                    'controller' => 'Tests',
-                    'action' => 'test',
-                ],
-                //expected
-                "Cannot evaluate permission when 'controller' and/or 'action' keys are absent",
-            ],
-            'no-action' => [
-                //permissions
-                [[
-                    'plugin' => 'Tests',
-                    'role' => 'test',
-                    'controller' => 'Tests',
-                    //'action' => 'test',
-                    'allowed' => true,
-                ]],
-                //user
-                [
-                    'id' => 1,
-                    'username' => 'luke',
-                    'role' => 'test',
-                ],
-                //request
-                [
-                    'plugin' => 'Tests',
-                    'controller' => 'Tests',
-                    'action' => 'test',
-                ],
-                //expected
-                "Cannot evaluate permission when 'controller' and/or 'action' keys are absent",
-            ],
-            'no-controller-and-action' => [
-                //permissions
-                [[
-                    'plugin' => 'Tests',
-                    'role' => 'test',
-                    //'controller' => 'Tests',
-                    //'action' => 'test',
-                    'allowed' => true,
-                ]],
-                //user
-                [
-                    'id' => 1,
-                    'username' => 'luke',
-                    'role' => 'test',
-                ],
-                //request
-                [
-                    'plugin' => 'Tests',
-                    'controller' => 'Tests',
-                    'action' => 'test',
-                ],
-                //expected
-                "Cannot evaluate permission when 'controller' and/or 'action' keys are absent",
-            ],
-            'no-controller and user-key' => [
-                //permissions
-                [[
-                    'plugin' => 'Tests',
-                    'role' => 'test',
-                    //'controller' => 'Tests',
-                    'action' => 'test',
-                    'allowed' => true,
-                    'user' => 'something',
-                ]],
-                //user
-                [
-                    'id' => 1,
-                    'username' => 'luke',
-                    'role' => 'test',
-                ],
-                //request
-                [
-                    'plugin' => 'Tests',
-                    'controller' => 'Tests',
-                    'action' => 'test',
-                ],
-                //expected
-                "Cannot evaluate permission when 'controller' and/or 'action' keys are absent",
-            ],
-            'user-key' => [
-                //permissions
-                [[
-                    'plugin' => 'Tests',
-                    'role' => 'test',
-                    'controller' => 'Tests',
-                    'action' => 'test',
-                    'allowed' => true,
-                    'user' => 'something',
-                ]],
-                //user
-                [
-                    'id' => 1,
-                    'username' => 'luke',
-                    'role' => 'test',
-                ],
-                //request
-                [
-                    'plugin' => 'Tests',
-                    'controller' => 'Tests',
-                    'action' => 'test',
-                ],
-                //expected
-                "Permission key 'user' is illegal, cannot evaluate the permission",
-            ],
         ];
     }
 

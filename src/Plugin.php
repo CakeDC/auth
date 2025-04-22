@@ -21,4 +21,5 @@ use Cake\Core\BasePlugin;
  */
 class Plugin extends BasePlugin
 {
+    public const DEPRECATED_MESSAGE_U2F = 'U2F is no longer supported by chrome, we suggest using Webauthn as a replacement';
 }

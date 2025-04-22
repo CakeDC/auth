@@ -24,13 +24,13 @@ class Webauthn2fAuthenticationCheckerFactory
     /**
      * Get the two factor authentication checker
      *
-     * @return \CakeDC\Auth\Authentication\Webauthn2FAuthenticationCheckerInterface
+     * @return \CakeDC\Auth\Authentication\Webauthn2fAuthenticationCheckerInterface
      */
     public function build()
     {
         $className = Configure::read('Webauthn2fa.checker');
         $interfaces = class_implements($className);
-        $required = Webauthn2FAuthenticationCheckerInterface::class;
+        $required = Webauthn2fAuthenticationCheckerInterface::class;
 
         if (in_array($required, $interfaces)) {
             return new $className();
