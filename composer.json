@@ -43,7 +43,8 @@
         "cakephp/authorization": "^3.0",
         "cakephp/cakephp-codesniffer": "^5.0",
         "cakephp/authentication": "^3.0",
-        "yubico/u2flib-server": "^1.0"
+        "yubico/u2flib-server": "^1.0",
+        "firebase/php-jwt": "^v6.8"
     },
     "suggest": {
     },
