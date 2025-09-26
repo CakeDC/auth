@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [10.1.2] - 2025-09-26
+- Github social login
+
 ## [10.0.0] - 2024-02-09
 - Two factor processors introduced. Prvided way to add new two factor processors on client level. CakePHP 5.0 version.
 
