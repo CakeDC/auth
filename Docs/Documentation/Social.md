@@ -16,6 +16,7 @@ We have mappers to allow you a quick start with these providers:
 - Pinterest
 - Tumblr 
 - Twitter
+- Github
 
 You must define 'options.redirectUri', 'options.clientId' and
 'options.clientSecret' for any provider you want to enable. eg,
