@@ -29,7 +29,8 @@ class Keycloak extends AbstractMapper
         'username' => 'preferred_username',
         'id' => 'sub',
         'link' => 'website',
-        'roles' => 'realm_access'
+        'roles' => 'realm_access',
+        'validated' => 'email_verified'
     ];
     
     /**
@@ -49,8 +50,12 @@ class Keycloak extends AbstractMapper
     public function __construct()
     {
         $configRoleMap = Configure::read('OAuth.providers.keycloak.rolesMap');
+        $configMapFields = Configure::read('OAuth.providers.keycloak.mapFields');
         if (!empty($configRoleMap) && is_array($configRoleMap)) {
             $this->_rolesMap = $configRoleMap;
+        }
+        if (!empty($configMapFields) && is_array($configMapFields)) {
+            $this->_mapFields = $configMapFields;
         }
     }
 
