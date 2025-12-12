@@ -16,6 +16,7 @@ namespace CakeDC\Auth\Authentication;
 use Authentication\AuthenticationService as BaseService;
 use Authentication\Authenticator\ResultInterface;
 use Authentication\Authenticator\StatelessInterface;
+use Cake\Datasource\EntityInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use RuntimeException;
 
@@ -75,7 +76,10 @@ class AuthenticationService extends BaseService
             $result = $authenticator->authenticate($request);
             if ($result->isValid()) {
                 $skipTwoFactorVerify = $authenticator->getConfig('skipTwoFactorVerify');
-                $userData = $result->getData()->toArray();
+                $userData = $result->getData();
+                if ($userData instanceof EntityInterface) {
+                    $userData = $userData->toArray();
+                }
                 foreach ($processors as $processor) {
                     if ($skipTwoFactorVerify !== true && $processor->isRequired($userData)) {
                         return $this->proceed2FA($processor, $request, $result);
