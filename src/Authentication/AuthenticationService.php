@@ -17,6 +17,7 @@ use Authentication\AuthenticationService as BaseService;
 use Authentication\Authenticator\Result;
 use Authentication\Authenticator\ResultInterface;
 use Authentication\Authenticator\StatelessInterface;
+use Cake\Datasource\EntityInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use RuntimeException;
 
@@ -149,7 +150,10 @@ class AuthenticationService extends BaseService
             $result = $authenticator->authenticate($request);
             if ($result->isValid()) {
                 $skipTwoFactorVerify = $authenticator->getConfig('skipTwoFactorVerify');
-                $userData = $result->getData()->toArray();
+                $userData = $result->getData();
+                if ($userData instanceof EntityInterface) {
+                    $userData = $userData->toArray();
+                }
                 $webauthn2faChecker = $this->getWebauthn2fAuthenticationChecker();
                 if ($skipTwoFactorVerify !== true && $webauthn2faChecker->isRequired($userData)) {
                     return $this->proceedToWebauthn2fa($request, $result);
