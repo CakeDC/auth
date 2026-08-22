@@ -30,6 +30,7 @@ class OneTimeTokenAuthenticator extends AbstractAuthenticator implements Authent
 
         $usersTable = TableRegistry::getTableLocator()->get(Configure::read('Users.table'));
 
+        /** @phpstan-ignore method.notFound */
         $user = $usersTable->loginWithToken($token);
 
         if (!$user) {

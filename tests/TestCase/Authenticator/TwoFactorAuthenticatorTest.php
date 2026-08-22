@@ -61,7 +61,7 @@ class TwoFactorAuthenticatorTest extends TestCase
                 'id' => '42',
                 'username' => 'marcelo',
                 'role' => 'user',
-            ])
+            ]),
         );
         $identifiers = new IdentifierCollection([
             'Authentication.Password',
@@ -91,7 +91,7 @@ class TwoFactorAuthenticatorTest extends TestCase
                 'id' => '42',
                 'username' => 'marcelo',
                 'role' => 'user',
-            ])
+            ]),
         );
         $identifiers = new IdentifierCollection([
             'Authentication.Password',

@@ -23,12 +23,14 @@ use Cake\Routing\Router;
 use Cake\TestSuite\TestCase;
 use CakeDC\Auth\Authentication\AuthenticationService;
 use CakeDC\Auth\Middleware\TwoFactorMiddleware;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 
 /**
  * Class OneTimePasswordAuthenticatorMiddlewareTest
  *
  * @package TestCase\Middleware
  */
+#[AllowMockObjectsWithoutExpectations]
 class TwoFactorMiddlewareTest extends TestCase
 {
     /**
@@ -71,19 +73,20 @@ class TwoFactorMiddlewareTest extends TestCase
 
         $service = $this->getMockBuilder(AuthenticationService::class)->setConstructorArgs([
             [
-                'identifiers' => [
-                    'Authentication.Password',
-                ],
                 'authenticators' => [
-                    'Authentication.Session',
-                    'CakeDC/Auth.Form',
+                    'Authentication.Session' => [
+                        'identifier' => 'Authentication.Password',
+                    ],
+                    'CakeDC/Auth.Form' => [
+                        'identifier' => 'Authentication.Password',
+                    ],
                 ],
             ],
         ])->onlyMethods(['getResult'])->getMock();
         $result = new Result(['id' => 10, 'username' => 'johndoe'], Result::SUCCESS);
         $service->expects($this->any())
             ->method('getResult')
-            ->will($this->returnValue($result));
+            ->willReturn($result);
 
         $request = $request->withAttribute('authentication', $service);
         $middleware = $this->TwoFactorMiddleware;
@@ -99,7 +102,7 @@ class TwoFactorMiddlewareTest extends TestCase
         $request = ServerRequestFactory::fromGlobals(
             ['REQUEST_URI' => '/login'],
             [],
-            ['username' => 'user-1', 'password' => 'password', 'remember_me' => 1]
+            ['username' => 'user-1', 'password' => 'password', 'remember_me' => 1],
         );
         $handler = $this->getMockBuilder(Runner::class)
             ->onlyMethods(['handle'])
@@ -118,19 +121,20 @@ class TwoFactorMiddlewareTest extends TestCase
         ]);
         $service = $this->getMockBuilder(AuthenticationService::class)->setConstructorArgs([
             [
-                'identifiers' => [
-                    'Authentication.Password',
-                ],
                 'authenticators' => [
-                    'Authentication.Session',
-                    'CakeDC/Auth.Form',
+                    'Authentication.Session' => [
+                        'identifier' => 'Authentication.Password',
+                    ],
+                    'CakeDC/Auth.Form' => [
+                        'identifier' => 'Authentication.Password',
+                    ],
                 ],
             ],
         ])->onlyMethods(['getResult'])->getMock();
         $result = new Result(null, AuthenticationService::NEED_TWO_FACTOR_VERIFY);
         $service->expects($this->any())
             ->method('getResult')
-            ->will($this->returnValue($result));
+            ->willReturn($result);
 
         $request = $request->withAttribute('authentication', $service);
         $middleware = $this->TwoFactorMiddleware;

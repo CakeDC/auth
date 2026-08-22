@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace CakeDC\Auth\Authentication;
 
 use Authentication\AuthenticationService as BaseService;
+use Authentication\Authenticator\Result;
 use Authentication\Authenticator\ResultInterface;
 use Authentication\Authenticator\StatelessInterface;
 use Cake\Datasource\EntityInterface;
@@ -62,7 +63,7 @@ class AuthenticationService extends BaseService
     {
         if ($this->authenticators()->isEmpty()) {
             throw new RuntimeException(
-                'No authenticators loaded. You need to load at least one authenticator.'
+                'No authenticators loaded. You need to load at least one authenticator.',
             );
         }
 
@@ -71,6 +72,7 @@ class AuthenticationService extends BaseService
         foreach ($this->authenticators() as $authenticator) {
             $result = $authenticator->authenticate($request);
             if ($result->isValid()) {
+                /** @phpstan-ignore method.notFound */
                 $skipTwoFactorVerify = $authenticator->getConfig('skipTwoFactorVerify');
                 $userData = $result->getData();
                 if ($userData instanceof EntityInterface) {

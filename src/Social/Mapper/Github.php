@@ -13,8 +13,6 @@ declare(strict_types=1);
 
 namespace CakeDC\Auth\Social\Mapper;
 
-use Cake\Utility\Hash;
-
 /**
  * Github Mapper
  */

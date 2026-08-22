@@ -16,6 +16,8 @@ namespace CakeDC\Auth\Controller\Component;
 use Cake\Controller\Component;
 use Cake\Core\Configure;
 use RobThree\Auth\TwoFactorAuth;
+use RuntimeException;
+use Throwable;
 
 /**
  * OneTimePasswordAuthenticator Component.
@@ -47,17 +49,18 @@ class OneTimePasswordAuthenticatorComponent extends Component
                     digits: Configure::read('OneTimePasswordAuthenticator.digits'),
                     period: Configure::read('OneTimePasswordAuthenticator.period'),
                     algorithm: Configure::read('OneTimePasswordAuthenticator.algorithm'),
-                    rngprovider: Configure::read('OneTimePasswordAuthenticator.rngprovider')
+                    rngprovider: Configure::read('OneTimePasswordAuthenticator.rngprovider'),
                 );
-            } catch (\Throwable $t) {
-                throw new \RuntimeException(
-                    message:__d(
+            } catch (Throwable $t) {
+                throw new RuntimeException(
+                    message: __d(
                         'cake_d_c/users',
                         'An error has occurred configuring OneTimePasswordAuthenticator. ' .
                         'Please ensure you have installed robthree/twofactorauth and endroid/qr-code ' .
-                        '(or your preferred QR provider): {0}', $t->getMessage()
+                        '(or your preferred QR provider): {0}',
+                        $t->getMessage(),
                     ),
-                    previous: $t
+                    previous: $t,
                 );
             }
         }

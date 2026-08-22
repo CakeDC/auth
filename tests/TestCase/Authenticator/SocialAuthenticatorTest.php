@@ -27,6 +27,7 @@ use Laminas\Diactoros\Uri;
 use League\OAuth2\Client\Provider\Facebook;
 use League\OAuth2\Client\Provider\FacebookUser;
 use League\OAuth2\Client\Token\AccessToken;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use UnexpectedValueException;
 
 /**
@@ -34,6 +35,7 @@ use UnexpectedValueException;
  *
  * @package CakeDC\Auth\Test\TestCase\Authenticator
  */
+#[AllowMockObjectsWithoutExpectations]
 class SocialAuthenticatorTest extends TestCase
 {
     public array $fixtures = [
@@ -205,16 +207,16 @@ class SocialAuthenticatorTest extends TestCase
             ->method('getAccessToken')
             ->with(
                 $this->equalTo('authorization_code'),
-                $this->equalTo(['code' => 'ZPO9972j3092304230'])
+                $this->equalTo(['code' => 'ZPO9972j3092304230']),
             )
-            ->will($this->returnValue($Token));
+            ->willReturn($Token);
 
         $this->Provider->expects($this->any())
             ->method('getResourceOwner')
             ->with(
-                $this->equalTo($Token)
+                $this->equalTo($Token),
             )
-            ->will($this->returnValue($user));
+            ->willReturn($user);
 
         $service = (new ServiceFactory())->createFromProvider('facebook');
         $this->Request = $this->Request->withAttribute('socialService', $service);
@@ -268,14 +270,14 @@ class SocialAuthenticatorTest extends TestCase
             ->method('getAccessToken')
             ->with(
                 $this->equalTo('authorization_code'),
-                $this->equalTo(['code' => 'ZPO9972j3092304230'])
+                $this->equalTo(['code' => 'ZPO9972j3092304230']),
             )
-            ->will($this->returnValue($Token));
+            ->willReturn($Token);
 
         $this->Provider->expects($this->any())
             ->method('getResourceOwner')
             ->with(
-                $this->equalTo($Token)
+                $this->equalTo($Token),
             )
             ->will($this->throwException(new UnexpectedValueException('User not found')));
 
@@ -328,17 +330,17 @@ class SocialAuthenticatorTest extends TestCase
             ->method('getAccessToken')
             ->with(
                 $this->equalTo('authorization_code'),
-                $this->equalTo(['code' => 'ZPO9972j3092304230'])
+                $this->equalTo(['code' => 'ZPO9972j3092304230']),
             )
-            ->will($this->returnValue($Token));
+            ->willReturn($Token);
 
         $this->Provider->expects($this->any())
             ->method('getResourceOwner')
             ->with(
-                $this->equalTo($Token)
+                $this->equalTo($Token),
             )
             ->will($this->throwException(
-                new InvalidArgumentException('Invalid argument at getResourceOwner')
+                new InvalidArgumentException('Invalid argument at getResourceOwner'),
             ));
 
         $service = (new ServiceFactory())->createFromProvider('facebook');
@@ -420,16 +422,16 @@ class SocialAuthenticatorTest extends TestCase
             ->method('getAccessToken')
             ->with(
                 $this->equalTo('authorization_code'),
-                $this->equalTo(['code' => 'ZPO9972j3092304230'])
+                $this->equalTo(['code' => 'ZPO9972j3092304230']),
             )
-            ->will($this->returnValue($Token));
+            ->willReturn($Token);
 
         $this->Provider->expects($this->any())
             ->method('getResourceOwner')
             ->with(
-                $this->equalTo($Token)
+                $this->equalTo($Token),
             )
-            ->will($this->returnValue($user));
+            ->willReturn($user);
 
         $service = (new ServiceFactory())->createFromProvider('facebook');
         $this->Request = $this->Request->withAttribute('socialService', $service);

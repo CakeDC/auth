@@ -19,6 +19,7 @@ use Cake\Http\ServerRequestFactory;
 use Cake\ORM\Entity;
 use Cake\TestSuite\TestCase;
 use CakeDC\Auth\Policy\SuperuserPolicy;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class SuperuserPolicyTest extends TestCase
 {
@@ -50,12 +51,13 @@ class SuperuserPolicyTest extends TestCase
      * @dataProvider dataProviderCanAccess
      * @return void
      */
+    #[DataProvider('dataProviderCanAccess')]
     public function testCanAccess($userData, $expected, $config = [])
     {
         $user = new Entity($userData + [
             'id' => '00000000-0000-0000-0000-000000000001',
         ]);
-        $service = $this->createMock(AuthorizationServiceInterface::class);
+        $service = $this->createStub(AuthorizationServiceInterface::class);
         $identity = new IdentityDecorator($service, $user);
         $request = ServerRequestFactory::fromGlobals();
         $request = $request->withAttribute('identity', $identity);

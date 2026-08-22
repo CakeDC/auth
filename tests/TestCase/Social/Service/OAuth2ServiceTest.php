@@ -26,7 +26,9 @@ use Laminas\Diactoros\Uri;
 use League\OAuth2\Client\Provider\Facebook;
 use League\OAuth2\Client\Provider\FacebookUser;
 use League\OAuth2\Client\Token\AccessToken;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 
+#[AllowMockObjectsWithoutExpectations]
 class OAuth2ServiceTest extends TestCase
 {
     /**
@@ -219,14 +221,14 @@ class OAuth2ServiceTest extends TestCase
     {
         $this->Provider->expects($this->once())
             ->method('getState')
-            ->will($this->returnValue('_NEW_STATE_'));
+            ->willReturn('_NEW_STATE_');
 
         $this->Provider->expects($this->once())
             ->method('getAuthorizationUrl')
             ->with($this->equalTo([
                 'scope' => ['public_profile', 'email', 'user_birthday', 'user_gender', 'user_link'],
             ]))
-            ->will($this->returnValue('http://facebook.com/redirect/url'));
+            ->willReturn('http://facebook.com/redirect/url');
 
         $actual = $this->Service->getAuthorizationUrl($this->Request);
         $expected = 'http://facebook.com/redirect/url';
@@ -298,16 +300,16 @@ class OAuth2ServiceTest extends TestCase
             ->method('getAccessToken')
             ->with(
                 $this->equalTo('authorization_code'),
-                $this->equalTo(['code' => 'ZPO9972j3092304230'])
+                $this->equalTo(['code' => 'ZPO9972j3092304230']),
             )
-            ->will($this->returnValue($Token));
+            ->willReturn($Token);
 
         $this->Provider->expects($this->once())
             ->method('getResourceOwner')
             ->with(
-                $this->equalTo($Token)
+                $this->equalTo($Token),
             )
-            ->will($this->returnValue($user));
+            ->willReturn($user);
 
         $actual = $this->Service->getUser($this->Request);
 

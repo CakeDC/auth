@@ -40,7 +40,7 @@ trait ReCaptchaTrait
 
         return $this->validateReCaptcha(
             $captcha,
-            $request->clientIp()
+            $request->clientIp(),
         );
     }
 

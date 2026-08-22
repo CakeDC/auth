@@ -16,6 +16,8 @@ namespace CakeDC\Auth\Rbac;
 use ArrayAccess;
 use Cake\Core\Configure;
 use Cake\Core\InstanceConfigTrait;
+use Cake\Event\Event;
+use Cake\Event\EventManager;
 use Cake\Log\LogTrait;
 use Cake\Utility\Hash;
 use Cake\Utility\Inflector;
@@ -62,12 +64,20 @@ class Rbac implements RbacInterface
     protected array $permissions;
 
     /**
+     * Event emitor flag
+     *
+     * @var bool
+     */
+    protected bool $emitEvents = false;
+
+    /**
      * Rbac constructor.
      *
      * @param array $config Class configuration
      */
     public function __construct(array $config = [])
     {
+        $this->emitEvents = Configure::read('CakeDC/Auth.emitEvents', false);
         if (!isset($config['log'])) {
             $config['log'] = Configure::read('debug');
         }
@@ -125,8 +135,32 @@ class Rbac implements RbacInterface
                     $this->log($matchResult->getReason(), LogLevel::DEBUG);
                 }
 
+                if ($this->emitEvents) {
+                    EventManager::instance()->dispatch(new Event('Auth.Rbac.checked', $this, [
+                        'allowed' => $matchResult->isAllowed(),
+                        'role' => $role,
+                        'user' => $user,
+                        'request' => $request,
+                        'permission' => $permission,
+                        'result' => $matchResult,
+                        'reason' => $matchResult->getReason(),
+                    ]));
+                }
+
                 return $matchResult->isAllowed();
             }
+        }
+
+        if ($this->emitEvents) {
+            EventManager::instance()->dispatch(new Event('Auth.Rbac.checked', $this, [
+                'allowed' => false,
+                'role' => $role,
+                'user' => $user,
+                'request' => $request,
+                'permission' => null,
+                'result' => null,
+                'reason' => 'No permission rule matched',
+            ]));
         }
 
         return false;
@@ -209,7 +243,7 @@ class Rbac implements RbacInterface
                     'For %s --> Rule matched %s with result = %s',
                     json_encode($reserved),
                     json_encode($permission),
-                    $return
+                    $return,
                 );
 
                 return new PermissionMatchResult($return, $reason);
@@ -235,9 +269,9 @@ class Rbac implements RbacInterface
         $possibleArray = (array)$possibleValues;
 
         return $possibleValues === '*' ||
-            $value === $possibleValues ||
-            in_array($value, $possibleArray) ||
-            in_array(Inflector::camelize((string)$value, '-'), $possibleArray);
+        $value === $possibleValues ||
+        in_array($value, $possibleArray) ||
+        in_array(Inflector::camelize((string)$value, '-'), $possibleArray);
     }
 
     /**

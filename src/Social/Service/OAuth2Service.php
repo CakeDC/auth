@@ -69,7 +69,7 @@ class OAuth2Service extends OAuthServiceAbstract
         }
 
         return $this->provider->getAuthorizationUrl(
-            $this->getConfig('authParams', [])
+            $this->getConfig('authParams', []),
         );
     }
 

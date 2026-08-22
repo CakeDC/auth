@@ -66,16 +66,21 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
             'password' => 'password'
         ];
 
-        // Load identifiers
-        $service->loadIdentifier('Authentication.Password', compact('fields'));
-
         // Load the authenticators, you want session first
         $service->loadAuthenticator('Authentication.Session', [
-            'skipTwoFactorVerify' => true
+            'skipTwoFactorVerify' => true,
+            'identifier' => [
+                'className' => 'Authentication.Password',
+                'fields' => $fields,
+            ],
         ]);
         $service->loadAuthenticator('Authentication.Form', [
             'fields' => $fields,
-            'loginUrl' => '/users/login'
+            'loginUrl' => '/users/login',
+            'identifier' => [
+                'className' => 'Authentication.Password',
+                'fields' => $fields,
+            ],
         ]);
 
         return $service;

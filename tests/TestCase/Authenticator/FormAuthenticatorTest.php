@@ -42,17 +42,17 @@ class FormAuthenticatorTest extends TestCase
         $request = ServerRequestFactory::fromGlobals(
             ['REQUEST_URI' => '/testpath'],
             [],
-            ['username' => 'marcelo', 'password' => 'password', 'g-recaptcha-response' => 'BD-S2333-156465897897']
+            ['username' => 'marcelo', 'password' => 'password', 'g-recaptcha-response' => 'BD-S2333-156465897897'],
         );
 
         $baseResult = new Result(
             null,
-            Result::FAILURE_OTHER
+            Result::FAILURE_OTHER,
         );
         $BaseAuthenticator->expects($this->once())
             ->method('authenticate')
             ->with($request)
-            ->will($this->returnValue($baseResult));
+            ->willReturn($baseResult);
 
         $Authenticator = $this->getMockBuilder(FormAuthenticator::class)->setConstructorArgs([
             $identifiers,
@@ -76,8 +76,8 @@ class FormAuthenticatorTest extends TestCase
                         AbstractIdentifier::CREDENTIAL_PASSWORD => 'password',
                     ],
                     'keyCheckEnabledRecaptcha' => 'Users.reCaptcha.login',
-                ])
-            )->will($this->returnValue($BaseAuthenticator));
+                ]),
+            )->willReturn($BaseAuthenticator);
 
         $Authenticator->expects($this->never())
             ->method('validateReCaptcha');
@@ -106,7 +106,7 @@ class FormAuthenticatorTest extends TestCase
         $request = ServerRequestFactory::fromGlobals(
             ['REQUEST_URI' => '/testpath'],
             [],
-            ['username' => 'marcelo', 'password' => 'password', 'g-recaptcha-response' => 'BD-S2333-156465897897']
+            ['username' => 'marcelo', 'password' => 'password', 'g-recaptcha-response' => 'BD-S2333-156465897897'],
         );
 
         $baseResult = new Result(
@@ -115,12 +115,12 @@ class FormAuthenticatorTest extends TestCase
                 'username' => 'marcelo',
                 'role' => 'user',
             ],
-            Result::SUCCESS
+            Result::SUCCESS,
         );
         $BaseAuthenticator->expects($this->once())
             ->method('authenticate')
             ->with($request)
-            ->will($this->returnValue($baseResult));
+            ->willReturn($baseResult);
 
         $Authenticator = $this->getMockBuilder(FormAuthenticator::class)->setConstructorArgs([
             $identifiers,
@@ -144,15 +144,15 @@ class FormAuthenticatorTest extends TestCase
                         AbstractIdentifier::CREDENTIAL_PASSWORD => 'password',
                     ],
                     'keyCheckEnabledRecaptcha' => 'Users.reCaptcha.login',
-                ])
-            )->will($this->returnValue($BaseAuthenticator));
+                ]),
+            )->willReturn($BaseAuthenticator);
 
         $Authenticator->expects($this->once())
             ->method('validateReCaptcha')
             ->with(
-                $this->equalTo('BD-S2333-156465897897')
+                $this->equalTo('BD-S2333-156465897897'),
             )
-            ->will($this->returnValue(true));
+            ->willReturn(true);
         $actualIdentifiers = $Authenticator->getIdentifier();
         $this->assertInstanceOf(IdentifierCollection::class, $actualIdentifiers);
         $result = $Authenticator->authenticate($request);
@@ -179,7 +179,7 @@ class FormAuthenticatorTest extends TestCase
         $request = ServerRequestFactory::fromGlobals(
             ['REQUEST_URI' => '/testpath'],
             [],
-            ['username' => 'marcelo', 'password' => 'password', 'g-recaptcha-response' => 'BD-S2333-156465897897']
+            ['username' => 'marcelo', 'password' => 'password', 'g-recaptcha-response' => 'BD-S2333-156465897897'],
         );
 
         $baseResult = new Result(
@@ -188,12 +188,12 @@ class FormAuthenticatorTest extends TestCase
                 'username' => 'marcelo',
                 'role' => 'user',
             ],
-            Result::SUCCESS
+            Result::SUCCESS,
         );
         $BaseAuthenticator->expects($this->once())
             ->method('authenticate')
             ->with($request)
-            ->will($this->returnValue($baseResult));
+            ->willReturn($baseResult);
 
         $Authenticator = $this->getMockBuilder(FormAuthenticator::class)->setConstructorArgs([
             $identifiers,
@@ -216,8 +216,8 @@ class FormAuthenticatorTest extends TestCase
                         AbstractIdentifier::CREDENTIAL_PASSWORD => 'password',
                     ],
                     'keyCheckEnabledRecaptcha' => 'Users.reCaptcha.login',
-                ])
-            )->will($this->returnValue($BaseAuthenticator));
+                ]),
+            )->willReturn($BaseAuthenticator);
 
         $Authenticator->expects($this->never())
             ->method('validateReCaptcha');
@@ -246,7 +246,7 @@ class FormAuthenticatorTest extends TestCase
         $request = ServerRequestFactory::fromGlobals(
             ['REQUEST_URI' => '/testpath'],
             [],
-            ['username' => 'marcelo', 'password' => 'password', 'g-recaptcha-response' => 'BD-S2333-156465897897']
+            ['username' => 'marcelo', 'password' => 'password', 'g-recaptcha-response' => 'BD-S2333-156465897897'],
         );
 
         $baseResult = new Result(
@@ -255,12 +255,12 @@ class FormAuthenticatorTest extends TestCase
                 'username' => 'marcelo',
                 'role' => 'user',
             ],
-            Result::SUCCESS
+            Result::SUCCESS,
         );
         $BaseAuthenticator->expects($this->once())
             ->method('authenticate')
             ->with($request)
-            ->will($this->returnValue($baseResult));
+            ->willReturn($baseResult);
 
         $Authenticator = $this->getMockBuilder(FormAuthenticator::class)->setConstructorArgs([
             $identifiers,
@@ -283,15 +283,15 @@ class FormAuthenticatorTest extends TestCase
                         AbstractIdentifier::CREDENTIAL_PASSWORD => 'password',
                     ],
                     'keyCheckEnabledRecaptcha' => 'Users.reCaptcha.login',
-                ])
-            )->will($this->returnValue($BaseAuthenticator));
+                ]),
+            )->willReturn($BaseAuthenticator);
 
         $Authenticator->expects($this->once())
             ->method('validateReCaptcha')
             ->with(
-                $this->equalTo('BD-S2333-156465897897')
+                $this->equalTo('BD-S2333-156465897897'),
             )
-            ->will($this->returnValue(false));
+            ->willReturn(false);
 
         $result = $Authenticator->authenticate($request);
         $this->assertInstanceOf(Result::class, $result);
@@ -318,7 +318,7 @@ class FormAuthenticatorTest extends TestCase
                     AbstractIdentifier::CREDENTIAL_PASSWORD => 'password',
                 ],
                 'keyCheckEnabledRecaptcha' => 'Users.reCaptcha.login',
-            ]
+            ],
         );
         $actual = $Authenticator->getBaseAuthenticator();
         $this->assertInstanceOf(CakeFormAuthenticator::class, $actual);
@@ -354,7 +354,7 @@ class FormAuthenticatorTest extends TestCase
                 ],
                 'keyCheckEnabledRecaptcha' => 'Users.reCaptcha.login',
                 'baseClassName' => CakeFormAuthenticator::class,
-            ]
+            ],
         );
         $actual = $Authenticator->getBaseAuthenticator();
         $this->assertInstanceOf(CakeFormAuthenticator::class, $actual);
@@ -390,7 +390,7 @@ class FormAuthenticatorTest extends TestCase
                 ],
                 'keyCheckEnabledRecaptcha' => 'Users.reCaptcha.login',
                 'baseClassName' => 'NotExistingAuthenticator',
-            ]
+            ],
         );
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Base class for FormAuthenticator NotExistingAuthenticator does not exist');

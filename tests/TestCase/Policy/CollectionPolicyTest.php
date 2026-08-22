@@ -20,6 +20,7 @@ use Cake\TestSuite\TestCase;
 use CakeDC\Auth\Policy\CollectionPolicy;
 use CakeDC\Auth\Policy\RbacPolicy;
 use CakeDC\Auth\Policy\SuperuserPolicy;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 /**
  * Class CollectionPolicyTest
@@ -33,34 +34,12 @@ class CollectionPolicyTest extends TestCase
      *
      * @return array
      */
-    public function dataProviderCanAccess()
+    public static function dataProviderCanAccess()
     {
-        $rbacPolicy = function ($success) {
-            $Mock = $this->getMockBuilder(RbacPolicy::class)
-                ->onlyMethods(['canAccess'])
-                ->getMock();
-
-            $Mock->expects($this->once())
-                ->method('canAccess')
-                ->will($this->returnValue($success));
-
-            return $Mock;
-        };
-        $rbacPolicyNever = function () {
-            $Mock = $this->getMockBuilder(RbacPolicy::class)
-                ->onlyMethods(['canAccess'])
-                ->getMock();
-
-            $Mock->expects($this->never())
-                ->method('canAccess');
-
-            return $Mock;
-        };
-
         return [
-            [true, $rbacPolicyNever(), true],
-            [false, $rbacPolicy(false), false],
-            [false, $rbacPolicy(true), true],
+            [true, 'never', true],
+            [false, 'false', false],
+            [false, 'true', true],
         ];
     }
 
@@ -68,20 +47,31 @@ class CollectionPolicyTest extends TestCase
      * Test canAccess method
      *
      * @param bool $isSuperuser Is this a super user
-     * @param RbacPolicy $rbacPolicy Rbac policy instance
+     * @param string $rbacBehavior 'never', 'true', or 'false'
      * @param bool $expected The expected result;
      * @dataProvider dataProviderCanAccess
      * @return void
      */
-    public function testCanAccess($isSuperuser, RbacPolicy $rbacPolicy, $expected)
+    #[DataProvider('dataProviderCanAccess')]
+    public function testCanAccess($isSuperuser, $rbacBehavior, $expected)
     {
         $user = new Entity([
             'id' => '00000000-0000-0000-0000-000000000001',
             'is_superuser' => $isSuperuser,
         ]);
-        $service = $this->createMock(AuthorizationServiceInterface::class);
+        $service = $this->createStub(AuthorizationServiceInterface::class);
         $identity = new IdentityDecorator($service, $user);
         $request = ServerRequestFactory::fromGlobals();
+
+        $rbacPolicy = $this->createMock(RbacPolicy::class);
+        if ($rbacBehavior === 'never') {
+            $rbacPolicy->expects($this->never())
+                ->method('canAccess');
+        } else {
+            $rbacPolicy->expects($this->once())
+                ->method('canAccess')
+                ->willReturn($rbacBehavior === 'true');
+        }
 
         $policy = new CollectionPolicy([
             SuperuserPolicy::class,

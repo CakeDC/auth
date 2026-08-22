@@ -42,19 +42,7 @@ class MapUserTest extends TestCase
     {
         parent::setUp();
 
-        $this->Provider = $this->getMockBuilder(Facebook::class)->setConstructorArgs([
-            [
-                'graphApiVersion' => 'v2.8',
-                'redirectUri' => '/auth/facebook',
-                'linkSocialUri' => '/link-social/facebook',
-                'callbackLinkSocialUri' => '/callback-link-social/facebook',
-                'clientId' => '10003030300303',
-                'clientSecret' => 'secretpassword',
-            ],
-            [],
-        ])->onlyMethods([
-            'getAccessToken', 'getState', 'getAuthorizationUrl', 'getResourceOwner',
-        ])->getMock();
+        $this->Provider = $this->createStub(Facebook::class);
 
         $config = [
             'service' => OAuth2Service::class,

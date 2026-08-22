@@ -34,7 +34,7 @@ class RbacPolicyTest extends TestCase
             'id' => '00000000-0000-0000-0000-000000000001',
             'password' => '12345',
         ]);
-        $service = $this->createMock(AuthorizationServiceInterface::class);
+        $service = $this->createStub(AuthorizationServiceInterface::class);
         $identity = new IdentityDecorator($service, $user);
         $request = ServerRequestFactory::fromGlobals();
         $request = $request->withAttribute('identity', $identity);
@@ -44,9 +44,9 @@ class RbacPolicyTest extends TestCase
             ->method('checkPermissions')
             ->with(
                 $this->equalTo($identity->getOriginalData()),
-                $this->equalTo($request)
+                $this->equalTo($request),
             )
-            ->will($this->returnValue(true));
+            ->willReturn(true);
         $policy = new RbacPolicy();
         $this->assertTrue($policy->canAccess($identity, $request));
     }
@@ -60,7 +60,7 @@ class RbacPolicyTest extends TestCase
             'id' => '00000000-0000-0000-0000-000000000001',
             'password' => '12345',
         ]);
-        $service = $this->createMock(AuthorizationServiceInterface::class);
+        $service = $this->createStub(AuthorizationServiceInterface::class);
         $identity = new IdentityDecorator($service, $user);
 
         $request = ServerRequestFactory::fromGlobals();
@@ -71,9 +71,9 @@ class RbacPolicyTest extends TestCase
             ->method('checkPermissions')
             ->with(
                 $this->equalTo($identity->getOriginalData()),
-                $this->equalTo($request)
+                $this->equalTo($request),
             )
-            ->will($this->returnValue(false));
+            ->willReturn(false);
         $request = $request->withAttribute('rbac', $rbac);
         $policy = new RbacPolicy();
         $this->assertFalse($policy->canAccess($request->getAttribute('identity'), $request));
@@ -85,7 +85,7 @@ class RbacPolicyTest extends TestCase
     public function testGetRbac()
     {
         $request = ServerRequestFactory::fromGlobals();
-        $rbac = $this->getMockBuilder(Rbac::class)->onlyMethods(['checkPermissions'])->getMock();
+        $rbac = $this->createStub(Rbac::class);
         $request = $request->withAttribute('rbac', $rbac);
         $policy = new RbacPolicy();
         $actual = $policy->getRbac($request);
@@ -98,7 +98,7 @@ class RbacPolicyTest extends TestCase
     public function testGetRbacIgnoreConfigObject()
     {
         $request = ServerRequestFactory::fromGlobals();
-        $rbac = $this->getMockBuilder(Rbac::class)->onlyMethods(['checkPermissions'])->getMock();
+        $rbac = $this->createStub(Rbac::class);
         $request = $request->withAttribute('rbac', $rbac);
         $policy = new RbacPolicy([
             'adapter' => new Rbac(['role' => 'my_role']),
@@ -113,7 +113,7 @@ class RbacPolicyTest extends TestCase
     public function testGetRbacUseObject()
     {
         $request = ServerRequestFactory::fromGlobals();
-        $rbac = $this->getMockBuilder(Rbac::class)->onlyMethods(['checkPermissions'])->getMock();
+        $rbac = $this->createStub(Rbac::class);
         $policy = new RbacPolicy([
             'adapter' => $rbac,
         ]);

@@ -13,7 +13,10 @@ declare(strict_types=1);
 namespace CakeDC\Auth\Policy;
 
 use Authorization\IdentityInterface;
+use Cake\Core\Configure;
 use Cake\Core\InstanceConfigTrait;
+use Cake\Event\Event;
+use Cake\Event\EventManager;
 use Psr\Http\Message\ServerRequestInterface;
 
 /**
@@ -58,7 +61,22 @@ class SuperuserPolicy implements PolicyInterface
         $superuserField = $this->getConfig('superuser_field');
 
         $isSuperUser = $user[$superuserField] ?? false;
+        $allowed = $isSuperUser === true;
+        $emitEvents = Configure::read('CakeDC/Auth.emitEvents', false);
 
-        return $isSuperUser === true;
+        if ($allowed && $emitEvents) {
+            $role = is_array($user) ? ($user['role'] ?? null) : null;
+            EventManager::instance()->dispatch(new Event('Auth.Authorization.checked', $this, [
+                'allowed' => true,
+                'policy' => static::class,
+                'role' => is_string($role) ? $role : null,
+                'user' => $user,
+                'request' => $resource,
+                'permission' => null,
+                'reason' => 'SuperuserPolicy allowed',
+            ]));
+        }
+
+        return $allowed;
     }
 }

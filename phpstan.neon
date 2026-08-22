@@ -1,7 +1,30 @@
 parameters:
     level: 6
-    checkMissingIterableValueType: false
-    checkGenericClassInNonGenericObjectType: false
     treatPhpDocTypesAsCertain: false
     bootstrapFiles:
         - tests/bootstrap.php
+    ignoreErrors:
+        -
+            identifier: new.static
+            reportUnmatched: false
+        -
+            identifier: missingType.iterableValue
+            reportUnmatched: false
+        -
+            identifier: missingType.generics
+            reportUnmatched: false
+        -
+            # Public library trait
+            identifier: trait.unused
+            path: src/Traits/IsAuthorizedTrait.php
+            reportUnmatched: false
+        -
+            # Testsuite library trait
+            identifier: trait.unused
+            path: src/Test/BaseTestTrait.php
+            reportUnmatched: false
+        -
+            # U2F deprecated - classes removed but processor retained
+            identifier: class.notFound
+            path: src/Authentication/TwoFactorProcessor/U2FProcessor.php
+            reportUnmatched: false

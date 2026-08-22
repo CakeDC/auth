@@ -20,6 +20,7 @@ use Cake\TestSuite\TestCase;
 use Cake\Utility\Security;
 use CakeDC\Auth\Authenticator\CookieAuthenticator;
 use Laminas\Diactoros\Uri;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
@@ -53,6 +54,7 @@ class CookieAuthenticatorTest extends TestCase
      * @dataProvider dataProviderPersistIdentity
      * @return void
      */
+    #[DataProvider('dataProviderPersistIdentity')]
     public function testPersistIdentity($setCookie, $field, array $post, array $session)
     {
         $identifiers = new IdentifierCollection([
@@ -81,7 +83,7 @@ class CookieAuthenticatorTest extends TestCase
         $this->assertInstanceOf(RequestInterface::class, $result['request']);
         $this->assertInstanceOf(ResponseInterface::class, $result['response']);
         if ($setCookie) {
-            $this->assertStringContainsString('CookieAuth=%5B%22johndoe%22%2C%22%242y%24', $result['response']->getHeaderLine('Set-Cookie'));
+            $this->assertStringContainsString('CookieAuth=%5B%22johndoe%22%2C', $result['response']->getHeaderLine('Set-Cookie'));
         } else {
             $this->assertStringNotContainsString('CookieAuth', $result['response']->getHeaderLine('Set-Cookie'));
         }

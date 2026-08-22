@@ -81,7 +81,7 @@ trait IsAuthorizedTrait
 
         return $targetRequest->withAttribute(
             'rbac',
-            $this->getRequest()->getAttribute('rbac')
+            $this->getRequest()->getAttribute('rbac'),
         );
     }
 }

@@ -79,7 +79,7 @@ class Owner extends AbstractRule
                     'Missing column %s in table %s while checking ownership permissions for user %s',
                     $this->getConfig('ownerForeignKey'),
                     $table->getAlias(),
-                    $userId
+                    $userId,
                 );
                 throw new OutOfBoundsException($msg);
             }
@@ -88,7 +88,7 @@ class Owner extends AbstractRule
                 'Missing column %s in table %s while checking ownership permissions for user %s',
                 $this->getConfig('ownerForeignKey'),
                 $table->getAlias(),
-                $userId
+                $userId,
             );
             throw new OutOfBoundsException($msg, $ex->getCode(), $ex);
         }

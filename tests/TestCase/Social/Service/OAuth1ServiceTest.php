@@ -26,7 +26,9 @@ use League\OAuth1\Client\Credentials\TemporaryCredentials;
 use League\OAuth1\Client\Credentials\TokenCredentials;
 use League\OAuth1\Client\Server\Twitter;
 use League\OAuth1\Client\Server\User;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 
+#[AllowMockObjectsWithoutExpectations]
 class OAuth1ServiceTest extends TestCase
 {
     /**
@@ -143,14 +145,14 @@ class OAuth1ServiceTest extends TestCase
 
         $this->Provider->expects($this->once())
             ->method('getTemporaryCredentials')
-            ->will($this->returnValue($Credentials));
+            ->willReturn($Credentials);
 
         $this->Provider->expects($this->once())
             ->method('getAuthorizationUrl')
             ->with(
-                $this->equalTo($Credentials)
+                $this->equalTo($Credentials),
             )
-            ->will($this->returnValue('http://twitter.com/redirect/url'));
+            ->willReturn('http://twitter.com/redirect/url');
 
         $actual = $this->Service->getAuthorizationUrl($this->Request);
         $expected = 'http://twitter.com/redirect/url';
@@ -326,16 +328,16 @@ class OAuth1ServiceTest extends TestCase
             ->with(
                 $this->equalTo($Credentials),
                 $this->equalTo('good39972j3092304230'),
-                $this->equalTo('77312h2312390839012')
+                $this->equalTo('77312h2312390839012'),
             )
-            ->will($this->returnValue($TokenCredentials));
+            ->willReturn($TokenCredentials);
 
         $this->Provider->expects($this->once())
             ->method('getUserDetails')
             ->with(
-                $this->equalTo($TokenCredentials)
+                $this->equalTo($TokenCredentials),
             )
-            ->will($this->returnValue($user));
+            ->willReturn($user);
 
         $actual = $this->Service->getUser($this->Request);
 

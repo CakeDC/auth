@@ -32,7 +32,7 @@ class InvalidSettingsException extends CakeException
      * @param int $code code
      * @param null $previous previous
      */
-    public function __construct(array|string $message, int $code = 500, $previous = null)
+    public function __construct(array|string $message, int $code = 500, null $previous = null)
     {
         parent::__construct($message, $code, $previous);
     }

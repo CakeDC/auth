@@ -57,9 +57,6 @@ use Psr\Http\Server\RequestHandlerInterface;
  *     'password' => 'password'
  * ];
  *
- * // Load identifiers
- * $service->loadIdentifier('Authentication.Password', compact('fields'));
- *
  * // Load the authenticators, you want session first
  * $service->loadAuthenticator('Authentication.Session');
  * $service->loadAuthenticator('Authentication.Form', [
@@ -68,7 +65,11 @@ use Psr\Http\Server\RequestHandlerInterface;
  *         'plugin' => 'CakeDC/Users',
  *         'controller' => 'Users',
  *         'action' => 'login',
- *     ]
+ *     ],
+ *     'identifier' => [
+ *         'className' => 'Authentication.Password',
+ *         'fields' => $fields,
+ *     ],
  * ]);
  *
  * // Add it to the authentication middleware

@@ -30,7 +30,7 @@ class FailureTest extends TestCase
         $authenticator = new FormAuthenticator(new IdentifierCollection([]));
         $result = new Result(
             ['id' => '10', 'username' => 'johndoe'],
-            Result::SUCCESS
+            Result::SUCCESS,
         );
         $failure = new Failure($authenticator, $result);
         $this->assertSame($authenticator, $failure->getAuthenticator());

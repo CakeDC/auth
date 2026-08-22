@@ -23,9 +23,11 @@ use CakeDC\Auth\Social\Mapper\Facebook as FacebookMapper;
 use CakeDC\Auth\Social\Service\OAuth2Service;
 use Laminas\Diactoros\Uri;
 use League\OAuth2\Client\Provider\Facebook;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
+#[AllowMockObjectsWithoutExpectations]
 class SocialAuthMiddlewareTest extends TestCase
 {
     public array $fixtures = [
@@ -129,11 +131,11 @@ class SocialAuthMiddlewareTest extends TestCase
 
         $this->Provider->expects($this->any())
             ->method('getState')
-            ->will($this->returnValue('_NEW_STATE_'));
+            ->willReturn('_NEW_STATE_');
 
         $this->Provider->expects($this->any())
             ->method('getAuthorizationUrl')
-            ->will($this->returnValue('http://facebook.com/redirect/url'));
+            ->willReturn('http://facebook.com/redirect/url');
 
         $Middleware = new SocialAuthMiddleware([
             'urlChecker' => 'Authentication.Default',

@@ -17,12 +17,15 @@ use Cake\Core\Configure;
 use Cake\Routing\RouteBuilder;
 
 /**
- * Class Plugin
+ * Class AuthPlugin
  *
  * @package CakeDC\Auth
  */
-class Plugin extends BasePlugin
+class AuthPlugin extends BasePlugin
 {
+    public const DEPRECATED_MESSAGE_U2F =
+        'U2F is no longer supported by chrome, we suggest using Webauthn as a replacement';
+
     /**
      * @inheritDoc
      */

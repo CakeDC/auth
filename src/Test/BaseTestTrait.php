@@ -64,7 +64,7 @@ trait BaseTestTrait
                 $method,
                 $ajax,
                 $responseCode,
-                $responseContains
+                $responseContains,
             ), 0);
         }
         $this->loginAsUserName($username);

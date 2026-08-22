@@ -26,7 +26,8 @@ use CakeDC\Auth\Policy\CollectionPolicy;
 use CakeDC\Auth\Policy\RbacPolicy;
 use CakeDC\Auth\Policy\SuperuserPolicy;
 use CakeDC\Auth\Rbac\Rbac;
-use CakeDC\Auth\Traits\IsAuthorizedTrait;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
+use PHPUnit\Framework\Attributes\DataProvider;
 use RuntimeException;
 
 /**
@@ -34,6 +35,7 @@ use RuntimeException;
  *
  * @package CakeDC\Auth\Test\TestCase\Traits
  */
+#[AllowMockObjectsWithoutExpectations]
 class IsAuthorizedTraitTest extends TestCase
 {
     /**
@@ -64,9 +66,9 @@ class IsAuthorizedTraitTest extends TestCase
      */
     public function testIsAuthorizedEmpty()
     {
-        $Trait = $this->getMockBuilder(IsAuthorizedTrait::class)
-            ->addMethods(['getRequest'])
-            ->getMockForTrait();
+        $Trait = $this->getMockBuilder(StubAuthorizedController::class)
+            ->onlyMethods(['getRequest'])
+            ->getMock();
         $Trait->expects($this->never())
             ->method('getRequest');
         $this->assertFalse($Trait->isAuthorized(null));
@@ -82,6 +84,7 @@ class IsAuthorizedTraitTest extends TestCase
      * @dataProvider dataProviderIsAuthorized
      * @return void
      */
+    #[DataProvider('dataProviderIsAuthorized')]
     public function testIsAuthorizedWithMock($url, $authorize, $invalidUrl = false)
     {
         $builder = Router::createRouteBuilder('/');
@@ -100,9 +103,9 @@ class IsAuthorizedTraitTest extends TestCase
         $rbac->expects($this->once())
             ->method('checkPermissions')
             ->with(
-                $this->equalTo($identity->getOriginalData())
+                $this->equalTo($identity->getOriginalData()),
             )
-            ->will($this->returnValue($authorize));
+            ->willReturn($authorize);
         $request = $request->withAttribute('rbac', $rbac);
 
         $map = new MapResolver();
@@ -111,7 +114,7 @@ class IsAuthorizedTraitTest extends TestCase
             new CollectionPolicy([
                 SuperuserPolicy::class,
                 RbacPolicy::class,
-            ])
+            ]),
         );
         $orm = new OrmResolver();
         $resolver = new ResolverCollection([
@@ -122,12 +125,12 @@ class IsAuthorizedTraitTest extends TestCase
         $request = $request->withAttribute('authorization', $service);
         $request = $request->withAttribute('identity', new IdentityDecorator($service, $identity));
 
-        $Trait = $this->getMockBuilder(IsAuthorizedTrait::class)
-            ->addMethods(['getRequest'])
-            ->getMockForTrait();
+        $Trait = $this->getMockBuilder(StubAuthorizedController::class)
+            ->onlyMethods(['getRequest'])
+            ->getMock();
         $Trait->expects($this->any())
             ->method('getRequest')
-            ->will($this->returnValue($request));
+            ->willReturn($request);
 
         $result = $Trait->isAuthorized($url);
         $this->assertSame($authorize, $result);
@@ -152,12 +155,12 @@ class IsAuthorizedTraitTest extends TestCase
             ->method('checkPermissions');
         $request = $request->withAttribute('rbac', $rbac);
 
-        $Trait = $this->getMockBuilder(IsAuthorizedTrait::class)
-            ->addMethods(['getRequest'])
-            ->getMockForTrait();
+        $Trait = $this->getMockBuilder(StubAuthorizedController::class)
+            ->onlyMethods(['getRequest'])
+            ->getMock();
         $Trait->expects($this->any())
             ->method('getRequest')
-            ->will($this->returnValue($request));
+            ->willReturn($request);
 
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage('Could not find the authorization service in the request.');

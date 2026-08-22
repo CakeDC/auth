@@ -175,6 +175,7 @@ class RbacTest extends TestCase
     /**
      * @dataProvider providerAuthorize
      */
+    #[DataProvider('providerAuthorize')]
     public function testAuthorize($permissions, $user, $requestParams, $expected)
     {
         $this->rbac = new Rbac(['permissions' => $permissions]);
@@ -1202,6 +1203,7 @@ class RbacTest extends TestCase
      * @param array $requestParams
      * @param string $expectedMsg
      */
+    #[DataProvider('badPermissionProvider')]
     public function testBadPermission($permissions, $user, $requestParams, $expectedMsg)
     {
         $rbac = $this->getMockBuilder(Rbac::class)

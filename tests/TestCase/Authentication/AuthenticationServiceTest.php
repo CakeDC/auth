@@ -47,14 +47,11 @@ class AuthenticationServiceTest extends TestCase
         $request = ServerRequestFactory::fromGlobals(
             ['REQUEST_URI' => '/testpath'],
             [],
-            ['username' => 'user-not-found', 'password' => 'password']
+            ['username' => 'user-not-found', 'password' => 'password'],
         );
 
         $service = new AuthenticationService([
             'processors' => [],
-            'identifiers' => [
-                'Authentication.Password',
-            ],
             'authenticators' => [],
         ]);
         $this->expectException(RuntimeException::class);
@@ -77,17 +74,18 @@ class AuthenticationServiceTest extends TestCase
         $request = ServerRequestFactory::fromGlobals(
             ['REQUEST_URI' => '/testpath'],
             [],
-            ['username' => 'user-not-found', 'password' => 'password']
+            ['username' => 'user-not-found', 'password' => 'password'],
         );
 
         $service = new AuthenticationService([
             'processors' => [],
-            'identifiers' => [
-                'Authentication.Password',
-            ],
             'authenticators' => [
-                'Authentication.Session',
-                'CakeDC/Auth.Form',
+                'Authentication.Session' => [
+                    'identifier' => 'Authentication.Password',
+                ],
+                'CakeDC/Auth.Form' => [
+                    'identifier' => 'Authentication.Password',
+                ],
             ],
         ]);
 
@@ -100,13 +98,11 @@ class AuthenticationServiceTest extends TestCase
 
         $sessionFailure = new Failure(
             $service->authenticators()->get('Session'),
-            new Result(null, Result::FAILURE_IDENTITY_NOT_FOUND)
+            new Result(null, Result::FAILURE_IDENTITY_NOT_FOUND),
         );
         $formFailure = new Failure(
             $service->authenticators()->get('Form'),
-            new Result(null, Result::FAILURE_IDENTITY_NOT_FOUND, [
-                'Password' => [],
-            ])
+            new Result(null, Result::FAILURE_IDENTITY_NOT_FOUND),
         );
         $expected = [$sessionFailure, $formFailure];
         $actual = $service->getFailures();
@@ -130,7 +126,7 @@ class AuthenticationServiceTest extends TestCase
         $request = ServerRequestFactory::fromGlobals(
             ['REQUEST_URI' => '/testpath'],
             [],
-            ['username' => 'user-1', 'password' => 'password']
+            ['username' => 'user-1', 'password' => 'password'],
         );
 
         $service = new AuthenticationService([
@@ -138,12 +134,13 @@ class AuthenticationServiceTest extends TestCase
                 new OneTimePasswordProcessor(),
                 new Webauthn2faProcessor(),
             ],
-            'identifiers' => [
-                'Authentication.Password',
-            ],
             'authenticators' => [
-                'Authentication.Session',
-                'CakeDC/Auth.Form',
+                'Authentication.Session' => [
+                    'identifier' => 'Authentication.Password',
+                ],
+                'CakeDC/Auth.Form' => [
+                    'identifier' => 'Authentication.Password',
+                ],
             ],
         ]);
 
@@ -152,14 +149,14 @@ class AuthenticationServiceTest extends TestCase
         $this->assertTrue($result->isValid());
         $this->assertEquals(
             'user-1',
-            $result->getData()['username']
+            $result->getData()['username'],
         );
         $provider = $service->getAuthenticationProvider();
         $this->assertInstanceOf(FormAuthenticator::class, $provider);
 
         $sessionFailure = new Failure(
             $service->authenticators()->get('Session'),
-            new Result(null, Result::FAILURE_IDENTITY_NOT_FOUND)
+            new Result(null, Result::FAILURE_IDENTITY_NOT_FOUND),
         );
         $expected = [$sessionFailure];
         $actual = $service->getFailures();
@@ -183,7 +180,7 @@ class AuthenticationServiceTest extends TestCase
         $request = ServerRequestFactory::fromGlobals(
             ['REQUEST_URI' => '/testpath'],
             [],
-            ['username' => 'user-1', 'password' => 'password']
+            ['username' => 'user-1', 'password' => 'password'],
         );
 
         $service = new AuthenticationService([
@@ -191,15 +188,14 @@ class AuthenticationServiceTest extends TestCase
                 new OneTimePasswordProcessor(),
                 new Webauthn2faProcessor(),
             ],
-            'identifiers' => [
-                'Authentication.Password' => [],
-            ],
             'authenticators' => [
                 'Authentication.Session' => [
                     'skipTwoFactorVerify' => true,
+                    'identifier' => 'Authentication.Password',
                 ],
                 'CakeDC/Auth.Form' => [
                     'skipTwoFactorVerify' => false,
+                    'identifier' => 'Authentication.Password',
                 ],
             ],
         ]);
@@ -211,11 +207,11 @@ class AuthenticationServiceTest extends TestCase
         $this->assertNull($result->getData());
         $this->assertEquals(
             'user-1',
-            $request->getAttribute('session')->read('temporarySession.username')
+            $request->getAttribute('session')->read('temporarySession.username'),
         );
         $sessionFailure = new Failure(
             $service->authenticators()->get('Session'),
-            new Result(null, Result::FAILURE_IDENTITY_NOT_FOUND)
+            new Result(null, Result::FAILURE_IDENTITY_NOT_FOUND),
         );
         $expected = [$sessionFailure];
         $actual = $service->getFailures();
@@ -239,7 +235,7 @@ class AuthenticationServiceTest extends TestCase
         $request = ServerRequestFactory::fromGlobals(
             ['REQUEST_URI' => '/testpath'],
             [],
-            ['username' => 'user-1', 'password' => 'password']
+            ['username' => 'user-1', 'password' => 'password'],
         );
 
         $service = new AuthenticationService([
@@ -247,15 +243,14 @@ class AuthenticationServiceTest extends TestCase
                 new OneTimePasswordProcessor(),
                 new Webauthn2faProcessor(),
             ],
-            'identifiers' => [
-                'Authentication.Password' => [],
-            ],
             'authenticators' => [
                 'Authentication.Session' => [
                     'skipTwoFactorVerify' => true,
+                    'identifier' => 'Authentication.Password',
                 ],
                 'CakeDC/Auth.Form' => [
                     'skipTwoFactorVerify' => false,
+                    'identifier' => 'Authentication.Password',
                 ],
             ],
         ]);
@@ -265,14 +260,14 @@ class AuthenticationServiceTest extends TestCase
         $this->assertTrue($result->isValid());
         $this->assertEquals(
             'user-1',
-            $result->getData()['username']
+            $result->getData()['username'],
         );
         $result = $service->getAuthenticationProvider();
         $this->assertInstanceOf(FormAuthenticator::class, $result);
 
         $sessionFailure = new Failure(
             $service->authenticators()->get('Session'),
-            new Result(null, Result::FAILURE_IDENTITY_NOT_FOUND)
+            new Result(null, Result::FAILURE_IDENTITY_NOT_FOUND),
         );
         $expected = [$sessionFailure];
         $actual = $service->getFailures();
@@ -295,7 +290,7 @@ class AuthenticationServiceTest extends TestCase
         $request = ServerRequestFactory::fromGlobals(
             ['REQUEST_URI' => '/testpath'],
             [],
-            ['username' => 'user-1', 'password' => 'password']
+            ['username' => 'user-1', 'password' => 'password'],
         );
 
         $service = new AuthenticationService([
@@ -303,15 +298,14 @@ class AuthenticationServiceTest extends TestCase
                 new OneTimePasswordProcessor(),
                 new Webauthn2faProcessor(),
             ],
-            'identifiers' => [
-                'Authentication.Password' => [],
-            ],
             'authenticators' => [
                 'Authentication.Session' => [
                     'skipTwoFactorVerify' => true,
+                    'identifier' => 'Authentication.Password',
                 ],
                 'CakeDC/Auth.Form' => [
                     'skipTwoFactorVerify' => false,
+                    'identifier' => 'Authentication.Password',
                 ],
             ],
         ]);
@@ -323,11 +317,11 @@ class AuthenticationServiceTest extends TestCase
         $this->assertNull($request->getAttribute('session')->read('Auth.username'));
         $this->assertEquals(
             'user-1',
-            $request->getAttribute('session')->read('Webauthn2fa.User.username')
+            $request->getAttribute('session')->read('Webauthn2fa.User.username'),
         );
         $sessionFailure = new Failure(
             $service->authenticators()->get('Session'),
-            new Result(null, Result::FAILURE_IDENTITY_NOT_FOUND)
+            new Result(null, Result::FAILURE_IDENTITY_NOT_FOUND),
         );
         $expected = [$sessionFailure];
         $actual = $service->getFailures();
