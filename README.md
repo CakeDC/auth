@@ -28,14 +28,15 @@ It covers the following features:
 Requirements
 ------------
 
-* CakePHP 4.0.0+
-* PHP 7.2+
+* CakePHP 5.4.0+
+* PHP 8.2+
 
 Versions and branches
 ---------------------
 
 | CakePHP | CakeDC Auth Plugin | Tag   | Notes |
 | :-------------: | :------------------------: | :--:  | :---- |
+| ^5.4            | [11.0](https://github.com/cakedc/auth/tree/11.next-cake5.4)                      | 11.0.0 | stable |
 | ^4.3            | [7.0](https://github.com/cakedc/auth/tree/7.next-cake4)                      | 7.0.0 | stable |
 | ^4.0     <4.3   | [6.0](https://github.com/cakedc/auth/tree/6.next-cake4)                      | 6.0.2 | stable |
 | ^3.7    <4.0.0  | [5.0](https://github.com/cakedc/auth/tree/5.next)                      | 5.0.0 | stable |
