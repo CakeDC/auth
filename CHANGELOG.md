@@ -5,6 +5,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Fixed
+- `ReCaptchaTrait::validateReCaptchaFromRequest()` treats a missing or empty
+  `g-recaptcha-response` as an invalid captcha (returns `false`) instead of passing `null` to the
+  non-nullable `validateReCaptcha(string ...)`, which raised a `TypeError` (HTTP 500). A tokenless
+  request — e.g. a programmatic JSON client — now fails the reCaptcha check cleanly.
 
 ## [10.1.2] - 2025-09-26
 - Github social login
