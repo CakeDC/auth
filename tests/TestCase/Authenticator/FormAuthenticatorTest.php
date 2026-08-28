@@ -300,6 +300,66 @@ class FormAuthenticatorTest extends TestCase
     }
 
     /**
+     * A request without a g-recaptcha-response token, with reCaptcha enabled and valid
+     * credentials, must fail as FAILURE_INVALID_RECAPTCHA through the real
+     * validateReCaptchaFromRequest() guard (no token never reaches validateReCaptcha(),
+     * so this asserts the guard end-to-end and that it no longer raises a TypeError).
+     *
+     * @return void
+     */
+    public function testAuthenticateTokenlessRecaptchaFailsCleanly()
+    {
+        $identifiers = new IdentifierCollection([
+            'Authentication.Password',
+        ]);
+
+        $BaseAuthenticator = $this->getMockBuilder(CakeFormAuthenticator::class)
+            ->setConstructorArgs([$identifiers])
+            ->onlyMethods(['authenticate'])
+            ->getMock();
+        $request = ServerRequestFactory::fromGlobals(
+            ['REQUEST_URI' => '/testpath', 'REMOTE_ADDR' => '127.0.0.1'],
+            [],
+            ['username' => 'marcelo', 'password' => 'password']
+        );
+
+        $baseResult = new Result(
+            [
+                'id' => '42',
+                'username' => 'marcelo',
+                'role' => 'user',
+            ],
+            Result::SUCCESS
+        );
+        $BaseAuthenticator->expects($this->once())
+            ->method('authenticate')
+            ->with($request)
+            ->willReturn($baseResult);
+
+        // Only the base authenticator is mocked; validateReCaptcha() is left real and
+        // must never be reached because the token is absent.
+        $Authenticator = $this->getMockBuilder(FormAuthenticator::class)->setConstructorArgs([
+            $identifiers,
+            [
+                'fields' => [
+                    AbstractIdentifier::CREDENTIAL_USERNAME => 'email',
+                    AbstractIdentifier::CREDENTIAL_PASSWORD => 'password',
+                ],
+            ],
+        ])->onlyMethods(['createBaseAuthenticator'])->getMock();
+
+        Configure::write('Users.reCaptcha.login', true);
+        $Authenticator->expects($this->once())
+            ->method('createBaseAuthenticator')
+            ->willReturn($BaseAuthenticator);
+
+        $result = $Authenticator->authenticate($request);
+        $this->assertInstanceOf(Result::class, $result);
+        $this->assertEquals(FormAuthenticator::FAILURE_INVALID_RECAPTCHA, $result->getStatus());
+        $this->assertNull($result->getData());
+    }
+
+    /**
      * test getBaseAuthenticator
      *
      * @return void

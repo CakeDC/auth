@@ -36,7 +36,13 @@ trait ReCaptchaTrait
             throw new BadMethodCallException('Request must be an instance of ServerRequest');
         }
         $data = $request->getParsedBody();
-        $captcha = $data['g-recaptcha-response'] ?? null;
+        $captcha = is_array($data) ? ($data['g-recaptcha-response'] ?? null) : null;
+        // A missing/empty token is simply an invalid captcha. Guard here so a request
+        // without the field (e.g. a programmatic JSON client) fails validation cleanly
+        // instead of hitting validateReCaptcha()'s non-nullable string param (TypeError -> 500).
+        if (!is_string($captcha) || $captcha === '') {
+            return false;
+        }
 
         return $this->validateReCaptcha(
             $captcha,
