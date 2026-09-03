@@ -81,7 +81,12 @@ class CookieAuthenticatorTest extends TestCase
         $this->assertInstanceOf(RequestInterface::class, $result['request']);
         $this->assertInstanceOf(ResponseInterface::class, $result['response']);
         if ($setCookie) {
-            $this->assertStringContainsString('CookieAuth=%5B%22johndoe%22%2C%22%242y%24', $result['response']->getHeaderLine('Set-Cookie'));
+            // The token is now [username, expires, hmac]; the password hash must not
+            // be stored in the cookie (timing-safe remember-me hardening).
+            $cookie = $result['response']->getHeaderLine('Set-Cookie');
+            $this->assertStringContainsString('CookieAuth=%5B%22johndoe%22%2C', $cookie);
+            $this->assertStringNotContainsString('%242y%24', $cookie);
+            $this->assertStringNotContainsString('%242a%24', $cookie);
         } else {
             $this->assertStringNotContainsString('CookieAuth', $result['response']->getHeaderLine('Set-Cookie'));
         }

@@ -104,9 +104,9 @@ class AuthenticationServiceTest extends TestCase
         );
         $formFailure = new Failure(
             $service->authenticators()->get('Form'),
-            new Result(null, Result::FAILURE_IDENTITY_NOT_FOUND, [
-                'Password' => [],
-            ])
+            // Newer cakephp/authentication no longer records an empty per-identifier
+            // error entry on identity-not-found.
+            new Result(null, Result::FAILURE_IDENTITY_NOT_FOUND)
         );
         $expected = [$sessionFailure, $formFailure];
         $actual = $service->getFailures();
