@@ -10,6 +10,7 @@
  */
 
 use Cake\Routing\Router;
+
 return [
     'OAuth.path' => ['plugin' => 'CakeDC/Users', 'controller' => 'Users', 'action' => 'socialLogin', 'prefix' => null],
     'OAuth.providers' => [
@@ -23,7 +24,7 @@ return [
                 'redirectUri' => Router::fullBaseUrl() . '/auth/facebook',
                 'linkSocialUri' => Router::fullBaseUrl() . '/link-social/facebook',
                 'callbackLinkSocialUri' => Router::fullBaseUrl() . '/callback-link-social/facebook',
-            ]
+            ],
         ],
         'twitter' => [
             'service' => 'CakeDC\Auth\Social\Service\OAuth1Service',
@@ -33,8 +34,9 @@ return [
                 'redirectUri' => Router::fullBaseUrl() . '/auth/twitter',
                 'linkSocialUri' => Router::fullBaseUrl() . '/link-social/twitter',
                 'callbackLinkSocialUri' => Router::fullBaseUrl() . '/callback-link-social/twitter',
-            ]
+            ],
         ],
+        // Deprecated, LinkedIn switched to OpenID-Connect and OAuth2 is no longer working properly
         'linkedIn' => [
             'service' => 'CakeDC\Auth\Social\Service\OAuth2Service',
             'className' => 'League\OAuth2\Client\Provider\LinkedIn',
@@ -43,7 +45,18 @@ return [
                 'redirectUri' => Router::fullBaseUrl() . '/auth/linkedIn',
                 'linkSocialUri' => Router::fullBaseUrl() . '/link-social/linkedIn',
                 'callbackLinkSocialUri' => Router::fullBaseUrl() . '/callback-link-social/linkedIn',
-            ]
+            ],
+        ],
+        'linkedInOpenIDConnect' => [
+            'service' => 'CakeDC\Auth\Social\Service\OpenIDConnectService',
+            'className' => 'League\OAuth2\Client\Provider\LinkedIn',
+            'mapper' => 'CakeDC\Auth\Social\Mapper\LinkedInOpenIDConnect',
+            'options' => [
+                'redirectUri' => Router::fullBaseUrl() . '/auth/linkedInOpenIDConnect',
+                'linkSocialUri' => Router::fullBaseUrl() . '/link-social/linkedInOpenIDConnect',
+                'callbackLinkSocialUri' => Router::fullBaseUrl() . '/callback-link-social/linkedInOpenIDConnect',
+                'defaultScopes' => ['email', 'openid', 'profile'],
+            ],
         ],
         'instagram' => [
             'service' => 'CakeDC\Auth\Social\Service\OAuth2Service',
@@ -53,7 +66,7 @@ return [
                 'redirectUri' => Router::fullBaseUrl() . '/auth/instagram',
                 'linkSocialUri' => Router::fullBaseUrl() . '/link-social/instagram',
                 'callbackLinkSocialUri' => Router::fullBaseUrl() . '/callback-link-social/instagram',
-            ]
+            ],
         ],
         'google' => [
             'service' => 'CakeDC\Auth\Social\Service\OAuth2Service',
@@ -64,7 +77,7 @@ return [
                 'redirectUri' => Router::fullBaseUrl() . '/auth/google',
                 'linkSocialUri' => Router::fullBaseUrl() . '/link-social/google',
                 'callbackLinkSocialUri' => Router::fullBaseUrl() . '/callback-link-social/google',
-            ]
+            ],
         ],
         'amazon' => [
             'service' => 'CakeDC\Auth\Social\Service\OAuth2Service',
@@ -74,7 +87,7 @@ return [
                 'redirectUri' => Router::fullBaseUrl() . '/auth/amazon',
                 'linkSocialUri' => Router::fullBaseUrl() . '/link-social/amazon',
                 'callbackLinkSocialUri' => Router::fullBaseUrl() . '/callback-link-social/amazon',
-            ]
+            ],
         ],
         'azure' => [
             'service' => 'CakeDC\Auth\Social\Service\OAuth2Service',
@@ -84,7 +97,7 @@ return [
                 'redirectUri' => Router::fullBaseUrl() . '/auth/azure',
                 'linkSocialUri' => Router::fullBaseUrl() . '/link-social/azure',
                 'callbackLinkSocialUri' => Router::fullBaseUrl() . '/callback-link-social/azure',
-            ]
+            ],
         ],
     ],
 	'TwoFactorProcessors' => [
@@ -110,7 +123,7 @@ return [
         // QR-code provider (more on this later)
         'qrcodeprovider' => new \RobThree\Auth\Providers\Qr\EndroidQrCodeProvider(),
         // Random Number Generator provider (more on this later)
-        'rngprovider' => null
+        'rngprovider' => null,
     ],
     'Webauthn2fa' => [
         'enabled' => false,
@@ -122,6 +135,6 @@ return [
             'controller' => 'Users',
             'action' => 'webauthn2fa',
             'prefix' => false,
-        ]
-    ]
+        ],
+    ],
 ];
