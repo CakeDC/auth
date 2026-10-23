@@ -17,7 +17,7 @@ use Cake\Core\Exception\CakeException;
 
 class InvalidSettingsException extends CakeException
 {
-    protected string $_messageTemplate = 'Invalid settings for key (%s)';
+    protected string $messageTemplate = 'Invalid settings for key (%s)';
 
     /**
      * @phpcsSuppress SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingNativeTypeHint

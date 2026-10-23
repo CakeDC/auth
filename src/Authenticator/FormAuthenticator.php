@@ -46,7 +46,7 @@ class FormAuthenticator implements AuthenticatorInterface
      *
      * @var array
      */
-    protected array $_defaultConfig = [
+    protected array $defaultConfig = [
         'keyCheckEnabledRecaptcha' => 'Users.reCaptcha.login',
     ];
 

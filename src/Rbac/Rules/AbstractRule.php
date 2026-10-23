@@ -34,7 +34,7 @@ abstract class AbstractRule implements Rule
     /**
      * @var array default config
      */
-    protected array $_defaultConfig = [];
+    protected array $defaultConfig = [];
 
     /**
      * AbstractRule constructor.
@@ -53,10 +53,10 @@ abstract class AbstractRule implements Rule
      * @param mixed $table table
      * @return \Cake\ORM\Table
      */
-    protected function _getTable(ServerRequestInterface $request, mixed $table = null): Table
+    protected function getTable(ServerRequestInterface $request, mixed $table = null): Table
     {
         if (empty($table)) {
-            return $this->_getTableFromRequest($request);
+            return $this->getTableFromRequest($request);
         }
         if ($table instanceof Table) {
             return $table;
@@ -72,7 +72,7 @@ abstract class AbstractRule implements Rule
      * @return \Cake\ORM\Table
      * @throws \OutOfBoundsException if table alias can't be extracted from request
      */
-    protected function _getTableFromRequest(ServerRequestInterface $request): Table
+    protected function getTableFromRequest(ServerRequestInterface $request): Table
     {
         $params = $request->getAttribute('params');
 

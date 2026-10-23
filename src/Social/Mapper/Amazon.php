@@ -30,7 +30,7 @@ class Amazon extends AbstractMapper
      *
      * @var array
      */
-    protected array $_mapFields = [
+    protected array $mapFields = [
         'id' => 'user_id',
     ];
 
@@ -40,8 +40,8 @@ class Amazon extends AbstractMapper
      * @param mixed $rawData raw data
      * @return string
      */
-    protected function _link(mixed $rawData): string
+    protected function link(mixed $rawData): string
     {
-        return self::AMAZON_BASE_URL . Hash::get($rawData, $this->_mapFields['id']);
+        return self::AMAZON_BASE_URL . Hash::get($rawData, $this->mapFields['id']);
     }
 }

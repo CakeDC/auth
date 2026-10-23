@@ -23,7 +23,7 @@ class Github extends AbstractMapper
      *
      * @var array
      */
-    protected array $_mapFields = [
+    protected array $mapFields = [
         'username' => 'login',
         'full_name' => 'name',
         'avatar' => 'avatar_url',

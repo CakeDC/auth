@@ -41,7 +41,7 @@ class Rbac implements RbacInterface
     /**
      * @var array default configuration
      */
-    protected array $_defaultConfig = [
+    protected array $defaultConfig = [
         // autoload permissions based on a configuration
         'autoload_config' => 'permissions',
         // role field in the Users table
@@ -129,7 +129,7 @@ class Rbac implements RbacInterface
         $role = Hash::get($user, $roleField, $defaultRole);
 
         foreach ($this->permissions as $permission) {
-            $matchResult = $this->_matchPermission($permission, $user, $role, $request);
+            $matchResult = $this->matchPermission($permission, $user, $role, $request);
             if ($matchResult !== null) {
                 if ($this->getConfig('log')) {
                     $this->log($matchResult->getReason(), LogLevel::DEBUG);
@@ -176,7 +176,7 @@ class Rbac implements RbacInterface
      * @return \CakeDC\Auth\Rbac\PermissionMatchResult|null Null if permission is discarded, PermissionMatchResult if a final
      * result is produced
      */
-    protected function _matchPermission(array $permission, array|ArrayAccess $user, string $role, ServerRequestInterface $request): ?PermissionMatchResult
+    protected function matchPermission(array $permission, array|ArrayAccess $user, string $role, ServerRequestInterface $request): ?PermissionMatchResult
     {
         $issetController = isset($permission['controller']) || isset($permission['*controller']);
         $issetAction = isset($permission['action']) || isset($permission['*action']);
@@ -212,7 +212,7 @@ class Rbac implements RbacInterface
             return null;
         }
         foreach ($permission as $key => $value) {
-            $inverse = is_string($key) && $this->_startsWith($key, '*');
+            $inverse = is_string($key) && $this->startsWith($key, '*');
             if ($inverse) {
                 $key = ltrim($key, '*');
             }
@@ -226,13 +226,13 @@ class Rbac implements RbacInterface
             } elseif ($key === 'allowed') {
                 $return = !empty($user) && (bool)$value;
             } elseif (array_key_exists($key, $reserved)) {
-                $return = $this->_matchOrAsterisk($value, $reserved[$key], true);
+                $return = $this->matchOrAsterisk($value, $reserved[$key], true);
             } else {
-                if (!$this->_startsWith((string)$key, 'user.')) {
+                if (!$this->startsWith((string)$key, 'user.')) {
                     $key = 'user.' . $key;
                 }
 
-                $return = $this->_matchOrAsterisk($value, Hash::get($userArr, (string)$key));
+                $return = $this->matchOrAsterisk($value, Hash::get($userArr, (string)$key));
             }
 
             if ($inverse) {
@@ -264,7 +264,7 @@ class Rbac implements RbacInterface
      * @param bool $allowEmpty If true and $value is null, the rule will pass
      * @return bool
      */
-    protected function _matchOrAsterisk(mixed $possibleValues, mixed $value, bool $allowEmpty = false): bool
+    protected function matchOrAsterisk(mixed $possibleValues, mixed $value, bool $allowEmpty = false): bool
     {
         $possibleArray = (array)$possibleValues;
 
@@ -282,7 +282,7 @@ class Rbac implements RbacInterface
      * @param string $needle The beginning to check
      * @return bool
      */
-    protected function _startsWith(string $haystack, string $needle): bool
+    protected function startsWith(string $haystack, string $needle): bool
     {
         return substr($haystack, 0, strlen($needle)) === $needle;
     }

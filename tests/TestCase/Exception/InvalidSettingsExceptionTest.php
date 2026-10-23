@@ -18,7 +18,7 @@ use CakeDC\Auth\Exception\InvalidSettingsException;
 
 class InvalidSettingsExceptionTest extends TestCase
 {
-    protected $_messageTemplate = 'Invalid settings for key (%s)';
+    protected $messageTemplate = 'Invalid settings for key (%s)';
     protected $code = 500;
 
     /**

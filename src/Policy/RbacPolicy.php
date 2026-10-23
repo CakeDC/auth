@@ -29,7 +29,7 @@ class RbacPolicy implements PolicyInterface
      *
      * @var array
      */
-    protected array $_defaultConfig = [
+    protected array $defaultConfig = [
         'adapter' => [
             'className' => Rbac::class,
         ],
@@ -63,7 +63,7 @@ class RbacPolicy implements PolicyInterface
     {
         $rbac = $this->getRbac($resource);
 
-        $user = $identity !== null ? $identity->getOriginalData() : [];
+        $user = $identity?->getOriginalData() ?? [];
 
         return $rbac->checkPermissions($user, $resource);
     }

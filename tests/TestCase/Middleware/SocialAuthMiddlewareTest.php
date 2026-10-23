@@ -129,17 +129,15 @@ class SocialAuthMiddlewareTest extends TestCase
             'provider' => 'facebook',
         ]);
 
-        $this->Provider->expects($this->any())
-            ->method('getState')
+        $this->Provider->method('getState')
             ->willReturn('_NEW_STATE_');
 
-        $this->Provider->expects($this->any())
-            ->method('getAuthorizationUrl')
+        $this->Provider->method('getAuthorizationUrl')
             ->willReturn('http://facebook.com/redirect/url');
 
         $Middleware = new SocialAuthMiddleware([
             'urlChecker' => 'Authentication.Default',
-            'loginUrl' => ['/auth/facebook'],
+            'loginUrl' => '/auth/facebook',
         ]);
         $handler = $this->getMockBuilder(Runner::class)
             ->onlyMethods(['handle'])
@@ -183,7 +181,7 @@ class SocialAuthMiddlewareTest extends TestCase
         $this->Request->getSession()->write('oauth2state', '__TEST_STATE__');
         $Middleware = new SocialAuthMiddleware([
             'urlChecker' => 'Authentication.Default',
-            'loginUrl' => ['/auth/facebook'],
+            'loginUrl' => '/auth/facebook',
         ]);
 
         $response = new Response();
@@ -233,7 +231,7 @@ class SocialAuthMiddlewareTest extends TestCase
     {
         $Middleware = new SocialAuthMiddleware([
             'urlChecker' => 'Authentication.Default',
-            'loginUrl' => ['/auth/facebook'],
+            'loginUrl' => '/auth/facebook',
         ]);
         $response = new Response();
         $response = $response->withStringBody(__METHOD__ . time());

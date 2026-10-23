@@ -36,7 +36,7 @@ class ProviderConfig
 
         $providers = [];
         foreach ($oauthConfig['providers'] as $provider => $options) {
-            if ($this->_isProviderEnabled($options)) {
+            if ($this->isProviderEnabled($options)) {
                 $providers[$provider] = $options;
             }
         }
@@ -55,7 +55,7 @@ class ProviderConfig
     public function normalizeConfig(array $config): array
     {
         if (!empty($config['providers'])) {
-            array_walk($config['providers'], [$this, '_normalizeConfig'], $config);
+            array_walk($config['providers'], [$this, 'normalizeProviderConfig'], $config);
         }
 
         return $config;
@@ -69,7 +69,7 @@ class ProviderConfig
      * @param array $parent Parent configuration.
      * @return void
      */
-    protected function _normalizeConfig(array &$config, string $alias, array $parent): void
+    protected function normalizeProviderConfig(array &$config, string $alias, array $parent): void
     {
         unset($parent['providers']);
 
@@ -87,7 +87,7 @@ class ProviderConfig
         $config = array_intersect_key($config, $defaults);
         $config += $defaults;
 
-        array_walk($config, [$this, '_validateConfig']);
+        array_walk($config, [$this, 'validateConfig']);
 
         foreach (['options', 'collaborators', 'signature'] as $key) {
             if (empty($parent[$key]) || empty($config[$key])) {
@@ -107,7 +107,7 @@ class ProviderConfig
      * @throws \CakeDC\Auth\Exception\InvalidProviderException
      * @throws \CakeDC\Auth\Exception\InvalidSettingsException
      */
-    protected function _validateConfig(mixed &$value, string $key): void
+    protected function validateConfig(mixed &$value, string $key): void
     {
         if (in_array($key, ['className', 'service', 'mapper'], true) && !is_object($value) && !class_exists($value)) {
             throw new InvalidProviderException([$value]);
@@ -122,7 +122,7 @@ class ProviderConfig
      * @param array $options array of options by provider
      * @return bool
      */
-    protected function _isProviderEnabled(array $options): bool
+    protected function isProviderEnabled(array $options): bool
     {
         return !empty($options['options']['redirectUri']) && !empty($options['options']['clientId']) &&
             !empty($options['options']['clientSecret']);

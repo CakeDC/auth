@@ -28,7 +28,7 @@ class Owner extends AbstractRule
     public const TYPE_TABLE_KEY_QUERY = 'query';
     public const TYPE_TABLE_KEY_DATA = 'data';
 
-    protected array $_defaultConfig = [
+    protected array $defaultConfig = [
         //field in the owned table matching the user_id
         'ownerForeignKey' => 'user_id',
         /*
@@ -65,7 +65,7 @@ class Owner extends AbstractRule
      */
     public function allowed(array|ArrayAccess $user, string $role, ServerRequestInterface $request): bool
     {
-        $table = $this->_getTable($request, $this->getConfig('table'));
+        $table = $this->getTable($request, $this->getConfig('table'));
         //retrieve entity id from request
         $id = $this->getTableId($request);
         $userId = $user['id'] ?? null;

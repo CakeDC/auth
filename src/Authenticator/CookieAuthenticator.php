@@ -47,15 +47,15 @@ class CookieAuthenticator extends BaseAuthenticator implements PersistenceInterf
             $session->delete(self::SESSION_DATA_KEY);
         }
 
-        if (!$this->_checkUrl($request) || !is_array($bodyData) || empty($bodyData[$field])) {
+        if (!$this->checkUrl($request) || !is_array($bodyData) || empty($bodyData[$field])) {
             return [
                 'request' => $request,
                 'response' => $response,
             ];
         }
 
-        $value = $this->_createToken($identity);
-        $cookie = $this->_createCookie($value);
+        $value = $this->createToken($identity);
+        $cookie = $this->createCookie($value);
 
         return [
             'request' => $request,

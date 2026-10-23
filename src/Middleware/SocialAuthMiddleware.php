@@ -35,7 +35,7 @@ class SocialAuthMiddleware implements MiddlewareInterface
      *
      * @var array
      */
-    protected array $_defaultConfig = [
+    protected array $defaultConfig = [
         'loginUrl' => false,
         'urlChecker' => 'Authentication.Default',
     ];

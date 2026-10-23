@@ -25,7 +25,7 @@ class Google extends AbstractMapper
      *
      * @var array
      */
-    protected array $_mapFields = [
+    protected array $mapFields = [
         'id' => 'sub',
         'avatar' => 'picture',
         'full_name' => 'name',
@@ -42,8 +42,8 @@ class Google extends AbstractMapper
      * @param mixed $rawData raw data
      * @return string
      */
-    protected function _link(mixed $rawData): string
+    protected function link(mixed $rawData): string
     {
-        return Hash::get($rawData, $this->_mapFields['link']) ?: '#';
+        return Hash::get($rawData, $this->mapFields['link']) ?: '#';
     }
 }

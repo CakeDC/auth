@@ -27,7 +27,7 @@ class ConfigProvider extends AbstractProvider
     /**
      * @var array default configuration
      */
-    protected array $_defaultConfig = [
+    protected array $defaultConfig = [
         'autoload_config' => 'permissions',
     ];
 
@@ -45,13 +45,13 @@ class ConfigProvider extends AbstractProvider
                 $permissions = [];
 
                 foreach ($autoload as $configItem) {
-                    $permissions = array_merge($permissions, $this->_loadPermissions($configItem));
+                    $permissions = array_merge($permissions, $this->loadPermissions($configItem));
                 }
 
                 return $permissions;
             }
 
-            return $this->_loadPermissions($autoload);
+            return $this->loadPermissions($autoload);
         }
 
         return $this->defaultPermissions;
@@ -65,7 +65,7 @@ class ConfigProvider extends AbstractProvider
      * @param string $key name of the configuration file to read permissions from
      * @return array permissions
      */
-    protected function _loadPermissions(string $key): array
+    protected function loadPermissions(string $key): array
     {
         $permissions = null;
         try {

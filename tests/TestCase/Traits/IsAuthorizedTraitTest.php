@@ -128,8 +128,7 @@ class IsAuthorizedTraitTest extends TestCase
         $Trait = $this->getMockBuilder(StubAuthorizedController::class)
             ->onlyMethods(['getRequest'])
             ->getMock();
-        $Trait->expects($this->any())
-            ->method('getRequest')
+        $Trait->method('getRequest')
             ->willReturn($request);
 
         $result = $Trait->isAuthorized($url);
@@ -158,8 +157,7 @@ class IsAuthorizedTraitTest extends TestCase
         $Trait = $this->getMockBuilder(StubAuthorizedController::class)
             ->onlyMethods(['getRequest'])
             ->getMock();
-        $Trait->expects($this->any())
-            ->method('getRequest')
+        $Trait->method('getRequest')
             ->willReturn($request);
 
         $this->expectException(RuntimeException::class);

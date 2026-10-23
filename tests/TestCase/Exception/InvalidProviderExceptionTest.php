@@ -18,7 +18,7 @@ use CakeDC\Auth\Exception\InvalidProviderException;
 
 class InvalidProviderExceptionTest extends TestCase
 {
-    protected $_messageTemplate = 'Invalid provider or missing class (%s)';
+    protected $messageTemplate = 'Invalid provider or missing class (%s)';
     protected $code = 500;
 
     /**

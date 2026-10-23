@@ -14,8 +14,9 @@ namespace CakeDC\Auth\Test\TestCase\Authenticator;
 
 use Authentication\Authenticator\FormAuthenticator as CakeFormAuthenticator;
 use Authentication\Authenticator\Result;
-use Authentication\Identifier\AbstractIdentifier;
-use Authentication\Identifier\IdentifierCollection;
+use Authentication\Identifier\IdentifierFactory;
+use Authentication\Identifier\IdentifierInterface;
+use Authentication\Identifier\PasswordIdentifier;
 use Cake\Core\Configure;
 use Cake\Http\ServerRequestFactory;
 use Cake\TestSuite\TestCase;
@@ -31,9 +32,7 @@ class FormAuthenticatorTest extends TestCase
      */
     public function testAuthenticateBaseFailed()
     {
-        $identifiers = new IdentifierCollection([
-            'Authentication.Password',
-        ]);
+        $identifiers = IdentifierFactory::create('Authentication.Password');
 
         $BaseAuthenticator = $this->getMockBuilder(CakeFormAuthenticator::class)
             ->setConstructorArgs([$identifiers])
@@ -58,8 +57,8 @@ class FormAuthenticatorTest extends TestCase
             $identifiers,
             [
                 'fields' => [
-                    AbstractIdentifier::CREDENTIAL_USERNAME => 'email',
-                    AbstractIdentifier::CREDENTIAL_PASSWORD => 'password',
+                    PasswordIdentifier::CREDENTIAL_USERNAME => 'email',
+                    PasswordIdentifier::CREDENTIAL_PASSWORD => 'password',
                 ],
                 'keyCheckEnabledRecaptcha' => 'Users.reCaptcha.login',
             ],
@@ -72,8 +71,8 @@ class FormAuthenticatorTest extends TestCase
                 $this->equalTo($identifiers),
                 $this->equalTo([
                     'fields' => [
-                        AbstractIdentifier::CREDENTIAL_USERNAME => 'email',
-                        AbstractIdentifier::CREDENTIAL_PASSWORD => 'password',
+                        PasswordIdentifier::CREDENTIAL_USERNAME => 'email',
+                        PasswordIdentifier::CREDENTIAL_PASSWORD => 'password',
                     ],
                     'keyCheckEnabledRecaptcha' => 'Users.reCaptcha.login',
                 ]),
@@ -95,9 +94,7 @@ class FormAuthenticatorTest extends TestCase
      */
     public function testAuthenticate()
     {
-        $identifiers = new IdentifierCollection([
-            'Authentication.Password',
-        ]);
+        $identifiers = IdentifierFactory::create('Authentication.Password');
 
         $BaseAuthenticator = $this->getMockBuilder(CakeFormAuthenticator::class)
             ->setConstructorArgs([$identifiers])
@@ -126,8 +123,8 @@ class FormAuthenticatorTest extends TestCase
             $identifiers,
             [
                 'fields' => [
-                    AbstractIdentifier::CREDENTIAL_USERNAME => 'email',
-                    AbstractIdentifier::CREDENTIAL_PASSWORD => 'password',
+                    PasswordIdentifier::CREDENTIAL_USERNAME => 'email',
+                    PasswordIdentifier::CREDENTIAL_PASSWORD => 'password',
                 ],
                 'keyCheckEnabledRecaptcha' => 'Users.reCaptcha.login',
             ],
@@ -140,8 +137,8 @@ class FormAuthenticatorTest extends TestCase
                 $this->equalTo($identifiers),
                 $this->equalTo([
                     'fields' => [
-                        AbstractIdentifier::CREDENTIAL_USERNAME => 'email',
-                        AbstractIdentifier::CREDENTIAL_PASSWORD => 'password',
+                        PasswordIdentifier::CREDENTIAL_USERNAME => 'email',
+                        PasswordIdentifier::CREDENTIAL_PASSWORD => 'password',
                     ],
                     'keyCheckEnabledRecaptcha' => 'Users.reCaptcha.login',
                 ]),
@@ -154,7 +151,7 @@ class FormAuthenticatorTest extends TestCase
             )
             ->willReturn(true);
         $actualIdentifiers = $Authenticator->getIdentifier();
-        $this->assertInstanceOf(IdentifierCollection::class, $actualIdentifiers);
+        $this->assertInstanceOf(IdentifierInterface::class, $actualIdentifiers);
         $result = $Authenticator->authenticate($request);
         $this->assertInstanceOf(Result::class, $result);
         $this->assertEquals(Result::SUCCESS, $result->getStatus());
@@ -168,9 +165,7 @@ class FormAuthenticatorTest extends TestCase
      */
     public function testAuthenticateNotRequiredReCaptcha()
     {
-        $identifiers = new IdentifierCollection([
-            'Authentication.Password',
-        ]);
+        $identifiers = IdentifierFactory::create('Authentication.Password');
 
         $BaseAuthenticator = $this->getMockBuilder(CakeFormAuthenticator::class)
             ->setConstructorArgs([$identifiers])
@@ -199,8 +194,8 @@ class FormAuthenticatorTest extends TestCase
             $identifiers,
             [
                 'fields' => [
-                    AbstractIdentifier::CREDENTIAL_USERNAME => 'email',
-                    AbstractIdentifier::CREDENTIAL_PASSWORD => 'password',
+                    PasswordIdentifier::CREDENTIAL_USERNAME => 'email',
+                    PasswordIdentifier::CREDENTIAL_PASSWORD => 'password',
                 ],
             ],
         ])->onlyMethods(['createBaseAuthenticator', 'validateReCaptcha'])->getMock();
@@ -212,8 +207,8 @@ class FormAuthenticatorTest extends TestCase
                 $this->equalTo($identifiers),
                 $this->equalTo([
                     'fields' => [
-                        AbstractIdentifier::CREDENTIAL_USERNAME => 'email',
-                        AbstractIdentifier::CREDENTIAL_PASSWORD => 'password',
+                        PasswordIdentifier::CREDENTIAL_USERNAME => 'email',
+                        PasswordIdentifier::CREDENTIAL_PASSWORD => 'password',
                     ],
                     'keyCheckEnabledRecaptcha' => 'Users.reCaptcha.login',
                 ]),
@@ -235,9 +230,7 @@ class FormAuthenticatorTest extends TestCase
      */
     public function testAuthenticateInvalidRecaptcha()
     {
-        $identifiers = new IdentifierCollection([
-            'Authentication.Password',
-        ]);
+        $identifiers = IdentifierFactory::create('Authentication.Password');
 
         $BaseAuthenticator = $this->getMockBuilder(CakeFormAuthenticator::class)
             ->setConstructorArgs([$identifiers])
@@ -266,8 +259,8 @@ class FormAuthenticatorTest extends TestCase
             $identifiers,
             [
                 'fields' => [
-                    AbstractIdentifier::CREDENTIAL_USERNAME => 'email',
-                    AbstractIdentifier::CREDENTIAL_PASSWORD => 'password',
+                    PasswordIdentifier::CREDENTIAL_USERNAME => 'email',
+                    PasswordIdentifier::CREDENTIAL_PASSWORD => 'password',
                 ],
             ],
         ])->onlyMethods(['createBaseAuthenticator', 'validateReCaptcha'])->getMock();
@@ -279,8 +272,8 @@ class FormAuthenticatorTest extends TestCase
                 $this->equalTo($identifiers),
                 $this->equalTo([
                     'fields' => [
-                        AbstractIdentifier::CREDENTIAL_USERNAME => 'email',
-                        AbstractIdentifier::CREDENTIAL_PASSWORD => 'password',
+                        PasswordIdentifier::CREDENTIAL_USERNAME => 'email',
+                        PasswordIdentifier::CREDENTIAL_PASSWORD => 'password',
                     ],
                     'keyCheckEnabledRecaptcha' => 'Users.reCaptcha.login',
                 ]),
@@ -306,16 +299,14 @@ class FormAuthenticatorTest extends TestCase
      */
     public function testGetBaseAuthenticator()
     {
-        $identifiers = new IdentifierCollection([
-            'Authentication.Password',
-        ]);
+        $identifiers = IdentifierFactory::create('Authentication.Password');
 
         $Authenticator = new FormAuthenticator(
             $identifiers,
             [
                 'fields' => [
-                    AbstractIdentifier::CREDENTIAL_USERNAME => 'email',
-                    AbstractIdentifier::CREDENTIAL_PASSWORD => 'password',
+                    PasswordIdentifier::CREDENTIAL_USERNAME => 'email',
+                    PasswordIdentifier::CREDENTIAL_PASSWORD => 'password',
                 ],
                 'keyCheckEnabledRecaptcha' => 'Users.reCaptcha.login',
             ],
@@ -325,11 +316,11 @@ class FormAuthenticatorTest extends TestCase
         $this->assertNotInstanceOf(FormAuthenticator::class, $actual);
         $expected = [
             'fields' => [
-                AbstractIdentifier::CREDENTIAL_USERNAME => 'email',
-                AbstractIdentifier::CREDENTIAL_PASSWORD => 'password',
+                PasswordIdentifier::CREDENTIAL_USERNAME => 'email',
+                PasswordIdentifier::CREDENTIAL_PASSWORD => 'password',
             ],
             'loginUrl' => null,
-            'urlChecker' => 'Authentication.Default',
+            'urlChecker' => null,
         ];
         $this->assertEquals($expected, $actual->getConfig());
     }
@@ -341,16 +332,14 @@ class FormAuthenticatorTest extends TestCase
      */
     public function testGetBaseAuthenticatorCustom()
     {
-        $identifiers = new IdentifierCollection([
-            'Authentication.Password',
-        ]);
+        $identifiers = IdentifierFactory::create('Authentication.Password');
 
         $Authenticator = new FormAuthenticator(
             $identifiers,
             [
                 'fields' => [
-                    AbstractIdentifier::CREDENTIAL_USERNAME => 'email',
-                    AbstractIdentifier::CREDENTIAL_PASSWORD => 'password',
+                    PasswordIdentifier::CREDENTIAL_USERNAME => 'email',
+                    PasswordIdentifier::CREDENTIAL_PASSWORD => 'password',
                 ],
                 'keyCheckEnabledRecaptcha' => 'Users.reCaptcha.login',
                 'baseClassName' => CakeFormAuthenticator::class,
@@ -361,11 +350,11 @@ class FormAuthenticatorTest extends TestCase
         $this->assertNotInstanceOf(FormAuthenticator::class, $actual);
         $expected = [
             'fields' => [
-                AbstractIdentifier::CREDENTIAL_USERNAME => 'email',
-                AbstractIdentifier::CREDENTIAL_PASSWORD => 'password',
+                PasswordIdentifier::CREDENTIAL_USERNAME => 'email',
+                PasswordIdentifier::CREDENTIAL_PASSWORD => 'password',
             ],
             'loginUrl' => null,
-            'urlChecker' => 'Authentication.Default',
+            'urlChecker' => null,
         ];
         $this->assertEquals($expected, $actual->getConfig());
     }
@@ -377,16 +366,14 @@ class FormAuthenticatorTest extends TestCase
      */
     public function testGetBaseAuthenticatorError()
     {
-        $identifiers = new IdentifierCollection([
-            'Authentication.Password',
-        ]);
+        $identifiers = IdentifierFactory::create('Authentication.Password');
 
         $Authenticator = new FormAuthenticator(
             $identifiers,
             [
                 'fields' => [
-                    AbstractIdentifier::CREDENTIAL_USERNAME => 'email',
-                    AbstractIdentifier::CREDENTIAL_PASSWORD => 'password',
+                    PasswordIdentifier::CREDENTIAL_USERNAME => 'email',
+                    PasswordIdentifier::CREDENTIAL_PASSWORD => 'password',
                 ],
                 'keyCheckEnabledRecaptcha' => 'Users.reCaptcha.login',
                 'baseClassName' => 'NotExistingAuthenticator',

@@ -26,7 +26,7 @@ class User extends Entity
      *
      * @var array
      */
-    protected array $_accessible = [
+    protected array $patchable = [
         '*' => true,
         'id' => false,
         'is_superuser' => false,
@@ -38,7 +38,7 @@ class User extends Entity
      *
      * @var array
      */
-    protected array $_hidden = [
+    protected array $hidden = [
         'password',
         'token',
         'token_expires',

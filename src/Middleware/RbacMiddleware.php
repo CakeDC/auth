@@ -96,7 +96,7 @@ class RbacMiddleware implements MiddlewareInterface
      *
      * @var array
      */
-    protected array $_defaultConfig = [
+    protected array $defaultConfig = [
         /*
          * Manage what to do if the request is not authorized,
          * throw - throw a ForbiddenException

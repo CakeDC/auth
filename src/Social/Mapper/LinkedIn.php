@@ -20,7 +20,7 @@ class LinkedIn extends AbstractMapper
      *
      * @var array
      */
-    protected array $_mapFields = [
+    protected array $mapFields = [
         'avatar' => 'pictureUrl',
         'first_name' => 'firstName',
         'last_name' => 'lastName',

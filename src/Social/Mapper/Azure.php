@@ -20,7 +20,7 @@ class Azure extends AbstractMapper
      *
      * @var array
      */
-    protected array $_mapFields = [
+    protected array $mapFields = [
         'id' => 'sub',
         'full_name' => 'name',
         'username' => 'unique_name',
@@ -33,7 +33,7 @@ class Azure extends AbstractMapper
      * @param mixed $rawData raw data
      * @return string
      */
-    protected function _link(mixed $rawData): string
+    protected function link(mixed $rawData): string
     {
         return '#';
     }

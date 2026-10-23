@@ -38,7 +38,7 @@ trait BaseTestTrait
     /**
      * @return bool
      */
-    protected function _isVerboseOrDebug(): bool
+    protected function isVerboseOrDebug(): bool
     {
         return !empty(array_intersect(['--debug', '--verbose', '-v'], $_SERVER['argv']));
     }
@@ -54,9 +54,9 @@ trait BaseTestTrait
      * @param string $responseContains Text the response should contains.
      * @throws \PHPUnit\Exception
      */
-    protected function _testPermissions(string $url, string $username, string $method, string $ajax, string $responseCode, string $responseContains): void
+    protected function testPermissions(string $url, string $username, string $method, string $ajax, string $responseCode, string $responseContains): void
     {
-        if ($this->_isVerboseOrDebug()) {
+        if ($this->isVerboseOrDebug()) {
             (new ConsoleIo())->info(__(
                 "\nUrl: {0} Username: {1} Method: {2} Ajax?: {3} Response Code: {4} Response Contains: {5} ",
                 $url,
@@ -87,7 +87,7 @@ trait BaseTestTrait
         if ($responseContains) {
             $this->assertResponseContains($responseContains);
         } else {
-            $this->assertEmpty((string)$this->_response->getBody());
+            $this->assertEmpty((string)$this->response->getBody());
         }
     }
 
@@ -108,7 +108,7 @@ trait BaseTestTrait
             }
             [$url, $username, $method, $ajax, $responseCode, $responseContains] = array_pad($row, 6, null);
             $this->setUp();
-            $this->_testPermissions($url, $username, $method, $ajax, $responseCode, $responseContains);
+            $this->testPermissions($url, $username, $method, $ajax, $responseCode, $responseContains);
             $this->tearDown();
         }
     }

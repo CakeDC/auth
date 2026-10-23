@@ -33,7 +33,7 @@ class SuperuserPolicy implements PolicyInterface
      *
      * @var array
      */
-    protected array $_defaultConfig = [
+    protected array $defaultConfig = [
         //superuser field in the Users table
         'superuser_field' => 'is_superuser',
     ];
@@ -57,7 +57,7 @@ class SuperuserPolicy implements PolicyInterface
      */
     public function canAccess(?IdentityInterface $identity, ServerRequestInterface $resource): bool
     {
-        $user = $identity !== null ? $identity->getOriginalData() : [];
+        $user = $identity?->getOriginalData() ?? [];
         $superuserField = $this->getConfig('superuser_field');
 
         $isSuperUser = $user[$superuserField] ?? false;

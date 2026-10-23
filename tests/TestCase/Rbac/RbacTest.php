@@ -179,7 +179,7 @@ class RbacTest extends TestCase
     public function testAuthorize($permissions, $user, $requestParams, $expected)
     {
         $this->rbac = new Rbac(['permissions' => $permissions]);
-        $request = $this->_requestFromArray($requestParams);
+        $request = $this->requestFromArray($requestParams);
 
         $result = $this->rbac->checkPermissions($user, $request);
         $this->assertSame($expected, $result);
@@ -187,12 +187,11 @@ class RbacTest extends TestCase
 
     public static function providerAuthorize()
     {
-        $testCase = new static(RbacTest::class);
+        $testCase = new self('testAuthorize');
         $trueRuleMock = $testCase->getMockBuilder(Owner::class)
             ->onlyMethods(['allowed'])
             ->getMock();
-        $trueRuleMock->expects($testCase->any())
-            ->method('allowed')
+        $trueRuleMock->method('allowed')
             ->willReturn(true);
 
         return [
@@ -1217,7 +1216,7 @@ class RbacTest extends TestCase
 
         $rbac->setConfig('log', true);
         $rbac->setPermissions($permissions);
-        $request = $this->_requestFromArray($requestParams);
+        $request = $this->requestFromArray($requestParams);
 
         $rbac->checkPermissions($user, $request);
     }
@@ -1354,7 +1353,7 @@ class RbacTest extends TestCase
      * @param array $params
      * @return ServerRequest
      */
-    protected function _requestFromArray($params)
+    protected function requestFromArray($params)
     {
         $request = new ServerRequest();
 

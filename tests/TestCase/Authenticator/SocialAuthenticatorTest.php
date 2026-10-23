@@ -13,7 +13,7 @@ declare(strict_types=1);
 namespace CakeDC\Auth\Test\TestCase\Authenticator;
 
 use Authentication\Authenticator\Result;
-use Authentication\Identifier\IdentifierCollection;
+use Authentication\Identifier\IdentifierFactory;
 use Cake\Core\Configure;
 use Cake\Http\ServerRequestFactory;
 use Cake\ORM\Entity;
@@ -127,9 +127,7 @@ class SocialAuthenticatorTest extends TestCase
         ]);
         $this->Request->getSession()->write('oauth2state', '__TEST_STATE__');
 
-        $identifiers = new IdentifierCollection([
-            'CakeDC/Auth.Social',
-        ]);
+        $identifiers = IdentifierFactory::create('CakeDC/Auth.Social');
         $Authenticator = new SocialAuthenticator($identifiers);
         $result = $Authenticator->authenticate($this->Request);
         $this->assertInstanceOf(Result::class, $result);
@@ -203,16 +201,14 @@ class SocialAuthenticatorTest extends TestCase
         $this->Provider->expects($this->never())
             ->method('getState');
 
-        $this->Provider->expects($this->any())
-            ->method('getAccessToken')
+        $this->Provider->expects($this->atLeastOnce())->method('getAccessToken')
             ->with(
                 $this->equalTo('authorization_code'),
                 $this->equalTo(['code' => 'ZPO9972j3092304230']),
             )
             ->willReturn($Token);
 
-        $this->Provider->expects($this->any())
-            ->method('getResourceOwner')
+        $this->Provider->expects($this->atLeastOnce())->method('getResourceOwner')
             ->with(
                 $this->equalTo($Token),
             )
@@ -220,9 +216,7 @@ class SocialAuthenticatorTest extends TestCase
 
         $service = (new ServiceFactory())->createFromProvider('facebook');
         $this->Request = $this->Request->withAttribute('socialService', $service);
-        $identifiers = new IdentifierCollection([
-            'CakeDC/Auth.Social',
-        ]);
+        $identifiers = IdentifierFactory::create('CakeDC/Auth.Social');
         $Authenticator = new SocialAuthenticator($identifiers);
 
         $result = $Authenticator->authenticate($this->Request);
@@ -266,16 +260,14 @@ class SocialAuthenticatorTest extends TestCase
         $this->Provider->expects($this->never())
             ->method('getState');
 
-        $this->Provider->expects($this->any())
-            ->method('getAccessToken')
+        $this->Provider->expects($this->atLeastOnce())->method('getAccessToken')
             ->with(
                 $this->equalTo('authorization_code'),
                 $this->equalTo(['code' => 'ZPO9972j3092304230']),
             )
             ->willReturn($Token);
 
-        $this->Provider->expects($this->any())
-            ->method('getResourceOwner')
+        $this->Provider->expects($this->atLeastOnce())->method('getResourceOwner')
             ->with(
                 $this->equalTo($Token),
             )
@@ -283,9 +275,7 @@ class SocialAuthenticatorTest extends TestCase
 
         $service = (new ServiceFactory())->createFromProvider('facebook');
         $this->Request = $this->Request->withAttribute('socialService', $service);
-        $identifiers = new IdentifierCollection([
-            'CakeDC/Auth.Social',
-        ]);
+        $identifiers = IdentifierFactory::create('CakeDC/Auth.Social');
         $Authenticator = new SocialAuthenticator($identifiers);
         $result = $Authenticator->authenticate($this->Request);
         $this->assertInstanceOf(Result::class, $result);
@@ -326,16 +316,14 @@ class SocialAuthenticatorTest extends TestCase
         $this->Provider->expects($this->never())
             ->method('getState');
 
-        $this->Provider->expects($this->any())
-            ->method('getAccessToken')
+        $this->Provider->expects($this->atLeastOnce())->method('getAccessToken')
             ->with(
                 $this->equalTo('authorization_code'),
                 $this->equalTo(['code' => 'ZPO9972j3092304230']),
             )
             ->willReturn($Token);
 
-        $this->Provider->expects($this->any())
-            ->method('getResourceOwner')
+        $this->Provider->expects($this->atLeastOnce())->method('getResourceOwner')
             ->with(
                 $this->equalTo($Token),
             )
@@ -345,9 +333,7 @@ class SocialAuthenticatorTest extends TestCase
 
         $service = (new ServiceFactory())->createFromProvider('facebook');
         $this->Request = $this->Request->withAttribute('socialService', $service);
-        $identifiers = new IdentifierCollection([
-            'CakeDC/Auth.Social',
-        ]);
+        $identifiers = IdentifierFactory::create('CakeDC/Auth.Social');
         $Authenticator = new SocialAuthenticator($identifiers);
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Invalid argument at getResourceOwner');
@@ -418,16 +404,14 @@ class SocialAuthenticatorTest extends TestCase
         $this->Provider->expects($this->never())
             ->method('getState');
 
-        $this->Provider->expects($this->any())
-            ->method('getAccessToken')
+        $this->Provider->expects($this->atLeastOnce())->method('getAccessToken')
             ->with(
                 $this->equalTo('authorization_code'),
                 $this->equalTo(['code' => 'ZPO9972j3092304230']),
             )
             ->willReturn($Token);
 
-        $this->Provider->expects($this->any())
-            ->method('getResourceOwner')
+        $this->Provider->expects($this->atLeastOnce())->method('getResourceOwner')
             ->with(
                 $this->equalTo($Token),
             )
@@ -435,7 +419,7 @@ class SocialAuthenticatorTest extends TestCase
 
         $service = (new ServiceFactory())->createFromProvider('facebook');
         $this->Request = $this->Request->withAttribute('socialService', $service);
-        $identifiers = new IdentifierCollection([]);
+        $identifiers = IdentifierFactory::create('Authentication.Password');
         $Authenticator = new SocialAuthenticator($identifiers);
         $Authenticator->authenticate($this->Request);
         $result = $Authenticator->authenticate($this->Request);

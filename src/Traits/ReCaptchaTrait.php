@@ -53,7 +53,7 @@ trait ReCaptchaTrait
      */
     public function validateReCaptcha(string $recaptchaResponse, string $clientIp): bool
     {
-        $recaptcha = $this->_getReCaptchaInstance();
+        $recaptcha = $this->getReCaptchaInstance();
         if (!empty($recaptcha)) {
             $response = $recaptcha->verify($recaptchaResponse, $clientIp);
 
@@ -68,7 +68,7 @@ trait ReCaptchaTrait
      *
      * @return \ReCaptcha\ReCaptcha|null
      */
-    protected function _getReCaptchaInstance(): ?ReCaptcha
+    protected function getReCaptchaInstance(): ?ReCaptcha
     {
         $reCaptchaSecret = Configure::read('Users.reCaptcha.secret');
         if (!empty($reCaptchaSecret)) {

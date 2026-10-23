@@ -13,7 +13,7 @@ declare(strict_types=1);
 namespace CakeDC\Auth\Test\TestCase\Authenticator;
 
 use ArrayObject;
-use Authentication\Identifier\IdentifierCollection;
+use Authentication\Identifier\IdentifierFactory;
 use Cake\Http\Response;
 use Cake\Http\ServerRequest;
 use Cake\TestSuite\TestCase;
@@ -57,9 +57,7 @@ class CookieAuthenticatorTest extends TestCase
     #[DataProvider('dataProviderPersistIdentity')]
     public function testPersistIdentity($setCookie, $field, array $post, array $session)
     {
-        $identifiers = new IdentifierCollection([
-            'Authentication.Password',
-        ]);
+        $identifiers = IdentifierFactory::create('Authentication.Password');
         $uri = new Uri('/login');
         $request = new ServerRequest();
         $request = $request->withUri($uri);

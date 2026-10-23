@@ -44,7 +44,7 @@ class TwoFactorProcessorCollection implements IteratorAggregate, Countable
      *
      * @return $this
      */
-    public function clear()
+    public function clear(): static
     {
         $this->processors = [];
 
@@ -57,7 +57,7 @@ class TwoFactorProcessorCollection implements IteratorAggregate, Countable
      * @param array<\CakeDC\Auth\Authentication\TwoFactorProcessorInterface|string> $processors The list of processors to add to the collection.
      * @return $this
      */
-    public function addMany(array $processors)
+    public function addMany(array $processors): static
     {
         foreach ($processors as $processor) {
             if (is_string($processor) && is_subclass_of($processor, TwoFactorProcessorInterface::class)) {
@@ -78,7 +78,7 @@ class TwoFactorProcessorCollection implements IteratorAggregate, Countable
      * @return $this
      * @throws \InvalidArgumentException
      */
-    public function add(TwoFactorProcessorInterface $processor)
+    public function add(TwoFactorProcessorInterface $processor): static
     {
         $this->processors[] = $processor;
 

@@ -90,11 +90,11 @@ return static function (RouteBuilder $routes) {
         ]);
     });
 
-    $routes->scope('/admin', ['prefix' => 'admin'], function (RouteBuilder $routes) {
+    $routes->scope('/admin', function (RouteBuilder $routes) {
         $routes->setExtensions(['other', 'csv']);
         $routes->connect('/tests/one', [
         'controller' => 'Tests',
         'action' => 'one',
         ]);
-    });
+    }, ['prefix' => 'admin']);
 };

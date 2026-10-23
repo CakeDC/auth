@@ -17,7 +17,7 @@ use Cake\Core\Exception\CakeException;
 
 class InvalidProviderException extends CakeException
 {
-    protected string $_messageTemplate = 'Invalid provider or missing class (%s)';
+    protected string $messageTemplate = 'Invalid provider or missing class (%s)';
 
     /**
      * @phpcsSuppress SlevomatCodingStandard.TypeHints.PropertyTypeHint.MissingNativeTypeHint

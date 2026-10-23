@@ -27,21 +27,21 @@ abstract class AbstractMapper
      *
      * @var array
      */
-    protected array $_rawData = [];
+    protected array $rawData = [];
 
     /**
      * Map for provider fields
      *
      * @var array
      */
-    protected array $_mapFields = [];
+    protected array $mapFields = [];
 
     /**
      * Default Map for provider fields
      *
      * @var array
      */
-    protected array $_defaultMapFields = [
+    protected array $defaultMapFields = [
         'id' => 'id',
         'username' => 'username',
         'full_name' => 'name',
@@ -64,9 +64,9 @@ abstract class AbstractMapper
     public function __construct(mixed $mapFields = null)
     {
         if (!is_null($mapFields)) {
-            $this->_mapFields = $mapFields;
+            $this->mapFields = $mapFields;
         }
-        $this->_mapFields = array_merge($this->_defaultMapFields, $this->_mapFields);
+        $this->mapFields = array_merge($this->defaultMapFields, $this->mapFields);
     }
 
     /**
@@ -77,7 +77,7 @@ abstract class AbstractMapper
      */
     public function __invoke(mixed $rawData): mixed
     {
-        return $this->_map($rawData);
+        return $this->map($rawData);
     }
 
     /**
@@ -86,9 +86,9 @@ abstract class AbstractMapper
      * @param mixed $rawData raw data
      * @return bool
      */
-    protected function _validated(mixed $rawData): bool
+    protected function validated(mixed $rawData): bool
     {
-        $email = Hash::get($rawData, $this->_mapFields['email']);
+        $email = Hash::get($rawData, $this->mapFields['email']);
 
         return !empty($email);
     }
@@ -99,12 +99,12 @@ abstract class AbstractMapper
      * @param mixed $rawData raw data
      * @return mixed
      */
-    protected function _map(mixed $rawData): mixed
+    protected function map(mixed $rawData): mixed
     {
         $result = [];
-        collection($this->_mapFields)->each(function (string $mappedField, string $field) use (&$result, $rawData): void {
+        collection($this->mapFields)->each(function (string $mappedField, string $field) use (&$result, $rawData): void {
             $value = Hash::get($rawData, $mappedField);
-            $function = '_' . Inflector::camelize($field);
+            $function = lcfirst(Inflector::camelize($field));
             if (method_exists($this, $function)) {
                 $value = $this->{$function}($rawData);
             }

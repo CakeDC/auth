@@ -35,10 +35,10 @@ trait IsAuthorizedTrait
         }
 
         if (is_array($url)) {
-            return $this->_checkCanAccess(Router::normalize(Router::reverse($url)), $action);
+            return $this->checkCanAccess(Router::normalize(Router::reverse($url)), $action);
         }
 
-        return $this->_checkCanAccess($url, $action);
+        return $this->checkCanAccess($url, $action);
     }
 
     /**
@@ -48,7 +48,7 @@ trait IsAuthorizedTrait
      * @param string $action Authorization action.
      * @return bool
      */
-    protected function _checkCanAccess(string $url, string $action): bool
+    protected function checkCanAccess(string $url, string $action): bool
     {
         /**
          * @var \Cake\Http\ServerRequest $request
@@ -59,7 +59,7 @@ trait IsAuthorizedTrait
             throw new RuntimeException(__('Could not find the authorization service in the request.'));
         }
         $identity = $request->getAttribute('identity');
-        $targetRequest = $this->_createUrlRequestToCheck($url);
+        $targetRequest = $this->createUrlRequestToCheck($url);
 
         return $service->can($identity, $action, $targetRequest);
     }
@@ -70,7 +70,7 @@ trait IsAuthorizedTrait
      * @param string $url The target url.
      * @return \Cake\Http\ServerRequest
      */
-    protected function _createUrlRequestToCheck(string $url): ServerRequest
+    protected function createUrlRequestToCheck(string $url): ServerRequest
     {
         $uri = new Uri($url);
         $targetRequest = new ServerRequest([

@@ -84,8 +84,7 @@ class TwoFactorMiddlewareTest extends TestCase
             ],
         ])->onlyMethods(['getResult'])->getMock();
         $result = new Result(['id' => 10, 'username' => 'johndoe'], Result::SUCCESS);
-        $service->expects($this->any())
-            ->method('getResult')
+        $service->method('getResult')
             ->willReturn($result);
 
         $request = $request->withAttribute('authentication', $service);
@@ -132,8 +131,7 @@ class TwoFactorMiddlewareTest extends TestCase
             ],
         ])->onlyMethods(['getResult'])->getMock();
         $result = new Result(null, AuthenticationService::NEED_TWO_FACTOR_VERIFY);
-        $service->expects($this->any())
-            ->method('getResult')
+        $service->method('getResult')
             ->willReturn($result);
 
         $request = $request->withAttribute('authentication', $service);

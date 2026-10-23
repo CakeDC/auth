@@ -24,12 +24,12 @@ class PermissionMatchResult
     /**
      * @var bool
      */
-    protected bool $_allowed;
+    protected bool $allowed;
 
     /**
      * @var string
      */
-    protected string $_reason;
+    protected string $reason;
 
     /**
      * PermissionMatchResult constructor.
@@ -39,16 +39,16 @@ class PermissionMatchResult
      */
     public function __construct(bool $allowed = false, string $reason = '')
     {
-        $this->_allowed = $allowed;
-        $this->_reason = $reason;
+        $this->allowed = $allowed;
+        $this->reason = $reason;
     }
 
     /**
      * @param bool $allowed allowed value
      */
-    public function setAllowed(bool $allowed): PermissionMatchResult
+    public function setAllowed(bool $allowed): self
     {
-        $this->_allowed = $allowed;
+        $this->allowed = $allowed;
 
         return $this;
     }
@@ -58,15 +58,15 @@ class PermissionMatchResult
      */
     public function isAllowed(): bool
     {
-        return $this->_allowed;
+        return $this->allowed;
     }
 
     /**
      * @param string $reason reason
      */
-    public function setReason(string $reason): PermissionMatchResult
+    public function setReason(string $reason): self
     {
-        $this->_reason = $reason;
+        $this->reason = $reason;
 
         return $this;
     }
@@ -76,6 +76,6 @@ class PermissionMatchResult
      */
     public function getReason(): string
     {
-        return $this->_reason;
+        return $this->reason;
     }
 }

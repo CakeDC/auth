@@ -49,9 +49,9 @@ class AuthenticationService extends BaseService
     protected function proceed2FA(TwoFactorProcessorInterface $processor, ServerRequestInterface $request, ResultInterface $result): ResultInterface
     {
         $result = $processor->proceed($request, $result);
-        $this->_successfulAuthenticator = null;
+        $this->successfulAuthenticator = null;
 
-        return $this->_result = $result;
+        return $this->result = $result;
     }
 
     /**
@@ -83,10 +83,10 @@ class AuthenticationService extends BaseService
                         return $this->proceed2FA($processor, $request, $result);
                     }
                 }
-                $this->_successfulAuthenticator = $authenticator;
-                $this->_result = $result;
+                $this->successfulAuthenticator = $authenticator;
+                $this->result = $result;
 
-                return $this->_result = $result;
+                return $this->result = $result;
             } else {
                 $this->failures[] = new Failure($authenticator, $result);
             }
@@ -100,9 +100,9 @@ class AuthenticationService extends BaseService
             $result = new Result(null, ResultInterface::FAILURE_OTHER);
         }
 
-        $this->_successfulAuthenticator = null;
+        $this->successfulAuthenticator = null;
 
-        return $this->_result = $result;
+        return $this->result = $result;
     }
 
     /**

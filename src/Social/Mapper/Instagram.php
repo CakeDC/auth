@@ -30,7 +30,7 @@ class Instagram extends AbstractMapper
      *
      * @var array
      */
-    protected array $_mapFields = [
+    protected array $mapFields = [
         'full_name' => 'full_name',
         'avatar' => 'profile_picture',
     ];
@@ -41,8 +41,8 @@ class Instagram extends AbstractMapper
      * @param mixed $rawData raw data
      * @return string
      */
-    protected function _link(mixed $rawData): string
+    protected function link(mixed $rawData): string
     {
-        return self::INSTAGRAM_BASE_URL . Hash::get($rawData, $this->_mapFields['username']);
+        return self::INSTAGRAM_BASE_URL . Hash::get($rawData, $this->mapFields['username']);
     }
 }

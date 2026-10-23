@@ -20,7 +20,7 @@ class Pinterest extends AbstractMapper
      *
      * @var array
      */
-    protected array $_mapFields = [
+    protected array $mapFields = [
         'avatar' => 'image.60x60.url',
         'link' => 'url',
     ];

@@ -13,7 +13,7 @@ declare(strict_types=1);
 namespace CakeDC\Auth\Test\TestCase\Authentication;
 
 use Authentication\Authenticator\Result;
-use Authentication\Identifier\IdentifierCollection;
+use Authentication\Identifier\IdentifierFactory;
 use Cake\TestSuite\TestCase;
 use CakeDC\Auth\Authentication\Failure;
 use CakeDC\Auth\Authenticator\FormAuthenticator;
@@ -27,7 +27,7 @@ class FailureTest extends TestCase
      */
     public function testGetters()
     {
-        $authenticator = new FormAuthenticator(new IdentifierCollection([]));
+        $authenticator = new FormAuthenticator(IdentifierFactory::create('Authentication.Password'));
         $result = new Result(
             ['id' => '10', 'username' => 'johndoe'],
             Result::SUCCESS,

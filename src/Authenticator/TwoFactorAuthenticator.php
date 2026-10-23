@@ -36,9 +36,9 @@ class TwoFactorAuthenticator extends AbstractAuthenticator
      * - `loginUrl` Login URL or an array of URLs.
      * - `urlChecker` Url checker config.
      *
-     * @var array
+     * @var array<string, mixed>
      */
-    protected array $_defaultConfig = [
+    protected array $defaultConfig = [
         'loginUrl' => null,
         'urlChecker' => 'Authentication.Default',
     ];
@@ -49,7 +49,7 @@ class TwoFactorAuthenticator extends AbstractAuthenticator
      * @param \Psr\Http\Message\ServerRequestInterface $request The request that contains login information.
      * @return \Authentication\Authenticator\ResultInterface
      */
-    protected function _buildLoginUrlErrorResult(ServerRequestInterface $request): ResultInterface
+    protected function buildLoginUrlErrorResult(ServerRequestInterface $request): ResultInterface
     {
         $errors = [
             sprintf(
@@ -72,8 +72,8 @@ class TwoFactorAuthenticator extends AbstractAuthenticator
      */
     public function authenticate(ServerRequestInterface $request): ResultInterface
     {
-        if (!$this->_checkUrl($request)) {
-            return $this->_buildLoginUrlErrorResult($request);
+        if (!$this->checkUrl($request)) {
+            return $this->buildLoginUrlErrorResult($request);
         }
         /**
          * @var \Cake\Http\Session $session

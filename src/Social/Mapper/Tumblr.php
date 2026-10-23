@@ -23,7 +23,7 @@ class Tumblr extends AbstractMapper
      *
      * @var array
      */
-    protected array $_mapFields = [
+    protected array $mapFields = [
         'id' => 'uid',
         'username' => 'nickname',
         'full_name' => 'name',
@@ -42,7 +42,7 @@ class Tumblr extends AbstractMapper
      * @param mixed $rawData raw data
      * @return string
      */
-    protected function _id(mixed $rawData): string
+    protected function id(mixed $rawData): string
     {
         return (string)crc32($rawData['nickname']);
     }

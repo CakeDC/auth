@@ -13,7 +13,7 @@ declare(strict_types=1);
 namespace CakeDC\Auth\Test\TestCase\Authenticator;
 
 use Authentication\Authenticator\Result;
-use Authentication\Identifier\IdentifierCollection;
+use Authentication\Identifier\IdentifierFactory;
 use Cake\Http\ServerRequest;
 use Cake\ORM\Entity;
 use Cake\TestSuite\TestCase;
@@ -32,9 +32,7 @@ class TwoFactorAuthenticatorTest extends TestCase
         $uri = new Uri('/testpath');
         $request = new ServerRequest();
         $request = $request->withUri($uri);
-        $identifiers = new IdentifierCollection([
-            'Authentication.Password',
-        ]);
+        $identifiers = IdentifierFactory::create('Authentication.Password');
 
         $Authenticator = new TwoFactorAuthenticator($identifiers, [
             'loginUrl' => '/testpath',
@@ -63,9 +61,7 @@ class TwoFactorAuthenticatorTest extends TestCase
                 'role' => 'user',
             ]),
         );
-        $identifiers = new IdentifierCollection([
-            'Authentication.Password',
-        ]);
+        $identifiers = IdentifierFactory::create('Authentication.Password');
         $Authenticator = new TwoFactorAuthenticator($identifiers, [
             'loginUrl' => '/testpathnotsame',
         ]);
@@ -93,9 +89,7 @@ class TwoFactorAuthenticatorTest extends TestCase
                 'role' => 'user',
             ]),
         );
-        $identifiers = new IdentifierCollection([
-            'Authentication.Password',
-        ]);
+        $identifiers = IdentifierFactory::create('Authentication.Password');
         $Authenticator = new TwoFactorAuthenticator($identifiers, [
             'loginUrl' => '/testpath',
         ]);

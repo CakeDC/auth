@@ -24,7 +24,7 @@ abstract class OAuthServiceAbstract implements ServiceInterface
      *
      * @var array
      */
-    protected array $_defaultConfig = [];
+    protected array $defaultConfig = [];
 
     /**
      * The provider name.
