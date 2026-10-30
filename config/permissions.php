@@ -107,7 +107,7 @@ $permissions = [
         'action' => 'resetOneTimePasswordAuthenticator',
         'allowed' => [
             'className' => \CakeDC\Auth\Rbac\Rules\OTPRule::class,
-            'option' => []
+            'options' => [],
         ],
     ],
     //all roles allowed to Pages/display

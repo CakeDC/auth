@@ -93,6 +93,18 @@ For example, the above ownership callback is included in CakeDC\Users as `Owner`
 ```
 Check the [Owner Rule](OwnerRule.md) documentation for more details
 
+You can also define a rule as an array with the rule class name and its options. The rule is
+created with the RuleRegistry. Unlike a closure, this permission can be serialized:
+
+```php
+'allowed' => [
+    'className' => \CakeDC\Auth\Rbac\Rules\OTPRule::class,
+    'options' => [],
+],
+```
+
+The array is used as a rule only when `className` is a class implementing `\CakeDC\Auth\Rbac\Rules\Rule`.
+
 ## Creating rule classes
 
 The only requirement is to implement `\CakeDC\Auth\Rbac\Rules\Rule` interface which has one method:

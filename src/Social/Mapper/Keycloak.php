@@ -2,19 +2,27 @@
 declare(strict_types=1);
 
 /**
- * Copyright 2010 - 2019, Cake Development Corporation (https://www.cakedc.com)
+ * Copyright 2010 - 2026, Cake Development Corporation (https://www.cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2010 - 2019, Cake Development Corporation (https://www.cakedc.com)
+ * @copyright Copyright 2010 - 2026, Cake Development Corporation (https://www.cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
-
 namespace CakeDC\Auth\Social\Mapper;
-use Cake\Core\Configure;
 
+use Cake\Core\Configure;
+use Cake\Utility\Hash;
+use UnexpectedValueException;
+
+/**
+ * Keycloak Mapper
+ *
+ * The `roles` field holds the application role mapped from the Keycloak realm roles,
+ * using the `rolesMap` provider config (`OAuth.providers.keycloak.rolesMap`).
+ */
 class Keycloak extends AbstractMapper
 {
     /**
@@ -25,67 +33,83 @@ class Keycloak extends AbstractMapper
     protected array $_mapFields = [
         'first_name' => 'given_name',
         'last_name' => 'family_name',
+        'full_name' => 'name',
         'email' => 'email',
         'username' => 'preferred_username',
         'id' => 'sub',
         'link' => 'website',
-        'roles' => 'realm_access',
-        'validated' => 'email_verified'
+        'roles' => 'realm_access.roles',
+        'validated' => 'email_verified',
     ];
-    
+
     /**
-     * Map Keycloak roles to CakeDC roles
+     * Map Keycloak realm roles to application roles. The first matching entry wins.
      *
-     * @var array
+     * @var array<string, string>
      */
     protected array $_rolesMap = [
         'CakeDc-Admin' => 'admin',
         'CakeDc-User' => 'user',
-        'CakeDc-Worker' => 'user'
+        'CakeDc-Worker' => 'user',
     ];
-    
+
     /**
      * Constructor
+     *
+     * @param mixed $mapFields map fields, defaults to `OAuth.providers.keycloak.mapFields`
+     * @param array<string, string>|null $rolesMap roles map, defaults to `OAuth.providers.keycloak.rolesMap`
      */
-    public function __construct()
+    public function __construct(mixed $mapFields = null, ?array $rolesMap = null)
     {
-        $configRoleMap = Configure::read('OAuth.providers.keycloak.rolesMap');
-        $configMapFields = Configure::read('OAuth.providers.keycloak.mapFields');
-        if (!empty($configRoleMap) && is_array($configRoleMap)) {
-            $this->_rolesMap = $configRoleMap;
+        $mapFields ??= Configure::read('OAuth.providers.keycloak.mapFields') ?: null;
+        $rolesMap ??= Configure::read('OAuth.providers.keycloak.rolesMap');
+        if (is_array($rolesMap) && $rolesMap) {
+            $this->_rolesMap = $rolesMap;
         }
-        if (!empty($configMapFields) && is_array($configMapFields)) {
-            $this->_mapFields = $configMapFields;
-        }
+        parent::__construct($mapFields);
     }
 
-    function _roles(array $data): string
-    {   // Client Scopes > roles > Mappers > realm roles -> Add to userinfo  := Enable
-        if (is_null($data[$this->_mapFields['roles']])) {
-            throw new \Exception("No roles in UserInfo token. Set realm roles 'Add to userinfo' field to ON in Client scopes or check the roles field in _mapFields");
+    /**
+     * Get the application role from the Keycloak realm roles
+     *
+     * Requires the realm roles mapper of the `roles` client scope to have "Add to userinfo" enabled.
+     *
+     * @param mixed $rawData raw data
+     * @throws \UnexpectedValueException when there are no roles or none of them is mapped
+     * @return string
+     */
+    protected function _roles(mixed $rawData): string
+    {
+        $keycloakRoles = Hash::get($rawData, $this->_mapFields['roles']);
+        if (!is_array($keycloakRoles)) {
+            throw new UnexpectedValueException(
+                'No roles in Keycloak userinfo. Enable "Add to userinfo" for the realm roles mapper ' .
+                'or check the `roles` map field',
+            );
         }
-        
-        $keycloakRoles = $data[$this->_mapFields['roles']]['roles'];
-        
-        // Ignore case when comparing roles
-        $mappedRoles = [];
-        foreach ($keycloakRoles as $keycloakRole) {
-            foreach (array_keys($this->_rolesMap) as $mapKey) {
-                if (strcasecmp($keycloakRole, $mapKey) === 0) {
-                    $mappedRoles[] = $mapKey;
-                    break;
+
+        foreach ($this->_rolesMap as $keycloakRole => $role) {
+            foreach ($keycloakRoles as $userRole) {
+                if (is_string($userRole) && strcasecmp($userRole, $keycloakRole) === 0) {
+                    return $role;
                 }
             }
         }
-            
-        if (empty($mappedRoles)) {
-            throw new \Exception("No mappable role found in Keycloak. Available roles in map: " . implode(', ', array_keys($this->_rolesMap)) . ' / '. implode(', ', ($keycloakRoles)));
-        }
-        
-        $keycloakRole = array_pop($mappedRoles);
-        $role = $this->_rolesMap[$keycloakRole];
-        // Set the cakedc default user role from keycloak roles
-        Configure::write('Users.Registration.defaultRole', $role);
-        return $role;   
+
+        throw new UnexpectedValueException(sprintf(
+            'No mapped role found in Keycloak roles. Mapped roles: %s',
+            implode(', ', array_keys($this->_rolesMap)),
+        ));
+    }
+
+    /**
+     * Keycloak reports the email verification status
+     *
+     * @param mixed $rawData raw data
+     * @return bool
+     */
+    protected function _validated(mixed $rawData): bool
+    {
+        return (bool)Hash::get($rawData, $this->_mapFields['validated']);
     }
 }

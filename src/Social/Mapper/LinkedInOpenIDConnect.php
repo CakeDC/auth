@@ -13,6 +13,9 @@ declare(strict_types=1);
 
 namespace CakeDC\Auth\Social\Mapper;
 
+/**
+ * LinkedIn OpenID Connect Mapper
+ */
 class LinkedInOpenIDConnect extends AbstractMapper
 {
     /**
@@ -20,7 +23,7 @@ class LinkedInOpenIDConnect extends AbstractMapper
      *
      * @var array
      */
-    protected $_mapFields = [
+    protected array $_mapFields = [
         'avatar' => 'picture',
         'first_name' => 'given_name',
         'last_name' => 'family_name',
@@ -29,10 +32,13 @@ class LinkedInOpenIDConnect extends AbstractMapper
         'id' => 'sub',
     ];
 
+    /**
+     * There is no way to retrieve the public profile url from the id token
+     *
+     * @return string
+     */
     protected function _link(): string
     {
-        // no way to retrieve the public url from the users profile
-
         return 'https://www.linkedin.com';
     }
 }

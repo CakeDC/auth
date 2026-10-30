@@ -100,26 +100,25 @@ return [
             ],
         ],
         'keycloak' => [
-                'service' => 'CakeDC\Auth\Social\Service\OAuth2Service',
-                'className' => 'Stevenmaguire\OAuth2\Client\Provider\Keycloak',
-                'mapper' => 'CakeDC\Auth\Social\Mapper\Keycloak',
-                'rolesMap' => [
-                    'CakeDc-Admin' => 'Admin',
-                    'CakeDc-User' => 'User',
-                    'CakeDc-Worker' => 'User'
-                ],
-                'authParams' => ['scope' => ['openid','roles']],
-                'skipSocialAccountValidation' => true,
-                'options' => [
-                    'redirectUri' => Router::fullBaseUrl() . '/auth/keycloak',
-                    'linkSocialUri' => Router::fullBaseUrl() . '/auth/link-social/keycloak',
-                    'callbackLinkSocialUri' => Router::fullBaseUrl() . '/auth/callback-link-social/keycloak',
-                ]
+            'service' => 'CakeDC\Auth\Social\Service\OAuth2Service',
+            'className' => 'Stevenmaguire\OAuth2\Client\Provider\Keycloak',
+            'mapper' => 'CakeDC\Auth\Social\Mapper\Keycloak',
+            'rolesMap' => [
+                'CakeDc-Admin' => 'admin',
+                'CakeDc-User' => 'user',
+                'CakeDc-Worker' => 'user',
+            ],
+            'authParams' => ['scope' => ['openid', 'roles']],
+            'options' => [
+                'redirectUri' => Router::fullBaseUrl() . '/auth/keycloak',
+                'linkSocialUri' => Router::fullBaseUrl() . '/link-social/keycloak',
+                'callbackLinkSocialUri' => Router::fullBaseUrl() . '/callback-link-social/keycloak',
+            ],
         ],
     ],
     'TwoFactorProcessors' => [
         \CakeDC\Auth\Authentication\TwoFactorProcessor\OneTimePasswordProcessor::class,
-        \CakeDC\Auth\Authentication\TwoFactorProcessor\Webauthn2faProcessor::class
+        \CakeDC\Auth\Authentication\TwoFactorProcessor\Webauthn2faProcessor::class,
     ],
     'OneTimePasswordAuthenticator' => [
         'checker' => \CakeDC\Auth\Authentication\DefaultOneTimePasswordAuthenticationChecker::class,

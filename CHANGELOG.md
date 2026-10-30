@@ -5,6 +5,31 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Added
+- Keycloak social login mapper `CakeDC\Auth\Social\Mapper\Keycloak`, with realm roles mapped by the
+  `rolesMap` provider config, and a disabled `keycloak` provider in `config/auth.php`.
+- `CakeDC\Auth\Social\Service\OpenIDConnectService` and the `LinkedInOpenIDConnect` mapper and
+  provider. The id token `iss`, `aud` and `nonce` claims are validated, the discovery document and the
+  key set can be cached with `openid.cache`. Requires `firebase/php-jwt`.
+- `CakeDC\Auth\Rbac\Rules\OTPRule`, used by the default `resetOneTimePasswordAuthenticator` permission.
+- Rbac permission values can be a rule config array `['className' => Rule::class, 'options' => []]`.
+  Arrays with a `className` key that is not a `Rule` class keep the previous matching behavior.
+- The 2FA verify url (`TwoFactorProcessorInterface::getUrlByType()`) can be a string url. The return
+  type is now `array|string|null`; custom callers of `getUrlByType()` must handle strings.
+
+### Changed
+- Requires CakePHP `^5.4` (PHP `>=8.2` unchanged).
+- `cakephp/authentication` `^3.3` moved from require-dev/suggest to `require`, the authenticators,
+  identifiers, 2FA and social login depend on it.
+- Dev dependencies curated: no more `@stable` constraints, minimum versions raised to the ones the
+  test suite passes with on PHP 8.2 (`--prefer-lowest`) up to 8.5. PHPUnit `^11.5 || ^12.5`,
+  PHPStan `^2.3`, Psalm `^6.20` (`psalm/phar` in require-dev, `stan-setup` script removed),
+  `robthree/twofactorauth` `^3.0.1`, `endroid/qr-code` `^6.0`.
+- Removed the unused `yubico/u2flib-server` dev dependency (U2F is deprecated).
+- `suggest` lists the optional packages needed by each feature.
+- The default `resetOneTimePasswordAuthenticator` permission uses `OTPRule` instead of a closure. It
+  compares the user id as string, so integer ids are matched too.
+
 ### Fixed
 - `ReCaptchaTrait::validateReCaptchaFromRequest()` treats a missing or empty
   `g-recaptcha-response` as an invalid captcha (returns `false`) instead of passing `null` to the

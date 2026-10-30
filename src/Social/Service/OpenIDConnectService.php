@@ -1,31 +1,95 @@
 <?php
 declare(strict_types=1);
 
+/**
+ * Copyright 2010 - 2026, Cake Development Corporation (https://www.cakedc.com)
+ *
+ * Licensed under The MIT License
+ * Redistributions of files must retain the above copyright notice.
+ *
+ * @copyright Copyright 2010 - 2026, Cake Development Corporation (https://www.cakedc.com)
+ * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
+ */
+
 namespace CakeDC\Auth\Social\Service;
 
+use BadMethodCallException;
+use Cake\Cache\Cache;
 use Cake\Http\Client;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\ServerRequest;
+use Exception;
 use Firebase\JWT\JWK;
 use Firebase\JWT\JWT;
 use Psr\Http\Message\ServerRequestInterface;
 
 class OpenIDConnectService extends OAuth2Service
 {
-    protected $_defaultConfig = [
+    /**
+     * Session key used to store the nonce sent in the authorization request
+     *
+     * @var string
+     */
+    public const SESSION_NONCE_KEY = 'oidcnonce';
+
+    /**
+     * Default configuration. `openid` defaults target LinkedIn, override them per provider.
+     *
+     * - `openid.baseUrl`: the `jwks_uri` from the discovery document must start with it.
+     * - `openid.url`: discovery document url.
+     * - `openid.issuer`: expected `iss` claim, null to use the discovery document `issuer`.
+     * - `openid.nonce`: send a nonce in the authorization request and validate it in the id token.
+     * - `openid.cache`: cache config used for the discovery document and the key set, null to disable.
+     * - `openid.jwk.defaultAlgorithm`: algorithm used for keys without `alg`.
+     *
+     * @var array
+     */
+    protected array $_defaultConfig = [
         'openid' => [
             'baseUrl' => 'https://www.linkedin.com/',
             'url' => 'https://www.linkedin.com/oauth/.well-known/openid-configuration',
+            'issuer' => null,
+            'nonce' => true,
+            'cache' => null,
             'jwk' => [
                 'defaultAlgorithm' => 'RS256',
             ],
         ],
     ];
 
+    /**
+     * @inheritDoc
+     */
+    public function getAuthorizationUrl(ServerRequestInterface $request): string
+    {
+        if (!$request instanceof ServerRequest) {
+            throw new BadMethodCallException('Request must be an instance of ServerRequest');
+        }
+        if (!$this->getConfig('openid.nonce')) {
+            return parent::getAuthorizationUrl($request);
+        }
+        $nonce = bin2hex(random_bytes(16));
+        $request->getSession()->write(self::SESSION_NONCE_KEY, $nonce);
+        $authParams = $this->getConfig('authParams', []);
+        $this->setConfig('authParams', ['nonce' => $nonce] + $authParams, false);
+        try {
+            return parent::getAuthorizationUrl($request);
+        } finally {
+            $this->setConfig('authParams', $authParams, false);
+        }
+    }
+
+    /**
+     * Get the user from the validated id token
+     *
+     * @param \Psr\Http\Message\ServerRequestInterface $request Request object.
+     * @throws \Cake\Http\Exception\BadRequestException when state or id token are invalid
+     * @return array
+     */
     public function getUser(ServerRequestInterface $request): array
     {
         if (!$request instanceof ServerRequest) {
-            throw new \BadMethodCallException('Request must be an instance of ServerRequest');
+            throw new BadMethodCallException('Request must be an instance of ServerRequest');
         }
         if (!$this->validate($request)) {
             throw new BadRequestException('Invalid OAuth2 state');
@@ -40,48 +104,118 @@ class OpenIDConnectService extends OAuth2Service
             throw new BadRequestException('Missing id_token in response');
         }
         try {
-            $idTokenDecoded = JWT::decode($idToken, $this->getIdTokenKeys());
-
-            return ['token' => $token] + (array)$idTokenDecoded;
-        } catch (\Exception $ex) {
+            $claims = (array)JWT::decode($idToken, $this->getIdTokenKeys());
+        } catch (Exception $ex) {
             throw new BadRequestException('Invalid id token. ' . $ex->getMessage());
+        }
+        $this->validateClaims($request, $claims);
+
+        return ['token' => $token] + $claims;
+    }
+
+    /**
+     * Validates the `iss`, `aud` and `nonce` claims of the id token
+     *
+     * @param \Cake\Http\ServerRequest $request Request object.
+     * @param array $claims Decoded id token claims.
+     * @throws \Cake\Http\Exception\BadRequestException when a claim is invalid
+     * @return void
+     */
+    protected function validateClaims(ServerRequest $request, array $claims): void
+    {
+        $issuer = $this->getConfig('openid.issuer') ?? ($this->discover()['issuer'] ?? null);
+        if (!$issuer || ($claims['iss'] ?? null) !== $issuer) {
+            throw new BadRequestException('Invalid id token. Unexpected issuer');
+        }
+
+        $clientId = $this->getConfig('options.clientId');
+        $audience = (array)($claims['aud'] ?? []);
+        if (!$clientId || !in_array($clientId, $audience, true)) {
+            throw new BadRequestException('Invalid id token. Unexpected audience');
+        }
+
+        if ($this->getConfig('openid.nonce')) {
+            $session = $request->getSession();
+            $nonce = $session->read(self::SESSION_NONCE_KEY);
+            $session->delete(self::SESSION_NONCE_KEY);
+            if (!is_string($nonce) || !hash_equals($nonce, (string)($claims['nonce'] ?? ''))) {
+                throw new BadRequestException('Invalid id token. Nonce mismatch');
+            }
         }
     }
 
+    /**
+     * Get the keys used to verify the id token signature
+     *
+     * @return array<string, \Firebase\JWT\Key>
+     */
     protected function getIdTokenKeys(): array
     {
         $discoverData = $this->discover();
         $jwksUri = $discoverData['jwks_uri'] ?? null;
         if (!$jwksUri) {
             throw new BadRequestException(
-                'No `jwks_uri` in discover data. Unable to retrieve the JWT signature public key'
+                'No `jwks_uri` in discover data. Unable to retrieve the JWT signature public key',
             );
         }
-        if (strpos($jwksUri, $this->getConfig('openid.baseUrl')) !== 0) {
+        if (!str_starts_with($jwksUri, (string)$this->getConfig('openid.baseUrl'))) {
             throw new BadRequestException(
                 'Invalid `jwks_uri` in discover data. It is not pointing to ' .
-                $this->getConfig('openid.baseUrl')
+                $this->getConfig('openid.baseUrl'),
             );
         }
-        $client = $this->getHttpClient();
-        $jwksData = $client->get($jwksUri)->getJson();
+        $jwksData = $this->fetchJson($jwksUri);
         if (!$jwksData) {
             throw new BadRequestException(
-                'Unable to retrieve jwks. Not found in the `jwks_uri` contents'
+                'Unable to retrieve jwks. Not found in the `jwks_uri` contents',
             );
         }
 
         return JWK::parseKeySet($jwksData, $this->getConfig('openid.jwk.defaultAlgorithm'));
     }
 
+    /**
+     * Get the OpenID discovery document
+     *
+     * @return array
+     */
     public function discover(): array
     {
-        $openidUrl = $this->getConfig('openid.url');
-        $client = $this->getHttpClient();
-
-        return $client->get($openidUrl)->getJson();
+        return $this->fetchJson($this->getConfig('openid.url'));
     }
 
+    /**
+     * Fetch a json document, using the `openid.cache` cache config when set
+     *
+     * @param string $url Url of the document.
+     * @return array
+     */
+    protected function fetchJson(string $url): array
+    {
+        $fetch = fn(): array => (array)$this->getHttpClient()->get($url)->getJson();
+        $cacheConfig = $this->getConfig('openid.cache');
+        if (!$cacheConfig) {
+            return $fetch();
+        }
+
+        $key = 'cakedc_auth_oidc_' . md5($url);
+        $data = Cache::read($key, $cacheConfig);
+        if (is_array($data) && $data) {
+            return $data;
+        }
+        $data = $fetch();
+        if ($data) {
+            Cache::write($key, $data, $cacheConfig);
+        }
+
+        return $data;
+    }
+
+    /**
+     * Get the http client
+     *
+     * @return \Cake\Http\Client
+     */
     protected function getHttpClient(): Client
     {
         return new Client();

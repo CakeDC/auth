@@ -18,6 +18,7 @@ We have mappers to allow you a quick start with these providers:
 - Tumblr
 - Twitter
 - Github
+- Keycloak
 
 You must define 'options.redirectUri', 'options.clientId' and
 'options.clientSecret' for any provider you want to enable. eg,
@@ -126,11 +127,10 @@ Add the Keycloak provider configuration to your `config/users.php` file:
                 'CakeDc-Worker' => 'user'
             ],
             'authParams' => ['scope' => ['openid', 'roles']],
-            'skipSocialAccountValidation' => true,
             'options' => [
                 'redirectUri' => Router::fullBaseUrl() . '/auth/keycloak',
-                'linkSocialUri' => Router::fullBaseUrl() . '/auth/link-social/keycloak',
-                'callbackLinkSocialUri' => Router::fullBaseUrl() . '/auth/callback-link-social/keycloak',
+                'linkSocialUri' => Router::fullBaseUrl() . '/link-social/keycloak',
+                'callbackLinkSocialUri' => Router::fullBaseUrl() . '/callback-link-social/keycloak',
                 'realm' => env('KEYCLOAK_REALM', null),
                 'clientId' => env('KEYCLOAK_CLIENT_ID', null),
                 'clientSecret' => env('KEYCLOAK_CLIENT_SECRET', null),
@@ -157,11 +157,22 @@ Add the Keycloak provider configuration to your `config/users.php` file:
 
 ### Role Mapping
 
-The plugin maps Keycloak roles to application roles using the `rolesMap` configuration. When a user logs in, their Keycloak roles are checked against this map and the corresponding application role is assigned.
+The `CakeDC\Auth\Social\Mapper\Keycloak` mapper reads the realm roles from `realm_access.roles`
+and maps them to an application role using the `rolesMap` provider configuration. The keys are
+Keycloak roles (compared case-insensitive), the values are application roles. The first entry of
+`rolesMap` the user has wins, so list the most privileged roles first. The mapped role is
+returned in the `roles` field of the mapped user.
+
+The login fails with an `UnexpectedValueException` when the userinfo has no roles or none of the
+user roles is in `rolesMap`.
+
+The mapper does not change the user role by itself. Use an event listener in your application to
+apply it, see below.
 
 ### Event Listener for Role Updates
 
-You can create a custom event listener to update user roles during login:
+Create an event listener in your application to update the role of existing users during login
+and register it in your `Application::bootstrap()` with `EventManager::instance()->on(new SocialLoginListener());`:
 
 ```php
 <?php
@@ -207,3 +218,36 @@ KEYCLOAK_AUTH_SERVER_URL=https://your-keycloak-server/auth
 ```
 
 This setup allows your CakePHP application to authenticate users through Keycloak and map their roles appropriately.
+
+Working with OpenID Connect
+---------------------------
+
+`CakeDC\Auth\Social\Service\OpenIDConnectService` reads the user from the signed `id_token`
+instead of calling the provider user endpoint. It is used by the `linkedInOpenIDConnect` provider.
+It requires `firebase/php-jwt`:
+
+```bash
+composer require firebase/php-jwt
+```
+
+The service validates the token signature with the provider key set, and the `iss`, `aud`
+(must contain `options.clientId`) and `nonce` claims. Configure it with the `openid` key of the
+provider:
+
+```php
+'linkedInOpenIDConnect' => [
+    // ...
+    'openid' => [
+        // the jwks_uri of the discovery document must start with this url
+        'baseUrl' => 'https://www.linkedin.com/',
+        // discovery document
+        'url' => 'https://www.linkedin.com/oauth/.well-known/openid-configuration',
+        // expected issuer, null to use the issuer of the discovery document
+        'issuer' => null,
+        // send a nonce in the authorization request and validate it in the id token
+        'nonce' => true,
+        // cache config for the discovery document and the key set, null to disable the cache
+        'cache' => null,
+    ],
+],
+```

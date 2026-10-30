@@ -98,9 +98,9 @@ class U2FProcessor implements TwoFactorProcessorInterface
      * Generates 2fa url, if enable.
      *
      * @param string $type Processor type.
-     * @return array|null
+     * @return array|string|null
      */
-    public function getUrlByType(string $type): ?array
+    public function getUrlByType(string $type): array|string|null
     {
         if ($type == $this->getType()) {
             return Configure::read('U2f.startAction');

@@ -57,8 +57,8 @@ class TwoFactorMiddleware implements MiddlewareInterface
             $url = array_merge($url, [
                 '?' => $params,
             ]);
-        } else {
-            $url .= '?' . implode('&', array_map(fn ($k, $v) => "$k=$v", array_keys($params), array_values($params)));
+        } elseif ($params) {
+            $url .= (str_contains($url, '?') ? '&' : '?') . http_build_query($params);
         }
 
         $url = Router::url($url);

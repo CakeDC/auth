@@ -1,0 +1,538 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<files psalm-version="6.20.4@e53db692e6600cf729c88190b892bcf96e1c550e">
+  <file src="src/AuthPlugin.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[AuthPlugin]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Authentication/AuthenticationService.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[AuthenticationService]]></code>
+    </ClassMustBeFinal>
+    <UndefinedInterfaceMethod>
+      <code><![CDATA[getConfig]]></code>
+    </UndefinedInterfaceMethod>
+    <UnusedClass>
+      <code><![CDATA[AuthenticationService]]></code>
+    </UnusedClass>
+  </file>
+  <file src="src/Authentication/DefaultOneTimePasswordAuthenticationChecker.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[DefaultOneTimePasswordAuthenticationChecker]]></code>
+    </ClassMustBeFinal>
+    <RiskyTruthyFalsyComparison>
+      <code><![CDATA[empty($user)]]></code>
+    </RiskyTruthyFalsyComparison>
+    <UnusedClass>
+      <code><![CDATA[DefaultOneTimePasswordAuthenticationChecker]]></code>
+    </UnusedClass>
+  </file>
+  <file src="src/Authentication/DefaultWebauthn2FAuthenticationChecker.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[DefaultWebauthn2FAuthenticationChecker]]></code>
+    </ClassMustBeFinal>
+    <RiskyTruthyFalsyComparison>
+      <code><![CDATA[empty($user)]]></code>
+    </RiskyTruthyFalsyComparison>
+    <UnusedClass>
+      <code><![CDATA[DefaultWebauthn2FAuthenticationChecker]]></code>
+    </UnusedClass>
+  </file>
+  <file src="src/Authentication/Failure.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[Failure]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Authentication/FailureInterface.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[getAuthenticator]]></code>
+      <code><![CDATA[getResult]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="src/Authentication/OneTimePasswordAuthenticationCheckerFactory.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[OneTimePasswordAuthenticationCheckerFactory]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Authentication/TwoFactorProcessor/OneTimePasswordProcessor.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[OneTimePasswordProcessor]]></code>
+    </ClassMustBeFinal>
+    <UnusedClass>
+      <code><![CDATA[OneTimePasswordProcessor]]></code>
+    </UnusedClass>
+  </file>
+  <file src="src/Authentication/TwoFactorProcessor/U2FProcessor.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[U2FProcessor]]></code>
+    </ClassMustBeFinal>
+    <UndefinedClass>
+      <code><![CDATA[$this->getU2fAuthenticationChecker()]]></code>
+      <code><![CDATA[U2fAuthenticationCheckerInterface]]></code>
+    </UndefinedClass>
+    <UnusedClass>
+      <code><![CDATA[U2FProcessor]]></code>
+    </UnusedClass>
+  </file>
+  <file src="src/Authentication/TwoFactorProcessor/Webauthn2faProcessor.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[Webauthn2faProcessor]]></code>
+    </ClassMustBeFinal>
+    <UnusedClass>
+      <code><![CDATA[Webauthn2faProcessor]]></code>
+    </UnusedClass>
+  </file>
+  <file src="src/Authentication/TwoFactorProcessorCollection.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[TwoFactorProcessorCollection]]></code>
+    </ClassMustBeFinal>
+    <MissingTemplateParam>
+      <code><![CDATA[IteratorAggregate]]></code>
+    </MissingTemplateParam>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[clear]]></code>
+      <code><![CDATA[count]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="src/Authentication/TwoFactorProcessorInterface.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[enabled]]></code>
+      <code><![CDATA[isRequired]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="src/Authentication/TwoFactorProcessorLoader.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[TwoFactorProcessorLoader]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Authentication/Webauthn2fAuthenticationCheckerFactory.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[Webauthn2fAuthenticationCheckerFactory]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Authenticator/CookieAuthenticator.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[CookieAuthenticator]]></code>
+    </ClassMustBeFinal>
+    <RiskyTruthyFalsyComparison>
+      <code><![CDATA[empty($bodyData)]]></code>
+    </RiskyTruthyFalsyComparison>
+  </file>
+  <file src="src/Authenticator/FormAuthenticator.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[FormAuthenticator]]></code>
+    </ClassMustBeFinal>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__call]]></code>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+    <UndefinedFunction>
+      <code><![CDATA[__('Base class for FormAuthenticator {0} does not exist', $className)]]></code>
+    </UndefinedFunction>
+  </file>
+  <file src="src/Authenticator/OneTimeTokenAuthenticator.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[OneTimeTokenAuthenticator]]></code>
+    </ClassMustBeFinal>
+    <UndefinedMagicMethod>
+      <code><![CDATA[loginWithToken]]></code>
+    </UndefinedMagicMethod>
+    <UnusedClass>
+      <code><![CDATA[OneTimeTokenAuthenticator]]></code>
+    </UnusedClass>
+  </file>
+  <file src="src/Authenticator/SocialAuthenticator.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[SocialAuthenticator]]></code>
+    </ClassMustBeFinal>
+    <RiskyTruthyFalsyComparison>
+      <code><![CDATA[empty($rawData)]]></code>
+      <code><![CDATA[empty($user)]]></code>
+    </RiskyTruthyFalsyComparison>
+    <UnusedVariable>
+      <code><![CDATA[$rawData]]></code>
+    </UnusedVariable>
+  </file>
+  <file src="src/Authenticator/TwoFactorAuthenticator.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[TwoFactorAuthenticator]]></code>
+    </ClassMustBeFinal>
+    <RiskyTruthyFalsyComparison>
+      <code><![CDATA[empty($data)]]></code>
+    </RiskyTruthyFalsyComparison>
+    <UnusedClass>
+      <code><![CDATA[TwoFactorAuthenticator]]></code>
+    </UnusedClass>
+  </file>
+  <file src="src/Controller/Component/OneTimePasswordAuthenticatorComponent.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[OneTimePasswordAuthenticatorComponent]]></code>
+    </ClassMustBeFinal>
+    <UndefinedFunction>
+      <code><![CDATA[__d(
+                        'cake_d_c/users',
+                        'An error has occurred configuring OneTimePasswordAuthenticator. ' .
+                        'Please ensure you have installed robthree/twofactorauth and endroid/qr-code ' .
+                        '(or your preferred QR provider): {0}',
+                        $t->getMessage(),
+                    )]]></code>
+    </UndefinedFunction>
+    <UnusedClass>
+      <code><![CDATA[OneTimePasswordAuthenticatorComponent]]></code>
+    </UnusedClass>
+  </file>
+  <file src="src/Exception/InvalidProviderException.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[InvalidProviderException]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Exception/InvalidSettingsException.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[InvalidSettingsException]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Identifier/SocialIdentifier.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[SocialIdentifier]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Middleware/RbacMiddleware.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[RbacMiddleware]]></code>
+    </ClassMustBeFinal>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+    <RedundantCast>
+      <code><![CDATA[(array)$request->getHeader('Accept')]]></code>
+    </RedundantCast>
+  </file>
+  <file src="src/Middleware/SocialAuthMiddleware.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[SocialAuthMiddleware]]></code>
+    </ClassMustBeFinal>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="src/Middleware/TwoFactorMiddleware.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[TwoFactorMiddleware]]></code>
+    </ClassMustBeFinal>
+    <UnusedClass>
+      <code><![CDATA[TwoFactorMiddleware]]></code>
+    </UnusedClass>
+  </file>
+  <file src="src/Plugin.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[Plugin]]></code>
+    </ClassMustBeFinal>
+    <UnusedClass>
+      <code><![CDATA[Plugin]]></code>
+    </UnusedClass>
+  </file>
+  <file src="src/Policy/CollectionPolicy.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[CollectionPolicy]]></code>
+    </ClassMustBeFinal>
+    <UnusedClass>
+      <code><![CDATA[CollectionPolicy]]></code>
+    </UnusedClass>
+  </file>
+  <file src="src/Policy/RbacPolicy.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[RbacPolicy]]></code>
+    </ClassMustBeFinal>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="src/Policy/SuperuserPolicy.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[SuperuserPolicy]]></code>
+    </ClassMustBeFinal>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="src/Rbac/PermissionMatchResult.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[PermissionMatchResult]]></code>
+    </ClassMustBeFinal>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[setAllowed]]></code>
+      <code><![CDATA[setReason]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="src/Rbac/Permissions/AbstractProvider.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[getDefaultPermissions]]></code>
+      <code><![CDATA[setDefaultPermissions]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="src/Rbac/Permissions/ConfigProvider.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[ConfigProvider]]></code>
+    </ClassMustBeFinal>
+    <PossiblyUnusedProperty>
+      <code><![CDATA[$_defaultConfig]]></code>
+    </PossiblyUnusedProperty>
+    <RiskyTruthyFalsyComparison>
+      <code><![CDATA[empty($permissions)]]></code>
+    </RiskyTruthyFalsyComparison>
+  </file>
+  <file src="src/Rbac/Rbac.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[Rbac]]></code>
+    </ClassMustBeFinal>
+    <PossiblyUnusedParam>
+      <code><![CDATA[$allowEmpty]]></code>
+    </PossiblyUnusedParam>
+    <RedundantCastGivenDocblockType>
+      <code><![CDATA[(string)$key]]></code>
+      <code><![CDATA[(string)$key]]></code>
+    </RedundantCastGivenDocblockType>
+    <RiskyTruthyFalsyComparison>
+      <code><![CDATA[!$user]]></code>
+      <code><![CDATA[empty($user)]]></code>
+    </RiskyTruthyFalsyComparison>
+    <UnsafeInstantiation>
+      <code><![CDATA[new $permissionsProviderClass([
+                'autoload_config' => $this->getConfig('autoload_config'),
+            ])]]></code>
+    </UnsafeInstantiation>
+  </file>
+  <file src="src/Rbac/RbacInterface.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[getPermissions]]></code>
+      <code><![CDATA[setPermissions]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="src/Rbac/Rules/AbstractRule.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[__construct]]></code>
+    </PossiblyUnusedMethod>
+    <RiskyTruthyFalsyComparison>
+      <code><![CDATA[$plugin]]></code>
+    </RiskyTruthyFalsyComparison>
+  </file>
+  <file src="src/Rbac/Rules/OTPRule.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[OTPRule]]></code>
+    </ClassMustBeFinal>
+  </file>
+  <file src="src/Rbac/Rules/Owner.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[Owner]]></code>
+    </ClassMustBeFinal>
+    <InvalidArrayOffset>
+      <code><![CDATA[[
+            $idColumn => $id,
+            $this->getConfig('ownerForeignKey') => $userId,
+        ]]]></code>
+    </InvalidArrayOffset>
+    <RiskyTruthyFalsyComparison>
+      <code><![CDATA[$request->getParsedBody()]]></code>
+    </RiskyTruthyFalsyComparison>
+    <UnusedClass>
+      <code><![CDATA[Owner]]></code>
+    </UnusedClass>
+  </file>
+  <file src="src/Rbac/Rules/RuleRegistry.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[RuleRegistry]]></code>
+    </ClassMustBeFinal>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[clear]]></code>
+      <code><![CDATA[toArray]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="src/Social/MapUser.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[MapUser]]></code>
+    </ClassMustBeFinal>
+    <UndefinedFunction>
+      <code><![CDATA[__('Provider mapper class {0} does not exist', $className)]]></code>
+    </UndefinedFunction>
+  </file>
+  <file src="src/Social/Mapper/AbstractMapper.php">
+    <PossiblyUnusedMethod>
+      <code><![CDATA[_validated]]></code>
+    </PossiblyUnusedMethod>
+    <PossiblyUnusedProperty>
+      <code><![CDATA[$_rawData]]></code>
+    </PossiblyUnusedProperty>
+    <RiskyTruthyFalsyComparison>
+      <code><![CDATA[empty($token)]]></code>
+    </RiskyTruthyFalsyComparison>
+    <UndefinedFunction>
+      <code><![CDATA[collection($this->_mapFields)]]></code>
+    </UndefinedFunction>
+  </file>
+  <file src="src/Social/Mapper/Amazon.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[Amazon]]></code>
+    </ClassMustBeFinal>
+    <UnusedClass>
+      <code><![CDATA[Amazon]]></code>
+    </UnusedClass>
+  </file>
+  <file src="src/Social/Mapper/Azure.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[Azure]]></code>
+    </ClassMustBeFinal>
+    <PossiblyUnusedParam>
+      <code><![CDATA[$rawData]]></code>
+    </PossiblyUnusedParam>
+    <UnusedClass>
+      <code><![CDATA[Azure]]></code>
+    </UnusedClass>
+  </file>
+  <file src="src/Social/Mapper/Cognito.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[Cognito]]></code>
+    </ClassMustBeFinal>
+    <UnusedClass>
+      <code><![CDATA[Cognito]]></code>
+    </UnusedClass>
+  </file>
+  <file src="src/Social/Mapper/Facebook.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[Facebook]]></code>
+    </ClassMustBeFinal>
+    <RiskyTruthyFalsyComparison>
+      <code><![CDATA[$rawData['link'] ?? null]]></code>
+    </RiskyTruthyFalsyComparison>
+    <UnusedClass>
+      <code><![CDATA[Facebook]]></code>
+    </UnusedClass>
+  </file>
+  <file src="src/Social/Mapper/Github.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[Github]]></code>
+    </ClassMustBeFinal>
+    <UnusedClass>
+      <code><![CDATA[Github]]></code>
+    </UnusedClass>
+  </file>
+  <file src="src/Social/Mapper/Google.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[Google]]></code>
+    </ClassMustBeFinal>
+    <UnusedClass>
+      <code><![CDATA[Google]]></code>
+    </UnusedClass>
+  </file>
+  <file src="src/Social/Mapper/Instagram.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[Instagram]]></code>
+    </ClassMustBeFinal>
+    <UnusedClass>
+      <code><![CDATA[Instagram]]></code>
+    </UnusedClass>
+  </file>
+  <file src="src/Social/Mapper/Keycloak.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[Keycloak]]></code>
+    </ClassMustBeFinal>
+    <UnusedClass>
+      <code><![CDATA[Keycloak]]></code>
+    </UnusedClass>
+  </file>
+  <file src="src/Social/Mapper/LinkedIn.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[LinkedIn]]></code>
+    </ClassMustBeFinal>
+    <UnusedClass>
+      <code><![CDATA[LinkedIn]]></code>
+    </UnusedClass>
+  </file>
+  <file src="src/Social/Mapper/LinkedInOpenIDConnect.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[LinkedInOpenIDConnect]]></code>
+    </ClassMustBeFinal>
+    <UnusedClass>
+      <code><![CDATA[LinkedInOpenIDConnect]]></code>
+    </UnusedClass>
+  </file>
+  <file src="src/Social/Mapper/Pinterest.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[Pinterest]]></code>
+    </ClassMustBeFinal>
+    <UnusedClass>
+      <code><![CDATA[Pinterest]]></code>
+    </UnusedClass>
+  </file>
+  <file src="src/Social/Mapper/Tumblr.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[Tumblr]]></code>
+    </ClassMustBeFinal>
+    <UnusedClass>
+      <code><![CDATA[Tumblr]]></code>
+    </UnusedClass>
+  </file>
+  <file src="src/Social/Mapper/Twitter.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[Twitter]]></code>
+    </ClassMustBeFinal>
+    <InvalidReturnStatement>
+      <code><![CDATA[str_replace('normal', 'bigger', Hash::get($rawData, $this->_mapFields['avatar']))]]></code>
+    </InvalidReturnStatement>
+    <InvalidReturnType>
+      <code><![CDATA[string]]></code>
+    </InvalidReturnType>
+    <UnusedClass>
+      <code><![CDATA[Twitter]]></code>
+    </UnusedClass>
+  </file>
+  <file src="src/Social/ProviderConfig.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[ProviderConfig]]></code>
+    </ClassMustBeFinal>
+    <PossiblyUnusedParam>
+      <code><![CDATA[$alias]]></code>
+    </PossiblyUnusedParam>
+  </file>
+  <file src="src/Social/Service/OAuth1Service.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[OAuth1Service]]></code>
+    </ClassMustBeFinal>
+    <PropertyTypeCoercion>
+      <code><![CDATA[new $class($config['options'], $config['signature'])]]></code>
+    </PropertyTypeCoercion>
+    <UnusedClass>
+      <code><![CDATA[OAuth1Service]]></code>
+    </UnusedClass>
+  </file>
+  <file src="src/Social/Service/OAuth2Service.php">
+    <PropertyTypeCoercion>
+      <code><![CDATA[new $class($config['options'], $config['collaborators'])]]></code>
+    </PropertyTypeCoercion>
+  </file>
+  <file src="src/Social/Service/OpenIDConnectService.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[OpenIDConnectService]]></code>
+    </ClassMustBeFinal>
+    <RiskyTruthyFalsyComparison>
+      <code><![CDATA[!$idToken]]></code>
+      <code><![CDATA[!$issuer]]></code>
+      <code><![CDATA[!$jwksUri]]></code>
+    </RiskyTruthyFalsyComparison>
+    <UnusedClass>
+      <code><![CDATA[OpenIDConnectService]]></code>
+    </UnusedClass>
+  </file>
+  <file src="src/Social/Service/ServiceFactory.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[ServiceFactory]]></code>
+    </ClassMustBeFinal>
+    <PossiblyUnusedMethod>
+      <code><![CDATA[setRedirectUriField]]></code>
+    </PossiblyUnusedMethod>
+  </file>
+  <file src="src/Social/Service/ServiceInterface.php">
+    <PossiblyUnusedReturnValue>
+      <code><![CDATA[self]]></code>
+    </PossiblyUnusedReturnValue>
+  </file>
+</files>

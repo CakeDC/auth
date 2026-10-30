@@ -222,11 +222,9 @@ class Rbac implements RbacInterface
                 $return = (bool)call_user_func($value, $user, $role, $request);
             } elseif ($value instanceof Rule) {
                 $return = $value->allowed($user, $role, $request);
-            } elseif (is_array($value) && array_key_exists('className', $value)) {
-                $rule = RuleRegistry::get($value['className'], $value['options'] ?? []);
-                if ($rule instanceof Rule) {
-                    $return = (bool)$rule->allowed($user, $role, $request);
-                }
+            } elseif ($this->_isRuleConfig($value)) {
+                $rule = RuleRegistry::get($value['className'], (array)($value['options'] ?? []));
+                $return = $rule->allowed($user, $role, $request);
             } elseif ($key === 'bypassAuth' && $value === true) {
                 $return = true;
             } elseif ($key === 'allowed') {
@@ -260,6 +258,20 @@ class Rbac implements RbacInterface
         }
 
         return null;
+    }
+
+    /**
+     * Check if the value is a rule config array, `['className' => Rule::class, 'options' => []]`
+     *
+     * @param mixed $value Permission value.
+     * @return bool
+     */
+    protected function _isRuleConfig(mixed $value): bool
+    {
+        return is_array($value) &&
+            isset($value['className']) &&
+            is_string($value['className']) &&
+            is_a($value['className'], Rule::class, true);
     }
 
     /**

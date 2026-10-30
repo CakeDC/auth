@@ -2,6 +2,7 @@
 <psalm
         totallyTyped="false"
         allowStringToStandInForClass="true"
+        errorBaseline="psalm-baseline.xml"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xmlns="https://getpsalm.org/schema/config"
         xsi:schemaLocation="https://getpsalm.org/schema/config vendor/vimeo/psalm/config.xsd"
@@ -14,6 +15,8 @@
     </projectFiles>
 
     <issueHandlers>
+        <!-- #[\Override] needs PHP 8.3, the plugin supports PHP 8.2 -->
+        <MissingOverrideAttribute errorLevel="suppress" />
         <LessSpecificReturnType errorLevel="info" />
 
         <!-- level 3 issues - slightly lazy code writing, but provably low false-negatives -->
@@ -27,10 +30,6 @@
         <MissingClosureParamType errorLevel="info" />
         <MissingParamType errorLevel="info" />
 
-        <RedundantCondition>
-            <errorLevel type="suppress">
-            </errorLevel>
-        </RedundantCondition>
 
         <DocblockTypeContradiction errorLevel="info" />
         <RedundantConditionGivenDocblockType errorLevel="info" />
@@ -70,10 +69,6 @@
 
         <!-- level 6 issues - really bad things -->
 
-        <NullableReturnStatement>
-            <errorLevel type="suppress">
-            </errorLevel>
-        </NullableReturnStatement>
 
         <MoreSpecificImplementedParamType errorLevel="info" />
         <LessSpecificImplementedReturnType errorLevel="info" />
@@ -81,17 +76,8 @@
         <!-- level 7 issues - even worse -->
         <InvalidArgument errorLevel="info" />
 
-        <InvalidPropertyAssignmentValue>
-            <errorLevel type="suppress">
-            </errorLevel>
-        </InvalidPropertyAssignmentValue>
 
         <!-- CakePHP Specific -->
-        <DeprecatedClass>
-            <errorLevel type="suppress">
-            </errorLevel>
-        </DeprecatedClass>
-
         <PossiblyUndefinedArrayOffset>
         </PossiblyUndefinedArrayOffset>
 
@@ -109,11 +95,6 @@
         <LoopInvalidation>
         </LoopInvalidation>
 
-        <UndefinedClass>
-            <errorLevel type="suppress">
-                <referencedClass name="Imagine\Image\Boolean" />
-            </errorLevel>
-        </UndefinedClass>
 
         <UndefinedMethod>
         </UndefinedMethod>

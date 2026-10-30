@@ -52,9 +52,6 @@ class RbacMiddlewareTest extends TestCase
         unset($this->rbacMiddleware);
     }
 
-    /**
-     * @test
-     */
     public function testInvokeForbidden()
     {
         $this->expectException(ForbiddenException::class);
@@ -72,9 +69,6 @@ class RbacMiddlewareTest extends TestCase
         $rbacMiddleware->process($request, $handler);
     }
 
-    /**
-     * @test
-     */
     public function testInvokeForbiddenAjax()
     {
         $this->expectException(ForbiddenException::class);
@@ -92,9 +86,6 @@ class RbacMiddlewareTest extends TestCase
         $rbacMiddleware->process($request, $handler);
     }
 
-    /**
-     * @test
-     */
     public function testInvokeRedirect()
     {
         $request = new ServerRequest();
@@ -117,9 +108,6 @@ class RbacMiddlewareTest extends TestCase
         $this->assertSame('http://localhost/login', $response->getHeaderLine('Location'));
     }
 
-    /**
-     * @test
-     */
     public function testInvokeAllowed()
     {
         $request = new ServerRequest();

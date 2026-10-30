@@ -1,5 +1,4 @@
 <?php
-
 declare(strict_types=1);
 
 /**
@@ -14,23 +13,23 @@ declare(strict_types=1);
 
 namespace CakeDC\Auth\Test\TestCase\Social\Service;
 
-use Cake\Core\Configure;
+use Cake\Cache\Cache;
+use Cake\Http\Client;
+use Cake\Http\Client\Response;
 use Cake\Http\Exception\BadRequestException;
-use Cake\Http\ServerRequest;
 use Cake\Http\ServerRequestFactory;
-use Cake\Http\Session;
 use Cake\TestSuite\TestCase;
 use CakeDC\Auth\Social\Mapper\LinkedInOpenIDConnect;
-use CakeDC\Auth\Social\Service\OAuth2Service;
 use CakeDC\Auth\Social\Service\OpenIDConnectService;
 use CakeDC\Auth\Social\Service\ServiceInterface;
-use Firebase\JWT\JWK;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
-use Laminas\Diactoros\Uri;
-use League\OAuth2\Client\Provider\FacebookUser;
-use League\OAuth2\Client\Provider\LinkedInResourceOwner;
+use League\OAuth2\Client\Provider\LinkedIn;
+use League\OAuth2\Client\Token\AccessToken;
+use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
+use PHPUnit\Framework\Attributes\DataProvider;
 
+#[AllowMockObjectsWithoutExpectations]
 class OpenIDConnectServiceTest extends TestCase
 {
     /**
@@ -65,13 +64,13 @@ class OpenIDConnectServiceTest extends TestCase
         parent::setUp();
 
         $this->Client = $this->getMockBuilder(
-            \Cake\Http\Client::class
+            Client::class,
         )->onlyMethods([
             'get',
         ])->getMock();
 
         $this->Provider = $this->getMockBuilder(
-            \League\OAuth2\Client\Provider\LinkedIn::class
+            LinkedIn::class,
         )->setConstructorArgs([
             [
                 'id' => '1',
@@ -79,17 +78,21 @@ class OpenIDConnectServiceTest extends TestCase
                 'lastName' => 'last',
             ],
             [],
-        ])->setMethods([
+        ])->onlyMethods([
             'getAccessToken', 'getState', 'getAuthorizationUrl', 'getResourceOwner',
         ])->getMock();
 
         $config = [
             'service' => OpenIDConnectService::class,
             'className' => $this->Provider,
-            'mapper' => \CakeDC\Auth\Social\Mapper\LinkedInOpenIDConnect::class,
+            'mapper' => LinkedInOpenIDConnect::class,
             'authParams' => ['scope' => ['public_profile', 'email', 'user_birthday', 'user_gender', 'user_link']],
             'options' => [
                 'state' => '__TEST_STATE__',
+                'clientId' => '__CLIENT_ID__',
+            ],
+            'openid' => [
+                'issuer' => 'https://www.linkedin.com/oauth',
             ],
             'collaborators' => [],
             'signature' => null,
@@ -103,7 +106,7 @@ class OpenIDConnectServiceTest extends TestCase
         ];
 
         $this->Service = $this->getMockBuilder(
-            \CakeDC\Auth\Social\Service\OpenIDConnectService::class
+            OpenIDConnectService::class,
         )->setConstructorArgs([
             $config,
         ])->onlyMethods([
@@ -113,7 +116,7 @@ class OpenIDConnectServiceTest extends TestCase
 
         $this->Service->expects($this->any())
             ->method('getHttpClient')
-            ->will($this->returnValue($this->Client));
+            ->willReturn($this->Client);
 
         //new OpenIDConnectService($config);
         $this->Request = ServerRequestFactory::fromGlobals();
@@ -139,8 +142,8 @@ class OpenIDConnectServiceTest extends TestCase
     public function testConstruct()
     {
         $service = new OpenIDConnectService([
-            'className' => \League\OAuth2\Client\Provider\LinkedIn::class,
-            'mapper' => \CakeDC\Auth\Social\Mapper\LinkedInOpenIDConnect::class,
+            'className' => LinkedIn::class,
+            'mapper' => LinkedInOpenIDConnect::class,
             'authParams' => ['scope' => ['public_profile', 'email', 'user_birthday', 'user_gender', 'user_link']],
             'options' => [],
             'collaborators' => [],
@@ -168,7 +171,8 @@ class OpenIDConnectServiceTest extends TestCase
             'state' => '__TEST_STATE__',
         ]);
 
-        $this->expectException(BadRequestException::class, 'Invalid OAuth2 state');
+        $this->expectException(BadRequestException::class);
+        $this->expectExceptionMessage('Invalid OAuth2 state');
 
         $this->Service->getUser($this->Request);
     }
@@ -187,7 +191,7 @@ class OpenIDConnectServiceTest extends TestCase
 
         $this->Request->getSession()->write('oauth2state', '__TEST_STATE__');
 
-        $token = new \League\OAuth2\Client\Token\AccessToken([
+        $token = new AccessToken([
             'access_token' => 'test-token',
             'expires' => 1490988496,
         ]);
@@ -196,11 +200,12 @@ class OpenIDConnectServiceTest extends TestCase
             ->method('getAccessToken')
             ->with(
                 $this->equalTo('authorization_code'),
-                $this->equalTo(['code' => 'ZPO9972j3092304230'])
+                $this->equalTo(['code' => 'ZPO9972j3092304230']),
             )
-            ->will($this->returnValue($token));
+            ->willReturn($token);
 
-        $this->expectException(BadRequestException::class, 'Missing id_token in response');
+        $this->expectException(BadRequestException::class);
+        $this->expectExceptionMessage('Missing id_token in response');
 
         $this->Service->getUser($this->Request);
     }
@@ -219,7 +224,7 @@ class OpenIDConnectServiceTest extends TestCase
 
         $this->Request->getSession()->write('oauth2state', '__TEST_STATE__');
 
-        $token = new \League\OAuth2\Client\Token\AccessToken([
+        $token = new AccessToken([
             'access_token' => 'test-token',
             'expires' => 1490988496,
             'id_token' => 'invalid-jwt',
@@ -229,13 +234,52 @@ class OpenIDConnectServiceTest extends TestCase
             ->method('getAccessToken')
             ->with(
                 $this->equalTo('authorization_code'),
-                $this->equalTo(['code' => 'ZPO9972j3092304230'])
+                $this->equalTo(['code' => 'ZPO9972j3092304230']),
             )
-            ->will($this->returnValue($token));
+            ->willReturn($token);
 
-        $this->expectException(BadRequestException::class, 'Invalid id token. Key may not be empty');
+        $this->expectException(BadRequestException::class);
+        $this->expectExceptionMessage('Invalid id token. Key may not be empty');
 
         $this->Service->getUser($this->Request);
+    }
+
+    /**
+     * Build a signed id token and prepare the request, provider and key set mocks
+     *
+     * @param array $payload id token claims
+     * @return \League\OAuth2\Client\Token\AccessToken
+     */
+    protected function prepareIdToken(array $payload): AccessToken
+    {
+        $this->Request = $this->Request->withQueryParams([
+            'code' => 'ZPO9972j3092304230',
+            'state' => '__TEST_STATE__',
+        ]);
+        $this->Request->getSession()->write('oauth2state', '__TEST_STATE__');
+        $this->Request->getSession()->write(OpenIDConnectService::SESSION_NONCE_KEY, '__NONCE__');
+
+        $key = 'example_key_with_at_least_32_bytes!';
+        $alg = 'HS256';
+        $kid = 'd929668a-bab1-4c69-9598-4373149723ff';
+        $token = new AccessToken([
+            'access_token' => 'test-token',
+            'expires' => 1490988496,
+            'id_token' => JWT::encode($payload, $key, $alg, $kid),
+        ]);
+
+        $this->Provider->expects($this->once())
+            ->method('getAccessToken')
+            ->with(
+                $this->equalTo('authorization_code'),
+                $this->equalTo(['code' => 'ZPO9972j3092304230']),
+            )
+            ->willReturn($token);
+        $this->Service->expects($this->once())
+            ->method('getIdTokenKeys')
+            ->willReturn([$kid => new Key($key, $alg)]);
+
+        return $token;
     }
 
     /**
@@ -245,53 +289,75 @@ class OpenIDConnectServiceTest extends TestCase
      */
     public function testGetUser()
     {
-        $this->Request = $this->Request->withQueryParams([
-            'code' => 'ZPO9972j3092304230',
-            'state' => '__TEST_STATE__',
-        ]);
-
-        $this->Request->getSession()->write('oauth2state', '__TEST_STATE__');
-
-        $key = 'example_key';
-        $alg = 'HS256';
         $payload = [
             'iat' => 1490988496,
-            'iss' => 'https://www.linkedin.com/',
+            'iss' => 'https://www.linkedin.com/oauth',
+            'aud' => '__CLIENT_ID__',
+            'nonce' => '__NONCE__',
         ];
-        $kid = 'd929668a-bab1-4c69-9598-4373149723ff';
-        $jwt = JWT::encode($payload, $key, $alg, $kid);
-
-        $token = new \League\OAuth2\Client\Token\AccessToken([
-            'access_token' => 'test-token',
-            'expires' => 1490988496,
-            'id_token' => $jwt,
-        ]);
-
-        $this->Provider->expects($this->once())
-            ->method('getAccessToken')
-            ->with(
-                $this->equalTo('authorization_code'),
-                $this->equalTo(['code' => 'ZPO9972j3092304230'])
-            )
-            ->will($this->returnValue($token));
-
-        $jwksData = [
-            $kid => new Key($key, $alg),
-        ];
-
-        $this->Service->expects($this->once())
-            ->method('getIdTokenKeys')
-            ->will($this->returnValue($jwksData));
+        $token = $this->prepareIdToken($payload);
 
         $actual = $this->Service->getUser($this->Request);
 
-        $expected = [
-            'token' => $token,
-            'iat' => 1490988496,
-            'iss' => 'https://www.linkedin.com/',
+        $this->assertEquals(['token' => $token] + $payload, $actual);
+        $this->assertNull($this->Request->getSession()->read(OpenIDConnectService::SESSION_NONCE_KEY));
+    }
+
+    /**
+     * @return array<string, array{0: array, 1: string}>
+     */
+    public static function invalidClaimsProvider(): array
+    {
+        $valid = [
+            'iss' => 'https://www.linkedin.com/oauth',
+            'aud' => '__CLIENT_ID__',
+            'nonce' => '__NONCE__',
         ];
 
-        $this->assertEquals($expected, $actual);
+        return [
+            'wrong issuer' => [['iss' => 'https://evil.example.com'] + $valid, 'Unexpected issuer'],
+            'missing issuer' => [array_diff_key($valid, ['iss' => true]), 'Unexpected issuer'],
+            'wrong audience' => [['aud' => 'other-client'] + $valid, 'Unexpected audience'],
+            'missing audience' => [array_diff_key($valid, ['aud' => true]), 'Unexpected audience'],
+            'wrong nonce' => [['nonce' => 'other'] + $valid, 'Nonce mismatch'],
+            'missing nonce' => [array_diff_key($valid, ['nonce' => true]), 'Nonce mismatch'],
+        ];
+    }
+
+    /**
+     * Test GetUser with invalid id token claims
+     *
+     * @param array $payload id token claims
+     * @param string $message expected error
+     * @return void
+     */
+    #[DataProvider('invalidClaimsProvider')]
+    public function testGetUserInvalidClaims(array $payload, string $message): void
+    {
+        $this->prepareIdToken($payload);
+
+        $this->expectException(BadRequestException::class);
+        $this->expectExceptionMessage($message);
+
+        $this->Service->getUser($this->Request);
+    }
+
+    /**
+     * Test the authorization url carries a nonce stored in session
+     *
+     * @return void
+     */
+    public function testGetAuthorizationUrlNonce(): void
+    {
+        $this->Provider->expects($this->once())
+            ->method('getAuthorizationUrl')
+            ->with($this->callback(fn(array $params): bool => !empty($params['nonce']) &&
+                $params['nonce'] === $this->Request->getSession()->read(OpenIDConnectService::SESSION_NONCE_KEY) &&
+                $params['scope'] === ['public_profile', 'email', 'user_birthday', 'user_gender', 'user_link']))
+            ->willReturn('http://example.com/auth');
+
+        $this->assertSame('http://example.com/auth', $this->Service->getAuthorizationUrl($this->Request));
+        $this->assertArrayNotHasKey('nonce', $this->Service->getConfig('authParams'));
     }
 
     /**
@@ -302,14 +368,34 @@ class OpenIDConnectServiceTest extends TestCase
     public function testDiscover()
     {
         $arrayTest = ['test' => 'test'];
-        $response = new \Cake\Http\Client\Response([], json_encode($arrayTest));
+        $response = new Response([], json_encode($arrayTest));
 
         $this->Client->expects($this->once())
             ->method('get')
-            ->will($this->returnValue($response));
+            ->willReturn($response);
 
         $actual = $this->Service->discover();
 
         $this->assertEquals($arrayTest, $actual);
+    }
+
+    /**
+     * Test discover uses the configured cache
+     *
+     * @return void
+     */
+    public function testDiscoverCached(): void
+    {
+        Cache::setConfig('_oidc_test_', ['className' => 'Array']);
+        $this->Service->setConfig('openid.cache', '_oidc_test_');
+        $arrayTest = ['issuer' => 'https://www.linkedin.com/oauth'];
+
+        $this->Client->expects($this->once())
+            ->method('get')
+            ->willReturn(new Response([], json_encode($arrayTest)));
+
+        $this->assertEquals($arrayTest, $this->Service->discover());
+        $this->assertEquals($arrayTest, $this->Service->discover());
+        Cache::drop('_oidc_test_');
     }
 }

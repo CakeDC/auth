@@ -17,6 +17,10 @@ You can disable it by adding this to any config file:
 To get a list of available providers please visit [RobThree/TwoFactorAuth](https://robthree.github.io/TwoFactorAuth/qr-codes.html) documentation.
 
 
+The url of each processor (`OneTimePasswordAuthenticator.verifyAction`, `Webauthn2fa.startAction`,
+`U2f.startAction`) can be a routing array or a string url. The query params of the login request
+are appended to it.
+
 Processors
 -------------
 

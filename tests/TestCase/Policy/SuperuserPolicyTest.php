@@ -48,7 +48,6 @@ class SuperuserPolicyTest extends TestCase
      * @param array $userData custom user data for testing.
      * @param bool $expected The expected result.
      * @param array $config policy configurations.
-     * @dataProvider dataProviderCanAccess
      * @return void
      */
     #[DataProvider('dataProviderCanAccess')]

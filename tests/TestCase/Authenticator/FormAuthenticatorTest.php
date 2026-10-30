@@ -320,7 +320,7 @@ class FormAuthenticatorTest extends TestCase
         $request = ServerRequestFactory::fromGlobals(
             ['REQUEST_URI' => '/testpath', 'REMOTE_ADDR' => '127.0.0.1'],
             [],
-            ['username' => 'marcelo', 'password' => 'password']
+            ['username' => 'marcelo', 'password' => 'password'],
         );
 
         $baseResult = new Result(
@@ -329,7 +329,7 @@ class FormAuthenticatorTest extends TestCase
                 'username' => 'marcelo',
                 'role' => 'user',
             ],
-            Result::SUCCESS
+            Result::SUCCESS,
         );
         $BaseAuthenticator->expects($this->once())
             ->method('authenticate')

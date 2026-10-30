@@ -14,9 +14,8 @@ declare(strict_types=1);
 namespace CakeDC\Auth\Rbac\Permissions;
 
 use Cake\Core\InstanceConfigTrait;
-use Cake\Http\ServerRequest;
 use Cake\Log\LogTrait;
-use Cake\Utility\Hash;
+use CakeDC\Auth\Rbac\Rules\OTPRule;
 
 /**
  * Class AbstractProvider, handles getting permission from different sources,
@@ -100,8 +99,8 @@ abstract class AbstractProvider
                 'controller' => 'Users',
                 'action' => 'resetOneTimePasswordAuthenticator',
                 'allowed' => [
-                    'className' => \CakeDC\Auth\Rbac\Rules\OTPRule::class,
-                    'option' => []
+                    'className' => OTPRule::class,
+                    'options' => [],
                 ],
             ],
             //all roles allowed to Pages/display

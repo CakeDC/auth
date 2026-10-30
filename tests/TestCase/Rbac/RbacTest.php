@@ -16,6 +16,7 @@ namespace CakeDC\Auth\Test\TestCase\Rbac;
 use Cake\Http\ServerRequest;
 use Cake\TestSuite\TestCase;
 use CakeDC\Auth\Rbac\Rbac;
+use CakeDC\Auth\Rbac\Rules\OTPRule;
 use CakeDC\Auth\Rbac\Rules\Owner;
 use CakeDC\Auth\Test\App\Auth\Rule\SampleRule;
 use Exception;
@@ -99,8 +100,8 @@ class RbacTest extends TestCase
                 'controller' => 'Users',
                 'action' => 'resetOneTimePasswordAuthenticator',
                 'allowed' => [
-                    'className' => \CakeDC\Auth\Rbac\Rules\OTPRule::class,
-                    'option' => []
+                    'className' => OTPRule::class,
+                    'options' => [],
                 ],
             ],
             //all roles allowed to Pages/display
@@ -129,9 +130,6 @@ class RbacTest extends TestCase
         unset($this->rbac);
     }
 
-    /**
-     * @covers \CakeDC\Auth\Rbac\Rbac::__construct
-     */
     public function testConstructGetDefaultPermissions()
     {
         $this->rbac = new Rbac();
@@ -139,9 +137,6 @@ class RbacTest extends TestCase
         $this->assertSame($this->defaultPermissions, $result);
     }
 
-    /**
-     * @covers \CakeDC\Auth\Rbac\Rbac::__construct
-     */
     public function testConstructBadProvider()
     {
         $this->expectException(RuntimeException::class);
@@ -151,9 +146,6 @@ class RbacTest extends TestCase
         ]);
     }
 
-    /**
-     * @covers \CakeDC\Auth\Rbac\Rbac::__construct
-     */
     public function testConstructSetPermissions()
     {
         $this->rbac = new Rbac([
@@ -173,9 +165,6 @@ class RbacTest extends TestCase
         $this->assertEquals($permissions, $resultPermissions);
     }
 
-    /**
-     * @dataProvider providerAuthorize
-     */
     #[DataProvider('providerAuthorize')]
     public function testAuthorize($permissions, $user, $requestParams, $expected)
     {
@@ -1198,7 +1187,6 @@ class RbacTest extends TestCase
     }
 
     /**
-     * @dataProvider badPermissionProvider
      * @param array $permissions
      * @param array $user
      * @param array $requestParams
@@ -1365,6 +1353,47 @@ class RbacTest extends TestCase
             ->withParam('action', $params['action'] ?? null)
             ->withParam('prefix', $params['prefix'] ?? null)
             ->withParam('_ext', $params['_ext'] ?? null);
+    }
+
+    /**
+     * A `['className' => Rule::class, 'options' => []]` value is resolved through the RuleRegistry
+     *
+     * @return void
+     */
+    public function testRuleConfig(): void
+    {
+        $permissions = [[
+            'controller' => 'Users',
+            'action' => 'resetOneTimePasswordAuthenticator',
+            'allowed' => ['className' => OTPRule::class, 'options' => []],
+        ]];
+        $this->rbac = new Rbac(['permissions' => $permissions]);
+        $request = $this->_requestFromArray([
+            'controller' => 'Users',
+            'action' => 'resetOneTimePasswordAuthenticator',
+        ])->withParam('pass', ['1']);
+
+        $this->assertTrue($this->rbac->checkPermissions(['id' => 1, 'role' => 'user'], $request));
+        $this->assertFalse($this->rbac->checkPermissions(['id' => 2, 'role' => 'user'], $request));
+    }
+
+    /**
+     * An array with a `className` key that is not a Rule keeps the value matching behavior
+     *
+     * @return void
+     */
+    public function testRuleConfigNotARule(): void
+    {
+        $permissions = [[
+            'role' => ['className' => 'admin'],
+            'controller' => '*',
+            'action' => '*',
+        ]];
+        $this->rbac = new Rbac(['permissions' => $permissions]);
+        $request = $this->_requestFromArray(['controller' => 'Posts', 'action' => 'index']);
+
+        $this->assertTrue($this->rbac->checkPermissions(['id' => 1, 'role' => 'admin'], $request));
+        $this->assertFalse($this->rbac->checkPermissions(['id' => 1, 'role' => 'user'], $request));
     }
 
     public function testGetPermissions()

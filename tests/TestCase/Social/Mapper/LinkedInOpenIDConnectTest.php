@@ -14,8 +14,8 @@ declare(strict_types=1);
 namespace CakeDC\Auth\Test\TestCase\Social\Mapper;
 
 use Cake\TestSuite\TestCase;
-use CakeDC\Auth\Social\Mapper\LinkedIn;
 use CakeDC\Auth\Social\Mapper\LinkedInOpenIDConnect;
+use League\OAuth2\Client\Token\AccessToken;
 
 class LinkedInOpenIDConnectTest extends TestCase
 {
@@ -31,14 +31,14 @@ class LinkedInOpenIDConnectTest extends TestCase
 
     public function testMap()
     {
-        $token = new \League\OAuth2\Client\Token\AccessToken([
+        $token = new AccessToken([
             'access_token' => 'test-token',
             'expires' => 1490988496,
         ]);
         $rawData = [
             'sub' => '1',
             'token' => $token,
-            'email' => 'test@gmail.com',           
+            'email' => 'test@gmail.com',
             'given_name' => 'Test',
             'family_name' => 'User',
             'industry' => 'Computer Software',
@@ -49,8 +49,7 @@ class LinkedInOpenIDConnectTest extends TestCase
                 'name' => 'Spain',
             ],
             'picture' => 'https://media.licdn.com/mpr/mprx/test.jpg',
-            
-            
+
             'bio' => 'The best test user in the world.',
             'publicProfileUrl' => 'https://www.linkedin.com/in/test',
         ];

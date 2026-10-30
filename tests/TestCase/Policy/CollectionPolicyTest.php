@@ -49,7 +49,6 @@ class CollectionPolicyTest extends TestCase
      * @param bool $isSuperuser Is this a super user
      * @param string $rbacBehavior 'never', 'true', or 'false'
      * @param bool $expected The expected result;
-     * @dataProvider dataProviderCanAccess
      * @return void
      */
     #[DataProvider('dataProviderCanAccess')]
