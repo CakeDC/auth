@@ -22,6 +22,18 @@ use UnexpectedValueException;
 class KeycloakTest extends TestCase
 {
     /**
+     * @return void
+     */
+    public function setUp(): void
+    {
+        parent::setUp();
+        Configure::write('OAuth.providers.keycloak.rolesMap', [
+            'CakeDc-Admin' => 'admin',
+            'CakeDc-User' => 'user',
+        ]);
+    }
+
+    /**
      * @param array $roles realm roles
      * @return array
      */
@@ -76,15 +88,31 @@ class KeycloakTest extends TestCase
     }
 
     /**
-     * The first matching rolesMap entry wins, roles are compared case-insensitive
+     * The first matching rolesMap entry wins, roles are compared case-sensitive
      *
      * @return void
      */
     public function testRolesMapOrder(): void
     {
-        $user = (new Keycloak())($this->rawData(['cakedc-user', 'CAKEDC-ADMIN']));
-
+        $user = (new Keycloak())($this->rawData(['CakeDc-User', 'CakeDc-Admin']));
         $this->assertSame('admin', $user['roles']);
+
+        $user = (new Keycloak())($this->rawData(['cakedc-admin', 'CakeDc-User']));
+        $this->assertSame('user', $user['roles']);
+    }
+
+    /**
+     * Without a roles map the role is not mapped and the login is not blocked
+     *
+     * @return void
+     */
+    public function testNoRolesMap(): void
+    {
+        Configure::delete('OAuth.providers.keycloak.rolesMap');
+        $rawData = $this->rawData(['offline_access']);
+        unset($rawData['realm_access']);
+
+        $this->assertNull((new Keycloak())($rawData)['roles']);
     }
 
     /**
@@ -92,7 +120,7 @@ class KeycloakTest extends TestCase
      */
     public function testRolesMapFromConfig(): void
     {
-        Configure::write('OAuth.providers.keycloak.rolesMap', ['manager' => 'superuser']);
+        Configure::write('OAuth.providers.keycloak.rolesMap', ['Manager' => 'superuser']);
         $user = (new Keycloak())($this->rawData(['Manager']));
 
         $this->assertSame('superuser', $user['roles']);

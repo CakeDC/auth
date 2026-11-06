@@ -20,10 +20,12 @@ use CakeDC\Auth\Rbac\Rules\OTPRule;
 use CakeDC\Auth\Rbac\Rules\Owner;
 use CakeDC\Auth\Test\App\Auth\Rule\SampleRule;
 use Exception;
+use InvalidArgumentException;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Psr\Log\LogLevel;
 use ReflectionClass;
 use RuntimeException;
+use stdClass;
 
 class RbacTest extends TestCase
 {
@@ -1394,6 +1396,42 @@ class RbacTest extends TestCase
 
         $this->assertTrue($this->rbac->checkPermissions(['id' => 1, 'role' => 'admin'], $request));
         $this->assertFalse($this->rbac->checkPermissions(['id' => 1, 'role' => 'user'], $request));
+    }
+
+    /**
+     * An `allowed` or `bypassAuth` rule config with a class that is not a Rule must not allow access
+     *
+     * @return void
+     */
+    #[DataProvider('ruleConfigInvalidClassProvider')]
+    public function testRuleConfigInvalidClass(string $key, mixed $className): void
+    {
+        $permissions = [[
+            'controller' => 'Users',
+            'action' => 'resetOneTimePasswordAuthenticator',
+            $key => ['className' => $className],
+        ]];
+        $this->rbac = new Rbac(['permissions' => $permissions]);
+        $request = $this->_requestFromArray([
+            'controller' => 'Users',
+            'action' => 'resetOneTimePasswordAuthenticator',
+        ]);
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->rbac->checkPermissions(['id' => 1, 'role' => 'user'], $request);
+    }
+
+    /**
+     * @return array
+     */
+    public static function ruleConfigInvalidClassProvider(): array
+    {
+        return [
+            'missing class' => ['allowed', 'App\Rbac\MissingRule'],
+            'not a rule' => ['allowed', stdClass::class],
+            'not a string' => ['allowed', 123],
+            'bypassAuth' => ['bypassAuth', stdClass::class],
+        ];
     }
 
     public function testGetPermissions()

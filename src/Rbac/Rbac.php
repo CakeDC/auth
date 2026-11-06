@@ -25,6 +25,7 @@ use CakeDC\Auth\Rbac\Permissions\AbstractProvider;
 use CakeDC\Auth\Rbac\Permissions\ConfigProvider;
 use CakeDC\Auth\Rbac\Rules\Rule;
 use CakeDC\Auth\Rbac\Rules\RuleRegistry;
+use InvalidArgumentException;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LogLevel;
 use RuntimeException;
@@ -222,9 +223,11 @@ class Rbac implements RbacInterface
                 $return = (bool)call_user_func($value, $user, $role, $request);
             } elseif ($value instanceof Rule) {
                 $return = $value->allowed($user, $role, $request);
-            } elseif ($this->_isRuleConfig($value)) {
-                $rule = RuleRegistry::get($value['className'], (array)($value['options'] ?? []));
-                $return = $rule->allowed($user, $role, $request);
+            } elseif (
+                $this->_isRuleConfig($value) ||
+                (in_array($key, ['allowed', 'bypassAuth'], true) && is_array($value) && isset($value['className']))
+            ) {
+                $return = $this->_ruleFromConfig($value)->allowed($user, $role, $request);
             } elseif ($key === 'bypassAuth' && $value === true) {
                 $return = true;
             } elseif ($key === 'allowed') {
@@ -272,6 +275,29 @@ class Rbac implements RbacInterface
             isset($value['className']) &&
             is_string($value['className']) &&
             is_a($value['className'], Rule::class, true);
+    }
+
+    /**
+     * Get the rule instance for a rule config array
+     *
+     * An `allowed` or `bypassAuth` array with a `className` key is always a rule config, a class that
+     * does not exist or is not a Rule throws instead of evaluating the array as a truthy value.
+     *
+     * @param array $config Rule config, `['className' => Rule::class, 'options' => []]`.
+     * @throws \InvalidArgumentException when `className` is not a Rule class
+     * @return \CakeDC\Auth\Rbac\Rules\Rule
+     */
+    protected function _ruleFromConfig(array $config): Rule
+    {
+        if (!$this->_isRuleConfig($config)) {
+            throw new InvalidArgumentException(sprintf(
+                'Permission rule `%s` is not a class implementing %s',
+                is_string($config['className']) ? $config['className'] : get_debug_type($config['className']),
+                Rule::class,
+            ));
+        }
+
+        return RuleRegistry::get($config['className'], (array)($config['options'] ?? []));
     }
 
     /**

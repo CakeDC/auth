@@ -65,7 +65,7 @@ class SuperuserPolicy implements PolicyInterface
         $emitEvents = Configure::read('CakeDC/Auth.emitEvents', false);
 
         if ($allowed && $emitEvents) {
-            $role = is_array($user) ? ($user['role'] ?? null) : null;
+            $role = $user['role'] ?? null;
             EventManager::instance()->dispatch(new Event('Auth.Authorization.checked', $this, [
                 'allowed' => true,
                 'policy' => static::class,

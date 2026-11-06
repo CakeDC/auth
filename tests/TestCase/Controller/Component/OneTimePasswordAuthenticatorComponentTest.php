@@ -22,6 +22,7 @@ use Cake\TestSuite\TestCase;
 use Cake\Utility\Security;
 use CakeDC\Auth\Controller\Component\OneTimePasswordAuthenticatorComponent;
 use PHPUnit\Framework\MockObject\MockObject;
+use RuntimeException;
 
 class OneTimePasswordAuthenticatorComponentTest extends TestCase
 {
@@ -132,5 +133,40 @@ class OneTimePasswordAuthenticatorComponentTest extends TestCase
 
         $verified = $this->Controller->OneTimePasswordAuthenticator->verifyCode($secret, $verificationCode);
         $this->assertTrue($verified);
+    }
+
+    /**
+     * Test a configuration error is reported with the package hint and the original error
+     *
+     * @return void
+     */
+    public function testInitializeConfigurationError(): void
+    {
+        Configure::write('OneTimePasswordAuthenticator.digits', 'not-a-number');
+
+        try {
+            new OneTimePasswordAuthenticatorComponent($this->Registry);
+            $this->fail('RuntimeException was not thrown');
+        } catch (RuntimeException $ex) {
+            $this->assertStringContainsString('An error has occurred configuring OneTimePasswordAuthenticator', $ex->getMessage());
+            $this->assertStringContainsString('robthree/twofactorauth', $ex->getMessage());
+            $this->assertNotNull($ex->getPrevious());
+            $this->assertStringContainsString($ex->getPrevious()->getMessage(), $ex->getMessage());
+        }
+    }
+
+    /**
+     * Test the authenticator is not created when the one time password login is disabled
+     *
+     * @return void
+     */
+    public function testInitializeLoginDisabled(): void
+    {
+        Configure::write('OneTimePasswordAuthenticator.login', false);
+        Configure::write('OneTimePasswordAuthenticator.digits', 'not-a-number');
+
+        $component = new OneTimePasswordAuthenticatorComponent($this->Registry);
+
+        $this->assertFalse(isset($component->tfa));
     }
 }

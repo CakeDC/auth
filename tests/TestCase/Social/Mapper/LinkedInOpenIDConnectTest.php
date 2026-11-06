@@ -39,6 +39,7 @@ class LinkedInOpenIDConnectTest extends TestCase
             'sub' => '1',
             'token' => $token,
             'email' => 'test@gmail.com',
+            'email_verified' => true,
             'given_name' => 'Test',
             'family_name' => 'User',
             'industry' => 'Computer Software',
@@ -76,5 +77,24 @@ class LinkedInOpenIDConnectTest extends TestCase
             ],
             'raw' => $rawData,
         ], $user);
+    }
+
+    /**
+     * An unverified email is not validated
+     *
+     * @return void
+     */
+    public function testMapEmailNotVerified(): void
+    {
+        $rawData = [
+            'sub' => '1',
+            'token' => new AccessToken(['access_token' => 'test-token']),
+            'email' => 'test@gmail.com',
+            'email_verified' => false,
+        ];
+
+        $this->assertFalse((new LinkedInOpenIDConnect())($rawData)['validated']);
+        unset($rawData['email_verified']);
+        $this->assertFalse((new LinkedInOpenIDConnect())($rawData)['validated']);
     }
 }

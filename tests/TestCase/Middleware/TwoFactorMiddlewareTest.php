@@ -163,6 +163,7 @@ class TwoFactorMiddlewareTest extends TestCase
 
     /**
      * Test middleware redirect when the verify action is a string url
+     *
      * @param string $verifyAction configured verify action
      * @param array $query request query params
      * @param string $expected expected location

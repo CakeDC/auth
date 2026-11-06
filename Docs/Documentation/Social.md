@@ -159,12 +159,17 @@ Add the Keycloak provider configuration to your `config/users.php` file:
 
 The `CakeDC\Auth\Social\Mapper\Keycloak` mapper reads the realm roles from `realm_access.roles`
 and maps them to an application role using the `rolesMap` provider configuration. The keys are
-Keycloak roles (compared case-insensitive), the values are application roles. The first entry of
-`rolesMap` the user has wins, so list the most privileged roles first. The mapped role is
-returned in the `roles` field of the mapped user.
+Keycloak roles (compared case-sensitive, as in Keycloak), the values are application roles. The
+first entry of `rolesMap` the user has wins, so list the most privileged roles first. The mapped
+role is returned in the `roles` field of the mapped user.
 
-The login fails with an `UnexpectedValueException` when the userinfo has no roles or none of the
-user roles is in `rolesMap`.
+Without a `rolesMap` the `roles` field is `null` and no role is required. When a `rolesMap` is set,
+the login fails with an `UnexpectedValueException` when the userinfo has no roles or none of the
+user roles is in `rolesMap`, so only users with a mapped role can log in.
+
+The mapper reads `OAuth.providers.keycloak.rolesMap` and `OAuth.providers.keycloak.mapFields`. When
+the provider uses another key, pass a mapper instance instead of the class name:
+`'mapper' => new \CakeDC\Auth\Social\Mapper\Keycloak(null, ['MyRealm-Admin' => 'admin'])`.
 
 The mapper does not change the user role by itself. Use an event listener in your application to
 apply it, see below.

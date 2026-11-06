@@ -18,19 +18,32 @@ use Cake\Cache\Cache;
 use Cake\Http\Client;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\ServerRequest;
+use Cake\Log\LogTrait;
 use Exception;
 use Firebase\JWT\JWK;
 use Firebase\JWT\JWT;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Log\LogLevel;
+use RuntimeException;
+use UnexpectedValueException;
 
 class OpenIDConnectService extends OAuth2Service
 {
+    use LogTrait;
+
     /**
      * Session key used to store the nonce sent in the authorization request
      *
      * @var string
      */
     public const SESSION_NONCE_KEY = 'oidcnonce';
+
+    /**
+     * Discovery document, fetched once per instance
+     *
+     * @var array|null
+     */
+    protected ?array $discoveryDocument = null;
 
     /**
      * Default configuration. `openid` defaults target LinkedIn, override them per provider.
@@ -103,10 +116,15 @@ class OpenIDConnectService extends OAuth2Service
         if (!$idToken) {
             throw new BadRequestException('Missing id_token in response');
         }
+        if (!class_exists(JWT::class)) {
+            throw new RuntimeException('OpenIDConnectService requires the firebase/php-jwt package');
+        }
         try {
-            $claims = (array)JWT::decode($idToken, $this->getIdTokenKeys());
+            $claims = $this->decodeIdToken($idToken);
         } catch (Exception $ex) {
-            throw new BadRequestException('Invalid id token. ' . $ex->getMessage());
+            $this->log('Invalid OpenID Connect id token: ' . $ex->getMessage(), LogLevel::WARNING);
+
+            throw new BadRequestException('Invalid id token');
         }
         $this->validateClaims($request, $claims);
 
@@ -145,11 +163,34 @@ class OpenIDConnectService extends OAuth2Service
     }
 
     /**
+     * Decode the id token and verify its signature
+     *
+     * When the token is signed with a key that is not in the cached key set, the provider may have
+     * rotated its keys, so the key set is fetched again once, bypassing the cache.
+     *
+     * @param string $idToken Encoded id token.
+     * @return array
+     */
+    protected function decodeIdToken(string $idToken): array
+    {
+        try {
+            return (array)JWT::decode($idToken, $this->getIdTokenKeys());
+        } catch (UnexpectedValueException $ex) {
+            if (!$this->getConfig('openid.cache') || !str_contains($ex->getMessage(), '"kid" invalid')) {
+                throw $ex;
+            }
+
+            return (array)JWT::decode($idToken, $this->getIdTokenKeys(true));
+        }
+    }
+
+    /**
      * Get the keys used to verify the id token signature
      *
+     * @param bool $refresh Fetch the key set again instead of reading it from the cache.
      * @return array<string, \Firebase\JWT\Key>
      */
-    protected function getIdTokenKeys(): array
+    protected function getIdTokenKeys(bool $refresh = false): array
     {
         $discoverData = $this->discover();
         $jwksUri = $discoverData['jwks_uri'] ?? null;
@@ -164,7 +205,7 @@ class OpenIDConnectService extends OAuth2Service
                 $this->getConfig('openid.baseUrl'),
             );
         }
-        $jwksData = $this->fetchJson($jwksUri);
+        $jwksData = $this->fetchJson($jwksUri, $refresh);
         if (!$jwksData) {
             throw new BadRequestException(
                 'Unable to retrieve jwks. Not found in the `jwks_uri` contents',
@@ -175,31 +216,44 @@ class OpenIDConnectService extends OAuth2Service
     }
 
     /**
-     * Get the OpenID discovery document
+     * Get the OpenID discovery document, fetched once per service instance
      *
      * @return array
      */
     public function discover(): array
     {
-        return $this->fetchJson($this->getConfig('openid.url'));
+        return $this->discoveryDocument ??= $this->fetchJson($this->getConfig('openid.url'));
     }
 
     /**
      * Fetch a json document, using the `openid.cache` cache config when set
      *
      * @param string $url Url of the document.
-     * @return array
+     * @param bool $refresh Ignore the cached document and fetch it again.
+     * @return array The document, empty when the request failed.
      */
-    protected function fetchJson(string $url): array
+    protected function fetchJson(string $url, bool $refresh = false): array
     {
-        $fetch = fn(): array => (array)$this->getHttpClient()->get($url)->getJson();
+        $fetch = function () use ($url): array {
+            $response = $this->getHttpClient()->get($url);
+            if (!$response->isOk()) {
+                $this->log(
+                    sprintf('OpenID Connect request to %s failed with status %s', $url, $response->getStatusCode()),
+                    LogLevel::WARNING,
+                );
+
+                return [];
+            }
+
+            return (array)$response->getJson();
+        };
         $cacheConfig = $this->getConfig('openid.cache');
         if (!$cacheConfig) {
             return $fetch();
         }
 
         $key = 'cakedc_auth_oidc_' . md5($url);
-        $data = Cache::read($key, $cacheConfig);
+        $data = $refresh ? null : Cache::read($key, $cacheConfig);
         if (is_array($data) && $data) {
             return $data;
         }

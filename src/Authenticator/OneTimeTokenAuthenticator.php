@@ -20,11 +20,13 @@ class OneTimeTokenAuthenticator extends AbstractAuthenticator implements Authent
     {
         /** @var \Cake\Http\ServerRequest $request */
         $token = $request->getQuery('token') ?: $request->getData('token');
+        // The CakeDC/Users token form posts one input per character, `token[0]`, `token[1]`...
         if (is_array($token)) {
-            $token = join($token);
+            $isStringList = array_filter($token, 'is_string') === $token;
+            $token = $isStringList ? implode('', $token) : null;
         }
 
-        if (!$token) {
+        if (!is_string($token) || $token === '') {
             return new Result(null, Result::FAILURE_CREDENTIALS_MISSING);
         }
 

@@ -35,7 +35,7 @@ class AuthPlugin extends BasePlugin
         if (is_array($oauthPath)) {
             $routes->scope('/auth', function ($routes) use ($oauthPath): void {
                 $routes->connect(
-                    '/:provider',
+                    '/{provider}',
                     $oauthPath,
                     ['provider' => implode('|', array_keys(Configure::read('OAuth.providers')))],
                 );
