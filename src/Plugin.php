@@ -12,31 +12,12 @@ declare(strict_types=1);
  */
 namespace CakeDC\Auth;
 
-use Cake\Core\BasePlugin;
-use Cake\Core\Configure;
-use Cake\Routing\RouteBuilder;
-
 /**
  * Class Plugin
  *
  * @package CakeDC\Auth
+ * @deprecated 11.1.0 Use \CakeDC\Auth\AuthPlugin instead, the plugin class name expected since CakePHP 5.3.
  */
-class Plugin extends BasePlugin
+class Plugin extends AuthPlugin
 {
-    /**
-     * @inheritDoc
-     */
-    public function routes(RouteBuilder $routes): void
-    {
-        $oauthPath = Configure::read('OAuth.path');
-        if (is_array($oauthPath)) {
-            $routes->scope('/auth', function ($routes) use ($oauthPath): void {
-                $routes->connect(
-                    '/{provider}',
-                    $oauthPath,
-                    ['provider' => implode('|', array_keys(Configure::read('OAuth.providers')))],
-                );
-            });
-        }
-    }
 }
