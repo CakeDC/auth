@@ -151,4 +151,22 @@ class KeycloakTest extends TestCase
 
         (new Keycloak())($rawData);
     }
+
+    /**
+     * A partial mapFields config is merged over the Keycloak map, the role check keeps working
+     *
+     * @return void
+     */
+    public function testPartialMapFieldsKeepRoleCheck(): void
+    {
+        Configure::write('OAuth.providers.keycloak.mapFields', ['username' => 'email']);
+
+        $user = (new Keycloak())($this->rawData(['CakeDc-Admin']));
+        $this->assertSame('test@example.com', $user['username']);
+        $this->assertSame('f4b8c1a2', $user['id']);
+        $this->assertSame('admin', $user['roles']);
+
+        $this->expectException(UnexpectedValueException::class);
+        (new Keycloak())($this->rawData(['nobody']));
+    }
 }

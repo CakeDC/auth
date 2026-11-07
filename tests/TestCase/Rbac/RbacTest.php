@@ -1440,4 +1440,46 @@ class RbacTest extends TestCase
         $this->rbac->setPermissions($permissions);
         $this->assertSame($permissions, $this->rbac->getPermissions());
     }
+
+    /**
+     * Test the match reason reports the result as true or false
+     *
+     * @return void
+     */
+    public function testMatchReasonResult(): void
+    {
+        $request = $this->_requestFromArray(['controller' => 'Posts', 'action' => 'index']);
+        $user = ['id' => 1, 'role' => 'user'];
+        $method = (new ReflectionClass(Rbac::class))->getMethod('_matchPermission');
+
+        $allowed = $method->invoke(new Rbac(), [
+            'role' => 'user', 'controller' => 'Posts', 'action' => 'index', 'allowed' => true,
+        ], $user, 'user', $request);
+        $denied = $method->invoke(new Rbac(), [
+            'role' => 'user', 'controller' => 'Posts', 'action' => 'index', 'allowed' => false,
+        ], $user, 'user', $request);
+
+        $this->assertStringEndsWith('with result = true', $allowed->getReason());
+        $this->assertStringEndsWith('with result = false', $denied->getReason());
+    }
+
+    /**
+     * Only `true` or a callable in `bypassAuth` opens a permission to anonymous requests. A rule or
+     * rule config is only evaluated for logged in users.
+     *
+     * @return void
+     */
+    public function testBypassAuthRuleOnlyForLoggedInUsers(): void
+    {
+        $request = $this->_requestFromArray(['controller' => 'Pages', 'action' => 'display']);
+        foreach ([new SampleRule(), ['className' => SampleRule::class]] as $bypass) {
+            $rbac = new Rbac(['permissions' => [[
+                'controller' => 'Pages',
+                'action' => 'display',
+                'bypassAuth' => $bypass,
+            ]]]);
+            $this->assertFalse($rbac->checkPermissions([], $request));
+            $this->assertTrue($rbac->checkPermissions(['id' => 1, 'role' => 'user'], $request));
+        }
+    }
 }

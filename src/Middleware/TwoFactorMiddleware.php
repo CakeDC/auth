@@ -2,17 +2,18 @@
 declare(strict_types=1);
 
 /**
- * Copyright 2010 - 2019, Cake Development Corporation (https://www.cakedc.com)
+ * Copyright 2010 - 2026, Cake Development Corporation (https://www.cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2010 - 2019, Cake Development Corporation (https://www.cakedc.com)
+ * @copyright Copyright 2010 - 2026, Cake Development Corporation (https://www.cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
 namespace CakeDC\Auth\Middleware;
 
+use Authentication\AuthenticationServiceInterface;
 use Cake\Http\Response;
 use Cake\Routing\Router;
 use CakeDC\Auth\Authentication\TwoFactorProcessorLoader;
@@ -30,7 +31,11 @@ class TwoFactorMiddleware implements MiddlewareInterface
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         $service = $request->getAttribute('authentication');
-        $status = $service->getResult() ? $service->getResult()->getStatus() : null;
+        $result = $service instanceof AuthenticationServiceInterface ? $service->getResult() : null;
+        if ($result === null) {
+            return $handler->handle($request);
+        }
+        $status = $result->getStatus();
         $processors = TwoFactorProcessorLoader::processors();
         $url = null;
         foreach ($processors as $processor) {

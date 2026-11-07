@@ -2,14 +2,15 @@
 declare(strict_types=1);
 
 /**
- * Copyright 2010 - 2019, Cake Development Corporation (https://www.cakedc.com)
+ * Copyright 2010 - 2026, Cake Development Corporation (https://www.cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2010 - 2019, Cake Development Corporation (https://www.cakedc.com)
+ * @copyright Copyright 2010 - 2026, Cake Development Corporation (https://www.cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
+
 namespace CakeDC\Auth\Rbac\Rules;
 
 use ArrayAccess;
@@ -125,7 +126,10 @@ class Owner extends AbstractRule
                 $requestKeyTypeData = $request->getParsedBody() ?: [];
                 break;
             default:
-                throw new RuntimeException(sprintf('TypeTableKey "%s" is invalid, please use "params", "data" or "query"', $tableKeyType));
+                throw new RuntimeException(sprintf(
+                    'TypeTableKey "%s" is invalid, please use "params", "data" or "query"',
+                    $tableKeyType,
+                ));
         }
 
         return Hash::get($requestKeyTypeData, $this->getConfig('tableIdParamsKey'));

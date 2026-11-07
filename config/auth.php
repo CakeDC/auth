@@ -36,7 +36,7 @@ return [
                 'callbackLinkSocialUri' => Router::fullBaseUrl() . '/callback-link-social/twitter',
             ],
         ],
-        // Deprecated, LinkedIn switched to OpenID-Connect and OAuth2 is no longer working properly
+        // Deprecated: LinkedIn retired this API, use linkedInOpenIDConnect
         'linkedIn' => [
             'service' => 'CakeDC\Auth\Social\Service\OAuth2Service',
             'className' => 'League\OAuth2\Client\Provider\LinkedIn',
@@ -58,6 +58,7 @@ return [
                 'defaultScopes' => ['email', 'openid', 'profile'],
             ],
         ],
+        // Deprecated: the Instagram Basic Display API was shut down
         'instagram' => [
             'service' => 'CakeDC\Auth\Social\Service\OAuth2Service',
             'className' => 'League\OAuth2\Client\Provider\Instagram',
@@ -103,11 +104,11 @@ return [
             'service' => 'CakeDC\Auth\Social\Service\OAuth2Service',
             'className' => 'Stevenmaguire\OAuth2\Client\Provider\Keycloak',
             'mapper' => 'CakeDC\Auth\Social\Mapper\Keycloak',
-            'rolesMap' => [
-                'CakeDc-Admin' => 'admin',
-                'CakeDc-User' => 'user',
-                'CakeDc-Worker' => 'user',
-            ],
+            // Keycloak realm role => application role, the first match wins. Without a map no role is set.
+            // 'rolesMap' => [
+            //     'example-realm-admin' => 'admin',
+            //     'example-realm-user' => 'user',
+            // ],
             'authParams' => ['scope' => ['openid', 'roles']],
             'options' => [
                 'redirectUri' => Router::fullBaseUrl() . '/auth/keycloak',

@@ -2,14 +2,15 @@
 declare(strict_types=1);
 
 /**
- * Copyright 2010 - 2019, Cake Development Corporation (https://www.cakedc.com)
+ * Copyright 2010 - 2026, Cake Development Corporation (https://www.cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2010 - 2018, Cake Development Corporation (https://www.cakedc.com)
+ * @copyright Copyright 2010 - 2026, Cake Development Corporation (https://www.cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
+
 namespace CakeDC\Auth\Authentication;
 
 use Cake\Core\Configure;
@@ -30,12 +31,15 @@ class Webauthn2fAuthenticationCheckerFactory
     public function build(): Webauthn2fAuthenticationCheckerInterface
     {
         $className = Configure::read('Webauthn2fa.checker');
-        $interfaces = class_implements($className);
         $required = Webauthn2fAuthenticationCheckerInterface::class;
 
-        if (in_array($required, $interfaces)) {
+        if (is_string($className) && is_subclass_of($className, $required)) {
             return new $className();
         }
-        throw new InvalidArgumentException("Invalid config for 'Webauthn2fa.checker', '$className' does not implement '$required'");
+        throw new InvalidArgumentException(sprintf(
+            "Invalid config for 'Webauthn2fa.checker', '%s' does not implement '%s'",
+            is_string($className) ? $className : get_debug_type($className),
+            $required,
+        ));
     }
 }

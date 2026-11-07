@@ -200,4 +200,43 @@ class TwoFactorMiddlewareTest extends TestCase
 
         $this->assertSame([$expected], $actual->getHeader('Location'));
     }
+
+    /**
+     * @return array<string, array{0: bool}>
+     */
+    public static function noAuthenticationResultProvider(): array
+    {
+        return [
+            'no authentication service' => [false],
+            'service without result' => [true],
+        ];
+    }
+
+    /**
+     * Test the request is passed on when there is no authentication result
+     *
+     * @param bool $withService add an authentication service without result
+     * @return void
+     */
+    #[DataProvider('noAuthenticationResultProvider')]
+    public function testInvokeWithoutAuthenticationResult(bool $withService): void
+    {
+        $request = new ServerRequest();
+        if ($withService) {
+            $service = $this->getMockBuilder(AuthenticationService::class)
+                ->onlyMethods(['getResult'])
+                ->getMock();
+            $service->method('getResult')->willReturn(null);
+            $request = $request->withAttribute('authentication', $service);
+        }
+        $response = (new Response())->withStringBody('next');
+        $handler = $this->getMockBuilder(Runner::class)
+            ->onlyMethods(['handle'])
+            ->getMock();
+        $handler->expects($this->once())
+            ->method('handle')
+            ->willReturn($response);
+
+        $this->assertSame($response, $this->TwoFactorMiddleware->process($request, $handler));
+    }
 }

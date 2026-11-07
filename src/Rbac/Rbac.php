@@ -2,12 +2,12 @@
 declare(strict_types=1);
 
 /**
- * Copyright 2010 - 2019, Cake Development Corporation (https://www.cakedc.com)
+ * Copyright 2010 - 2026, Cake Development Corporation (https://www.cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2010 - 2019, Cake Development Corporation (https://www.cakedc.com)
+ * @copyright Copyright 2010 - 2026, Cake Development Corporation (https://www.cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
@@ -90,7 +90,9 @@ class Rbac implements RbacInterface
         } else {
             $permissionsProviderClass = $this->getConfig('permissions_provider_class');
             if (!is_subclass_of($permissionsProviderClass, AbstractProvider::class)) {
-                throw new RuntimeException(sprintf('Class "%s" must extend AbstractProvider', $permissionsProviderClass));
+                throw new RuntimeException(
+                    sprintf('Class "%s" must extend AbstractProvider', $permissionsProviderClass),
+                );
             }
             $permissionsProvider = new $permissionsProviderClass([
                 'autoload_config' => $this->getConfig('autoload_config'),
@@ -178,8 +180,12 @@ class Rbac implements RbacInterface
      * @return \CakeDC\Auth\Rbac\PermissionMatchResult|null Null if permission is discarded, PermissionMatchResult if a final
      * result is produced
      */
-    protected function _matchPermission(array $permission, array|ArrayAccess $user, string $role, ServerRequestInterface $request): ?PermissionMatchResult
-    {
+    protected function _matchPermission(
+        array $permission,
+        array|ArrayAccess $user,
+        string $role,
+        ServerRequestInterface $request,
+    ): ?PermissionMatchResult {
         $issetController = isset($permission['controller']) || isset($permission['*controller']);
         $issetAction = isset($permission['action']) || isset($permission['*action']);
         $issetUser = isset($permission['user']) || isset($permission['*user']);
@@ -248,9 +254,9 @@ class Rbac implements RbacInterface
             if ($key === 'allowed' || $key === 'bypassAuth') {
                 $reason = sprintf(
                     'For %s --> Rule matched %s with result = %s',
-                    json_encode($reserved),
-                    json_encode($permission),
-                    $return,
+                    $this->_encodeForReason($reserved),
+                    $this->_encodeForReason($permission),
+                    $return ? 'true' : 'false',
                 );
 
                 return new PermissionMatchResult($return, $reason);
@@ -275,6 +281,19 @@ class Rbac implements RbacInterface
             isset($value['className']) &&
             is_string($value['className']) &&
             is_a($value['className'], Rule::class, true);
+    }
+
+    /**
+     * Encode a value as json for the match reason
+     *
+     * @param mixed $value Value to encode.
+     * @return string
+     */
+    protected function _encodeForReason(mixed $value): string
+    {
+        $json = json_encode($value, JSON_PARTIAL_OUTPUT_ON_ERROR);
+
+        return $json === false ? 'null' : $json;
     }
 
     /**

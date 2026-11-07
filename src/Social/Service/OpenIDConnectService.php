@@ -48,7 +48,8 @@ class OpenIDConnectService extends OAuth2Service
     /**
      * Default configuration. `openid` defaults target LinkedIn, override them per provider.
      *
-     * - `openid.baseUrl`: the `jwks_uri` from the discovery document must start with it.
+     * - `openid.baseUrl`: the `jwks_uri` from the discovery document must use its scheme, host and port,
+     *   and a path below its path.
      * - `openid.url`: discovery document url.
      * - `openid.issuer`: expected `iss` claim, null to use the discovery document `issuer`.
      * - `openid.nonce`: send a nonce in the authorization request and validate it in the id token.
@@ -151,6 +152,10 @@ class OpenIDConnectService extends OAuth2Service
         if (!$clientId || !in_array($clientId, $audience, true)) {
             throw new BadRequestException('Invalid id token. Unexpected audience');
         }
+        $authorizedParty = $claims['azp'] ?? null;
+        if (($authorizedParty !== null || count($audience) > 1) && $authorizedParty !== $clientId) {
+            throw new BadRequestException('Invalid id token. Unexpected authorized party');
+        }
 
         if ($this->getConfig('openid.nonce')) {
             $session = $request->getSession();
@@ -199,7 +204,7 @@ class OpenIDConnectService extends OAuth2Service
                 'No `jwks_uri` in discover data. Unable to retrieve the JWT signature public key',
             );
         }
-        if (!str_starts_with($jwksUri, (string)$this->getConfig('openid.baseUrl'))) {
+        if (!is_string($jwksUri) || !$this->isTrustedUrl($jwksUri, (string)$this->getConfig('openid.baseUrl'))) {
             throw new BadRequestException(
                 'Invalid `jwks_uri` in discover data. It is not pointing to ' .
                 $this->getConfig('openid.baseUrl'),
@@ -213,6 +218,37 @@ class OpenIDConnectService extends OAuth2Service
         }
 
         return JWK::parseKeySet($jwksData, $this->getConfig('openid.jwk.defaultAlgorithm'));
+    }
+
+    /**
+     * Check the url uses the scheme, host and port of the base url, and a path below its path
+     *
+     * @param string $url Url to check.
+     * @param string $baseUrl Trusted base url, `openid.baseUrl`.
+     * @return bool
+     */
+    protected function isTrustedUrl(string $url, string $baseUrl): bool
+    {
+        $target = parse_url($url);
+        $base = parse_url($baseUrl);
+        if (!is_array($target) || !is_array($base)) {
+            return false;
+        }
+        $targetHost = strtolower($target['host'] ?? '');
+        $baseHost = strtolower($base['host'] ?? '');
+        if ($baseHost === '' || $targetHost !== $baseHost) {
+            return false;
+        }
+        if (
+            strtolower($target['scheme'] ?? '') !== strtolower($base['scheme'] ?? '') ||
+            ($target['port'] ?? null) !== ($base['port'] ?? null)
+        ) {
+            return false;
+        }
+        $basePath = rtrim($base['path'] ?? '', '/');
+        $path = $target['path'] ?? '/';
+
+        return $basePath === '' || $path === $basePath || str_starts_with($path, $basePath . '/');
     }
 
     /**

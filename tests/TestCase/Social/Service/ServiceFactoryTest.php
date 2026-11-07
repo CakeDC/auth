@@ -18,12 +18,16 @@ use Cake\Http\Exception\NotFoundException;
 use Cake\Http\ServerRequestFactory;
 use Cake\TestSuite\TestCase;
 use CakeDC\Auth\Social\Mapper\Facebook as FacebookMapper;
+use CakeDC\Auth\Social\Mapper\LinkedInOpenIDConnect;
 use CakeDC\Auth\Social\Mapper\Twitter as TwitterMapper;
 use CakeDC\Auth\Social\Service\OAuth1Service;
 use CakeDC\Auth\Social\Service\OAuth2Service;
+use CakeDC\Auth\Social\Service\OpenIDConnectService;
 use CakeDC\Auth\Social\Service\ServiceFactory;
 use League\OAuth1\Client\Server\Twitter;
 use League\OAuth2\Client\Provider\Facebook;
+use League\OAuth2\Client\Provider\GenericProvider;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class ServiceFactoryTest extends TestCase
 {
@@ -267,5 +271,71 @@ class ServiceFactoryTest extends TestCase
 
         $this->expectException(NotFoundException::class);
         $this->Factory->createFromRequest($request);
+    }
+
+    /**
+     * @return array<string, array{0: mixed}>
+     */
+    public static function missingProviderParamsProvider(): array
+    {
+        return [
+            'no params' => [[]],
+            'no provider' => [['controller' => 'Users', 'action' => 'socialLogin']],
+            'empty provider' => [['provider' => '']],
+        ];
+    }
+
+    /**
+     * Test createFromRequest without a provider route param
+     *
+     * @param mixed $params request params
+     * @return void
+     */
+    #[DataProvider('missingProviderParamsProvider')]
+    public function testCreateFromRequestMissingProvider(mixed $params): void
+    {
+        $request = ServerRequestFactory::fromGlobals()->withAttribute('params', $params);
+
+        $this->expectException(NotFoundException::class);
+        $this->expectExceptionMessage('Provider not found');
+        $this->Factory->createFromRequest($request);
+    }
+
+    /**
+     * Test the provider `openid` config reaches the OpenID Connect service, merged with its defaults
+     *
+     * @return void
+     */
+    public function testCreateFromProviderOpenIdConfig(): void
+    {
+        Configure::write('OAuth.providers.customOidc', [
+            'service' => OpenIDConnectService::class,
+            'className' => GenericProvider::class,
+            'mapper' => LinkedInOpenIDConnect::class,
+            'options' => [
+                'redirectUri' => '/auth/customOidc',
+                'linkSocialUri' => '/link-social/customOidc',
+                'callbackLinkSocialUri' => '/callback-link-social/customOidc',
+                'clientId' => 'client-id',
+                'clientSecret' => 'secret',
+                'urlAuthorize' => 'https://idp.example/auth',
+                'urlAccessToken' => 'https://idp.example/token',
+                'urlResourceOwnerDetails' => 'https://idp.example/userinfo',
+            ],
+            'openid' => [
+                'baseUrl' => 'https://idp.example/',
+                'url' => 'https://idp.example/.well-known/openid-configuration',
+                'issuer' => 'https://idp.example',
+                'cache' => 'default',
+            ],
+        ]);
+
+        $service = $this->Factory->createFromProvider('customOidc');
+
+        $this->assertSame('https://idp.example/.well-known/openid-configuration', $service->getConfig('openid.url'));
+        $this->assertSame('https://idp.example', $service->getConfig('openid.issuer'));
+        $this->assertSame('default', $service->getConfig('openid.cache'));
+        $this->assertTrue($service->getConfig('openid.nonce'));
+        $this->assertSame('RS256', $service->getConfig('openid.jwk.defaultAlgorithm'));
     }
 }

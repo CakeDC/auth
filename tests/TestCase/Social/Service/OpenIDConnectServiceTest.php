@@ -29,6 +29,7 @@ use League\OAuth2\Client\Provider\LinkedIn;
 use League\OAuth2\Client\Token\AccessToken;
 use PHPUnit\Framework\Attributes\AllowMockObjectsWithoutExpectations;
 use PHPUnit\Framework\Attributes\DataProvider;
+use ReflectionMethod;
 
 #[AllowMockObjectsWithoutExpectations]
 class OpenIDConnectServiceTest extends TestCase
@@ -322,6 +323,11 @@ class OpenIDConnectServiceTest extends TestCase
             'missing audience' => [array_diff_key($valid, ['aud' => true]), 'Unexpected audience'],
             'wrong nonce' => [['nonce' => 'other'] + $valid, 'Nonce mismatch'],
             'missing nonce' => [array_diff_key($valid, ['nonce' => true]), 'Nonce mismatch'],
+            'other authorized party' => [['azp' => 'other-client'] + $valid, 'Unexpected authorized party'],
+            'several audiences without azp' => [
+                ['aud' => ['__CLIENT_ID__', 'other-client']] + $valid,
+                'Unexpected authorized party',
+            ],
         ];
     }
 
@@ -775,5 +781,59 @@ class OpenIDConnectServiceTest extends TestCase
 
         $this->assertSame('http://example.com/auth', $this->Service->getAuthorizationUrl($this->Request));
         $this->assertNull($this->Request->getSession()->read(OpenIDConnectService::SESSION_NONCE_KEY));
+    }
+
+    /**
+     * Test a token for several audiences is valid when `azp` is the client id
+     *
+     * @return void
+     */
+    public function testGetUserSeveralAudiencesWithAuthorizedParty(): void
+    {
+        $payload = [
+            'iss' => 'https://www.linkedin.com/oauth',
+            'aud' => ['__CLIENT_ID__', 'other-client'],
+            'azp' => '__CLIENT_ID__',
+            'nonce' => '__NONCE__',
+        ];
+        $this->prepareIdToken($payload);
+
+        $this->assertSame('__CLIENT_ID__', $this->Service->getUser($this->Request)['azp']);
+    }
+
+    /**
+     * @return array<string, array{0: string, 1: string, 2: bool}>
+     */
+    public static function trustedUrlProvider(): array
+    {
+        return [
+            'same host' => ['https://www.linkedin.com/oauth/openid/jwks', 'https://www.linkedin.com/', true],
+            'below base path' => ['https://idp.example/realms/a/certs', 'https://idp.example/realms/a', true],
+            'base path itself' => ['https://idp.example/realms/a', 'https://idp.example/realms/a/', true],
+            'host case' => ['https://IDP.example/certs', 'https://idp.example', true],
+            'host prefix' => ['https://idp.example.evil.com/certs', 'https://idp.example', false],
+            'user info trick' => ['https://idp.example@evil.com/certs', 'https://idp.example', false],
+            'other scheme' => ['http://idp.example/certs', 'https://idp.example', false],
+            'other port' => ['https://idp.example:8443/certs', 'https://idp.example', false],
+            'sibling path' => ['https://idp.example/realms/ab/certs', 'https://idp.example/realms/a', false],
+            'empty base url' => ['https://evil.com/certs', '', false],
+            'relative url' => ['/certs', 'https://idp.example', false],
+        ];
+    }
+
+    /**
+     * Test the jwks_uri must use the scheme, host and port of `openid.baseUrl`
+     *
+     * @param string $url url to check
+     * @param string $baseUrl base url
+     * @param bool $expected expected result
+     * @return void
+     */
+    #[DataProvider('trustedUrlProvider')]
+    public function testIsTrustedUrl(string $url, string $baseUrl, bool $expected): void
+    {
+        $method = new ReflectionMethod(OpenIDConnectService::class, 'isTrustedUrl');
+
+        $this->assertSame($expected, $method->invoke($this->Service, $url, $baseUrl));
     }
 }

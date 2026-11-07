@@ -2,14 +2,15 @@
 declare(strict_types=1);
 
 /**
- * Copyright 2010 - 2019, Cake Development Corporation (https://www.cakedc.com)
+ * Copyright 2010 - 2026, Cake Development Corporation (https://www.cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2010 - 2019, Cake Development Corporation (https://www.cakedc.com)
+ * @copyright Copyright 2010 - 2026, Cake Development Corporation (https://www.cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
+
 namespace CakeDC\Auth\Rbac\Rules;
 
 use ArrayAccess;
@@ -81,7 +82,9 @@ abstract class AbstractRule implements Rule
         $modelClass = ($plugin ? $plugin . '.' : '') . $controller;
 
         if (empty($modelClass)) {
-            throw new OutOfBoundsException('Missing Table alias, we could not extract a default table from the request');
+            throw new OutOfBoundsException(
+                'Missing Table alias, we could not extract a default table from the request',
+            );
         }
 
         return $this->fetchTable($modelClass);

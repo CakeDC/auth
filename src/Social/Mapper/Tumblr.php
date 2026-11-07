@@ -2,22 +2,41 @@
 declare(strict_types=1);
 
 /**
- * Copyright 2010 - 2019, Cake Development Corporation (https://www.cakedc.com)
+ * Copyright 2010 - 2026, Cake Development Corporation (https://www.cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2010 - 2019, Cake Development Corporation (https://www.cakedc.com)
+ * @copyright Copyright 2010 - 2026, Cake Development Corporation (https://www.cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
 namespace CakeDC\Auth\Social\Mapper;
 
+use function Cake\Core\deprecationWarning;
+
 /**
  * Tumblr Mapper
+ *
+ * @deprecated 11.1.0 The user id is a crc32 of the nickname, it can collide and changes when the blog is renamed.
  */
 class Tumblr extends AbstractMapper
 {
+    /**
+     * Constructor
+     *
+     * @param mixed $mapFields map fields
+     */
+    public function __construct(mixed $mapFields = null)
+    {
+        deprecationWarning(
+            '11.1.0',
+            'The Tumblr mapper is deprecated, its user id is a crc32 of the nickname, which ' .
+            'can collide and changes when the blog is renamed.',
+        );
+        parent::__construct($mapFields);
+    }
+
     /**
      * Map for provider fields
      *

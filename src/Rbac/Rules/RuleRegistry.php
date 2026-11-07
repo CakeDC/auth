@@ -1,13 +1,13 @@
 <?php
 declare(strict_types=1);
 
-/*
- * Copyright 2010 - 2021, Cake Development Corporation (https://www.cakedc.com)
+/**
+ * Copyright 2010 - 2026, Cake Development Corporation (https://www.cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2010 - 2021, Cake Development Corporation (https://www.cakedc.com)
+ * @copyright Copyright 2010 - 2026, Cake Development Corporation (https://www.cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
@@ -40,7 +40,7 @@ class RuleRegistry
         if (!class_exists($class)) {
             throw new BadMethodCallException(sprintf('Unknown rule class %s', $class));
         }
-        $key = $class . md5(json_encode($config));
+        $key = $class . md5(json_encode($config, JSON_THROW_ON_ERROR));
         if (!isset(static::$rules[$key])) {
             $ruleInstance = new $class($config);
             static::$rules[$key] = $ruleInstance;

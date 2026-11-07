@@ -53,7 +53,7 @@ class Keycloak extends AbstractMapper
     /**
      * Constructor
      *
-     * @param mixed $mapFields map fields, defaults to `OAuth.providers.keycloak.mapFields`
+     * @param mixed $mapFields map fields merged over the Keycloak map, defaults to `OAuth.providers.keycloak.mapFields`
      * @param array<string, string>|null $rolesMap roles map, defaults to `OAuth.providers.keycloak.rolesMap`
      */
     public function __construct(mixed $mapFields = null, ?array $rolesMap = null)
@@ -62,6 +62,10 @@ class Keycloak extends AbstractMapper
         $rolesMap ??= Configure::read('OAuth.providers.keycloak.rolesMap');
         if (is_array($rolesMap) && $rolesMap) {
             $this->_rolesMap = $rolesMap;
+        }
+        // A partial map must not drop the `id`, `roles` and `validated` fields the role check depends on
+        if (is_array($mapFields)) {
+            $mapFields = array_merge($this->_mapFields, $mapFields);
         }
         parent::__construct($mapFields);
     }

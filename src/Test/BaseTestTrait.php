@@ -1,11 +1,22 @@
 <?php
 declare(strict_types=1);
 
+/**
+ * Copyright 2010 - 2026, Cake Development Corporation (https://www.cakedc.com)
+ *
+ * Licensed under The MIT License
+ * Redistributions of files must retain the above copyright notice.
+ *
+ * @copyright Copyright 2010 - 2026, Cake Development Corporation (https://www.cakedc.com)
+ * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
+ */
+
 namespace CakeDC\Auth\Test;
 
 use Cake\Console\ConsoleIo;
 use Cake\Core\Configure;
 use Cake\ORM\TableRegistry;
+use Cake\Utility\Hash;
 use PHPUnit\Framework\Attributes\DataProvider;
 
 trait BaseTestTrait
@@ -20,7 +31,7 @@ trait BaseTestTrait
     {
         $data = TableRegistry::getTableLocator()
             ->get(Configure::read('Users.table', 'Users'))->get($id)->toArray();
-        $this->session(['Auth' => ['User' => $data]]);
+        $this->session($this->_authSessionData($data));
     }
 
     /**
@@ -33,7 +44,23 @@ trait BaseTestTrait
     {
         $data = TableRegistry::getTableLocator()
             ->get(Configure::read('Users.table', 'Users'))->findByUsername($username)->first()->toArray();
-        $this->session(['Auth' => ['User' => $data]]);
+        $this->session($this->_authSessionData($data));
+    }
+
+    /**
+     * Session data of the logged in user
+     *
+     * The user is stored at the session key of the session authenticator, read from
+     * `Auth.Authenticators.Session.sessionKey` (CakeDC/Users configuration), `Auth` by default.
+     *
+     * @param array $user User data.
+     * @return array
+     */
+    protected function _authSessionData(array $user): array
+    {
+        $sessionKey = (string)Configure::read('Auth.Authenticators.Session.sessionKey', 'Auth');
+
+        return Hash::insert([], $sessionKey, $user);
     }
 
     /**
@@ -75,10 +102,10 @@ trait BaseTestTrait
             ), 0);
         }
         $this->loginAsUserName($username);
-        if ($ajax === 'ajax') {
+        if (strtolower($ajax) === 'ajax') {
             $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
         }
-        if ($method === 'post') {
+        if (strtolower($method) === 'post') {
             $this->enableCsrfToken();
             $this->enableSecurityToken();
             $this->post($url);

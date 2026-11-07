@@ -1,21 +1,23 @@
 Social Layer
 ============
-The social layer provide a easier way to handle social provider authentication
-with provides using OAuth1 or OAuth2. The idea is to provide a base
-interface for both OAuth and OAuth2.
+The social layer provides an easier way to handle social provider authentication
+with providers using OAuth1, OAuth2 or OpenID Connect. The idea is to provide a base
+interface for all of them.
 
 ***Make sure to load the bootstap.php file of this plugin!***
 
 We have mappers to allow you a quick start with these providers:
 
 - Amazon
+- Azure (the email is only validated with the `email_verified` or `xms_edov` claim)
+- Cognito
 - Facebook
 - Google
-- Instagram
-- LinkedIn (Deprecated, they switched to OpenID-Connect)
-- LinkedInOpenIDConnect (New, OIDC based authentication)
-- Pinterest
-- Tumblr
+- Instagram (Deprecated, the Instagram Basic Display API was shut down)
+- LinkedIn (Deprecated, LinkedIn retired this API, use LinkedInOpenIDConnect)
+- LinkedInOpenIDConnect (OIDC based authentication)
+- Pinterest (Deprecated, reads fields of the retired API v1)
+- Tumblr (Deprecated, the user id is a crc32 of the nickname)
 - Twitter
 - Github
 - Keycloak
@@ -25,9 +27,9 @@ You must define 'options.redirectUri', 'options.clientId' and
 for facebook you could add these at your bootstrap.php:
 
 ```php
-\Cake\Configure\Configure::write('OAuth.providers.facebook.options.redirectUri', $redirectUrl);
-\Cake\Configure\Configure::write('OAuth.providers.facebook.options.clientId', 'myFacebookAppClientId');
-\Cake\Configure\Configure::write('OAuth.providers.facebook.options.clientSecret', 'myFacebookAppClientSecret');
+\Cake\Core\Configure::write('OAuth.providers.facebook.options.redirectUri', $redirectUrl);
+\Cake\Core\Configure::write('OAuth.providers.facebook.options.clientId', 'myFacebookAppClientId');
+\Cake\Core\Configure::write('OAuth.providers.facebook.options.clientSecret', 'myFacebookAppClientSecret');
 ```
 
 ***Make sure to load the bootstap.php file of this plugin, cause we need
@@ -49,10 +51,10 @@ use CakeDC\Auth\Social\Service\ServiceFactory;
      *
      * @param string $alias of the provider.
      *
-     * @throws \Cake\Http\Exception\NotFoundException Quando o provider informado não existe
-     * @return  \Cake\Http\Response Redirects on successful
+     * @throws \Cake\Http\Exception\NotFoundException When the provider does not exist
+     * @return \Cake\Http\Response Redirects on successful
      */
-    public function social($alias = null)
+    public function social(?string $alias = null): \Cake\Http\Response
     {
         return $this->redirect(
             (new ServiceFactory())
@@ -66,10 +68,10 @@ use CakeDC\Auth\Social\Service\ServiceFactory;
      *
      * @param string $alias of the provider.
      *
-     * @throws \Cake\Http\Exception\NotFoundException Quando o provider informado não existe
-     * @return  \Cake\Http\Response Redirects to profile if okay or error
+     * @throws \Cake\Http\Exception\NotFoundException When the provider does not exist
+     * @return \Cake\Http\Response|null Redirects to profile if okay or error
      */
-    public function callbackSocial($alias = null)
+    public function callbackSocial(?string $alias = null): ?\Cake\Http\Response
     {
         try {
             $server = (new ServiceFactory())
@@ -77,7 +79,7 @@ use CakeDC\Auth\Social\Service\ServiceFactory;
                 ->createFromProvider($alias);
 
             if (!$server->isGetUserStep($this->request)) {
-                $this->Flash->error($message);
+                $this->Flash->error(__('Could not get the user from the provider'));
 
                 return $this->redirect(['action' => 'profile']);
             }
@@ -86,14 +88,16 @@ use CakeDC\Auth\Social\Service\ServiceFactory;
 
             //your code
         } catch (\Exception $e) {
-            $this->log($log);
+            $this->log($e->getMessage());
         }
+
+        return null;
     }
 ```
 Working with cakephp/authentication
 -----------------------------------
 If you're using the new cakephp/authentication we recommend you to use
-the SocialAuthenticator and SocialMiddleware provided in this plugin. For more
+the SocialAuthenticator and SocialAuthMiddleware provided in this plugin. For more
 details of how to handle social authentication with cakephp/authentication, please check
 how we implemented at CakeDC/Users plugins.
 
@@ -121,10 +125,10 @@ Add the Keycloak provider configuration to your `config/users.php` file:
             'service' => 'CakeDC\Auth\Social\Service\OAuth2Service',
             'className' => 'Stevenmaguire\OAuth2\Client\Provider\Keycloak',
             'mapper' => 'CakeDC\Auth\Social\Mapper\Keycloak',
+            // replace with the realm roles of your Keycloak server
             'rolesMap' => [
-                'CakeDc-Admin' => 'admin',
-                'CakeDc-User' => 'user',
-                'CakeDc-Worker' => 'user'
+                'example-realm-admin' => 'admin',
+                'example-realm-user' => 'user',
             ],
             'authParams' => ['scope' => ['openid', 'roles']],
             'options' => [
@@ -149,7 +153,7 @@ Add the Keycloak provider configuration to your `config/users.php` file:
    - Configure the `realm_roles` mapper with "Add to userinfo" set to ON
 
 2. **Realm Roles**:
-   - Create roles that match your configuration (e.g., `CakeDc-Admin`, `CakeDc-User`, `CakeDc-Worker`)
+   - Create roles that match your configuration (e.g., `example-realm-admin`, `example-realm-user`)
    - Assign these roles to users or groups in Keycloak
 
 3. **User Attributes**:
@@ -167,11 +171,13 @@ Without a `rolesMap` the `roles` field is `null` and no role is required. When a
 the login fails with an `UnexpectedValueException` when the userinfo has no roles or none of the
 user roles is in `rolesMap`, so only users with a mapped role can log in.
 
-The mapper reads `OAuth.providers.keycloak.rolesMap` and `OAuth.providers.keycloak.mapFields`. When
+The mapper reads `OAuth.providers.keycloak.rolesMap` and `OAuth.providers.keycloak.mapFields`, the
+configured `mapFields` are merged over the mapper fields. When
 the provider uses another key, pass a mapper instance instead of the class name:
 `'mapper' => new \CakeDC\Auth\Social\Mapper\Keycloak(null, ['MyRealm-Admin' => 'admin'])`.
 
-The mapper does not change the user role by itself. Use an event listener in your application to
+The mapper does not change the user role by itself. CakeDC/Users creates new users with its
+`Users.Registration.defaultRole`, the mapped role is not used for them. Use an event listener in your application to
 apply it, see below.
 
 ### Event Listener for Role Updates
@@ -185,14 +191,14 @@ namespace App\Event;
 
 use Cake\Event\EventInterface;
 use Cake\Event\EventListenerInterface;
-use CakeDC\Users\Plugin;
+use CakeDC\Users\UsersPlugin;
 
 class SocialLoginListener implements EventListenerInterface
 {
     public function implementedEvents(): array
     {
         return [
-            Plugin::EVENT_SOCIAL_LOGIN_EXISTING_ACCOUNT => 'changeRole',
+            UsersPlugin::EVENT_SOCIAL_LOGIN_EXISTING_ACCOUNT => 'changeRole',
         ];
     }
 
@@ -236,14 +242,16 @@ composer require firebase/php-jwt
 ```
 
 The service validates the token signature with the provider key set, and the `iss`, `aud`
-(must contain `options.clientId`) and `nonce` claims. Configure it with the `openid` key of the
+(must contain `options.clientId`), `azp` (must be `options.clientId` when present, required when `aud`
+has several values) and `nonce` claims. Configure it with the `openid` key of the
 provider:
 
 ```php
 'linkedInOpenIDConnect' => [
     // ...
     'openid' => [
-        // the jwks_uri of the discovery document must start with this url
+        // the jwks_uri of the discovery document must use this scheme, host and port, and a path below it.
+        // The defaults are for LinkedIn, set baseUrl, url and issuer for any other provider
         'baseUrl' => 'https://www.linkedin.com/',
         // discovery document
         'url' => 'https://www.linkedin.com/oauth/.well-known/openid-configuration',

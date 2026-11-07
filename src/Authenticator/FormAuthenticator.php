@@ -2,12 +2,12 @@
 declare(strict_types=1);
 
 /**
- * Copyright 2010 - 2019, Cake Development Corporation (https://www.cakedc.com)
+ * Copyright 2010 - 2026, Cake Development Corporation (https://www.cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2010 - 2019, Cake Development Corporation (https://www.cakedc.com)
+ * @copyright Copyright 2010 - 2026, Cake Development Corporation (https://www.cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
@@ -23,6 +23,7 @@ use Cake\Core\InstanceConfigTrait;
 use CakeDC\Auth\Traits\ReCaptchaTrait;
 use InvalidArgumentException;
 use Psr\Http\Message\ServerRequestInterface;
+use function Cake\I18n\__;
 
 class FormAuthenticator implements AuthenticatorInterface
 {
@@ -83,8 +84,10 @@ class FormAuthenticator implements AuthenticatorInterface
      * @param array $config Configuration settings.
      * @return \Authentication\Authenticator\AuthenticatorInterface
      */
-    protected function createBaseAuthenticator(IdentifierInterface $identifier, array $config = []): AuthenticatorInterface
-    {
+    protected function createBaseAuthenticator(
+        IdentifierInterface $identifier,
+        array $config = [],
+    ): AuthenticatorInterface {
         unset($config['keyCheckEnabledRecaptcha']);
         if (!isset($config['baseClassName'])) {
             return new BaseFormAuthenticator($identifier, $config);
@@ -94,6 +97,11 @@ class FormAuthenticator implements AuthenticatorInterface
         unset($config['baseClassName']);
         if (!class_exists($className)) {
             throw new InvalidArgumentException(__('Base class for FormAuthenticator {0} does not exist', $className));
+        }
+        if (!is_subclass_of($className, AuthenticatorInterface::class)) {
+            throw new InvalidArgumentException(
+                __('Base class for FormAuthenticator {0} must implement AuthenticatorInterface', $className),
+            );
         }
 
         return new $className($identifier, $config);
@@ -112,7 +120,8 @@ class FormAuthenticator implements AuthenticatorInterface
     {
         $result = $this->getBaseAuthenticator()->authenticate($request);
         $checkKey = $this->getConfig('keyCheckEnabledRecaptcha');
-        if (!Configure::read($checkKey) || in_array($result->getStatus(), [Result::FAILURE_OTHER, Result::FAILURE_CREDENTIALS_MISSING])) {
+        $skippedStatuses = [Result::FAILURE_OTHER, Result::FAILURE_CREDENTIALS_MISSING];
+        if (!Configure::read($checkKey) || in_array($result->getStatus(), $skippedStatuses)) {
             return $result;
         }
 

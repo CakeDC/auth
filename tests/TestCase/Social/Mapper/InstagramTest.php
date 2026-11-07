@@ -49,7 +49,10 @@ class InstagramTest extends TestCase
             ],
             'bio' => '',
         ];
-        $providerMapper = new Instagram();
+        $providerMapper = null;
+        $this->deprecated(function () use (&$providerMapper): void {
+            $providerMapper = new Instagram();
+        });
         $user = $providerMapper($rawData);
         $this->assertEquals([
             'id' => '1',
