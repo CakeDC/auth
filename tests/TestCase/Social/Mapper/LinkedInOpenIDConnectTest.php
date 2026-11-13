@@ -16,6 +16,7 @@ namespace CakeDC\Auth\Test\TestCase\Social\Mapper;
 use Cake\TestSuite\TestCase;
 use CakeDC\Auth\Social\Mapper\LinkedInOpenIDConnect;
 use League\OAuth2\Client\Token\AccessToken;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class LinkedInOpenIDConnectTest extends TestCase
 {
@@ -96,5 +97,39 @@ class LinkedInOpenIDConnectTest extends TestCase
         $this->assertFalse((new LinkedInOpenIDConnect())($rawData)['validated']);
         unset($rawData['email_verified']);
         $this->assertFalse((new LinkedInOpenIDConnect())($rawData)['validated']);
+    }
+
+    /**
+     * Only a boolean true validates the email
+     *
+     * @return array<string, array{0: mixed, 1: bool}>
+     */
+    public static function validatedProvider(): array
+    {
+        return [
+            'boolean true' => [true, true],
+            'boolean false' => [false, false],
+            'string true' => ['true', false],
+            'string false' => ['false', false],
+            'integer one' => [1, false],
+            'null' => [null, false],
+        ];
+    }
+
+    /**
+     * @param mixed $value email_verified claim
+     * @param bool $expected expected validated value
+     * @return void
+     */
+    #[DataProvider('validatedProvider')]
+    public function testValidated(mixed $value, bool $expected): void
+    {
+        $rawData = [
+            'sub' => '1',
+            'token' => new AccessToken(['access_token' => 'test-token']),
+            'email_verified' => $value,
+        ];
+
+        $this->assertSame($expected, (new LinkedInOpenIDConnect())($rawData)['validated']);
     }
 }

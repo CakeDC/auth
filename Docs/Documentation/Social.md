@@ -15,7 +15,7 @@ We have mappers to allow you a quick start with these providers:
 - Google
 - Instagram (Deprecated, the Instagram Basic Display API was shut down)
 - LinkedIn (Deprecated, LinkedIn retired this API, use LinkedInOpenIDConnect)
-- LinkedInOpenIDConnect (OIDC based authentication)
+- LinkedInOpenIDConnect (OIDC based authentication; the email is only validated with the boolean `email_verified` claim)
 - Pinterest (Deprecated, reads fields of the retired API v1)
 - Tumblr (Deprecated, the user id is a crc32 of the nickname)
 - Twitter

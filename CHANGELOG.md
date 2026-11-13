@@ -91,6 +91,8 @@ documented. Check these behavior changes when upgrading:
   `AuthPlugin` (or by its name `CakeDC/Auth`).
 
 ### Fixed
+- The `LinkedInOpenIDConnect` and `Keycloak` mappers only treat a JSON boolean `true` as a validated
+  email. A string claim like `"false"` was cast to `true` before.
 - `ReCaptchaTrait::validateReCaptchaFromRequest()` treats a missing or empty
   `g-recaptcha-response` as an invalid captcha (returns `false`) instead of passing `null` to the
   non-nullable `validateReCaptcha(string ...)`, which raised a `TypeError` (HTTP 500). A tokenless

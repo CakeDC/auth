@@ -74,6 +74,8 @@ Please check [Authentication](Authentication.md) and [Authorization](Authorizati
   12.0. Switch the `linkedIn` provider to `linkedInOpenIDConnect`
 * The `Azure` mapper only sets `validated` when the `email_verified` or `xms_edov` claim is `true`.
   Before, any `upn` was trusted as a validated email
+* The `LinkedInOpenIDConnect` and `Keycloak` mappers only set `validated` when `email_verified` is
+  the JSON boolean `true`. String or numeric values are not accepted
 * `BaseTestTrait` stores the logged in user at `Auth.Authenticators.Session.sessionKey` (`Auth` by
   default) instead of `Auth.User`. Set `sessionKey` to `Auth.User` to keep the previous layout
 * New: Keycloak mapper, OpenID Connect service and LinkedIn OpenID Connect provider, see

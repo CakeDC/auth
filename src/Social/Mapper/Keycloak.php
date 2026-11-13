@@ -115,6 +115,6 @@ class Keycloak extends AbstractMapper
      */
     protected function _validated(mixed $rawData): bool
     {
-        return (bool)Hash::get($rawData, $this->_mapFields['validated']);
+        return Hash::get($rawData, $this->_mapFields['validated']) === true;
     }
 }
