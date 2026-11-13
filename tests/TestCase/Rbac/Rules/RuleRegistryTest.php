@@ -16,6 +16,7 @@ namespace CakeDC\Auth\Test\TestCase\Rbac\Rules;
 use Cake\TestSuite\TestCase;
 use CakeDC\Auth\Rbac\Rules\Owner;
 use CakeDC\Auth\Rbac\Rules\RuleRegistry;
+use JsonException;
 
 /**
  * @property Owner Owner
@@ -53,5 +54,16 @@ class RuleRegistryTest extends TestCase
 
         RuleRegistry::clear();
         $this->assertEmpty(RuleRegistry::toArray());
+    }
+
+    /**
+     * Rule options that can not be encoded throw a JsonException
+     *
+     * @return void
+     */
+    public function testGetOptionsNotEncodable(): void
+    {
+        $this->expectException(JsonException::class);
+        RuleRegistry::get(Owner::class, ['value' => INF]);
     }
 }

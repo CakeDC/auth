@@ -2,12 +2,12 @@
 declare(strict_types=1);
 
 /**
- * Copyright 2010 - 2019, Cake Development Corporation (https://www.cakedc.com)
+ * Copyright 2010 - 2026, Cake Development Corporation (https://www.cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2010 - 2019, Cake Development Corporation (https://www.cakedc.com)
+ * @copyright Copyright 2010 - 2026, Cake Development Corporation (https://www.cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
@@ -73,7 +73,10 @@ class ServiceFactory
     public function createFromRequest(ServerRequestInterface $request): ServiceInterface
     {
         $params = $request->getAttribute('params');
-        $provider = $params['provider'] ?? null;
+        $provider = is_array($params) ? ($params['provider'] ?? null) : null;
+        if (!is_string($provider) || $provider === '') {
+            throw new NotFoundException('Provider not found');
+        }
 
         return $this->createFromProvider($provider);
     }

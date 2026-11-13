@@ -10,6 +10,7 @@
  */
 
 use Cake\Routing\Router;
+
 return [
     'OAuth.path' => ['plugin' => 'CakeDC/Users', 'controller' => 'Users', 'action' => 'socialLogin', 'prefix' => null],
     'OAuth.providers' => [
@@ -33,8 +34,9 @@ return [
                 'redirectUri' => Router::fullBaseUrl() . '/auth/twitter',
                 'linkSocialUri' => Router::fullBaseUrl() . '/link-social/twitter',
                 'callbackLinkSocialUri' => Router::fullBaseUrl() . '/callback-link-social/twitter',
-            ]
+            ],
         ],
+        // Deprecated: LinkedIn retired this API, use linkedInOpenIDConnect
         'linkedIn' => [
             'service' => 'CakeDC\Auth\Social\Service\OAuth2Service',
             'className' => 'League\OAuth2\Client\Provider\LinkedIn',
@@ -45,6 +47,18 @@ return [
                 'callbackLinkSocialUri' => Router::fullBaseUrl() . '/callback-link-social/linkedIn',
             ],
         ],
+        'linkedInOpenIDConnect' => [
+            'service' => 'CakeDC\Auth\Social\Service\OpenIDConnectService',
+            'className' => 'League\OAuth2\Client\Provider\LinkedIn',
+            'mapper' => 'CakeDC\Auth\Social\Mapper\LinkedInOpenIDConnect',
+            'options' => [
+                'redirectUri' => Router::fullBaseUrl() . '/auth/linkedInOpenIDConnect',
+                'linkSocialUri' => Router::fullBaseUrl() . '/link-social/linkedInOpenIDConnect',
+                'callbackLinkSocialUri' => Router::fullBaseUrl() . '/callback-link-social/linkedInOpenIDConnect',
+                'defaultScopes' => ['email', 'openid', 'profile'],
+            ],
+        ],
+        // Deprecated: the Instagram Basic Display API was shut down
         'instagram' => [
             'service' => 'CakeDC\Auth\Social\Service\OAuth2Service',
             'className' => 'League\OAuth2\Client\Provider\Instagram',
@@ -53,7 +67,7 @@ return [
                 'redirectUri' => Router::fullBaseUrl() . '/auth/instagram',
                 'linkSocialUri' => Router::fullBaseUrl() . '/link-social/instagram',
                 'callbackLinkSocialUri' => Router::fullBaseUrl() . '/callback-link-social/instagram',
-            ]
+            ],
         ],
         'google' => [
             'service' => 'CakeDC\Auth\Social\Service\OAuth2Service',
@@ -86,11 +100,27 @@ return [
                 'callbackLinkSocialUri' => Router::fullBaseUrl() . '/callback-link-social/azure',
             ],
         ],
+        'keycloak' => [
+            'service' => 'CakeDC\Auth\Social\Service\OAuth2Service',
+            'className' => 'Stevenmaguire\OAuth2\Client\Provider\Keycloak',
+            'mapper' => 'CakeDC\Auth\Social\Mapper\Keycloak',
+            // Keycloak realm role => application role, the first match wins. Without a map no role is set.
+            // 'rolesMap' => [
+            //     'example-realm-admin' => 'admin',
+            //     'example-realm-user' => 'user',
+            // ],
+            'authParams' => ['scope' => ['openid', 'roles']],
+            'options' => [
+                'redirectUri' => Router::fullBaseUrl() . '/auth/keycloak',
+                'linkSocialUri' => Router::fullBaseUrl() . '/link-social/keycloak',
+                'callbackLinkSocialUri' => Router::fullBaseUrl() . '/callback-link-social/keycloak',
+            ],
+        ],
     ],
-	'TwoFactorProcessors' => [
+    'TwoFactorProcessors' => [
         \CakeDC\Auth\Authentication\TwoFactorProcessor\OneTimePasswordProcessor::class,
         \CakeDC\Auth\Authentication\TwoFactorProcessor\Webauthn2faProcessor::class,
-	],
+    ],
     'OneTimePasswordAuthenticator' => [
         'checker' => \CakeDC\Auth\Authentication\DefaultOneTimePasswordAuthenticationChecker::class,
         'verifyAction' => [

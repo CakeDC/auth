@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace CakeDC\Auth\Test\TestCase\Social\Service;
 
+use Cake\Collection\Collection;
 use Cake\Core\Configure;
 use Cake\Http\ServerRequest;
 use Cake\Http\ServerRequestFactory;
@@ -21,6 +22,7 @@ use Cake\TestSuite\TestCase;
 use CakeDC\Auth\Social\Mapper\Twitter as TwitterMapper;
 use CakeDC\Auth\Social\Service\OAuth1Service;
 use CakeDC\Auth\Social\Service\ServiceInterface;
+use InvalidArgumentException;
 use Laminas\Diactoros\Uri;
 use League\OAuth1\Client\Credentials\TemporaryCredentials;
 use League\OAuth1\Client\Credentials\TokenCredentials;
@@ -359,5 +361,23 @@ class OAuth1ServiceTest extends TestCase
             ],
         ];
         $this->assertEquals($expected, $actual);
+    }
+
+    /**
+     * Test a provider className of the wrong type throws
+     *
+     * @return void
+     */
+    public function testConstructInvalidProviderClass(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('must extend');
+
+        new OAuth1Service([
+            'className' => Collection::class,
+            'mapper' => null,
+            'options' => [],
+            'signature' => null,
+        ]);
     }
 }

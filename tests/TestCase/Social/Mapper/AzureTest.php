@@ -16,6 +16,7 @@ namespace CakeDC\Auth\Test\TestCase\Social\Mapper;
 use Cake\TestSuite\TestCase;
 use CakeDC\Auth\Social\Mapper\Azure;
 use League\OAuth2\Client\Token\AccessToken;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class AzureTest extends TestCase
 {
@@ -67,7 +68,7 @@ class AzureTest extends TestCase
             'link' => '#',
             'bio' => null,
             'locale' => null,
-            'validated' => true,
+            'validated' => false,
             'credentials' => [
                 'token' => 'test-token',
                 'secret' => null,
@@ -75,5 +76,38 @@ class AzureTest extends TestCase
             ],
             'raw' => $rawData,
         ], $user);
+    }
+
+    /**
+     * @return array<string, array{0: array, 1: bool}>
+     */
+    public static function validatedProvider(): array
+    {
+        return [
+            'only upn' => [[], false],
+            'email_verified true' => [['email_verified' => true], true],
+            'email_verified false' => [['email_verified' => false], false],
+            'email_verified string' => [['email_verified' => 'true'], false],
+            'xms_edov true' => [['xms_edov' => true], true],
+        ];
+    }
+
+    /**
+     * The email is only validated when Azure reports it as verified
+     *
+     * @param array $claims extra claims
+     * @param bool $expected expected validated value
+     * @return void
+     */
+    #[DataProvider('validatedProvider')]
+    public function testValidated(array $claims, bool $expected): void
+    {
+        $rawData = $claims + [
+            'token' => new AccessToken(['access_token' => 'test-token']),
+            'sub' => 'user-id',
+            'upn' => 'test@example.com',
+        ];
+
+        $this->assertSame($expected, (new Azure())($rawData)['validated']);
     }
 }

@@ -19,6 +19,7 @@ use CakeDC\Auth\Exception\InvalidProviderException;
 use CakeDC\Auth\Exception\InvalidSettingsException;
 use CakeDC\Auth\Social\Mapper\Amazon as AmazonMapper;
 use CakeDC\Auth\Social\Mapper\Facebook as FacebookMapper;
+use CakeDC\Auth\Social\Mapper\Keycloak as KeycloakMapper;
 use CakeDC\Auth\Social\Mapper\Twitter as TwitterMapper;
 use CakeDC\Auth\Social\ProviderConfig;
 use CakeDC\Auth\Social\Service\OAuth1Service;
@@ -164,6 +165,30 @@ class ProviderConfigTest extends TestCase
         ];
         $actual = $Config->getConfig('facebook');
         $this->assertEquals($expected, $actual);
+    }
+
+    /**
+     * A provider alias keeps its own rolesMap
+     *
+     * @return void
+     */
+    public function testRolesMapKeptForProviderAlias()
+    {
+        Configure::write('OAuth.providers.staffSso', [
+            'service' => OAuth2Service::class,
+            'className' => Facebook::class,
+            'mapper' => KeycloakMapper::class,
+            'options' => [
+                'redirectUri' => '/auth/staffSso',
+                'clientId' => '10003030300303',
+                'clientSecret' => 'secretpassword',
+            ],
+            'rolesMap' => ['Manager' => 'superuser'],
+        ]);
+
+        $config = (new ProviderConfig())->getConfig('staffSso');
+
+        $this->assertSame(['Manager' => 'superuser'], $config['rolesMap']);
     }
 
     /**

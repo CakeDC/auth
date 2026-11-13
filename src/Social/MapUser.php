@@ -2,12 +2,12 @@
 declare(strict_types=1);
 
 /**
- * Copyright 2010 - 2019, Cake Development Corporation (https://www.cakedc.com)
+ * Copyright 2010 - 2026, Cake Development Corporation (https://www.cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2010 - 2019, Cake Development Corporation (https://www.cakedc.com)
+ * @copyright Copyright 2010 - 2026, Cake Development Corporation (https://www.cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
@@ -15,6 +15,7 @@ namespace CakeDC\Auth\Social;
 
 use CakeDC\Auth\Social\Service\ServiceInterface;
 use InvalidArgumentException;
+use function Cake\I18n\__;
 
 class MapUser
 {
@@ -29,7 +30,8 @@ class MapUser
     {
         $mapper = $service->getConfig('mapper');
         if (is_string($mapper)) {
-            $mapper = $this->buildMapper($mapper);
+            $rolesMap = $service->getConfig('rolesMap');
+            $mapper = $this->buildMapper($mapper, is_array($rolesMap) ? $rolesMap : null);
         }
 
         $user = $mapper($data);
@@ -42,14 +44,15 @@ class MapUser
      * Build the mapper object
      *
      * @param string $className of mapper
+     * @param array<string, string>|null $rolesMap provider roles map
      * @return object
      */
-    protected function buildMapper(string $className): object
+    protected function buildMapper(string $className, ?array $rolesMap = null): object
     {
         if (!class_exists($className)) {
             throw new InvalidArgumentException(__('Provider mapper class {0} does not exist', $className));
         }
 
-        return new $className();
+        return new $className(null, $rolesMap);
     }
 }

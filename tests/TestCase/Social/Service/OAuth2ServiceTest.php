@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace CakeDC\Auth\Test\TestCase\Social\Service;
 
+use Cake\Collection\Collection;
 use Cake\Core\Configure;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\ServerRequest;
@@ -22,6 +23,7 @@ use Cake\TestSuite\TestCase;
 use CakeDC\Auth\Social\Mapper\Facebook as FacebookMapper;
 use CakeDC\Auth\Social\Service\OAuth2Service;
 use CakeDC\Auth\Social\Service\ServiceInterface;
+use InvalidArgumentException;
 use Laminas\Diactoros\Uri;
 use League\OAuth2\Client\Provider\Facebook;
 use League\OAuth2\Client\Provider\FacebookUser;
@@ -405,5 +407,23 @@ class OAuth2ServiceTest extends TestCase
 
         $this->expectException(BadRequestException::class);
         $this->Service->getUser($this->Request);
+    }
+
+    /**
+     * Test a provider className of the wrong type throws
+     *
+     * @return void
+     */
+    public function testConstructInvalidProviderClass(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('must extend');
+
+        new OAuth2Service([
+            'className' => Collection::class,
+            'mapper' => null,
+            'options' => [],
+            'collaborators' => [],
+        ]);
     }
 }

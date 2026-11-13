@@ -84,9 +84,11 @@ Configure::write('App.encoding', 'UTF-8');
 
 ini_set('intl.default_locale', 'en_US');
 
-@mkdir(TMP . 'cache/models');
-@mkdir(TMP . 'cache/persistent');
-@mkdir(TMP . 'cache/views');
+foreach (['models', 'persistent', 'views'] as $cacheDir) {
+    if (!is_dir(TMP . 'cache/' . $cacheDir)) {
+        mkdir(TMP . 'cache/' . $cacheDir, 0777, true);
+    }
+}
 
 $cache = [
     'default' => [

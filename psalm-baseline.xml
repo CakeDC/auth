@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<files psalm-version="6.20.4@e53db692e6600cf729c88190b892bcf96e1c550e">
+  <file src="src/AuthPlugin.php">
+    <MissingClosureParamType>
+      <code><![CDATA[$routes]]></code>
+    </MissingClosureParamType>
+  </file>
+  <file src="src/Authentication/AuthenticationService.php">
+    <UndefinedInterfaceMethod>
+      <code><![CDATA[getConfig]]></code>
+    </UndefinedInterfaceMethod>
+  </file>
+  <file src="src/Authentication/DefaultOneTimePasswordAuthenticationChecker.php">
+    <RiskyTruthyFalsyComparison>
+      <code><![CDATA[empty($user)]]></code>
+    </RiskyTruthyFalsyComparison>
+  </file>
+  <file src="src/Authentication/DefaultWebauthn2FAuthenticationChecker.php">
+    <RiskyTruthyFalsyComparison>
+      <code><![CDATA[empty($user)]]></code>
+    </RiskyTruthyFalsyComparison>
+  </file>
+  <file src="src/Authentication/OneTimePasswordAuthenticationCheckerFactory.php">
+    <LessSpecificReturnStatement>
+      <code><![CDATA[new $className()]]></code>
+    </LessSpecificReturnStatement>
+    <MoreSpecificReturnType>
+      <code><![CDATA[\CakeDC\Auth\Authentication\OneTimePasswordAuthenticationCheckerInterface]]></code>
+    </MoreSpecificReturnType>
+  </file>
+  <file src="src/Authentication/TwoFactorProcessor/U2FProcessor.php">
+    <UndefinedClass>
+      <code><![CDATA[$this->getU2fAuthenticationChecker()]]></code>
+      <code><![CDATA[U2fAuthenticationCheckerInterface]]></code>
+    </UndefinedClass>
+  </file>
+  <file src="src/Authentication/TwoFactorProcessorCollection.php">
+    <MissingTemplateParam>
+      <code><![CDATA[IteratorAggregate]]></code>
+    </MissingTemplateParam>
+  </file>
+  <file src="src/Authentication/Webauthn2fAuthenticationCheckerFactory.php">
+    <LessSpecificReturnStatement>
+      <code><![CDATA[new $className()]]></code>
+    </LessSpecificReturnStatement>
+    <MoreSpecificReturnType>
+      <code><![CDATA[\CakeDC\Auth\Authentication\Webauthn2fAuthenticationCheckerInterface]]></code>
+    </MoreSpecificReturnType>
+  </file>
+  <file src="src/Authenticator/CookieAuthenticator.php">
+    <RiskyTruthyFalsyComparison>
+      <code><![CDATA[empty($bodyData)]]></code>
+    </RiskyTruthyFalsyComparison>
+  </file>
+  <file src="src/Authenticator/OneTimeTokenAuthenticator.php">
+    <UndefinedMagicMethod>
+      <code><![CDATA[loginWithToken]]></code>
+    </UndefinedMagicMethod>
+  </file>
+  <file src="src/Authenticator/SocialAuthenticator.php">
+    <RiskyTruthyFalsyComparison>
+      <code><![CDATA[empty($rawData)]]></code>
+      <code><![CDATA[empty($user)]]></code>
+    </RiskyTruthyFalsyComparison>
+  </file>
+  <file src="src/Authenticator/TwoFactorAuthenticator.php">
+    <RiskyTruthyFalsyComparison>
+      <code><![CDATA[empty($data)]]></code>
+    </RiskyTruthyFalsyComparison>
+  </file>
+  <file src="src/Controller/Component/OneTimePasswordAuthenticatorComponent.php">
+    <PropertyNotSetInConstructor>
+      <code><![CDATA[$tfa]]></code>
+    </PropertyNotSetInConstructor>
+  </file>
+  <file src="src/Middleware/RbacMiddleware.php">
+    <RedundantCast>
+      <code><![CDATA[(array)$request->getHeader('Accept')]]></code>
+    </RedundantCast>
+  </file>
+  <file src="src/Rbac/Permissions/ConfigProvider.php">
+    <RiskyTruthyFalsyComparison>
+      <code><![CDATA[empty($permissions)]]></code>
+    </RiskyTruthyFalsyComparison>
+  </file>
+  <file src="src/Rbac/Rbac.php">
+    <PossiblyFalseArgument/>
+    <PossiblyInvalidArgument>
+      <code><![CDATA[$value]]></code>
+    </PossiblyInvalidArgument>
+    <RedundantCastGivenDocblockType>
+      <code><![CDATA[(string)$key]]></code>
+      <code><![CDATA[(string)$key]]></code>
+    </RedundantCastGivenDocblockType>
+    <RedundantConditionGivenDocblockType>
+      <code><![CDATA[is_string($key)]]></code>
+    </RedundantConditionGivenDocblockType>
+    <RiskyTruthyFalsyComparison>
+      <code><![CDATA[!$user]]></code>
+      <code><![CDATA[empty($user)]]></code>
+    </RiskyTruthyFalsyComparison>
+    <UnsafeInstantiation>
+      <code><![CDATA[new $permissionsProviderClass([
+                'autoload_config' => $this->getConfig('autoload_config'),
+            ])]]></code>
+    </UnsafeInstantiation>
+  </file>
+  <file src="src/Rbac/Rules/AbstractRule.php">
+    <RiskyTruthyFalsyComparison>
+      <code><![CDATA[$plugin]]></code>
+    </RiskyTruthyFalsyComparison>
+  </file>
+  <file src="src/Rbac/Rules/Owner.php">
+    <InvalidArrayOffset>
+      <code><![CDATA[[
+            $idColumn => $id,
+            $this->getConfig('ownerForeignKey') => $userId,
+        ]]]></code>
+    </InvalidArrayOffset>
+    <RiskyTruthyFalsyComparison>
+      <code><![CDATA[$request->getParsedBody()]]></code>
+    </RiskyTruthyFalsyComparison>
+  </file>
+  <file src="src/Rbac/Rules/RuleRegistry.php">
+    <LessSpecificReturnStatement>
+      <code><![CDATA[static::$rules[$key]]]></code>
+    </LessSpecificReturnStatement>
+  </file>
+  <file src="src/Social/MapUser.php">
+    <PossiblyInvalidFunctionCall>
+      <code><![CDATA[$mapper($data)]]></code>
+    </PossiblyInvalidFunctionCall>
+  </file>
+  <file src="src/Social/Mapper/AbstractMapper.php">
+    <RiskyTruthyFalsyComparison>
+      <code><![CDATA[empty($token)]]></code>
+    </RiskyTruthyFalsyComparison>
+  </file>
+  <file src="src/Social/Mapper/Facebook.php">
+    <RiskyTruthyFalsyComparison>
+      <code><![CDATA[$rawData['link'] ?? null]]></code>
+    </RiskyTruthyFalsyComparison>
+  </file>
+  <file src="src/Social/Service/OpenIDConnectService.php">
+    <RiskyTruthyFalsyComparison>
+      <code><![CDATA[!$idToken]]></code>
+      <code><![CDATA[!$issuer]]></code>
+      <code><![CDATA[!$jwksUri]]></code>
+    </RiskyTruthyFalsyComparison>
+  </file>
+</files>

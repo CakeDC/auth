@@ -16,13 +16,16 @@ namespace CakeDC\Auth\Test\TestCase\Rbac;
 use Cake\Http\ServerRequest;
 use Cake\TestSuite\TestCase;
 use CakeDC\Auth\Rbac\Rbac;
+use CakeDC\Auth\Rbac\Rules\OTPRule;
 use CakeDC\Auth\Rbac\Rules\Owner;
 use CakeDC\Auth\Test\App\Auth\Rule\SampleRule;
 use Exception;
+use InvalidArgumentException;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Psr\Log\LogLevel;
 use ReflectionClass;
 use RuntimeException;
+use stdClass;
 
 class RbacTest extends TestCase
 {
@@ -98,7 +101,10 @@ class RbacTest extends TestCase
                 'plugin' => 'CakeDC/Users',
                 'controller' => 'Users',
                 'action' => 'resetOneTimePasswordAuthenticator',
-                'allowed' => true,
+                'allowed' => [
+                    'className' => OTPRule::class,
+                    'options' => [],
+                ],
             ],
             //all roles allowed to Pages/display
             [
@@ -126,21 +132,13 @@ class RbacTest extends TestCase
         unset($this->rbac);
     }
 
-    /**
-     * @covers \CakeDC\Auth\Rbac\Rbac::__construct
-     */
     public function testConstructGetDefaultPermissions()
     {
         $this->rbac = new Rbac();
         $result = $this->rbac->getPermissions();
-        $this->assertTrue(is_callable($result[4]['allowed']));
-        $result[4]['allowed'] = true;
         $this->assertSame($this->defaultPermissions, $result);
     }
 
-    /**
-     * @covers \CakeDC\Auth\Rbac\Rbac::__construct
-     */
     public function testConstructBadProvider()
     {
         $this->expectException(RuntimeException::class);
@@ -150,9 +148,6 @@ class RbacTest extends TestCase
         ]);
     }
 
-    /**
-     * @covers \CakeDC\Auth\Rbac\Rbac::__construct
-     */
     public function testConstructSetPermissions()
     {
         $this->rbac = new Rbac([
@@ -172,9 +167,6 @@ class RbacTest extends TestCase
         $this->assertEquals($permissions, $resultPermissions);
     }
 
-    /**
-     * @dataProvider providerAuthorize
-     */
     #[DataProvider('providerAuthorize')]
     public function testAuthorize($permissions, $user, $requestParams, $expected)
     {
@@ -1197,7 +1189,6 @@ class RbacTest extends TestCase
     }
 
     /**
-     * @dataProvider badPermissionProvider
      * @param array $permissions
      * @param array $user
      * @param array $requestParams
@@ -1366,10 +1357,134 @@ class RbacTest extends TestCase
             ->withParam('_ext', $params['_ext'] ?? null);
     }
 
+    /**
+     * A `['className' => Rule::class, 'options' => []]` value is resolved through the RuleRegistry
+     *
+     * @return void
+     */
+    public function testRuleConfig(): void
+    {
+        $permissions = [[
+            'controller' => 'Users',
+            'action' => 'resetOneTimePasswordAuthenticator',
+            'allowed' => ['className' => OTPRule::class, 'options' => []],
+        ]];
+        $this->rbac = new Rbac(['permissions' => $permissions]);
+        $request = $this->_requestFromArray([
+            'controller' => 'Users',
+            'action' => 'resetOneTimePasswordAuthenticator',
+        ])->withParam('pass', ['1']);
+
+        $this->assertTrue($this->rbac->checkPermissions(['id' => 1, 'role' => 'user'], $request));
+        $this->assertFalse($this->rbac->checkPermissions(['id' => 2, 'role' => 'user'], $request));
+    }
+
+    /**
+     * An array with a `className` key that is not a Rule keeps the value matching behavior
+     *
+     * @return void
+     */
+    public function testRuleConfigNotARule(): void
+    {
+        $permissions = [[
+            'role' => ['className' => 'admin'],
+            'controller' => '*',
+            'action' => '*',
+        ]];
+        $this->rbac = new Rbac(['permissions' => $permissions]);
+        $request = $this->_requestFromArray(['controller' => 'Posts', 'action' => 'index']);
+
+        $this->assertTrue($this->rbac->checkPermissions(['id' => 1, 'role' => 'admin'], $request));
+        $this->assertFalse($this->rbac->checkPermissions(['id' => 1, 'role' => 'user'], $request));
+    }
+
+    /**
+     * An `allowed` or `bypassAuth` rule config with a class that is not a Rule must not allow access
+     *
+     * @return void
+     */
+    #[DataProvider('ruleConfigInvalidClassProvider')]
+    public function testRuleConfigInvalidClass(string $key, mixed $value): void
+    {
+        $permissions = [[
+            'controller' => 'Users',
+            'action' => 'resetOneTimePasswordAuthenticator',
+            $key => $value,
+        ]];
+        $this->rbac = new Rbac(['permissions' => $permissions]);
+        $request = $this->_requestFromArray([
+            'controller' => 'Users',
+            'action' => 'resetOneTimePasswordAuthenticator',
+        ]);
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->rbac->checkPermissions(['id' => 1, 'role' => 'user'], $request);
+    }
+
+    /**
+     * @return array
+     */
+    public static function ruleConfigInvalidClassProvider(): array
+    {
+        return [
+            'missing class' => ['allowed', ['className' => 'App\Rbac\MissingRule']],
+            'not a rule' => ['allowed', ['className' => stdClass::class]],
+            'not a string' => ['allowed', ['className' => 123]],
+            'bypassAuth' => ['bypassAuth', ['className' => stdClass::class]],
+            'missing className key' => ['allowed', ['options' => []]],
+            'null className' => ['allowed', ['className' => null]],
+            'className case typo' => ['allowed', ['classname' => OTPRule::class]],
+            'list of configs' => ['allowed', [['className' => OTPRule::class]]],
+            'bypassAuth missing className' => ['bypassAuth', ['options' => []]],
+        ];
+    }
+
     public function testGetPermissions()
     {
         $permissions = ['test'];
         $this->rbac->setPermissions($permissions);
         $this->assertSame($permissions, $this->rbac->getPermissions());
+    }
+
+    /**
+     * Test the match reason reports the result as true or false
+     *
+     * @return void
+     */
+    public function testMatchReasonResult(): void
+    {
+        $request = $this->_requestFromArray(['controller' => 'Posts', 'action' => 'index']);
+        $user = ['id' => 1, 'role' => 'user'];
+        $method = (new ReflectionClass(Rbac::class))->getMethod('_matchPermission');
+
+        $allowed = $method->invoke(new Rbac(), [
+            'role' => 'user', 'controller' => 'Posts', 'action' => 'index', 'allowed' => true,
+        ], $user, 'user', $request);
+        $denied = $method->invoke(new Rbac(), [
+            'role' => 'user', 'controller' => 'Posts', 'action' => 'index', 'allowed' => false,
+        ], $user, 'user', $request);
+
+        $this->assertStringEndsWith('with result = true', $allowed->getReason());
+        $this->assertStringEndsWith('with result = false', $denied->getReason());
+    }
+
+    /**
+     * Only `true` or a callable in `bypassAuth` opens a permission to anonymous requests. A rule or
+     * rule config is only evaluated for logged in users.
+     *
+     * @return void
+     */
+    public function testBypassAuthRuleOnlyForLoggedInUsers(): void
+    {
+        $request = $this->_requestFromArray(['controller' => 'Pages', 'action' => 'display']);
+        foreach ([new SampleRule(), ['className' => SampleRule::class]] as $bypass) {
+            $rbac = new Rbac(['permissions' => [[
+                'controller' => 'Pages',
+                'action' => 'display',
+                'bypassAuth' => $bypass,
+            ]]]);
+            $this->assertFalse($rbac->checkPermissions([], $request));
+            $this->assertTrue($rbac->checkPermissions(['id' => 1, 'role' => 'user'], $request));
+        }
     }
 }
