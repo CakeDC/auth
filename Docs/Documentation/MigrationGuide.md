@@ -66,8 +66,8 @@ Please check [Authentication](Authentication.md) and [Authorization](Authorizati
 * The default `resetOneTimePasswordAuthenticator` permission uses the `OTPRule`. Users with integer
   ids can now reset their own one time password authenticator, the previous closure always denied
   them
-* An `allowed` or `bypassAuth` array with a `className` key must be a valid rule config, a class that
-  is not a `Rule` throws an `InvalidArgumentException`
+* Any array in `allowed` or `bypassAuth` must be a valid rule config. A missing `className`, a class
+  that does not exist, or a class that is not a `Rule` throws an `InvalidArgumentException`
 * `BaseTestTrait::testPermissions()` uses a `#[DataProvider]` attribute, the `provider()` method of
   your test class must be static
 * The `LinkedIn`, `Instagram`, `Pinterest` and `Tumblr` mappers are deprecated and will be removed in

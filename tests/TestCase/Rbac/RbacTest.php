@@ -1404,12 +1404,12 @@ class RbacTest extends TestCase
      * @return void
      */
     #[DataProvider('ruleConfigInvalidClassProvider')]
-    public function testRuleConfigInvalidClass(string $key, mixed $className): void
+    public function testRuleConfigInvalidClass(string $key, mixed $value): void
     {
         $permissions = [[
             'controller' => 'Users',
             'action' => 'resetOneTimePasswordAuthenticator',
-            $key => ['className' => $className],
+            $key => $value,
         ]];
         $this->rbac = new Rbac(['permissions' => $permissions]);
         $request = $this->_requestFromArray([
@@ -1427,10 +1427,15 @@ class RbacTest extends TestCase
     public static function ruleConfigInvalidClassProvider(): array
     {
         return [
-            'missing class' => ['allowed', 'App\Rbac\MissingRule'],
-            'not a rule' => ['allowed', stdClass::class],
-            'not a string' => ['allowed', 123],
-            'bypassAuth' => ['bypassAuth', stdClass::class],
+            'missing class' => ['allowed', ['className' => 'App\Rbac\MissingRule']],
+            'not a rule' => ['allowed', ['className' => stdClass::class]],
+            'not a string' => ['allowed', ['className' => 123]],
+            'bypassAuth' => ['bypassAuth', ['className' => stdClass::class]],
+            'missing className key' => ['allowed', ['options' => []]],
+            'null className' => ['allowed', ['className' => null]],
+            'className case typo' => ['allowed', ['classname' => OTPRule::class]],
+            'list of configs' => ['allowed', [['className' => OTPRule::class]]],
+            'bypassAuth missing className' => ['bypassAuth', ['options' => []]],
         ];
     }
 

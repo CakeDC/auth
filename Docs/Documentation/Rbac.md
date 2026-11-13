@@ -76,12 +76,13 @@ Permission rules syntax
     * A callable/object (see below)
 * If any of rules fail, the permission is discarded and the next one is evaluated
 * A very special key `allowed` exists which has the following behaviour:
-    * If `expected_value` is a callable/object then it's executed and the result is casted to boolean
-    * If `expected_value` is **not** a callable/object then it's simply casted to boolean
+    * If `expected_value` is a callable/object or a rule config array, it's executed and the result is casted to boolean
+    * If `expected_value` is an array without a valid rule config (`className` implementing `Rule`), an `InvalidArgumentException` is thrown
+    * Any other `expected_value` is simply casted to boolean
     * The `*` is checked and if found the result is inverted
     * The final boolean value is **the result of permission** checker. This means if it is `false` then no other permissions are checked and the user is denied access. And if it is `true`, you need at least an user identified, or it'll deny your access attempt.
     For this reason the `allowed` key must be placed at the end of permission since no other rules are executed after it
-* Another special key is `bypassAuth`. If it is `true`, or a callable `($user, $role, $request)` returning `true`, the request is allowed even if there is no user data. Use it for public actions. A `Rule` or a rule config array in `bypassAuth` is only evaluated for logged in users.
+* Another special key is `bypassAuth`. If it is `true`, or a callable `($user, $role, $request)` returning `true`, the request is allowed even if there is no user data. Use it for public actions. A `Rule` or any array in `bypassAuth` must be a valid rule config; an invalid or incomplete one throws an `InvalidArgumentException`. A rule config in `bypassAuth` is only evaluated for logged in users.
 
 **Notes**:
 
@@ -133,7 +134,7 @@ created with the RuleRegistry. Unlike a closure, this permission can be serializ
 ],
 ```
 
-The array is used as a rule only when `className` is a class implementing `\CakeDC\Auth\Rbac\Rules\Rule`.
+An array in `allowed` or `bypassAuth` is always treated as a rule config. Its `className` must be a class implementing `\CakeDC\Auth\Rbac\Rules\Rule`; a missing class, a class that does not exist, or a class that is not a `Rule` throws an `InvalidArgumentException`.
 
 ## Creating rule classes
 

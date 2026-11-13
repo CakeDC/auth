@@ -231,7 +231,7 @@ class Rbac implements RbacInterface
                 $return = $value->allowed($user, $role, $request);
             } elseif (
                 $this->_isRuleConfig($value) ||
-                (in_array($key, ['allowed', 'bypassAuth'], true) && is_array($value) && isset($value['className']))
+                (in_array($key, ['allowed', 'bypassAuth'], true) && is_array($value))
             ) {
                 $return = $this->_ruleFromConfig($value)->allowed($user, $role, $request);
             } elseif ($key === 'bypassAuth' && $value === true) {
@@ -309,9 +309,10 @@ class Rbac implements RbacInterface
     protected function _ruleFromConfig(array $config): Rule
     {
         if (!$this->_isRuleConfig($config)) {
+            $className = $config['className'] ?? null;
             throw new InvalidArgumentException(sprintf(
                 'Permission rule `%s` is not a class implementing %s',
-                is_string($config['className']) ? $config['className'] : get_debug_type($config['className']),
+                is_string($className) ? $className : get_debug_type($className),
                 Rule::class,
             ));
         }
