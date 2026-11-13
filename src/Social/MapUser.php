@@ -30,7 +30,8 @@ class MapUser
     {
         $mapper = $service->getConfig('mapper');
         if (is_string($mapper)) {
-            $mapper = $this->buildMapper($mapper);
+            $rolesMap = $service->getConfig('rolesMap');
+            $mapper = $this->buildMapper($mapper, is_array($rolesMap) ? $rolesMap : null);
         }
 
         $user = $mapper($data);
@@ -43,14 +44,15 @@ class MapUser
      * Build the mapper object
      *
      * @param string $className of mapper
+     * @param array<string, string>|null $rolesMap provider roles map
      * @return object
      */
-    protected function buildMapper(string $className): object
+    protected function buildMapper(string $className, ?array $rolesMap = null): object
     {
         if (!class_exists($className)) {
             throw new InvalidArgumentException(__('Provider mapper class {0} does not exist', $className));
         }
 
-        return new $className();
+        return new $className(null, $rolesMap);
     }
 }

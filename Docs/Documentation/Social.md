@@ -171,9 +171,10 @@ Without a `rolesMap` the `roles` field is `null` and no role is required. When a
 the login fails with an `UnexpectedValueException` when the userinfo has no roles or none of the
 user roles is in `rolesMap`, so only users with a mapped role can log in.
 
-The mapper reads `OAuth.providers.keycloak.rolesMap` and `OAuth.providers.keycloak.mapFields`, the
-configured `mapFields` are merged over the mapper fields. When
-the provider uses another key, pass a mapper instance instead of the class name:
+The mapper reads the `rolesMap` of the provider configuration, so it works with any provider alias
+(e.g. `OAuth.providers.staffSso.rolesMap` with `'mapper' => Keycloak::class`). The `mapFields` still
+default to `OAuth.providers.keycloak.mapFields`; when the provider uses another key and needs custom
+map fields, pass a mapper instance instead of the class name:
 `'mapper' => new \CakeDC\Auth\Social\Mapper\Keycloak(null, ['MyRealm-Admin' => 'admin'])`.
 
 The mapper does not change the user role by itself. CakeDC/Users creates new users with its

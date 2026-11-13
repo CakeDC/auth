@@ -117,6 +117,9 @@ documented. Check these behavior changes when upgrading:
 - A partial `OAuth.providers.keycloak.mapFields` replaced the whole Keycloak field map, losing `id`,
   `roles` and `validated`, so the `rolesMap` check let every user in. The configured fields are now
   merged over the mapper fields.
+- The Keycloak `rolesMap` was only read from `OAuth.providers.keycloak`, so a provider alias with
+  `mapper => Keycloak::class` ignored its own roles map. `ProviderConfig` now keeps the provider
+  `rolesMap` and `MapUser` passes it to the mapper.
 - `OneTimeTokenAuthenticator` treats a token array that is not a flat list of strings as a missing
   token, instead of joining it with an "Array to string conversion" warning.
 

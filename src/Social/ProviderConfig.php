@@ -84,7 +84,7 @@ class ProviderConfig
                 'mapFields' => [],
             ] + $parent;
         // OpenIDConnectService settings, only kept when the provider defines them
-        $optional = ['openid' => true];
+        $optional = ['openid' => true, 'rolesMap' => true];
 
         $config = array_intersect_key($config, $defaults + $optional);
         $config += $defaults;
