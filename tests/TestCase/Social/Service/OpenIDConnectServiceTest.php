@@ -767,6 +767,36 @@ class OpenIDConnectServiceTest extends TestCase
     }
 
     /**
+     * Test a cached key set that still misses the token key id after the refresh is rejected
+     *
+     * @return void
+     */
+    public function testGetUserCachedKeySetRefreshStillMissingKid(): void
+    {
+        Cache::setConfig('_oidc_test_', ['className' => 'Array']);
+        $oldKey = $this->rsaKey('old-key');
+        $newKey = $this->rsaKey('new-key');
+        Cache::write('cakedc_auth_oidc_' . md5(self::JWKS_URI), ['keys' => [$oldKey['jwk']]], '_oidc_test_');
+        $requested = [];
+        $service = $this->serviceWithHttp($this->oidcResponses([$oldKey['jwk']]), $requested);
+        $service->setConfig('openid.cache', '_oidc_test_');
+        $this->prepareCallback(JWT::encode($this->validClaims(), $newKey['private'], 'RS256', 'new-key'));
+
+        try {
+            $this->assertInvalidIdToken($service, '"kid" invalid');
+            $cached = Cache::read('cakedc_auth_oidc_' . md5(self::JWKS_URI), '_oidc_test_');
+        } finally {
+            Cache::drop('_oidc_test_');
+        }
+
+        $this->assertSame([
+            'https://www.linkedin.com/oauth/.well-known/openid-configuration',
+            self::JWKS_URI,
+        ], $requested);
+        $this->assertSame(['old-key'], array_column($cached['keys'], 'kid'));
+    }
+
+    /**
      * Test the authorization url has no nonce when `openid.nonce` is disabled
      *
      * @return void
