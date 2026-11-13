@@ -816,6 +816,9 @@ class OpenIDConnectServiceTest extends TestCase
             'other scheme' => ['http://idp.example/certs', 'https://idp.example', false],
             'other port' => ['https://idp.example:8443/certs', 'https://idp.example', false],
             'sibling path' => ['https://idp.example/realms/ab/certs', 'https://idp.example/realms/a', false],
+            'dot segment' => ['https://idp.example/realms/a/../b/certs', 'https://idp.example/realms/a', false],
+            'single dot segment' => ['https://idp.example/realms/a/./certs', 'https://idp.example/realms/a', false],
+            'encoded dot segment' => ['https://idp.example/realms/a/%2e%2e/b/certs', 'https://idp.example/realms/a', false],
             'empty base url' => ['https://evil.com/certs', '', false],
             'relative url' => ['/certs', 'https://idp.example', false],
         ];

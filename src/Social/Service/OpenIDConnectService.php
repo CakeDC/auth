@@ -247,8 +247,29 @@ class OpenIDConnectService extends OAuth2Service
         }
         $basePath = rtrim($base['path'] ?? '', '/');
         $path = $target['path'] ?? '/';
+        if ($this->hasDotSegments($path)) {
+            return false;
+        }
 
         return $basePath === '' || $path === $basePath || str_starts_with($path, $basePath . '/');
+    }
+
+    /**
+     * Check whether the path contains a dot segment, raw or percent-encoded
+     *
+     * @param string $path Url path.
+     * @return bool
+     */
+    protected function hasDotSegments(string $path): bool
+    {
+        foreach (explode('/', $path) as $segment) {
+            $segment = rawurldecode($segment);
+            if ($segment === '.' || $segment === '..' || str_contains($segment, '/') || str_contains($segment, '\\')) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**

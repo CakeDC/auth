@@ -252,6 +252,7 @@ provider:
     // ...
     'openid' => [
         // the jwks_uri of the discovery document must use this scheme, host and port, and a path below it.
+        // Dot segments (`.` or `..`, raw or percent-encoded) are rejected.
         // The defaults are for LinkedIn, set baseUrl, url and issuer for any other provider
         'baseUrl' => 'https://www.linkedin.com/',
         // discovery document

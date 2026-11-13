@@ -35,8 +35,9 @@ documented. Check these behavior changes when upgrading:
 - An Rbac `allowed` or `bypassAuth` rule config whose `className` is missing or is not a `Rule`
   allowed every logged in user. It now throws an `InvalidArgumentException`.
 - The OpenID Connect service validates the id token signature and its `iss`, `aud`, `azp` and `nonce`
-  claims, only loads the key set from a `jwks_uri` on the scheme, host and port of `openid.baseUrl`, and
-  the `LinkedInOpenIDConnect` mapper reads `validated` from `email_verified`.
+  claims, only loads the key set from a `jwks_uri` on the scheme, host and port of `openid.baseUrl`
+  and a path below it without `.` or `..` segments (raw or percent-encoded), and the
+  `LinkedInOpenIDConnect` mapper reads `validated` from `email_verified`.
 - A partial Keycloak `mapFields` config dropped the `roles` field, so the `rolesMap` check let users
   without a mapped role log in. The configured fields are now merged over the mapper fields.
 - The `Tumblr` mapper is deprecated: its user id is a crc32 of the nickname, so two users can get the
