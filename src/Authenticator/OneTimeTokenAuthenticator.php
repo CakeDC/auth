@@ -32,7 +32,7 @@ class OneTimeTokenAuthenticator extends AbstractAuthenticator implements Authent
         $token = $request->getQuery('token') ?: $request->getData('token');
         // The CakeDC/Users token form posts one input per character, `token[0]`, `token[1]`...
         if (is_array($token)) {
-            $isStringList = array_filter($token, 'is_string') === $token;
+            $isStringList = array_is_list($token) && array_filter($token, 'is_string') === $token;
             $token = $isStringList ? implode('', $token) : null;
         }
 

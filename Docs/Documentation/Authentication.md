@@ -29,8 +29,9 @@ Check how enabled social authentication at [users plugin.](https://github.com/Ca
     - urlChecker: The URL checker class or object. Default is DefaultUrlChecker.
 
 - **OneTimeTokenAuthenticator**, logs in a user with a one time token (magic link), read from the
-`token` query param or the posted `token` field. A token posted as one input per character
-(`token[0]`, `token[1]`...) is joined. The user is found with the `loginWithToken($token)` method of
+`token` query param or the posted `token` field. A token posted as one input per character in a flat,
+zero-based list (`token[0]`, `token[1]`...) is joined; any other array shape is treated as a missing
+token. The user is found with the `loginWithToken($token)` method of
 the users table configured in `Users.table`, provided by the CakeDC/Users plugin.
 
 All authenticators use the identifiers of cakephp/authentication 3.x, configured per authenticator

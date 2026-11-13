@@ -83,6 +83,24 @@ class OneTimeTokenAuthenticatorTest extends TestCase
                 ['valid-token'],
             ],
             'nested array token' => [['token' => ['valid-', ['token']]], [], Result::FAILURE_CREDENTIALS_MISSING, []],
+            'associative array token' => [
+                [],
+                ['token' => [
+                    'a' => 'v', 'b' => 'a', 'c' => 'l', 'd' => 'i', 'e' => 'd', 'f' => '-',
+                    'g' => 't', 'h' => 'o', 'i' => 'k', 'j' => 'e', 'k' => 'n',
+                ]],
+                Result::FAILURE_CREDENTIALS_MISSING,
+                [],
+            ],
+            'non zero based list token' => [
+                [],
+                ['token' => [
+                    1 => 'v', 2 => 'a', 3 => 'l', 4 => 'i', 5 => 'd', 6 => '-',
+                    7 => 't', 8 => 'o', 9 => 'k', 10 => 'e', 11 => 'n',
+                ]],
+                Result::FAILURE_CREDENTIALS_MISSING,
+                [],
+            ],
             'no token' => [[], [], Result::FAILURE_CREDENTIALS_MISSING, []],
             'empty token' => [['token' => ''], ['token' => ''], Result::FAILURE_CREDENTIALS_MISSING, []],
         ];
