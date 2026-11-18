@@ -2,7 +2,7 @@ Rbac
 ====
 
 The Rbac class is provided to allow permission matching based on request params and a set of rules.
-This class was extracted initially from SimpleRbacAuthorize to allow using it from Middlewares.
+It is used by the `RbacMiddleware` and by the `RbacPolicy` (see [Authorization](Authorization.md)).
 Along with the original extraction, new classes for permission providers were created too, to allow
 using other sources to provide the permissions array, for example the database or a cache engine. 
 
@@ -13,7 +13,7 @@ Setup
 Create an instance of the Rbac class and use `checkPermissions` method
 ```php
     $rbac = new Rbac();
-    $isAuthorized = $this->rbac->checkPermissions($userData, $request);
+    $isAuthorized = $rbac->checkPermissions($userData, $request);
 ```
 
 You can define the actual permissions array in the constructor options (key `permissions`), 
@@ -22,6 +22,34 @@ configuration file.
 
 Extend `AbstractProvider` class and use the `permissions_provider_class` config key to let
 the Rbac use your own permissions provider, for example to read the permissions from the database.
+
+Configuration options:
+
+* `autoload_config`: configuration file read by the default provider, `permissions` by default
+* `role_field`: user field holding the role, `role` by default
+* `default_role`: role used when the user has no role, `user` by default
+* `permissions_provider_class`: permissions provider, `ConfigProvider` by default
+* `permissions`: permissions array, overrides the provider
+* `log`: log the permission matching at debug level, `false` by default
+
+When `CakeDC/Auth.emitEvents` is `true`, every check dispatches the `Auth.Rbac.checked` event, see
+[Authorization](Authorization.md#events).
+
+RbacMiddleware
+--------------
+
+`CakeDC\Auth\Middleware\RbacMiddleware` checks the permissions of every request. Add it after the
+authentication and routing middlewares:
+
+```php
+$middlewareQueue->add(new \CakeDC\Auth\Middleware\RbacMiddleware(null, [
+    // RbacMiddleware::UNAUTHORIZED_BEHAVIOR_THROW, _REDIRECT or _AUTO (throw for json requests)
+    'unauthorizedBehavior' => \CakeDC\Auth\Middleware\RbacMiddleware::UNAUTHORIZED_BEHAVIOR_REDIRECT,
+    'unauthorizedRedirect' => ['plugin' => 'CakeDC/Users', 'controller' => 'Users', 'action' => 'login'],
+]));
+```
+
+The Rbac instance is stored in the `rbac` request attribute, the `RbacPolicy` reuses it.
 
 Permission rules syntax
 -----------------
@@ -48,18 +76,19 @@ Permission rules syntax
     * A callable/object (see below)
 * If any of rules fail, the permission is discarded and the next one is evaluated
 * A very special key `allowed` exists which has the following behaviour:
-    * If `expected_value` is a callable/object then it's executed and the result is casted to boolean
-    * If `expected_value` is **not** a callable/object then it's simply casted to boolean
+    * If `expected_value` is a callable/object or a rule config array, it's executed and the result is casted to boolean
+    * If `expected_value` is an array without a valid rule config (`className` implementing `Rule`), an `InvalidArgumentException` is thrown
+    * Any other `expected_value` is simply casted to boolean
     * The `*` is checked and if found the result is inverted
     * The final boolean value is **the result of permission** checker. This means if it is `false` then no other permissions are checked and the user is denied access. And if it is `true`, you need at least an user identified, or it'll deny your access attempt.
     For this reason the `allowed` key must be placed at the end of permission since no other rules are executed after it
-* ONLY when using Rbac within the Middleware implementation: Another special key is `bypassAuth`, if set to true will allow the request, even if there is no user data. Note this won't work with the regular AuthComponent setup, and you'll require using `AuthComponent::allow` method to specify public actions. 
+* Another special key is `bypassAuth`. If it is `true`, or a callable `($user, $role, $request)` returning `true`, the request is allowed even if there is no user data. Use it for public actions. A `Rule` or any array in `bypassAuth` must be a valid rule config; an invalid or incomplete one throws an `InvalidArgumentException`. A rule config in `bypassAuth` is only evaluated for logged in users.
 
 **Notes**:
 
-* For Superadmin access (permission to access ALL THE THINGS in your app) there is a specific Authorize Object provided
+* For Superadmin access (permission to access ALL THE THINGS in your app) use the `SuperuserPolicy`, see [Authorization](Authorization.md)
 * Permissions that do not have `controller` and/or `action` keys (or the inverted versions) are automatically discarded in order to prevent errors.
-* If you need to match all controllers/actions you should explicitly do `'contoller' => '*'`
+* If you need to match all controllers/actions you should explicitly do `'controller' => '*'`
 * Key `user` (or the inverted version) is illegal (as it's impossible to match an array) and any permission containing it will be discarded
 * If the permission is discarded for the reasons stated above, a debug message will be logged
 
@@ -73,42 +102,60 @@ You could use a callback in your 'allowed' to process complex authentication, li
 Example *ownership* callback, to allow users to edit their own Posts:
 
 ```php
-    'allowed' => function (array $user, $role, \Cake\Http\ServerRequest $request) {
-        $postId = \Cake\Utility\Hash::get($request->params, 'pass.0');
-        $post = \Cake\ORM\TableRegistry::get('Posts')->get($postId);
-        $userId = $user['id'];
-        if (!empty($post->user_id) && !empty($userId)) {
-            return $post->user_id === $userId;
+    'allowed' => function (array|\ArrayAccess $user, string $role, \Cake\Http\ServerRequest $request): bool {
+        $postId = $request->getParam('pass.0');
+        if (empty($postId) || empty($user['id'])) {
+            return false;
         }
-        return false;
+        $post = \Cake\ORM\TableRegistry::getTableLocator()->get('Posts')->find()
+            ->where(['id' => $postId])
+            ->first();
+
+        return $post !== null && (string)$post->user_id === (string)$user['id'];
     }
 ```
 
 ### Permission Rules: 
 
 If you see that you are duplicating logic in your callbacks, you can create rule class to re-use the logic.
-For example, the above ownership callback is included in CakeDC\Users as `Owner` rule
+For example, the above ownership callback is included in this plugin as the `Owner` rule
 ```php
 'allowed' => new \CakeDC\Auth\Rbac\Rules\Owner() //will pick by default the post id from the first pass param
 ```
 Check the [Owner Rule](OwnerRule.md) documentation for more details
+
+You can also define a rule as an array with the rule class name and its options. The rule is
+created with the RuleRegistry. Unlike a closure, this permission can be serialized:
+
+```php
+'allowed' => [
+    'className' => \CakeDC\Auth\Rbac\Rules\OTPRule::class,
+    'options' => [],
+],
+```
+
+An array in `allowed` or `bypassAuth` is always treated as a rule config. Its `className` must be a class implementing `\CakeDC\Auth\Rbac\Rules\Rule`; a missing class, a class that does not exist, or a class that is not a `Rule` throws an `InvalidArgumentException`.
 
 ## Creating rule classes
 
 The only requirement is to implement `\CakeDC\Auth\Rbac\Rules\Rule` interface which has one method:
 
 ```php
-class YourRule implements \CakeDC\Auth\Rbac\Rules\Rule
+use ArrayAccess;
+use CakeDC\Auth\Rbac\Rules\Rule;
+use Psr\Http\Message\ServerRequestInterface;
+
+class YourRule implements Rule
 {
     /**
      * Check the current entity is owned by the logged in user
      *
-     * @param array $user Auth array with the logged in data
+     * @param \ArrayAccess|array $user Auth array with the logged in data
      * @param string $role role of the user
-     * @param Request $request current request, used to get a default table if not provided
+     * @param \Psr\Http\Message\ServerRequestInterface $request current request
      * @return bool
      */
-    public function allowed(array $user, $role, Request $request)
+    public function allowed(array|ArrayAccess $user, string $role, ServerRequestInterface $request): bool
     {
         // Your logic here
     }

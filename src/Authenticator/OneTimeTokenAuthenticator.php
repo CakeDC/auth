@@ -1,6 +1,16 @@
 <?php
 declare(strict_types=1);
 
+/**
+ * Copyright 2010 - 2026, Cake Development Corporation (https://www.cakedc.com)
+ *
+ * Licensed under The MIT License
+ * Redistributions of files must retain the above copyright notice.
+ *
+ * @copyright Copyright 2010 - 2026, Cake Development Corporation (https://www.cakedc.com)
+ * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
+ */
+
 namespace CakeDC\Auth\Authenticator;
 
 use Authentication\Authenticator\AbstractAuthenticator;
@@ -20,11 +30,13 @@ class OneTimeTokenAuthenticator extends AbstractAuthenticator implements Authent
     {
         /** @var \Cake\Http\ServerRequest $request */
         $token = $request->getQuery('token') ?: $request->getData('token');
+        // The CakeDC/Users token form posts one input per character, `token[0]`, `token[1]`...
         if (is_array($token)) {
-            $token = join($token);
+            $isStringList = array_is_list($token) && array_filter($token, 'is_string') === $token;
+            $token = $isStringList ? implode('', $token) : null;
         }
 
-        if (!$token) {
+        if (!is_string($token) || $token === '') {
             return new Result(null, Result::FAILURE_CREDENTIALS_MISSING);
         }
 

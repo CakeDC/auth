@@ -2,12 +2,12 @@
 declare(strict_types=1);
 
 /**
- * Copyright 2010 - 2019, Cake Development Corporation (https://www.cakedc.com)
+ * Copyright 2010 - 2026, Cake Development Corporation (https://www.cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2010 - 2019, Cake Development Corporation (https://www.cakedc.com)
+ * @copyright Copyright 2010 - 2026, Cake Development Corporation (https://www.cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
@@ -15,6 +15,7 @@ namespace CakeDC\Auth\Social\Service;
 
 use BadMethodCallException;
 use Cake\Http\ServerRequest;
+use InvalidArgumentException;
 use League\OAuth1\Client\Server\Server;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -124,8 +125,12 @@ class OAuth1Service extends OAuthServiceAbstract
             $this->provider = $config['className'];
         } else {
             $class = $config['className'];
+            $provider = new $class($config['options'], $config['signature']);
+            if (!$provider instanceof Server) {
+                throw new InvalidArgumentException(sprintf('Provider class %s must extend %s', $class, Server::class));
+            }
 
-            $this->provider = new $class($config['options'], $config['signature']);
+            $this->provider = $provider;
         }
     }
 }

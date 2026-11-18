@@ -2,21 +2,20 @@
 declare(strict_types=1);
 
 /**
- * Copyright 2010 - 2019, Cake Development Corporation (https://www.cakedc.com)
+ * Copyright 2010 - 2026, Cake Development Corporation (https://www.cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2010 - 2019, Cake Development Corporation (https://www.cakedc.com)
+ * @copyright Copyright 2010 - 2026, Cake Development Corporation (https://www.cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
 namespace CakeDC\Auth\Rbac\Permissions;
 
 use Cake\Core\InstanceConfigTrait;
-use Cake\Http\ServerRequest;
 use Cake\Log\LogTrait;
-use Cake\Utility\Hash;
+use CakeDC\Auth\Rbac\Rules\OTPRule;
 
 /**
  * Class AbstractProvider, handles getting permission from different sources,
@@ -99,14 +98,10 @@ abstract class AbstractProvider
                 'plugin' => 'CakeDC/Users',
                 'controller' => 'Users',
                 'action' => 'resetOneTimePasswordAuthenticator',
-                'allowed' => function (array $user, string $role, ServerRequest $request): bool {
-                    $userId = Hash::get($request->getAttribute('params'), 'pass.0');
-                    if (!empty($userId) && !empty($user)) {
-                        return $userId === $user['id'];
-                    }
-
-                    return false;
-                },
+                'allowed' => [
+                    'className' => OTPRule::class,
+                    'options' => [],
+                ],
             ],
             //all roles allowed to Pages/display
             [

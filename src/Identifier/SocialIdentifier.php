@@ -2,12 +2,12 @@
 declare(strict_types=1);
 
 /**
- * Copyright 2010 - 2019, Cake Development Corporation (https://www.cakedc.com)
+ * Copyright 2010 - 2026, Cake Development Corporation (https://www.cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2010 - 2019, Cake Development Corporation (https://www.cakedc.com)
+ * @copyright Copyright 2010 - 2026, Cake Development Corporation (https://www.cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
@@ -23,6 +23,9 @@ class SocialIdentifier extends AbstractIdentifier
 
     public const CREDENTIAL_KEY = 'socialAuthUser';
 
+    /**
+     * @var array<string, mixed>
+     */
     protected array $defaultConfig = [
         'resolver' => 'Authentication.Orm',
     ];
@@ -30,8 +33,8 @@ class SocialIdentifier extends AbstractIdentifier
     /**
      * Identifies an user or service by the passed credentials
      *
-     * @param array $credentials Authentication credentials
-     * @return \ArrayAccess|array|null
+     * @param array<string, mixed> $credentials Authentication credentials
+     * @return \ArrayAccess<string, mixed>|array<string, mixed>|null
      */
     public function identify(array $credentials): ArrayAccess|array|null
     {

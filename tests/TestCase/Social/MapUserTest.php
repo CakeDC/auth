@@ -16,6 +16,7 @@ namespace CakeDC\Auth\Test\TestCase\Social;
 use Cake\Core\Configure;
 use Cake\TestSuite\TestCase;
 use CakeDC\Auth\Social\Mapper\Facebook as FacebookMapper;
+use CakeDC\Auth\Social\Mapper\Keycloak as KeycloakMapper;
 use CakeDC\Auth\Social\MapUser;
 use CakeDC\Auth\Social\Service\OAuth2Service;
 use CakeDC\Auth\Social\Service\ServiceFactory;
@@ -138,6 +139,43 @@ class MapUserTest extends TestCase
         $mapper = new MapUser();
         $actual = $mapper($service, $user);
         $this->assertEquals($expected, $actual);
+    }
+
+    /**
+     * The Keycloak mapper uses the rolesMap of any provider alias
+     */
+    public function testMapKeycloakRolesMapFromProviderAlias()
+    {
+        Configure::write('OAuth.providers.staffSso', [
+            'service' => OAuth2Service::class,
+            'className' => Facebook::class,
+            'mapper' => KeycloakMapper::class,
+            'options' => [
+                'state' => '__TEST_STATE__',
+                'graphApiVersion' => 'v2.8',
+                'redirectUri' => '/auth/staffSso',
+                'linkSocialUri' => '/link-social/staffSso',
+                'callbackLinkSocialUri' => '/callback-link-social/staffSso',
+                'clientId' => '10003030300303',
+                'clientSecret' => 'secretpassword',
+            ],
+            'rolesMap' => ['CakeDc-Admin' => 'admin'],
+        ]);
+        $service = (new ServiceFactory())->createFromProvider('staffSso');
+        $rawData = [
+            'token' => new AccessToken([
+                'access_token' => 'test-token',
+                'expires' => 1490988496,
+            ]),
+            'sub' => '1',
+            'email' => 'test@example.com',
+            'realm_access' => ['roles' => ['CakeDc-Admin']],
+        ];
+
+        $user = (new MapUser())($service, $rawData);
+
+        $this->assertSame('admin', $user['roles']);
+        $this->assertSame('staffSso', $user['provider']);
     }
 
     /**

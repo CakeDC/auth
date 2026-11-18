@@ -81,7 +81,6 @@ class IsAuthorizedTraitTest extends TestCase
      *
      * @param mixed $url The url to test.
      * @param bool $authorize Is authorized?
-     * @dataProvider dataProviderIsAuthorized
      * @return void
      */
     #[DataProvider('dataProviderIsAuthorized')]
