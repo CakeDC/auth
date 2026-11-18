@@ -4,7 +4,7 @@ Owner Rule
 Setup
 ---------------
 
-SimpleRbacAuthorize will pick and use specific Rule classes (implementing the \CakeDC\Auth\Auth\Rules\Rule interface).
+Rbac will pick and use specific Rule classes (implementing the `\CakeDC\Auth\Rbac\Rules\Rule` interface).
 You only need to create your own permission rules, implement the required interface and pass the instance in the
 'allowed' param.
 

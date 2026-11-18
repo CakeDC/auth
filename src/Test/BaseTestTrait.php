@@ -1,11 +1,23 @@
 <?php
 declare(strict_types=1);
 
+/**
+ * Copyright 2010 - 2026, Cake Development Corporation (https://www.cakedc.com)
+ *
+ * Licensed under The MIT License
+ * Redistributions of files must retain the above copyright notice.
+ *
+ * @copyright Copyright 2010 - 2026, Cake Development Corporation (https://www.cakedc.com)
+ * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
+ */
+
 namespace CakeDC\Auth\Test;
 
 use Cake\Console\ConsoleIo;
 use Cake\Core\Configure;
 use Cake\ORM\TableRegistry;
+use Cake\Utility\Hash;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 trait BaseTestTrait
 {
@@ -19,7 +31,7 @@ trait BaseTestTrait
     {
         $data = TableRegistry::getTableLocator()
             ->get(Configure::read('Users.table', 'Users'))->get($id)->toArray();
-        $this->session(['Auth' => ['User' => $data]]);
+        $this->session($this->_authSessionData($data));
     }
 
     /**
@@ -32,7 +44,23 @@ trait BaseTestTrait
     {
         $data = TableRegistry::getTableLocator()
             ->get(Configure::read('Users.table', 'Users'))->findByUsername($username)->first()->toArray();
-        $this->session(['Auth' => ['User' => $data]]);
+        $this->session($this->_authSessionData($data));
+    }
+
+    /**
+     * Session data of the logged in user
+     *
+     * The user is stored at the session key of the session authenticator, read from
+     * `Auth.Authenticators.Session.sessionKey` (CakeDC/Users configuration), `Auth` by default.
+     *
+     * @param array $user User data.
+     * @return array
+     */
+    protected function _authSessionData(array $user): array
+    {
+        $sessionKey = (string)Configure::read('Auth.Authenticators.Session.sessionKey', 'Auth');
+
+        return Hash::insert([], $sessionKey, $user);
     }
 
     /**
@@ -51,11 +79,17 @@ trait BaseTestTrait
      * @param string $method Request method.
      * @param string $ajax Ajax value
      * @param string $responseCode Reponse code.
-     * @param string $responseContains Text the response should contains.
+     * @param string $responseContains Text the response should contains, empty to expect an empty body.
      * @throws \PHPUnit\Exception
      */
-    protected function _testPermissions(string $url, string $username, string $method, string $ajax, string $responseCode, string $responseContains): void
-    {
+    protected function _testPermissions(
+        string $url,
+        string $username,
+        string $method,
+        string $ajax,
+        string $responseCode,
+        string $responseContains = '',
+    ): void {
         if ($this->_isVerboseOrDebug()) {
             (new ConsoleIo())->info(__(
                 "\nUrl: {0} Username: {1} Method: {2} Ajax?: {3} Response Code: {4} Response Contains: {5} ",
@@ -68,10 +102,10 @@ trait BaseTestTrait
             ), 0);
         }
         $this->loginAsUserName($username);
-        if ($ajax === 'ajax') {
+        if (strtolower($ajax) === 'ajax') {
             $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHttpRequest';
         }
-        if ($method === 'post') {
+        if (strtolower($method) === 'post') {
             $this->enableCsrfToken();
             $this->enableSecurityToken();
             $this->post($url);
@@ -94,22 +128,43 @@ trait BaseTestTrait
     /**
      * Test permissions
      *
+     * The test class must define a static `provider()` method returning the CSV file names, for example
+     * `[['admin.csv'], ['user.csv']]`. The files are read from `tests/Provider`.
+     *
      * @param string $csv CSV name
-     * @return array
-     * @dataProvider provider
+     * @return void
      */
-    public function testPermissions(string $csv): array
+    #[DataProvider('provider')]
+    public function testPermissions(string $csv): void
     {
-        $this->assertTrue(file_exists(TESTS . 'Provider' . DS . $csv));
-        $rows = array_map('str_getcsv', file(TESTS . 'Provider' . DS . $csv));
+        $path = $this->_permissionsCsvPath($csv);
+        $this->assertFileExists($path);
+        $rows = array_map(
+            fn(string $line): array => str_getcsv($line, ',', '"', ''),
+            (array)file($path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES),
+        );
         foreach ($rows as $row) {
-            if ($row[0][0] === '#') {
+            if (!isset($row[0]) || trim($row[0]) === '' || $row[0][0] === '#') {
                 continue;
             }
-            [$url, $username, $method, $ajax, $responseCode, $responseContains] = array_pad($row, 6, null);
+            [$url, $username, $method, $ajax, $responseCode, $responseContains] = array_map(
+                'strval',
+                array_pad($row, 6, ''),
+            );
             $this->setUp();
             $this->_testPermissions($url, $username, $method, $ajax, $responseCode, $responseContains);
             $this->tearDown();
         }
+    }
+
+    /**
+     * Path of a permissions CSV file
+     *
+     * @param string $csv CSV name
+     * @return string
+     */
+    protected function _permissionsCsvPath(string $csv): string
+    {
+        return TESTS . 'Provider' . DS . $csv;
     }
 }

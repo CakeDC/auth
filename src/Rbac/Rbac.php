@@ -2,12 +2,12 @@
 declare(strict_types=1);
 
 /**
- * Copyright 2010 - 2019, Cake Development Corporation (https://www.cakedc.com)
+ * Copyright 2010 - 2026, Cake Development Corporation (https://www.cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2010 - 2019, Cake Development Corporation (https://www.cakedc.com)
+ * @copyright Copyright 2010 - 2026, Cake Development Corporation (https://www.cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
@@ -24,6 +24,8 @@ use Cake\Utility\Inflector;
 use CakeDC\Auth\Rbac\Permissions\AbstractProvider;
 use CakeDC\Auth\Rbac\Permissions\ConfigProvider;
 use CakeDC\Auth\Rbac\Rules\Rule;
+use CakeDC\Auth\Rbac\Rules\RuleRegistry;
+use InvalidArgumentException;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Log\LogLevel;
 use RuntimeException;
@@ -88,7 +90,9 @@ class Rbac implements RbacInterface
         } else {
             $permissionsProviderClass = $this->getConfig('permissions_provider_class');
             if (!is_subclass_of($permissionsProviderClass, AbstractProvider::class)) {
-                throw new RuntimeException(sprintf('Class "%s" must extend AbstractProvider', $permissionsProviderClass));
+                throw new RuntimeException(
+                    sprintf('Class "%s" must extend AbstractProvider', $permissionsProviderClass),
+                );
             }
             $permissionsProvider = new $permissionsProviderClass([
                 'autoload_config' => $this->getConfig('autoload_config'),
@@ -176,8 +180,12 @@ class Rbac implements RbacInterface
      * @return \CakeDC\Auth\Rbac\PermissionMatchResult|null Null if permission is discarded, PermissionMatchResult if a final
      * result is produced
      */
-    protected function _matchPermission(array $permission, array|ArrayAccess $user, string $role, ServerRequestInterface $request): ?PermissionMatchResult
-    {
+    protected function _matchPermission(
+        array $permission,
+        array|ArrayAccess $user,
+        string $role,
+        ServerRequestInterface $request,
+    ): ?PermissionMatchResult {
         $issetController = isset($permission['controller']) || isset($permission['*controller']);
         $issetAction = isset($permission['action']) || isset($permission['*action']);
         $issetUser = isset($permission['user']) || isset($permission['*user']);
@@ -221,6 +229,11 @@ class Rbac implements RbacInterface
                 $return = (bool)call_user_func($value, $user, $role, $request);
             } elseif ($value instanceof Rule) {
                 $return = $value->allowed($user, $role, $request);
+            } elseif (
+                $this->_isRuleConfig($value) ||
+                (in_array($key, ['allowed', 'bypassAuth'], true) && is_array($value))
+            ) {
+                $return = $this->_ruleFromConfig($value)->allowed($user, $role, $request);
             } elseif ($key === 'bypassAuth' && $value === true) {
                 $return = true;
             } elseif ($key === 'allowed') {
@@ -241,9 +254,9 @@ class Rbac implements RbacInterface
             if ($key === 'allowed' || $key === 'bypassAuth') {
                 $reason = sprintf(
                     'For %s --> Rule matched %s with result = %s',
-                    json_encode($reserved),
-                    json_encode($permission),
-                    $return,
+                    $this->_encodeForReason($reserved),
+                    $this->_encodeForReason($permission),
+                    $return ? 'true' : 'false',
                 );
 
                 return new PermissionMatchResult($return, $reason);
@@ -254,6 +267,57 @@ class Rbac implements RbacInterface
         }
 
         return null;
+    }
+
+    /**
+     * Check if the value is a rule config array, `['className' => Rule::class, 'options' => []]`
+     *
+     * @param mixed $value Permission value.
+     * @return bool
+     */
+    protected function _isRuleConfig(mixed $value): bool
+    {
+        return is_array($value) &&
+            isset($value['className']) &&
+            is_string($value['className']) &&
+            is_a($value['className'], Rule::class, true);
+    }
+
+    /**
+     * Encode a value as json for the match reason
+     *
+     * @param mixed $value Value to encode.
+     * @return string
+     */
+    protected function _encodeForReason(mixed $value): string
+    {
+        $json = json_encode($value, JSON_PARTIAL_OUTPUT_ON_ERROR);
+
+        return $json === false ? 'null' : $json;
+    }
+
+    /**
+     * Get the rule instance for a rule config array
+     *
+     * An `allowed` or `bypassAuth` array with a `className` key is always a rule config, a class that
+     * does not exist or is not a Rule throws instead of evaluating the array as a truthy value.
+     *
+     * @param array $config Rule config, `['className' => Rule::class, 'options' => []]`.
+     * @throws \InvalidArgumentException when `className` is not a Rule class
+     * @return \CakeDC\Auth\Rbac\Rules\Rule
+     */
+    protected function _ruleFromConfig(array $config): Rule
+    {
+        if (!$this->_isRuleConfig($config)) {
+            $className = $config['className'] ?? null;
+            throw new InvalidArgumentException(sprintf(
+                'Permission rule `%s` is not a class implementing %s',
+                is_string($className) ? $className : get_debug_type($className),
+                Rule::class,
+            ));
+        }
+
+        return RuleRegistry::get($config['className'], (array)($config['options'] ?? []));
     }
 
     /**

@@ -2,14 +2,15 @@
 declare(strict_types=1);
 
 /**
- * Copyright 2010 - 2024, Cake Development Corporation (https://www.cakedc.com)
+ * Copyright 2010 - 2026, Cake Development Corporation (https://www.cakedc.com)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright 2010 - 2024, Cake Development Corporation (https://www.cakedc.com)
+ * @copyright Copyright 2010 - 2026, Cake Development Corporation (https://www.cakedc.com)
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
+
 namespace CakeDC\Auth\Authentication\TwoFactorProcessor;
 
 use Authentication\Authenticator\Result;
@@ -92,9 +93,9 @@ class Webauthn2faProcessor implements TwoFactorProcessorInterface
      * Generates 2fa url, if enable.
      *
      * @param string $type Processor type.
-     * @return array|null
+     * @return array|string|null
      */
-    public function getUrlByType(string $type): ?array
+    public function getUrlByType(string $type): array|string|null
     {
         if ($type == $this->getType()) {
             return Configure::read('Webauthn2fa.startAction');
