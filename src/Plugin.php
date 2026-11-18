@@ -17,7 +17,7 @@ namespace CakeDC\Auth;
  * Class Plugin
  *
  * @package CakeDC\Auth
- * @deprecated 11.1.0 Use \CakeDC\Auth\AuthPlugin instead, the plugin class name expected since CakePHP 5.3.
+ * @deprecated 12.0.0 Use \CakeDC\Auth\AuthPlugin instead, the plugin class name expected since CakePHP 5.3.
  */
 class Plugin extends AuthPlugin
 {

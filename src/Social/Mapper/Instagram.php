@@ -19,7 +19,7 @@ use function Cake\Core\deprecationWarning;
 /**
  * Instagram Mapper
  *
- * @deprecated 11.1.0 The Instagram Basic Display API was shut down, there is no replacement for user login. Use the `facebook` provider for a Meta login.
+ * @deprecated 12.0.0 The Instagram Basic Display API was shut down, there is no replacement for user login. Use the `facebook` provider for a Meta login.
  */
 class Instagram extends AbstractMapper
 {
@@ -31,7 +31,7 @@ class Instagram extends AbstractMapper
     public function __construct(mixed $mapFields = null)
     {
         deprecationWarning(
-            '11.1.0',
+            '12.0.0',
             'The Instagram mapper is deprecated, the Instagram Basic Display API was shut ' .
             'down. Use the `facebook` provider for a Meta login.',
         );

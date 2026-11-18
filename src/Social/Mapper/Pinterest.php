@@ -18,7 +18,7 @@ use function Cake\Core\deprecationWarning;
 /**
  * Pinterest Mapper
  *
- * @deprecated 11.1.0 The mapper reads fields of the retired Pinterest API v1.
+ * @deprecated 12.0.0 The mapper reads fields of the retired Pinterest API v1.
  */
 class Pinterest extends AbstractMapper
 {
@@ -30,7 +30,7 @@ class Pinterest extends AbstractMapper
     public function __construct(mixed $mapFields = null)
     {
         deprecationWarning(
-            '11.1.0',
+            '12.0.0',
             'The Pinterest mapper is deprecated, it reads fields of the retired Pinterest API ' .
             'v1.',
         );

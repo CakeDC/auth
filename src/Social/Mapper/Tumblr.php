@@ -18,7 +18,7 @@ use function Cake\Core\deprecationWarning;
 /**
  * Tumblr Mapper
  *
- * @deprecated 11.1.0 The user id is a crc32 of the nickname, it can collide and changes when the blog is renamed.
+ * @deprecated 12.0.0 The user id is a crc32 of the nickname, it can collide and changes when the blog is renamed.
  */
 class Tumblr extends AbstractMapper
 {
@@ -30,7 +30,7 @@ class Tumblr extends AbstractMapper
     public function __construct(mixed $mapFields = null)
     {
         deprecationWarning(
-            '11.1.0',
+            '12.0.0',
             'The Tumblr mapper is deprecated, its user id is a crc32 of the nickname, which ' .
             'can collide and changes when the blog is renamed.',
         );

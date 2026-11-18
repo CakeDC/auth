@@ -18,7 +18,7 @@ use function Cake\Core\deprecationWarning;
 /**
  * LinkedIn Mapper
  *
- * @deprecated 11.1.0 LinkedIn retired the legacy Sign In with LinkedIn API, use the `linkedInOpenIDConnect` provider with the `LinkedInOpenIDConnect` mapper instead.
+ * @deprecated 12.0.0 LinkedIn retired the legacy Sign In with LinkedIn API, use the `linkedInOpenIDConnect` provider with the `LinkedInOpenIDConnect` mapper instead.
  */
 class LinkedIn extends AbstractMapper
 {
@@ -30,7 +30,7 @@ class LinkedIn extends AbstractMapper
     public function __construct(mixed $mapFields = null)
     {
         deprecationWarning(
-            '11.1.0',
+            '12.0.0',
             'The LinkedIn mapper is deprecated, LinkedIn retired the legacy Sign In API. Use ' .
             'the `linkedInOpenIDConnect` provider with ' .
             '`CakeDC\\Auth\\Social\\Mapper\\LinkedInOpenIDConnect` instead.',
