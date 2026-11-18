@@ -34,7 +34,7 @@ zero-based list (`token[0]`, `token[1]`...) is joined; any other array shape is 
 token. The user is found with the `loginWithToken($token)` method of
 the users table configured in `Users.table`, provided by the CakeDC/Users plugin.
 
-All authenticators use the identifiers of cakephp/authentication 3.x, configured per authenticator
+All authenticators use the identifiers of cakephp/authentication 4.x, configured per authenticator
 with the `identifier` option.
 
 

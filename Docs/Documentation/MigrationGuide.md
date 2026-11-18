@@ -80,3 +80,18 @@ Please check [Authentication](Authentication.md) and [Authorization](Authorizati
   default) instead of `Auth.User`. Set `sessionKey` to `Auth.User` to keep the previous layout
 * New: Keycloak mapper, OpenID Connect service and LinkedIn OpenID Connect provider, see
   [Social](Social.md)
+
+11.1 to 12.0
+------------
+* Requires `cakephp/authentication` 4.2 or higher
+* Identifiers use the single-identifier format. Configure `identifier` as
+  `['className' => 'Authentication.Password', ...]`; the collection format keyed by identifier name
+  (`['Authentication.Password' => [...]]`) is no longer supported
+* `AuthenticationService::loadIdentifier()` and `identifiers()` no longer exist. Identifiers are
+  built by `cakephp/authentication` from each authenticator's `identifier` config
+* `SessionAuthenticator` no longer has `identify`; use `PrimaryKeySessionAuthenticator` when the
+  identity must be read from the session
+* `CakeDC\Auth\Authenticator\FormAuthenticator` accepts a `null` identifier and lets the base
+  authenticator build the default one
+* `CakeDC\Auth\Identifier\SocialIdentifier` uses stricter types; check any override of
+  `identify()`
