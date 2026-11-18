@@ -44,7 +44,7 @@ class SocialAuthenticator extends AbstractAuthenticator
      * - `loginUrl` Login URL or an array of URLs.
      * - `urlChecker` Url checker config.
      *
-     * @var array
+     * @var array<string, mixed>
      */
     protected array $_defaultConfig = [];
 

@@ -138,8 +138,8 @@ class SocialAuthMiddlewareTest extends TestCase
             ->willReturn('http://facebook.com/redirect/url');
 
         $Middleware = new SocialAuthMiddleware([
-            'urlChecker' => 'Authentication.Default',
-            'loginUrl' => ['/auth/facebook'],
+            'urlChecker' => 'Authentication.String',
+            'loginUrl' => '/auth/facebook',
         ]);
         $handler = $this->getMockBuilder(Runner::class)
             ->onlyMethods(['handle'])
@@ -182,8 +182,8 @@ class SocialAuthMiddlewareTest extends TestCase
         ]);
         $this->Request->getSession()->write('oauth2state', '__TEST_STATE__');
         $Middleware = new SocialAuthMiddleware([
-            'urlChecker' => 'Authentication.Default',
-            'loginUrl' => ['/auth/facebook'],
+            'urlChecker' => 'Authentication.String',
+            'loginUrl' => '/auth/facebook',
         ]);
 
         $response = new Response();
@@ -232,8 +232,8 @@ class SocialAuthMiddlewareTest extends TestCase
     public function testNotValidAction()
     {
         $Middleware = new SocialAuthMiddleware([
-            'urlChecker' => 'Authentication.Default',
-            'loginUrl' => ['/auth/facebook'],
+            'urlChecker' => 'Authentication.String',
+            'loginUrl' => '/auth/facebook',
         ]);
         $response = new Response();
         $response = $response->withStringBody(__METHOD__ . time());

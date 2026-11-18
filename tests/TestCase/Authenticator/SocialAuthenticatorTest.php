@@ -13,7 +13,8 @@ declare(strict_types=1);
 namespace CakeDC\Auth\Test\TestCase\Authenticator;
 
 use Authentication\Authenticator\Result;
-use Authentication\Identifier\IdentifierCollection;
+use Authentication\Identifier\IdentifierFactory;
+use Authentication\Identifier\IdentifierInterface;
 use Cake\Core\Configure;
 use Cake\Http\ServerRequestFactory;
 use Cake\ORM\Entity;
@@ -127,9 +128,7 @@ class SocialAuthenticatorTest extends TestCase
         ]);
         $this->Request->getSession()->write('oauth2state', '__TEST_STATE__');
 
-        $identifiers = new IdentifierCollection([
-            'CakeDC/Auth.Social',
-        ]);
+        $identifiers = IdentifierFactory::create('CakeDC/Auth.Social');
         $Authenticator = new SocialAuthenticator($identifiers);
         $result = $Authenticator->authenticate($this->Request);
         $this->assertInstanceOf(Result::class, $result);
@@ -220,9 +219,7 @@ class SocialAuthenticatorTest extends TestCase
 
         $service = (new ServiceFactory())->createFromProvider('facebook');
         $this->Request = $this->Request->withAttribute('socialService', $service);
-        $identifiers = new IdentifierCollection([
-            'CakeDC/Auth.Social',
-        ]);
+        $identifiers = IdentifierFactory::create('CakeDC/Auth.Social');
         $Authenticator = new SocialAuthenticator($identifiers);
 
         $result = $Authenticator->authenticate($this->Request);
@@ -283,9 +280,7 @@ class SocialAuthenticatorTest extends TestCase
 
         $service = (new ServiceFactory())->createFromProvider('facebook');
         $this->Request = $this->Request->withAttribute('socialService', $service);
-        $identifiers = new IdentifierCollection([
-            'CakeDC/Auth.Social',
-        ]);
+        $identifiers = IdentifierFactory::create('CakeDC/Auth.Social');
         $Authenticator = new SocialAuthenticator($identifiers);
         $result = $Authenticator->authenticate($this->Request);
         $this->assertInstanceOf(Result::class, $result);
@@ -345,9 +340,7 @@ class SocialAuthenticatorTest extends TestCase
 
         $service = (new ServiceFactory())->createFromProvider('facebook');
         $this->Request = $this->Request->withAttribute('socialService', $service);
-        $identifiers = new IdentifierCollection([
-            'CakeDC/Auth.Social',
-        ]);
+        $identifiers = IdentifierFactory::create('CakeDC/Auth.Social');
         $Authenticator = new SocialAuthenticator($identifiers);
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Invalid argument at getResourceOwner');
@@ -435,7 +428,10 @@ class SocialAuthenticatorTest extends TestCase
 
         $service = (new ServiceFactory())->createFromProvider('facebook');
         $this->Request = $this->Request->withAttribute('socialService', $service);
-        $identifiers = new IdentifierCollection([]);
+        $identifiers = $this->getMockBuilder(IdentifierInterface::class)->getMock();
+        $identifiers->expects($this->any())
+            ->method('identify')
+            ->willReturn(null);
         $Authenticator = new SocialAuthenticator($identifiers);
         $Authenticator->authenticate($this->Request);
         $result = $Authenticator->authenticate($this->Request);

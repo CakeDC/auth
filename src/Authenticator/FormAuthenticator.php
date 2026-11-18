@@ -40,7 +40,7 @@ class FormAuthenticator implements AuthenticatorInterface
     /**
      * Identifier or identifiers collection.
      */
-    protected IdentifierInterface $identifier;
+    protected ?IdentifierInterface $identifier = null;
 
     /**
      * Settings for base authenticator
@@ -54,10 +54,10 @@ class FormAuthenticator implements AuthenticatorInterface
     /**
      * Constructor
      *
-     * @param \Authentication\Identifier\IdentifierInterface $identifier Identifier or identifiers collection.
+     * @param \Authentication\Identifier\IdentifierInterface|null $identifier Identifier instance.
      * @param array $config Configuration settings.
      */
-    public function __construct(IdentifierInterface $identifier, array $config = [])
+    public function __construct(?IdentifierInterface $identifier = null, array $config = [])
     {
         $this->identifier = $identifier;
         $this->setConfig($config);
@@ -80,12 +80,12 @@ class FormAuthenticator implements AuthenticatorInterface
     /**
      * Create the base authenticator
      *
-     * @param \Authentication\Identifier\IdentifierInterface $identifier Identifier or identifiers collection.
+     * @param \Authentication\Identifier\IdentifierInterface|null $identifier Identifier instance.
      * @param array $config Configuration settings.
      * @return \Authentication\Authenticator\AuthenticatorInterface
      */
     protected function createBaseAuthenticator(
-        IdentifierInterface $identifier,
+        ?IdentifierInterface $identifier,
         array $config = [],
     ): AuthenticatorInterface {
         unset($config['keyCheckEnabledRecaptcha']);

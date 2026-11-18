@@ -14,7 +14,6 @@ declare(strict_types=1);
 namespace CakeDC\Auth\Test\TestCase\Authenticator;
 
 use Authentication\Authenticator\Result;
-use Authentication\Identifier\IdentifierCollection;
 use Cake\Core\Configure;
 use Cake\Http\ServerRequest;
 use Cake\ORM\Entity;
@@ -58,7 +57,7 @@ class OneTimeTokenAuthenticatorTest extends TestCase
         };
         $this->getTableLocator()->set('TokenUsers', $table);
         Configure::write('Users.table', 'TokenUsers');
-        $this->Authenticator = new OneTimeTokenAuthenticator(new IdentifierCollection());
+        $this->Authenticator = new OneTimeTokenAuthenticator();
     }
 
     /**

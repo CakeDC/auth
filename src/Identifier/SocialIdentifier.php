@@ -23,6 +23,9 @@ class SocialIdentifier extends AbstractIdentifier
 
     public const CREDENTIAL_KEY = 'socialAuthUser';
 
+    /**
+     * @var array<string, mixed>
+     */
     protected array $_defaultConfig = [
         'resolver' => 'Authentication.Orm',
     ];
@@ -30,8 +33,8 @@ class SocialIdentifier extends AbstractIdentifier
     /**
      * Identifies an user or service by the passed credentials
      *
-     * @param array $credentials Authentication credentials
-     * @return \ArrayAccess|array|null
+     * @param array<string, mixed> $credentials Authentication credentials
+     * @return \ArrayAccess<string, mixed>|array<string, mixed>|null
      */
     public function identify(array $credentials): ArrayAccess|array|null
     {
