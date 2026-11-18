@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [11.1.0] - Unreleased
+## [11.1.0] - 2026-11-18
 ### Upgrade notes
 No public API was removed, the changes below are compatible for applications using the plugin as
 documented. Check these behavior changes when upgrading:
