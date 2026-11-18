@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [12.0.0] - 2026-11-18
+## [13.0.0] - Unreleased
 ### Upgrade notes
 - Requires `cakephp/authentication` `^4.2`.
 - `identifier` uses the single-identifier format (`className`), not a collection keyed by name.
@@ -16,7 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `FormAuthenticator`: identifier is nullable.
 - `SocialAuthenticator`, `TwoFactorAuthenticator` and `SocialIdentifier`: stricter array types.
 
-## [11.1.0] - 2026-11-18
+## [12.0.0] - 2026-11-18
 ### Upgrade notes
 No public API was removed, the changes below are compatible for applications using the plugin as
 documented. Check these behavior changes when upgrading:
@@ -98,7 +98,7 @@ documented. Check these behavior changes when upgrading:
 ### Deprecated
 - The `LinkedIn` (LinkedIn retired the API, use `linkedInOpenIDConnect`), `Instagram` (Basic Display
   API shut down), `Pinterest` (API v1 fields) and `Tumblr` (crc32 user id) social mappers emit a
-  deprecation warning and will be removed in 12.0.
+  deprecation warning and will be removed in 13.0.
 - `CakeDC\Auth\Plugin` extends `CakeDC\Auth\AuthPlugin` and is deprecated, load the plugin with
   `AuthPlugin` (or by its name `CakeDC/Auth`).
 

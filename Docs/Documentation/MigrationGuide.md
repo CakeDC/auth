@@ -57,7 +57,7 @@ Please check [Authentication](Authentication.md) and [Authorization](Authorizati
   see [Authorization](Authorization.md#events)
 * `U2FProcessor` is back as a deprecated processor, use Webauthn instead
 
-11.0 to 11.1
+11.0 to 12.0
 ------------
 * Requires CakePHP 5.4, and `cakephp/authentication` 3.3 is a dependency of the plugin
 * `CakeDC\Auth\Plugin` is deprecated, load the plugin with `CakeDC\Auth\AuthPlugin`
@@ -71,7 +71,7 @@ Please check [Authentication](Authentication.md) and [Authorization](Authorizati
 * `BaseTestTrait::testPermissions()` uses a `#[DataProvider]` attribute, the `provider()` method of
   your test class must be static
 * The `LinkedIn`, `Instagram`, `Pinterest` and `Tumblr` mappers are deprecated and will be removed in
-  12.0. Switch the `linkedIn` provider to `linkedInOpenIDConnect`
+  13.0. Switch the `linkedIn` provider to `linkedInOpenIDConnect`
 * The `Azure` mapper only sets `validated` when the `email_verified` or `xms_edov` claim is `true`.
   Before, any `upn` was trusted as a validated email
 * The `LinkedInOpenIDConnect` and `Keycloak` mappers only set `validated` when `email_verified` is
@@ -81,7 +81,7 @@ Please check [Authentication](Authentication.md) and [Authorization](Authorizati
 * New: Keycloak mapper, OpenID Connect service and LinkedIn OpenID Connect provider, see
   [Social](Social.md)
 
-11.1 to 12.0
+12.0 to 13.0
 ------------
 * Requires `cakephp/authentication` 4.2 or higher
 * Identifiers use the single-identifier format. Configure `identifier` as
