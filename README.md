@@ -52,7 +52,7 @@ Supported versions
 | CakeDC Auth | Branch | Latest tag | CakePHP | PHP | Support |
 | :---------- | :----- | :--------- | :------ | :-- | :------ |
 | 13.x | [13.next-cake5](https://github.com/cakedc/auth/tree/13.next-cake5) | 13.0.0 | ^5.4 | >= 8.2 | Bug and security fixes |
-| 12.x | [12.next-cake5](https://github.com/cakedc/auth/tree/12.next-cake5) | 12.0.0 | ^5.4 | >= 8.2 | Bug and security fixes |
+| 12.x | [12.next-cake5](https://github.com/cakedc/auth/tree/12.next-cake5) | 12.0.1 | ^5.4 | >= 8.2 | Bug and security fixes |
 | 11.x | [11.next-cake5.4](https://github.com/cakedc/auth/tree/11.next-cake5.4) | 11.0.0 | ^5.4 | >= 8.2 | Bug and security fixes |
 | 10.x | [10.next-cake5](https://github.com/cakedc/auth/tree/10.next-cake5) | 10.1.4 | ^5.0 | >= 8.1 | Security fixes only |
 | 9.x | [9.next-cake4](https://github.com/cakedc/auth/tree/9.next-cake4) | 9.1.0 | ^4.3 | >= 7.4 | Security fixes only |

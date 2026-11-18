@@ -16,6 +16,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `FormAuthenticator`: identifier is nullable.
 - `SocialAuthenticator`, `TwoFactorAuthenticator` and `SocialIdentifier`: stricter array types.
 
+## [12.0.1] - 2026-11-18
+### Fixed
+- Re-release of 12.0.0 with the correct commit, no code changes.
+
 ## [12.0.0] - 2026-11-18
 ### Upgrade notes
 No public API was removed, the changes below are compatible for applications using the plugin as
